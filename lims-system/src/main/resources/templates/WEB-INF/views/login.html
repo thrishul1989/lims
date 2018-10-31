@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<title>系统登录-实验室管理系统</title>
+<link href="${system_css}/login.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        if (window != window.top)
+        {
+            window.top.location = window.location;
+        }
+    });
+//-->
+</script>
+</head>
+<body>
+    <div class="login_bg">
+        <h1 class="titleImg">
+            <img src="${system_images}/logo1-022.png" alt="迈基诺">
+        </h1>
+        <form action="${base}/login_process" method="post">
+            <div class="login_main">
+                <h5>实验室管理系统</h5>
+                <#if (SPRING_SECURITY_LAST_EXCEPTION.message)??>
+                <div class="failure">${SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+                </#if>
+                <div class="ub_pd">
+                    <div class="login_lable1"></div>
+                    <div class="ub_f1">
+                        <input type="text" id="txtname" name="username" placeholder="请输入账号" autofocus value=""/>
+                    </div>
+                </div>
+                <div class="ub_pd">
+                    <div class="login_lable2"></div>
+                    <div class="ub_f1">
+                        <input type="password" id="txtpswd" name="password" placeholder="请输入密码" value=""/>
+                    </div>
+                </div>
+                <input type="submit" value="立即登录" class="registerInfo" />
+            </div>
+        </form>
+    </div>
+</body>
+</html>

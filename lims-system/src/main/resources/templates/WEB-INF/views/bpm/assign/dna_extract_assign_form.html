@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>DNA提取任务</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.1"></script>
+<script src="${system_js}/testing/dna_extract_assign.js?v=1.0.2"></script>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <form id="testing_task_form" class="form-horizontal m-t" target="_parent" action="${base}/testing/dna_extract_assign_submit.do"
+                method="post">
+                <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                <input type="hidden" id="content" name="content" />
+                <input type="hidden" id="qcTesterName" name="qcTesterName" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">提取试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="extractReagentKit" name="extractReagentKitId" required data-msg="提取试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "DNA-EXT" sample = inputSampleTypeId!> <#list kits as kit>
+                            <option value="${kit.id!?html}" data-input-quantity="${kit.sampleInputQuantity!}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">提取实验员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="extractTesterId" required data-msg="提取实验员不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_members semantic = "DNA-EXT"> <#list members as s>
+                            <option value="${s.id!?html}">${s.name!?html}</option>
+                            </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">质检试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="qualityControlReagentKitId" required data-msg="质检试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "DNA-QC" pre_node = "DNA-QC"> <#list kits as kit>
+                            <option value="${kit.id!?html}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">质检实验员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="qualityControlTesterId" required data-msg="质检实验员不能为空">
+                            <option value="">请选择</option>
+                           <@bcm_members semantic = "DNA-QC"> <#list members as s>
+                            <option value="${s.id!?html}">${s.name!?html}</option>
+                            </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">质检方法：</label>
+                    <div class="col-sm-10">
+                        <div class="checkbox-inline i-checks">
+                            <label><input type="checkbox" name="qualityControlMethods" value="Qubit" /> Qubit</label> <label><input
+                                    type="checkbox" name="qualityControlMethods" value="2100DNA" />2100DNA</label> <label><input type="checkbox"
+                                    name="qualityControlMethods" value="2100RNA" />2100RNA</label> <label><input type="checkbox"
+                                    name="qualityControlMethods" value="Nanodrop" checked="checked"/>Nanodrop</label> <label><input type="checkbox"
+                                    name="qualityControlMethods" value="琼脂糖电泳" checked="checked"/>琼脂糖电泳</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务描述：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" name="description" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <table id="testing_task_detail_table" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>实验编号</th>
+                                    <th>订单类型</th>
+                                    <th>检测产品</th>
+                                    <th>样本类型</th>
+                                    <th>样本编号</th>
+                                    <th>样本名称</th>
+                                    <th>采样时间</th>
+                                    <th>是否正常</th>
+                                    <th class='dataSize'>样本投入量</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if data.tasks??> <#list data.tasks as record>
+                                <tr><input type="hidden" class="sampleTypeId" value="${(record.sampleTypeId)!?html}" />
+                                    <td>${(record.testingCode)!?html}</td>
+                                    <td>${(record.orderType)!?html}</td>
+                                    <td>${(record.products)!?html}</td>
+                                    <td>${(record.sampleTypeName)!?html}</td>
+                                    <td>${(record.sampleCode)!?html}</td>
+                                    <td>${(record.sampleName)!?html}</td>
+                                    <td><#if record.samplingDate??>${(record.samplingDate)?string("yyyy-MM-dd")}</#if></td>
+                                    <td>
+                                        <#if record.resubmit>
+                                        <span style="color: red">异常（${(record.resubmitCount)!0}次）</span>
+                                        <#else>
+                                        <span style="color: green">正常</span>
+                                        </#if>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="tasks[${record_index}].id" value="${record.id!}" />
+                                        <input type="hidden" name="tasks[${record_index}].testingCode" value="${record.testingCode!}" />
+                                        <input type="text" class="form-control input-sample-size" name="tasks[${record_index}].sampleInputSize" required
+                                            data-msg="" />
+                                    </td>
+                                </tr>
+                                </#list> </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

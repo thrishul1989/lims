@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>生信分析任务详情</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li>
+                                <span>已完成任务</span>
+                            </li>
+                            <li class="active">
+                                <strong>生信分析任务详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>生信分析任务详情</h5>
+                        <a href="${base}/testing/biology-analy/export/details_data.jsp?id=${(sheet.id)!?html}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-download"></i> 导出分析数据表
+                        </a>
+                        <a href="${base}/testing/biology-analy/export/sample_data.jsp?id=${(sheet.id)!?html}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-download"></i> 导出拆分数据表
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-horizontal m-t">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">测序编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.sampleCode)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">测序时间：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.createTime)?string('yyyy-MM-dd')}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">实验员：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.testerName)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">完成时间：</label>
+                                <div class="col-sm-2">
+                                    <#if sheet.submitTime??><input type="text" class="form-control" value="${(sheet.submitTime)?string('yyyy-MM-dd HH:mm:ss')}" readonly="readonly" />
+                                    <#else><input type="text" class="form-control" value="" readonly="readonly" />
+                                    </#if>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5" style="margin-top: 10px;">
+                                    <button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${plugins}/validation/jquery.validate.min.js"></script>
+<script src="${plugins}/validation/additional-methods.min.js"></script>
+<script src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>待处理详细信息</title>
+	<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+	<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+	<link href="${system_css}/animate.min.css" rel="stylesheet">
+	<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+	<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<ol class="breadcrumb">
+						<li>
+							<span>检测实验</span>
+						</li>
+						<li class="active">
+							<strong>追加样本待处理</strong>
+						</li>
+					</ol>
+				</div>
+			</div>
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5>查看</h5>
+				</div>
+				<div class="ibox-content">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>基本信息</h5>
+									<div class="ibox-tools">
+										<a class="collapse-link">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table class="table table-striped table-bordered table-hover table-details">
+										<tr>
+											<th class="col-sm-1">订单编号</th>
+											<td class="col-sm-2">${(data.orderCode)!?html}</td>
+											<th class="col-sm-1">营销中心</th>
+											<td class="col-sm-2">${(data.marketingCenter)!?html}</td>
+											<th class="col-sm-1">下单时间</th>
+											<td class="col-sm-2"><#if data.orderCreateTime??> ${(data.orderCreateTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>${(data.orderCreateTime)!?html} </#if></td>
+										</tr>
+										<tr>
+											<th>主样本类型</th>
+											<td>${(data.primarySampleType)!?html}</td>
+											<th>主样本编号</th>
+											<td>${(data.primarySampleCode)!?html}</td>
+											<th>主样本名称</th>
+											<td>${(data.primarySampleName)!?html}</td>
+										</tr>
+										<tr>
+											<th>追加样本类型</th>
+											<td>${(data.extraSampleType)!?html}</td>
+											<th>追加样本编号</th>
+											<td>${(data.extraSampleCode)!?html}</td>
+											<th>追加样本名称</th>
+											<td>${(data.extraSampleName)!?html}</td>
+										</tr>
+										<tr>
+											<th>追加样本用途</th>
+											<td> <#if 1==data.purpose>
+												验证
+												<#elseif 3==data.purpose>
+													对照
+											</#if></td>
+											<th></th>
+											<td></td>
+											<th></th>
+											<td></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>处理人信息</h5>
+									<div class="ibox-tools">
+										<a class="collapse-link">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table class="table table-striped table-bordered table-hover table-details">
+										<tr>
+											<th class="col-sm-1">处理人姓名</th>
+											<td class="col-sm-2">${(data.operator)!?html}</td>
+											<th class="col-sm-1">处理时间</th>
+											<td class="col-sm-2"><#if data.operatorTime??> ${(data.operatorTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>${(data.operatorTime)!?html} </#if></td>
+											<th></th>
+											<td></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row">
+					
+						<div class="col-lg-12">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>已启动主样本检测流程</h5>
+									<div class="ibox-tools">
+										<a class="collapse-link">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+										<tr>
+											<th class="index">序号</th>
+											<th>订单编号</th>
+											<th>样本编号</th>
+											<th>检测产品</th>
+											<th>检测方法</th>
+											<th>流程状态</th>
+										</tr>
+										</thead>
+										<tbody>
+										<#if (data.testSchedules)?? && (data.testSchedules)?has_content>
+											<#list data.testSchedules as record>
+												<tr>
+													<td>${(record_index+1)!?html}</td>
+													<td>${(record.orderCode)!?html}</td>
+													<td>${(record.sampleCode)!?html}</td>
+													<td>${(record.productName)!?html}</td>
+													<td>${(record.testingMethodName)!?html}</td>
+													<td>${(record.activeTaskName)!?html}</td>
+												</tr>
+											</#list>
+										</#if>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<#if 3==data.purpose>
+							<div class="col-lg-12">
+								<div class="ibox">
+									<div class="ibox-title">
+										<h5><span style="color: green">已启动追加样本检测流程</span></h5>
+										<div class="ibox-tools">
+											<a class="collapse-link">
+												<i class="fa fa-chevron-down"></i>
+											</a>
+										</div>
+									</div>
+									<div class="ibox-content">
+										<table class="table table-striped table-bordered table-hover">
+											<thead>
+											<tr>
+												<th class="index">序号</th>
+												<th>订单编号</th>
+												<th>样本编号</th>
+												<th>检测产品</th>
+												<th>检测方法</th>
+												<th>流程状态</th>
+											</tr>
+											</thead>
+											<tbody>
+											<#if (data.extraSampleTestSchedules)?? && (data.extraSampleTestSchedules)?has_content>
+												<#list data.extraSampleTestSchedules as record>
+													<tr>
+														<td>${(record_index+1)!?html}</td>
+														<td>${(record.orderCode)!?html}</td>
+														<td>${(record.sampleCode)!?html}</td>
+														<td>${(record.productName)!?html}</td>
+														<td>${(record.testingMethodName)!?html}</td>
+														<td>${(record.activeTaskName)!?html}</td>
+													</tr>
+												</#list>
+											</#if>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</#if>
+
+
+						<div class="col-lg-12">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>已启动主样本验证流程</h5>
+									<div class="ibox-tools">
+										<a class="collapse-link">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+										<tr>
+											<th class="index">序号</th>
+											<th>订单编号</th>
+											<th>样本编号</th>
+											<th>验证方法</th>
+											<th>位点</th>
+											<th>关联基因</th>
+										</tr>
+										</thead>
+										<tbody>
+										<#if (data.validSchedules)?? && (data.validSchedules)?has_content>
+											<#list data.validSchedules as record>
+												<tr>
+													<td>${(record_index+1)!?html}</td>
+													<td>${(record.orderCode)!?html}</td>
+													<td>${(record.sampleCode)!?html}</td>
+													<td>${(record.verifyMethod)!?html}</td>
+													<td>${(record.chromosomeLocation)!?html}</td>
+													<td>${(record.gene)!?html}</td>
+												</tr>
+											</#list>
+										</#if>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<#if 1==data.purpose>
+							<div class="col-lg-12">
+								<div class="ibox">
+									<div class="ibox-title">
+										<h5><span style="color: green">已启动追加样本验证流程</span></h5>
+										<div class="ibox-tools">
+											<a class="collapse-link">
+												<i class="fa fa-chevron-down"></i>
+											</a>
+										</div>
+									</div>
+									<div class="ibox-content">
+										<table class="table table-striped table-bordered table-hover">
+											<thead>
+											<tr>
+												<th class="index">序号</th>
+												<th>订单编号</th>
+												<th>样本编号</th>
+												<th>验证方法</th>
+												<th>位点</th>
+												<th>关联基因</th>
+											</tr>
+											</thead>
+											<tbody>
+											<#if (data.extraSampleValidSchedules)?? && (data.extraSampleValidSchedules)?has_content>
+												<#list data.extraSampleValidSchedules as record>
+													<tr>
+														<td>${(record_index+1)!?html}</td>
+														<td>${(record.orderCode)!?html}</td>
+														<td>${(record.sampleCode)!?html}</td>
+														<td>${(record.verifyMethod)!?html}</td>
+														<td>${(record.chromosomeLocation)!?html}</td>
+														<td>${(record.gene)!?html}</td>
+													</tr>
+												</#list>
+											</#if>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</#if>
+
+						<div class="col-lg-12">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>检测产品报告状态</h5>
+									<div class="ibox-tools">
+										<a class="collapse-link">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content">
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+										<tr>
+											<th class="index">序号</th>
+											<th>产品名称</th>
+											<th>产品退款状态</th>
+											<th>报告状态</th>
+											<th>产品状态</th>
+											<th>出报告日期</th>
+										</tr>
+										</thead>
+										<tbody>
+										<#if (data.extraSampleShowProducts)?? && (data.extraSampleShowProducts)?has_content>
+											<#list data.extraSampleShowProducts as record>
+												<tr>
+													<td>${(record_index+1)!?html}</td>
+													<td>${(record.productName)!?html}</td>
+													<td>
+														<#if record.refundStatus??>
+															<#if record.refundStatus==0>未申请</#if>
+															<#if record.refundStatus==1>退款审核中</#if>
+															<#if record.refundStatus==2>退款中</#if>
+															<#if record.refundStatus==3>已退款</#if>
+														</#if>
+													</td>
+													<td>
+														<#if record.reportStatus??>
+															<#if record.reportStatus==0>未出报告</#if>
+															<#if record.reportStatus==1>待一审</#if>
+															<#if record.reportStatus==2>待二审</#if>
+															<#if record.reportStatus==3>待寄送</#if>
+															<#if record.reportStatus==4>已寄送</#if>
+															<#if record.reportStatus==5>不寄送</#if>
+														</#if>
+													</td>
+													<td>
+														<#if record.productStatus??>
+															<#if record.productStatus==0>待送测</#if>
+															<#if record.productStatus==1>待数据分析</#if>
+															<#if record.productStatus==2>待验证</#if>
+															<#if record.productStatus==3>待出报告</#if>
+															<#if record.productStatus==4>待审核报告</#if>
+															<#if record.productStatus==5>待寄送报告</#if>
+															<#if record.productStatus==6>已完成</#if>
+															<#if record.productStatus==7>不寄送邮件</#if>
+															<#if record.productStatus==8>检测取消</#if>
+														</#if>
+													</td>
+													<td><#if record.reportTime??> ${(record.reportTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>${(record.reportTime)!?html} </#if></td>
+												</tr>
+											</#list>
+										</#if>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-5">
+								<button class="btn btn-primary" type="button"
+										onclick="history.go(-1)">返回</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/hplus/content.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+</body>
+</html>

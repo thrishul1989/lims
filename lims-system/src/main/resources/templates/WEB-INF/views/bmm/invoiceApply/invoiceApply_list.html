@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>发票申请列表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.7" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>发票申请列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/bmm/invoiceApply/list.do" method="post" id="search_from" class="search-form form-inline">
+							<div class="col-sm-3">
+                              	<div class="form-group">
+                                   <label class="control-label">申请编号：</label>
+                                   <input type="text" class="form-control" name="code" value="${(searcher.code)!?html}">
+                               </div>
+							</div>
+							<div class="col-sm-3">
+                                   <label class="control-label">发票状态：</label>
+                                   <select class="form-control" name="status" data-value="${(searcher.status)!?html}">
+                                       <option value="">所有类型</option>
+                                       <option value="1">待审核</option>
+                                       <option value="2">审核未通过</option>
+                                       <option value="3">已开票</option>
+                                       <option value="4">已寄送</option>
+                                   </select>
+	                        </div>
+							<div class="col-sm-3">
+                              	<div class="form-group">
+									<label class="control-label">营销中心：</label>
+									<select class="form-control" id="testingType" name="testingType" data-value="${searcher.testingType!?html}">
+									<option selected value="">--所有类型--</option>
+										<#if testingTypeList??> 
+											<#list testingTypeList as entry>
+											<option  value="${entry.id!?html}">${entry.name!?html}</option>
+										</#list>
+										</#if>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-3">
+                              	<div class="form-group">
+                                   <label class="control-label">申请人：</label>
+                                   <input type="text" class="form-control" name="creatorId" value="${(searcher.creatorId)!?html}">
+                               </div>
+							</div>
+							<div class="col-sm-3">
+                               <div class="form-group">
+                                   <label class="control-label">客户：</label>
+                                   <input type="text" class="form-control" name="customerId" value="${(searcher.customerId)!?html}">
+                               </div>
+                            </div>
+						    <div class="col-sm-3">
+                               <div class="form-group">
+                                   <label class="control-label">申请时间起：</label>
+								   <input type="text" id="applyTimeStart" class="form-control laydate-icon" name="applyTimeStart" 
+								   readOnly="readOnly" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value="${(searcher.applyTimeStart)!?html}"/>
+							   </div>
+                            </div>
+						    <div class="col-sm-3">
+                               <div class="form-group">
+                                   <label class="control-label">申请时间止：</label>
+								   <input type="text" id="applyTimeEnd" class="form-control laydate-icon" name="applyTimeEnd" 
+								   readOnly="readOnly" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value="${(searcher.applyTimeEnd)!?html}"/>
+							   </div>
+	                        </div>
+						    <div class="form-group">
+                               <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-search"></i> 查询 </button>
+                               <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')"><i class="fa fa-remove"></i> 清空 </button>
+                            </div>
+						</form>
+						<table class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+								<tr>
+									<td>序号</td>
+									<td>申请编号</td>
+									<td>客户</td>
+									<td>营销中心</td>
+									<td>开票金额</td>
+									<td>申请时间</td>
+									<td>申请人</td>
+									<td>状态</td>
+									<th class="flexible-btns">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pagination??> <#if pagination.records?has_content> <#list pagination.records as record>
+								<tr>
+									<td>${record_index + 1}</td>
+									<td>${(record.code)!?html}</td>
+									<td>${(record.customerId)!?html}</td>
+									<td>${(record.testingType)!?html}</td>
+									<td>${((record.invoiceAmount/100)!0)?string('0.##')}</td>
+									<td><#if record.applyTime??>${(record.applyTime)!?string('yyyy-MM-dd HH:mm')}</#if></td>
+									<td>${(record.creatorId)!?html}</td>
+									<td><#if record.status == 1>待审核</#if>
+										<#if record.status == 2>审核不通过</#if>
+										<#if record.status == 3>已开票</#if>
+										<#if record.status == 4>已寄送</#if></td>
+									<td class="flexible-btns">
+										<a href="${base}/bmm/invoiceApply/view.do?id=${record.id}" class="btn btn-sm btn-success"> <i class="fa fa-search-plus"></i>查看</a>
+										
+										<!-- <#if record.status == 1><@smm_security_resource resource = "/bmm/invoiceApply/doApply_forward.do">
+										<a href="${base}/bmm/invoiceApply/doApply_forward.do?id=${record.id}" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>处理</a>
+										</@smm_security_resource></#if>
+										
+										<#if record.status == 3><@smm_security_resource resource = "/bmm/invoiceApply/send_forward.do">
+										<a href="${base}/bmm/invoiceApply/send_forward.do?id=${record.id}" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>寄送</a>
+										</@smm_security_resource></#if> -->
+									</td>
+								</tr>
+								</#list> <#else>
+								<tr>
+									<td colspan="12">暂无相关记录</td>
+								</tr>
+								</#if> </#if>
+								</tbody>
+							</table>
+						<#include "../../inc/pagination.html" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+</html>

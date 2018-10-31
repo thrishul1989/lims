@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>产品列表-产品管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script>
+	var base = '${base}'
+</script>
+<script src="${system_js}/report/myEmail.js"></script>
+</head>
+<body class="gray-bg">
+
+	<form id="uploadForm" action="${base}/concludingReport/upload.do" method="post"
+		enctype="multipart/form-data">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox"></div>
+					<div class="ibox ibox-table">
+
+						<input type="hidden" name='orderId' value="${orderId}"> <input type="hidden"
+							name='concludingIds' id="concludingIds" value="${orderId}">
+						<div class="ibox-title">
+							<h5>报告中心/科研结题报告/处理</h5>
+							<#if statu == 0><a href="javascript:submitBtn()" class="btn btn-sm btn-success"> <i class="fa fa-plus"></i>
+								上传报告
+							</a></#if>
+						</div>
+
+
+
+						<div class="ibox-content">
+
+
+							<#if res.reportList?has_content>
+
+							<div class="ibox-title">
+								<h5>结题报告</h5>
+
+							</div>
+
+							<table class="table table-striped table-bordered table-hover " style="table-layout: fixed">
+								<thead>
+									<tr>
+										<th>报告名称</th>
+										<th>报告编号</th>
+										<th>上传时间</th>
+										<th>处理人</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#list res.reportList as report>
+									<tr>
+										<td>${report.concludingReportName!?html}</td>
+										<td>${report.concludingReportCode!?html}</td>
+										<td><#if report.updateTime??>${report.updateTime?string('yyyy-MM-dd hh:mm:ss')}</#if></td>
+										<td>${report.updateName!?html}</td>
+										<td><#if report.concludingReportPath?split(".")[report.concludingReportPath?split(".")?size-1]!?html == 'pdf'>
+										<a class="btn btn-sm btn-success" href="<@download_url fileName=report.concludingReportPath/>" target="_blank"> <i class="fa fa-search-plus"></i>预览
+										</a> </#if>
+										
+										<a class="btn btn-sm btn-success"
+											href="${base}/concludingReport/download.do?fileName=${report.concludingReportPath}">
+												<i class="fa fa-search-plus"></i>下载
+										</a> 
+										<#if statu == 0><a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该报告?"
+											href="${base}/concludingReport/deleteReport?fileCode=${report.concludingReportCode}&orderId=${orderId}">
+												<i class="fa fa-search-plus"></i>删除
+										</a></#if>
+										
+										</td>
+
+									</tr>
+									</#list>
+								</tbody>
+							</table>
+							</#if> <#if res.unDoList?has_content>
+
+							<div class="ibox-title">
+								<h5>待出报告</h5>
+
+							</div>
+
+							<table class="table table-striped table-bordered table-hover " style="table-layout: fixed">
+								<thead>
+									<tr>
+										<#if statu == 0><th>选项</th></#if>
+										<th>检测产品</th>
+										<th>样本编号</th>
+										<th>样本名称</th>
+										<th>检测方法</th>
+										<th>检测状态</th>
+										<th>测序编号</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#list res.unDoList as unDo>
+									<tr>
+										<#if statu == 0><td><input type="checkbox" name="concludingId" class="check-instance"
+											value="${unDo.id}" data-id="${unDo.productName!?html}${unDo.sampleName!?html}"  onclick="checkSelect(this)" ></td></#if>
+										<td>${unDo.productName!?html}</td>
+										<td>${unDo.sampleCode!?html}</td>
+										<td>${unDo.sampleName!?html}</td>
+										<td>${unDo.methodName!?html}</td>
+										<td>${unDo.activeTask!?html}</td>
+										<td>${unDo.lanCode!?html}</td>
+
+
+									</tr>
+									</#list>
+								</tbody>
+							</table>
+							</#if> <#if res.doList?has_content>
+
+							<div class="ibox-title">
+								<h5>已出报告</h5>
+
+							</div>
+
+							<table class="table table-striped table-bordered table-hover " style="table-layout: fixed">
+								<thead>
+									<tr>
+										<th>报告编号</th>
+										<th>检测产品</th>
+										<th>样本编号</th>
+										<th>样本名称</th>
+										<th>检测方法</th>
+										<th>检测状态</th>
+										<th>测序编号</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#list res.doList as do>
+									<tr>
+										<td>${do.concludingReportCode!?html}</td>
+										<td>${do.productName!?html}</td>
+										<td>${do.sampleCode!?html}</td>
+										<td>${do.sampleName!?html}</td>
+										<td>${do.methodName!?html}</td>
+										<td>${do.activeTask!?html}</td>
+										<td>${do.lanCode!?html}</td>
+
+
+									</tr>
+									</#list>
+								</tbody>
+							</table>
+							</#if>
+
+
+
+
+						</div>
+						
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th colspan="2"><div class="col-sm-4 col-sm-offset-2">
+										<a class=" btn btn-primary " type="button"
+											href='${base}/concludingReport/assignedList.do?statu=${statu}'>返回</a>
+									</div></th>
+							</tr>
+						</table>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">上传文件</h4>
+					</div>
+
+					<div class="modal-body">
+						<input type="file" class="file" name="uploadData" id="uploadData" accept=".pdf,.docx" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="submit" class="btn btn-primary" id="butt">提交</button>
+					</div>
+
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+
+	</form>
+
+</body>
+
+
+
+
+
+
+<script>
+	function submitBtn() {
+		$('.fileinput-upload-button').remove();
+		var check = $('input[name="concludingId"]:checked').val();
+		if (typeof (check) == "undefined") {
+
+			alert("请至少选择一条数据！");
+			return;
+
+		}
+		var concludingIds=[];
+		$.each($('input[name="concludingId"]:checked'),function(index,obj){
+			concludingIds.push($(obj).val());
+		})
+		
+		$('#concludingIds').val(concludingIds.join(","));
+
+		$('#myModal').modal('show')
+
+	}
+	
+	
+	function checkSelect(obj){
+		if ($(obj).is(":checked")){
+			
+			var dataid=$(obj).attr('data-id');
+			$.each($('input[name="concludingId"]'),function(index,o){
+				if($(o).attr('data-id') == dataid){
+					 $(o).prop("checked", true);	
+				}
+			})
+           
+        }
+		else if(!$(obj).is(":checked")){
+			var dataid=$(obj).attr('data-id');
+			$.each($('input[name="concludingId"]'),function(index,o){
+				if($(o).attr('data-id') == dataid){
+					 $(o).prop("checked", false);	
+				}
+			})
+		}
+	}
+</script>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>接头管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" >
+                        <ol class="breadcrumb">
+                            <li><a href="${base}/connect/list.do">接头管理</a></li>
+                            <li class="active"><strong>接头列表</strong></li>
+                            
+                            
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+					<div class="ibox-title">
+                           <h5>接头列表</h5>
+                           
+							<a href="${base}/connect/download.do"  class="btn btn-sm btn-success">
+							<i class="fa fa-download"></i> 导出模板
+							</a> 
+							 <@smm_security_resource resource = "/connect/create.do">
+							<a data-toggle="modal" data-target="#formModal" class="btn btn-sm btn-success" onclick="clearData()">
+							<i class="fa fa-plus"></i> 新增
+							</a>
+							</@smm_security_resource>
+							
+							<a class="btn btn-sm btn-success" data-toggle="modal" onclick="clearClass()" data-target="#myModal">
+							<i class="fa fa-folder-open-o"></i> 导入
+							</a>
+                    </div>
+                    
+                    
+                  <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                    
+ 						<!-- <div class="col-sm-2">
+                            <div id="metadata_tree"></div>
+                        </div> -->
+                       
+                        <div class="col-sm-12">
+                        
+	                        <form id="searchconnect_from" action="${base}/connect/list.do" method="post" class="search-form">
+	                        
+	                         <input type="hidden" id="dataObject" name="dataObject"  value="" />
+	                        
+	                            <div class="row m-b-xs">
+	                            
+	                                
+	                               <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" class="form-control" name="connectNum" id="connectNum"  placeholder="请输入接头号" value="${searcher.connectNum!?html}">
+	                                    </div>
+	                                </div>
+	                                <div class="col-sm-3">
+	                                    <div class="form-group">
+	                                        <button type="submit" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 查询
+	                                        </button>
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('searchconnect_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+	                                        <button type="button" class="btn btn-sm btn-success" id="button">
+	                                            <i class="fa fa-download"></i> 导出数据
+	                                        </button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form>
+	                        <table class="table table-striped table-bordered table-hover" id="myTable">
+	                            <thead>
+	                                <tr>
+	                                	<th><input type="checkbox" name="allChecked" id="allChecked"
+										value="" /></th>
+	                                    <th class="index">序号</th>
+	                                    <th>接头号</th>
+	                                    <th>接头序列</th>
+	                                    <th>接头创建时间</th>
+	                                    <th class="flexible-btns">操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if pagination??>
+	                              <#if pagination.records?has_content> 
+	                                <#list pagination.records as record>
+	                                <tr>
+	                              		<td><input type="checkbox" name="choose" class="choose"
+											value="${(record.id)!?html}" /></td>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.connectNum!?html}</td>
+	                                    <td>${record.connectSequence!?html}</td>
+	                                    <td><#if record.createTime??>${(record.createTime)!?string('yyyy-MM-dd')} <#else> </#if></td>
+	                                    
+	                                   	<td class="flexible-btns">
+	                                   	<@smm_security_resource resource = "/connect/modify.do">
+	                                   	<a data-toggle="modal" data-target="#formModal" 
+	                                   	onclick="getConnect(this)" data_id="${(record.id)!?html}"	class="btn btn-sm btn-success"> 
+										<i class="fa fa-edit"></i>修改
+									    </a> 
+									    </@smm_security_resource>
+									    <@smm_security_resource resource = "/connect/delete.do">
+									    <a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该接头?"
+									    href="${base}/connect/delete.do?id=${record.id}"> 
+										<i class="fa fa-trash" ></i>删除
+									    </a>
+									    </@smm_security_resource>
+										</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div>
+     <form id="doanloadData" action="${base}/connect/downloadData.do" style="display: none;">
+     	<input type="text" value="" name="MyData" id="MyData">
+     </form>
+     </div>
+     
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel">Excel导入</h4> 
+            </div> 
+            <form id="uploadForm" action="" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" class="file" name="uploadData" id="uploadData" accept=".xlsx,.xls" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="butt">提交</button>
+                    </div>
+                </form>
+        </div><!-- /.modal-content --> 
+    </div><!-- /.modal --> 
+</div>
+ 
+ 
+ <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel" >接头管理</h4> 
+            </div> 
+            <form class="form-horizontal m-t toggle-form" id="choseForm" action="${base}/connect/create.do" method="post">
+					<input type="hidden" id="id" name="id" value="${(connect.id)!?html}" />
+					<input type="hidden" id="connectNo" name="connectNo" value="${(connect.connectNum)!?html}" />
+					<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+					<div class="search-form">
+							
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">接头号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="connectNum" id="copyNum"
+											value="${(connect.connectNum)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">接头序列：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="connectSequence" 
+											value="${(connect.connectSequence)!?html}" />
+									</div>
+									<input type="hidden" class="form-control" name="createTime" 
+											value="${(connect.createTime)!?html}" />
+								</div>
+								
+
+							</div>
+
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class="btn btn-primary " type="submit" >保存</button>
+									
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</div>
+							
+			</form>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+ 
+ <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+ 
+</body>
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+ <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+ <script type="text/javascript" src="${system_js}/system.js"></script>
+ <script src="${plugins}/pagination/jquery.pagination.js"></script>
+ <script src="${system_js}/fileinput.min.js"></script>
+ <script src="${plugins}/layer/layer.min.js"></script>
+ <!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript">
+var dataObject = [];
+<#if data ??>
+var str = ${data};
+ var arr = str.split(",");
+
+arr.forEach(function(e){
+    dataObject.push(e);
+});
+
+
+$("#dataObject").val(dataObject.join(","));
+</#if>
+
+$(function(){
+
+	$("input[name='allChecked']").click(function() {
+		if ($(this).is(":checked")) {
+			$(".choose").prop("checked",true);
+			 var oneches=document.getElementsByName("choose");
+
+	         for(var i=0;i<oneches.length;i++){
+	             if(oneches[i].checked==true){
+					 if(dataObject.indexOf(oneches[i].value)==-1){
+
+						dataObject.push(oneches[i].value);
+					 }
+				 }
+	         }
+
+		} else {
+			$(".choose").prop("checked",false);
+			
+			 var oneches=document.getElementsByName("choose");
+	         for(var i=0;i<oneches.length;i++){
+	             if(oneches[i].checked==false){
+	            	 if(dataObject.indexOf(oneches[i].value)!=-1){
+	            		var index = dataObject.indexOf(oneches[i].value);
+	            		console.log("--------")
+	     				dataObject.splice(index,1);
+                     }
+				 }
+	         }
+	         
+		} 
+		$("#dataObject").val(dataObject.join(","));
+
+	});
+});
+
+
+$(".choose").on("click",function(){
+	if ($(this).val() != "") {
+            if($(this).is(":checked")){
+           	 //新增
+			 if(dataObject.indexOf($(this).val())==-1){
+				dataObject.push($(this).val());
+			 }
+		 }else{
+			//删除
+			 if(dataObject.indexOf($(this).val())!=-1){
+				var index =  dataObject.indexOf($(this).val());
+				dataObject.splice(index,1);
+			 }
+			
+		 }
+        
+	}
+
+	$("#dataObject").val(dataObject.join(","));
+})
+
+$("#button").click(function(){
+	
+		/* $("input:checkbox:checked").each(function(e) {
+	
+			if ($(this).val() != "") {
+				
+				dataObject.push($(this).val());
+			}
+		}); */
+		//获取所有选中的checkbox id
+
+		
+		if(dataObject.length < 1){
+			parent.layer.alert('请至少选中一条任务！',{title:"提示"});
+		}else{
+
+			var parameter = dataObject.join(",");
+
+			$("#MyData").val(parameter);
+		
+			 $.each($("#myTable").find('input'),function(){
+				$(this).attr("checked",false);  
+		   	}); 
+		 
+		 	$("#doanloadData").submit();
+		}
+	
+	
+});
+
+var checkSubmitFlg = true;
+$("#butt").click(function(){
+	
+	var excelFileName = $('#uploadData').val();
+	var formatStr = '';
+	var index = excelFileName.lastIndexOf('.');
+	if(excelFileName.length == 0){
+		parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+		return ;
+	}else if(index > 0){
+		
+		formatStr = excelFileName.substring(index);
+		if(!(".xlsx" == formatStr||".xls" == formatStr)){
+			
+			parent.layer.alert('请上传excel文件',{title:"提示"});
+			
+			return ;
+		}
+	}
+	$.ajax({
+        url : '/connect/upload',
+        type : 'POST',
+        cache : false,
+        data : new FormData($('#uploadForm')[0]),
+        processData : false,
+        contentType : false
+    }).done(function(data)
+    {
+        if (data == 1)
+        {
+            parent.parent.layer.alert('存在重复数据', {
+                title : "提示"
+            });
+        }else{
+            $('#myModal').modal('hide');
+        }
+        });
+	if(checkSubmitFlg == true){ 
+		checkSubmitFlg = false;
+	} else{
+		parent.layer.alert('不能重复提交',{title:"提示"});
+		return false;  
+	}
+
+});
+
+function getConnect(obj){
+	var id = $(obj).attr('data_id');
+	$.ajax({
+		type:"GET",
+		url:"${base}/connect/connectForm.do?id="+id,
+		success:function(data){
+			$('#id').val(data.id);
+			$('#copyNum').val(data.connectNum);
+			$("input[name='connectSequence']").val(data.connectSequence);
+			var time = FormatDate(new Date(data.createTime))
+			$("input[name='createTime']").val(time);
+			clearClass();
+			changeFormAttr();
+		},
+		error:function(data){
+			alert("failed");
+		}
+	});
+}
+function FormatDate (strTime) {
+    var date = new Date(strTime);
+    return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+}
+function clearClass(){
+	$('.error').text('');
+	$('.error').removeClass('error');
+}
+function clearData(){
+	 if($('#id').val()!=''||$('#id').val()!=null){
+		$('#id').val('');
+		$('#copyNum').val('');
+		$("input[name='connectSequence']").val('');
+		clearClass();
+		$('#choseForm').attr('action', '${base}/connect/create.do'); 
+	} 
+	
+}
+
+$(document).ready(function(){
+	
+	$("#searchconnect_from").validate({
+		 rules: {
+			 connectNum:{
+				 number:true,  
+			 }
+		 }
+	
+	});
+	
+	$("#choseForm").validate({
+ 		 rules: {
+ 			 connectNum:{
+ 				 required:true,
+ 				number:true,   
+ 				 remote:{
+						url: "${base}/connect/checkedconnectNum",
+						type: "post",               
+		        		data: {
+		        		        connectNum: function() {
+		        		            return $("#copyNum").val();
+		        		        },
+		        		        id:function() {
+		        		            return $("#id").val();
+		        		        }
+		        		    }
+		        		}
+ 					 },
+ 		 		},
+ 		 messages:{
+ 			connectNum:{
+ 				 required:"不能为空！" ,
+ 				 remote:"接头号已存在，请重新输入！"
+ 			 },
+ 			
+ 		 }
+ 	});
+});
+
+function changeFormAttr(){
+ 	
+ 	updateID = $('#id').val();
+ 	
+	if(updateID.length > 0){
+     	$('#choseForm').attr('action', '${base}/connect/modify.do'); 
+	}
+}
+
+
+function clearClass(){
+	$('.fileinput-upload-button').remove();
+}
+
+$('#formModal').on('hide.bs.modal', function () {
+	  $('#copyNum-error').remove();
+	  $(".error").css('border','1px solid #e5e6e7');
+	})
+ 
+</script>
+
+                
+                
+</html>
+

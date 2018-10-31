@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.ngs.mybatis.NgsSequecingMachineMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SEQUECING_MACHINE_CODE" property="sequecingMachineCode"
+			jdbcType="VARCHAR" />
+		<collection property="lanList" column="MACHINE_ID"
+			ofType="com.todaysoft.lims.ngs.model.NgsSequecingLan">
+			<id column="LAN_ID" property="id" />
+			<result column="LAN_CODE" property="lanCode" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, SEQUECING_MACHINE_CODE
+	</sql>
+	<select id="countList" resultType="int"
+		parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		select count(*) from NGS_SEQUECING_MACHINE
+	</select>
+
+	<select id="machineList" resultMap="BaseResultMap">
+
+
+		SELECT
+		M.ID,
+		M.SEQUECING_MACHINE_CODE,
+		L.ID AS LAN_ID,
+		L.LAN_CODE,
+		L.MACHINE_ID
+		FROM
+		(
+		SELECT
+		a.*
+		FROM
+		NGS_SEQUECING_MACHINE a
+		LIMIT #{0},#{1}
+		) M
+		LEFT JOIN
+		NGS_SEQUECING_LAN L ON L.MACHINE_ID = M.ID
+
+
+	</select>
+	
+		<select id="allList" resultMap="BaseResultMap">
+
+
+		SELECT
+		ID , SEQUECING_MACHINE_CODE from 
+		NGS_SEQUECING_MACHINE 
+		
+
+
+	</select>
+	
+	
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		M.ID,
+		M.SEQUECING_MACHINE_CODE,
+		L.ID AS LAN_ID,
+		L.LAN_CODE,
+		L.MACHINE_ID
+		FROM
+		NGS_SEQUECING_MACHINE M
+
+		LEFT JOIN NGS_SEQUECING_LAN L ON L.MACHINE_ID = M.ID
+		
+		where M.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		NGS_SEQUECING_MACHINE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		insert into
+		NGS_SEQUECING_MACHINE (ID, SEQUECING_MACHINE_CODE)
+		values
+		(#{id,jdbcType=VARCHAR}, #{sequecingMachineCode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		insert into NGS_SEQUECING_MACHINE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="sequecingMachineCode != null">
+				SEQUECING_MACHINE_CODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingMachineCode != null">
+				#{sequecingMachineCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		update NGS_SEQUECING_MACHINE
+		<set>
+			<if test="sequecingMachineCode != null">
+				SEQUECING_MACHINE_CODE =
+				#{sequecingMachineCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMachine">
+		update
+		NGS_SEQUECING_MACHINE
+		set SEQUECING_MACHINE_CODE =
+		#{sequecingMachineCode,jdbcType=VARCHAR}
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

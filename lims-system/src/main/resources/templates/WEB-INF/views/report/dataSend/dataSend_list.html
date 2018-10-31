@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>产品列表-产品管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+
+<script>
+	var base = '${base}'
+	$(document).ready(function () {
+        $("#prjManager").bsSuggest('init', {
+            url : "${base}/smm/role/getSelectList.do?disableStatus="+0+"&name=",
+            getDataMethod : "url",
+            idField : "id",
+            keyField : "name",
+            indexKey: 0,
+            effectiveFields : [ "name" ],
+            effectiveFieldsAlias : {
+                name : "项目管理人名称"
+            }
+        }).on('onDataRequestSuccess', function (e, result) {
+        }).on('onSetSelectValue', function (e, keyword, data) {
+            $('#projectManager').val(data.id);
+        }).on('onUnsetSelectValue', function () {
+            $('#projectManager').val('');
+        });
+
+    })
+</script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li>数据发送管理</li>
+							<li class="active"><a href="#"><#if searcher.statu == 0>待<#else>已</#if>处理列表</a></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5><#if searcher.statu == 0>待<#else>已</#if>处理列表</h5>
+
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/testingDataSend/assignedList.do?statu=${searcher.statu}" method="post"
+							id="search_from" class="form-horizontal m-t toggle-form">
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="orderCode" class="form-control" placeholder="订单编号"
+										value="${searcher.orderCode!?html}" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="contractCode" class="form-control" placeholder="合同编号"
+										value="${searcher.contractCode!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="contractName" class="form-control" placeholder="合同名称"
+										value="${searcher.contractName!?html}" />
+								</div>
+							</div>
+
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="customerCompany" class="form-control" placeholder="送检单位"
+										value="${searcher.customerCompany!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="customerName" class="form-control" placeholder="客户"
+										value="${searcher.customerName!?html}" />
+								</div>
+							</div>
+
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="examineeName" class="form-control" placeholder="受检人"
+										value="${searcher.examineeName!?html}" />
+								</div>
+							</div>
+
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="sampleCode" class="form-control" placeholder="样本编号"
+										value="${searcher.sampleCode!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+								<div class="input-group">
+									<input type="hidden" value="${searcher.projectManager!?html}" name="projectManager" id="projectManager" />
+									<input type="text" class="form-control" id="prjManager" name="prjManagerName" value="${searcher.prjManagerName!?html}" placeholder="请输入项目管理人" >
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+									</div>
+								</div>
+								</div>
+							</div>
+
+
+
+
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<button type="submit" class="btn btn-sm btn-success">
+										<i class="fa fa-search"></i> 查询
+									</button>
+									<button type="button" class="btn btn-sm btn-success"
+										onclick="clearHiddenCondition('search_from')">
+										<i class="fa fa-remove"></i> 清空
+								</div>
+							</div>
+
+						</form>
+						<table class="table table-striped table-bordered table-hover " style="table-layout: fixed">
+							<thead>
+								<tr>
+									<th>序号</th>
+									<th>订单编号</th>
+									<th>合同编号</th>
+									<th>合同名称</th>
+									<th>客户</th>
+									<th>送检单位</th>
+									<th>业务员</th>
+									<th>项目管理人</th>
+									<th>交付形式</th>
+									<th>交付方式</th>
+									<th>送检日期</th>
+
+									<th>检测进度</th>
+									<th>是否加急</th>
+									<th class="flexible-btns">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pagination??> <#if pagination.records?has_content> <#list pagination.records as record>
+								<tr>
+									<td>${record_index + 1}</td>
+									<td>${record.orderCode!?html}</td>
+									<td>${record.contractCode!?html}</td>
+									<td>${record.contractName!?html}</td>
+									<td>${record.customerName!?html}</td>
+									<td>${record.customerCompany!?html}</td>
+									<td>${record.createName!?html}</td>
+									<td>${record.prjManagerName!?html}</td>
+									<td><#list record.deliveryMode?split(",") as mode> <@dict_entry_text
+										category="DELIVER_FORM" value=mode />&nbsp; </#list></td>
+
+									<td><@dict_entry_text category="DELIVER_TYPE" value=record.deliveryResult /></td>
+
+
+
+									<td><#if record.createTime??>${record.createTime?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+
+									<td>${record.complete!?html}</td>
+									<td>
+										<#if record.ifUrgent??>
+                                    		<#if record.ifUrgent == 1>是</#if>
+                                    	</#if>
+                                    </td>
+									<td><#if record.statu == 0> <@smm_security_resource resource =
+										"/testingDataSend/dataSend.do"> <a class="btn btn-sm btn-success"
+										href="${base}/testingDataSend/dataSend.do?orderId=${record.orderId}"> <i
+											class="fa fa-edit"></i>处理
+									</a></@smm_security_resource> <#else> <@smm_security_resource resource =
+										"/testingDataSend/view.do"> <a class="btn btn-sm btn-success"
+										href="${base}/testingDataSend/view.do?orderId=${record.orderId}"> <i
+											class="fa fa-search-plus"></i>查看
+									</a></@smm_security_resource> </#if>
+									</td>
+								</tr>
+								</#list> </#if> </#if>
+							</tbody>
+						</table>
+						<#include "../../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

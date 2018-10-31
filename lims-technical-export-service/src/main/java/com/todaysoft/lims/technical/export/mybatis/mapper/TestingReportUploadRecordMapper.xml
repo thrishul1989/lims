@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.TestingReportUploadRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="UPLOAD_TIME" property="uploadTime" jdbcType="TIMESTAMP" />
+    <result column="UPLOAD_TYPE" property="uploadType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, REPORT_ID, FILE_NAME, UPLOAD_TIME, UPLOAD_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TESTING_REPORT_UPLOAD_RECORD
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TESTING_REPORT_UPLOAD_RECORD
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" >
+    insert into TESTING_REPORT_UPLOAD_RECORD (ID, REPORT_ID, FILE_NAME, 
+      UPLOAD_TIME, UPLOAD_TYPE)
+    values (#{id,jdbcType=VARCHAR}, #{reportId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{uploadType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" >
+    insert into TESTING_REPORT_UPLOAD_RECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="reportId != null" >
+        REPORT_ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="uploadTime != null" >
+        UPLOAD_TIME,
+      </if>
+      <if test="uploadType != null" >
+        UPLOAD_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null" >
+        #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uploadType != null" >
+        #{uploadType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" >
+    update TESTING_REPORT_UPLOAD_RECORD
+    <set >
+      <if test="reportId != null" >
+        REPORT_ID = #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        UPLOAD_TIME = #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uploadType != null" >
+        UPLOAD_TYPE = #{uploadType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" >
+    update TESTING_REPORT_UPLOAD_RECORD
+    set REPORT_ID = #{reportId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      UPLOAD_TIME = #{uploadTime,jdbcType=TIMESTAMP},
+      UPLOAD_TYPE = #{uploadType,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+	<select id="selectByReportIdAndUploadType" parameterType="com.todaysoft.lims.technical.export.mybatis.model.TestingReportUploadRecord" resultType="java.lang.Integer">
+	    select count(*) from TESTING_REPORT_UPLOAD_RECORD where 1=1
+	    <if test="reportId != null" >
+	       and REPORT_ID = #{reportId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="uploadType != null" >
+	       and UPLOAD_TYPE = #{uploadType,jdbcType=INTEGER}
+	      </if>
+	</select>
+
+</mapper>

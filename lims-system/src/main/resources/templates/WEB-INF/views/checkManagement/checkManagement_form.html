@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>检测方法管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript"src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/avalon.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		changeFormAttr();
+		 $("#checkManagementForm").validate({
+	    	    rules: {
+	    	    	testSample:{required: true},
+	    	    	name: {
+	    	        required: true,
+	    	        remote : {
+	        		    url: "${base}/checkManagement/validate.do",
+	        		    type: "post",               
+	        		    dataType: "json",          
+	        		    data: {
+	        		        name: function() {
+	        		            return $.trim($("#name").val());
+	        		        },
+	        		        id:function() {
+	        		            return $("#id").val();
+	        		        }
+	        		    }
+	        		}
+	    	      },
+	    	    },
+	    	    messages: {
+	    	    	name: {
+	    	        required: "请输入检测名称",
+	    	        remote : "名称已存在"
+	    	      }
+	    	    }
+	    	});
+		//使用绑定事件，对append的dom做增删操作
+		$("#checkManagementForm").on('change', '.next', function() {
+			$(this).css("background-color", "#FFFFCC");
+			var checkText = $(this).find("option:selected").text(); //获取next选中的内容
+			var selectHtml = $(".step").prop('outerHTML');
+			/* alert(selectHtml.find("option"));  */
+			<#if checkList1?has_content>
+			/* alert(123); */
+			selectHtml.replace();
+			</#if>
+			if (checkText == "下一步") {
+				$("#checkManagementForm").append($(this).parents(".step").prop('outerHTML'));
+			}
+			if (checkText == "结束") {
+				$(this).parents('.step').nextAll().remove();
+			}
+		});
+			$("#checkManagementForm").on('change', '.first', function() {
+			var arr1 = [];
+			console.log(arr1);
+			  $('.first').each(function() { 
+				  if(arr1.leng!=0){
+				var id = $(this).val();
+			/* 	alert(id); */
+				/* if($.inArray($(this).val(),arr1)!=-1){
+					alert("不可以设置重复检测方法");
+					$(this).find("option:selected").text('');
+				}else{ */
+				arr1.push(id);
+				/* }  */
+				  }else{
+					  $(this).parents('.step').nextAll().remove();
+				  }
+			 });  
+			console.log(arr1);
+		}); 
+		 	/*  var id = $(this).val();
+			if($.inArray($(this).val(),arr1)!=-1){
+				alert("不可以设置重复检测方法");
+				$(this).find("option:selected").text('');
+			}else{
+			arr1.push(id);
+			}  */
+	});
+	var vm;
+	var inputArrs =[];
+	<#if productProbes??>
+		inputArrs = ${productProbes};
+	</#if>
+	var tanzhenList ; //存放探针信息
+	var maps;  //存放id与数量
+	var qualityMaps; //存放id和质量
+	<#if probeList??>
+		tanzhenList = ${probeList};
+	</#if>
+	
+	<#if countMap??>
+		maps = ${countMap};
+	</#if>
+	
+	<#if qualityMap??>
+	qualityMaps = ${qualityMap};
+	</#if>
+	
+	$(function(){
+		
+		var task = function () {
+			this.probeId=""
+			this.dataSize="0"
+			this.qualitySize="0"
+			
+		};		
+	    
+		var selected ="";
+		vm = avalon.define({
+			$id: "test",
+			inputLists:inputArrs,
+			tanzhenList:tanzhenList,
+			map:maps,
+			qualityMap:qualityMaps,
+			add: function (e) {
+				this.inputLists.push(new task()); 
+			},
+			select:function(e){
+				selected = e.target.value;
+			},
+			select1:function(index){
+				this.inputLists[index].dataSize=maps[selected];
+				this.inputLists[index].qualitySize=qualityMaps[selected];
+			},
+			remove:function(e,index){
+			
+					this.inputLists.splice(index,1);
+				
+			}
+		});
+		
+		avalon.scan();
+		
+		
+		
+		//分析方法
+		$('#analyzeMethod').magicSuggest({
+		    width: 190,
+		    highlight: true,
+		    data:'${base}/analyzeMethod/manageList.do?',
+		    method:'get',
+		    allowFreeEntries:false,
+		    displayField : "coordinate",
+		    renderer: function(v){
+		    return '<div>' +
+		        '<div >' +
+		            '<div class="probe">' + v.coordinate + '</div>' +
+		            '</div>' +
+		        '<div style="clear:both;"></div>';
+		    }
+		}); 
+	});
+
+	function subFrom() {
+		var arr = [];
+		$('.first').each(function() {
+			var check = {};
+			check.id = $(this).val();
+			arr.push(check);
+		});
+		var checks = JSON.stringify(arr);
+		$("#tasks").val(checks);
+		
+		
+		$("#probeArray").val(JSON.stringify(vm.inputLists.$model)); 
+	
+		return setAnalyzeValue();
+	}
+	
+	
+	function setAnalyzeValue(){
+		var analyzeMethodIds=[];
+		var methodList=$('#analyzeMethod').magicSuggest().getSelection();
+		$.each(methodList,function(index,obj){
+			analyzeMethodIds.push(obj.id);
+		});
+		if(analyzeMethodIds ==''){
+			parent.layer.alert('分析方法坐标不能为空！',{title:"提示"});
+			return false;
+	    }
+		$("#analyzeMethodArray").val(analyzeMethodIds.join(","));
+		
+	}
+	
+	
+	
+	function changeFormAttr(){
+		var updateID = '';
+	 	updateID = $("#id").val();
+	 	if(updateID.length >0 ){
+		 $("#actiontitle").text('修改'); 
+	     $('#checkManagementForm').attr('action', '${base}/checkManagement/modify.do'); 
+	     setDeaultMethod(); //方修改的时候获得已关联方法值
+	 	}
+	 	
+	 	
+	}
+	
+	function setDeaultMethod(){
+		 $.ajax({
+             type: "GET",
+             url: "${base}/checkManagement/getMethodListById.do",
+             data: {id:$("#id").val()},
+             dataType: "json",
+             success: function(data){
+            	$('#analyzeMethod').magicSuggest().setSelection(data);
+             }
+         })
+	}
+	function sub(){
+		$('#checkManagementForm').submit();
+	}
+	
+	
+function clearObj(obj){
+	$(obj).parents(".step").find('first').val(null);
+	$(obj).parents(".step").remove();
+}	
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/product/list.do">检测管理</a></li>
+
+							<li class="active"><span id="actiontitle">新增</span></li>
+
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>基本信息</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="checkManagementForm"
+							class="form-horizontal m-t toggle-form" onsubmit="return subFrom()"
+							action="${base}/checkManagement/create.do" method="post">
+							<input type="hidden" name="tasks" id="tasks" />
+							<input type="hidden" id="id" name="id" value="${(data.id)!?html}"/>
+							
+							 <input type="hidden" name="probeArray" id="probeArray" /> <!-- 探针隐藏域 -->
+							  <input type="hidden" name="analyzeMethodArray" id="analyzeMethodArray" /> <!--分析方法隐藏域  -->
+							<div class="search-form">
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">检测管理名称：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(data.name)!?html}" />
+									</div>
+								</div>
+							</div>
+							
+							<!-- by宋健 2016年9月19日19:55:15 -->
+							<div class="search-form">
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">分析方法坐标：</label>
+									<div class="col-sm-3">
+										<div  class="form-control" id="analyzeMethod" name="analyzeMethod"  placeholder="请选择关联分析方法坐标"></div>
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label">检测管理描述：</label>
+								<div class="col-sm-3">
+									<textarea rows="5" cols="121" name="description"   class="form-control"
+										id="description">${(data.description)!?html}</textarea>
+								</div>
+							</div>
+							
+							<div class="ibox-title">
+								<h5>检测配置</h5>
+							</div>
+							
+							<#if checkList1?has_content>
+							<#list checkList1 as check>
+							
+							
+							<div class="ibox-content text-center step">
+								<div class="form-group box">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-3">
+											<select name="taskArray" class="form-control taskId first" id="taskId">
+												<#list checkList as
+												checkTask>
+												<option value="${(checkTask.id)!?html}" <#if (checkTask.taskName!?html) == 
+												(check.taskName!?html)>selected</#if>   >${(checkTask.taskName)!?html}</option>
+												</#list>
+												</select>
+									</div>
+									<label class="col-sm-2 control-label"></label>	
+									<div class="col-sm-3">
+											<select class="form-control  nextSelect next" id="next">
+											<#if (check_has_next)>
+												<option>下一步</option>
+												<option>结束</option>
+												<#else>
+												<option>结束</option>
+												<option>下一步</option>
+												</#if>
+											</select>
+									</div>
+									<div class="col-sm-1" >
+											<input type="button" onclick="clearObj(this)" value="-" />
+									</div>
+								</div>
+							</div>
+							</#list>
+							<#else>
+							<div class="ibox-content text-center step">
+								<div class="form-group box">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-3">
+										<select name="taskArray" class="form-control taskId first" id="taskId">
+											<option value="">===请选择任务===</option> <#list checkList as
+											check>
+											<option value="${check.id!?html}">${check.taskName!?html}</option>
+											</#list>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-3">
+										<select class="form-control  nextSelect next" id="next">
+											<option value="">===请选择===</option>
+											<option>下一步</option>
+											<option>结束</option>
+										</select>
+									</div>
+									<div class="col-sm-1" >
+											<input type="button" onclick="clearObj(this)"value="-" />
+									</div>
+								</div>
+							</div>
+					</div>
+							</#if>
+					
+					</form>
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-2 text-center">
+							<input class="btn btn-primary" type="button" value="提交" onclick="sub()">
+							<button class="btn btn-primary goback" type="button">返回</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>数据拆分</title>
+	<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+	<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+	<link href="${system_css}/animate.min.css" rel="stylesheet">
+	<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<ol class="breadcrumb">
+						<li>
+							<span>生信分析</span>
+						</li>
+						<li class="active">
+							<strong>数据拆分</strong>
+						</li>
+						<div style="float: right;">
+							<a href="javascript:history.go(-1)" target="_self"
+							   style="padding: 0px; position: relative; right: 16px; float: right"> <img
+									src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</ol>
+				</div>
+			</div>
+			<div class="ibox ibox-table">
+				<div class="ibox-title">
+					<h5>数据拆分失败记录查看</h5>
+				</div>
+				<div class="ibox-content">
+					<form id="submit_form" class="form-horizontal m-t" action="${base}/testing/dna_extract_test_submit.do" method="post">
+						<table class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>开始时间</th>
+								<th>结束时间</th>
+								<th>失败原因</th>
+							</tr>
+							</thead>
+							<tbody>
+							<#if records?? && records?has_content>
+								<#list records as record>
+									<tr>
+										<td>${(record_index+1)!?html}</td>
+										<td>${(record.startTime)?string("yyyy-MM-dd HH:mm:ss")}</td>
+										<td>${(record.endTime)?string("yyyy-MM-dd HH:mm:ss")}</td>
+										<td>${(record.failLog)!?html}</td>
+									</tr>
+								</#list>
+								<#else>
+									<tr>
+										<td colspan="4">未查询到相关记录</td>
+									</tr>
+							</#if>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/test/dna_extract_test.js?v=1.0.8"></script>
+<script type="text/javascript">
+	<!--
+	$(function()
+	{
+	});
+	//-->
+</script>
+</html>

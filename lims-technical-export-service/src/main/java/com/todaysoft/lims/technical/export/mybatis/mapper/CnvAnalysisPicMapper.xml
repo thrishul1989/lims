@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.CnvAnalysisPicMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.export.mybatis.model.CnvAnalysisPic">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="SAMPLE_TEST_ID" jdbcType="VARCHAR" property="sampleTestId" />
+		<result column="IMAGE_NAME" jdbcType="VARCHAR" property="imageName" />
+		<result column="IMAGE_URL" jdbcType="VARCHAR" property="imageUrl" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="IS_COLLECTION" property="isCollection" jdbcType="BIT" />
+		<result column="CLINICAL_JUDGMENT" jdbcType="VARCHAR" property="clinicalJudgment" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, SAMPLE_TEST_ID, IMAGE_NAME, IMAGE_URL, CREATE_TIME,
+		UPDATE_TIME,IS_COLLECTION,CLINICAL_JUDGMENT
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.export.mybatis.model.CnvAnalysisPic">
+		insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="sampleTestId != null">
+				SAMPLE_TEST_ID,
+			</if>
+			<if test="imageName != null">
+				IMAGE_NAME,
+			</if>
+			<if test="imageUrl != null">
+				IMAGE_URL,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="isCollection != null">
+				IS_COLLECTION,
+			</if>
+			<if test="clinicalJudgment != null">
+				CLINICAL_JUDGMENT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTestId != null">
+				#{sampleTestId,jdbcType=VARCHAR},
+			</if>
+			<if test="imageName != null">
+				#{imageName,jdbcType=VARCHAR},
+			</if>
+			<if test="imageUrl != null">
+				#{imageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isCollection != null">
+				#{isCollection,jdbcType=BIT},
+			</if>
+			<if test="clinicalJudgment != null">
+				#{clinicalJudgment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="getBySampleTestId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		where SAMPLE_TEST_ID =
+		#{sampleTestId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.export.mybatis.model.CnvAnalysisPic">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC (ID,SAMPLE_TEST_ID,
+		IMAGE_NAME,
+		IMAGE_URL,CREATE_TIME,UPDATE_TIME,IS_COLLECTION,CLINICAL_JUDGMENT)
+		values
+		(
+		#{id,jdbcType=VARCHAR},
+		#{sampleTestId,jdbcType=VARCHAR},
+		#{imageName,jdbcType=VARCHAR},
+		#{imageUrl,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{isCollection,jdbcType=BIT},
+		#{clinicalJudgment,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.export.mybatis.model.CnvAnalysisPic">
+		update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		<set>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=Integer},
+			</if>
+			<if test="sampleTestId != null">
+				SAMPLE_TEST_ID = #{sampleTestId,jdbcType=VARCHAR},
+			</if>
+			<if test="imageName != null">
+				IMAGE_NAME = #{imageName,jdbcType=VARCHAR},
+			</if>
+			<if test="imageUrl != null">
+				IMAGE_URL = #{imageUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.export.mybatis.model.CnvAnalysisPic">
+		update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		set
+		IMAGE_NAME =
+		#{imageName,jdbcType=VARCHAR},
+		IMAGE_URL =
+		#{imageUrl,jdbcType=VARCHAR},
+		UPDATE_TIME =
+		#{updateTime,jdbcType=TIMESTAMP},
+		IS_COLLECTION =
+		#{isCollection,jdbcType=BIT},
+		CLINICAL_JUDGMENT =
+		#{clinicalJudgment,jdbcType=VARCHAR} 
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getDoctorCollectionByAnalysisSampleId" resultMap="BaseResultMap">
+		select p.ID, p.SAMPLE_TEST_ID, p.IMAGE_NAME, p.IMAGE_URL from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC p where
+		SAMPLE_TEST_ID = #{0} and p.ID in
+		(select CNV_ANALYSIS_ID from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_COLLECTION where
+		DOCTOR_ID =#{1} and REF = 'pic')
+
+	</select>
+	
+	<select id="getByIds" parameterType="java.util.List"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		where Id in
+		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			 #{item}
+		 </foreach>
+	</select>
+</mapper>

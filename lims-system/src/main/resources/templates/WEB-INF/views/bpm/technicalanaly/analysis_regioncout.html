@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="widtd=device-widtd, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析-质控信息</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+th{
+text-align: center
+}
+
+td{
+text-align: center
+}
+</style>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+
+</head>
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox ibox-table">
+						<div class="ibox-content" style="overflow: auto">
+							<div class="sys-tabs-cot active">
+								<div class="sys-table-box mr_t20">
+									<div class="sys-input-group">
+										<form action="${base}/testing/analysisRegioncout.jsp"
+											class="search-form">
+											<div class="row m-b-xs">
+												<div class="col-sm-2">
+													<div class="form-group">
+														<input type="text" name="gene" class="form-control"
+															placeholder="请输入基因" value="${search.gene!?html}" />
+															
+															<input type="hidden" name="analysisSampleId" value="${search.analysisSampleId!?html}">
+													</div>
+												</div>
+												<div class="col-sm-3">
+													<div class="form-group">
+														<button
+																class="sys-btn sys-primary-btn sys-btn-mid btn btn-sm btn-success"
+																type="submit">
+															<i class="fa fa-search"></i>查询
+														</button>
+													</div>
+												</div>
+											</div>
+										</form>
+										
+										<table
+										class="table table-striped table-bordered table-hover table-details">
+										<thead>
+											<tr>
+												<th width="50px">序号</th>
+												<th style="text-align: center">染色体</th>
+												<th style="text-align: center">起始位置</th>
+												<th style="text-align: center">结束位置</th>
+												<th style="text-align: center">区域</th>
+												<th style="text-align: center">基因</th>
+												<th style="text-align: center">外显子</th>
+												<th style="text-align: center">长度</th>
+												<th style="text-align: center">read数目</th>
+											</tr>
+										</thead>
+										<tbody>
+											<#if pagination??><#if pagination.records?has_content><#list
+											pagination.records as record>
+											<tr>
+												<td style="text-align: center">${record_index+1}</td>
+												<td style="text-align: center">${record.chr!?html}</td>
+												<td style="text-align: center">${record.start!?html}</td>
+												<td style="text-align: center">${record.stop!?html}</td>
+												<td style="text-align: center">${record.geneSpan!?html}</td>
+												<td style="word-break: break-all;text-align: center">${record.gene!?html}</td>
+												<td style="text-align: center">${record.exon!?html}</td>
+												<td style="text-align: center">${record.len!?html}</td>
+												<td style="text-align: center">${record.readNum!?html}</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="9">暂无数据</td>
+											</tr>
+											</#if></#if>
+										</tbody>
+									</table>
+									<#include "../../inc/pagination.html" />
+									
+									
+									</div>
+
+									
+								</div>
+								
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	</div>
+	</div>
+	</article>
+
+</body>
+
+
+</html>
+

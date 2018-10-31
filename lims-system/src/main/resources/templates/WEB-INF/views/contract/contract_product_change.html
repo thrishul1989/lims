@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>业务库-合同</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/contract_add_contractProcuct.js"></script>
+<style type="text/css">
+.btn-default {
+	background-color: white;
+	color: gray;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated kv-main">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<h2 style="text-align: center;">${(contract.name)!?html}
+						合同产品变更</h2>
+					<div class="ibox-content">
+						<div class="form-horizontal m-t toggle-form">
+							<input type='hidden' id='contractId' value='${(contract.id)}' />
+							<input type='hidden' id='marketingCenter' value='${(contract.marketingCenter)!?html}' />
+							<fieldset>
+								<div class="ibox-content">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>产品名称</th>
+												<th>单价</th>
+												<th>数量</th>
+												<th>价格</th>
+												<th>服务要求</th>
+												<th>产品状态</th>
+												<th class="flexible-btns">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<#if products??> <#if products?has_content> <#list products
+											as p>
+											<tr>
+												<td>${(p.productName)!?html}</td>
+												<td>${(p.realContractPrice)!?html}</td>
+												<td>${(p.signCount)!?html}</td>
+												<td>${(p.realSignAmount)!?html}</td>
+												<td>${(p.requirement)!?html}</td>
+												<td><#if p.productStatus == 1>启用<#else>禁用</#if></td>
+												<td><a onclick='canDelete(this)'
+													proId='${(p.productId)}'>删除</a></td>
+											</tr>
+											</#list> </#if> </#if>
+										</tbody>
+									</table>
+
+
+									<div id="mainContent">
+										<div class="form-group">
+											<label class="col-sm-4 control-label"></label> <a
+												onclick="addMain(this)" style="float: right;"
+												class="btn btn-sm btn-success">新增产品 </a>
+										</div>
+										<div class="mainGroup">
+											<div class="form-group">
+												<label class="col-sm-2 control-label control-required">检测产品：</label>
+												<div class="col-sm-3">
+													<div class="form-control testProduct" id="contractPro"
+														placeholder="请选择检测产品"></div>
+												</div>
+
+												<label class="col-sm-2 control-label control-required">单价：</label>
+												<div class="col-sm-3">
+													<input type="text" class="form-control" onblur = getPriceByContractPrice(this)
+														name="contractPrice" id='contractPrice'
+														value="${(conProduct.contractPrice)!?html}" />
+												</div>
+
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label">数量：</label>
+												<div class="col-sm-3">
+													<input type="text" class="form-control" name="signCount" onblur = getPriceBySignCount(this)
+														id="signCount" value="${(conProduct.signCount)!?html}" />
+												</div>
+
+												<label class="col-sm-2 control-label">价格：</label>
+												<div class="col-sm-3">
+													<input type="text" class="form-control" name="signAmount"
+														id='signAmount' value="${(conProduct.signAmount)!?html}" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label">服务要求：</label>
+												<div class="col-sm-8">
+													<textarea class="form-control" rows="3" name="requirement">${(conProduct.requirement)!?html}</textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-4 text-center">
+											<button class=" btn btn-primary" onclick='insertProduct()'>提交</button>
+
+											<button class=" btn btn-primary goback" type="button">返回</button>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div style="display: none">
+
+		<div class="sampleTag">
+			<img src="${system_images}/rubish.png"
+				style="float: right; cursor: pointer;" onclick="removeMain(this)" />
+			<div class="form-group">
+				<label class="col-sm-2 control-label ">检测产品：</label>
+				<div class="col-sm-3">
+					<div class="form-control testProduct" placeholder="请选择检测产品"></div>
+				</div>
+
+				<label class="col-sm-2 control-label control-required">单价：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control price" onblur = getPriceByContractPrice(this) name="contractPrice" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label control-required">数量：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" onblur = getPriceBySignCount(this) name="signCount" />
+				</div>
+				<label class="col-sm-2 control-label control-required">价格：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="signAmount" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label control-required">服务要求：</label>
+				<div class="col-sm-8">
+					<textarea class="form-control" rows="3" name="requirement"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="${base}/contract/downloadData.do" method="post"
+		name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue" id="formValue" value="">
+	</form>
+</body>
+<script type="text/javascript">
+	var productsString = "";
+	<#if productsString??>
+		productsString = "${productsString!?html}";
+	</#if>
+	var system_images = "${system_images}";
+	var base = '${base}';
+	
+</script>
+
+</html>

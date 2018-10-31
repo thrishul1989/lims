@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.ReportExportCapcnvResultMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.ReportExportCapcnvResult" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="CNV_ANALYSIS_PIC_ID" property="cnvAnalysisPicId" jdbcType="VARCHAR" />
+    <result column="GENE" property="gene" jdbcType="VARCHAR" />
+    <result column="MISSING_AREA" property="missingArea" jdbcType="VARCHAR" />
+    <result column="EXON" property="exon" jdbcType="VARCHAR" />
+    <result column="INHERIT_SOURCE" property="inheritSource" jdbcType="VARCHAR" />
+    <result column="RELATED_DISEASE" property="relatedDisease" jdbcType="VARCHAR" />
+    <result column="AREA_SIZE" property="areaSize" jdbcType="VARCHAR" />
+    <result column="PATHOGENIC_LEVEL" property="pathogenicLevel" jdbcType="VARCHAR" />
+    <result column="MUTATION_COMMENT" property="mutationComment" jdbcType="VARCHAR" />
+    <result column="MISSING_TYPE" property="missingType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TASK_ID, CNV_ANALYSIS_PIC_ID, GENE, MISSING_AREA, EXON, INHERIT_SOURCE, RELATED_DISEASE, 
+    AREA_SIZE, PATHOGENIC_LEVEL, MUTATION_COMMENT, MISSING_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_CAPCNV_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from REPORT_EXPORT_CAPCNV_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCapcnvResult" >
+ 	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+		select replace(uuid(),'-','') from dual
+	</selectKey>
+    insert into REPORT_EXPORT_CAPCNV_RESULT (ID, TASK_ID, CNV_ANALYSIS_PIC_ID, 
+      GENE, MISSING_AREA, EXON, 
+      INHERIT_SOURCE, RELATED_DISEASE, AREA_SIZE, 
+      PATHOGENIC_LEVEL, MUTATION_COMMENT, MISSING_TYPE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{cnvAnalysisPicId,jdbcType=VARCHAR}, 
+      #{gene,jdbcType=VARCHAR}, #{missingArea,jdbcType=VARCHAR}, #{exon,jdbcType=VARCHAR}, 
+      #{inheritSource,jdbcType=VARCHAR}, #{relatedDisease,jdbcType=VARCHAR}, #{areaSize,jdbcType=VARCHAR}, 
+      #{pathogenicLevel,jdbcType=VARCHAR}, #{mutationComment,jdbcType=VARCHAR}, #{missingType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCapcnvResult" >
+ 	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+		select replace(uuid(),'-','') from dual
+	</selectKey>
+    insert into REPORT_EXPORT_CAPCNV_RESULT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="cnvAnalysisPicId != null" >
+        CNV_ANALYSIS_PIC_ID,
+      </if>
+      <if test="gene != null" >
+        GENE,
+      </if>
+      <if test="missingArea != null" >
+        MISSING_AREA,
+      </if>
+      <if test="exon != null" >
+        EXON,
+      </if>
+      <if test="inheritSource != null" >
+        INHERIT_SOURCE,
+      </if>
+      <if test="relatedDisease != null" >
+        RELATED_DISEASE,
+      </if>
+      <if test="areaSize != null" >
+        AREA_SIZE,
+      </if>
+      <if test="pathogenicLevel != null" >
+        PATHOGENIC_LEVEL,
+      </if>
+      <if test="mutationComment != null" >
+        MUTATION_COMMENT,
+      </if>
+      <if test="missingType != null" >
+        MISSING_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisPicId != null" >
+        #{cnvAnalysisPicId,jdbcType=VARCHAR},
+      </if>
+      <if test="gene != null" >
+        #{gene,jdbcType=VARCHAR},
+      </if>
+      <if test="missingArea != null" >
+        #{missingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="exon != null" >
+        #{exon,jdbcType=VARCHAR},
+      </if>
+      <if test="inheritSource != null" >
+        #{inheritSource,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedDisease != null" >
+        #{relatedDisease,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSize != null" >
+        #{areaSize,jdbcType=VARCHAR},
+      </if>
+      <if test="pathogenicLevel != null" >
+        #{pathogenicLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="mutationComment != null" >
+        #{mutationComment,jdbcType=VARCHAR},
+      </if>
+      <if test="missingType != null" >
+        #{missingType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCapcnvResult" >
+    update REPORT_EXPORT_CAPCNV_RESULT
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisPicId != null" >
+        CNV_ANALYSIS_PIC_ID = #{cnvAnalysisPicId,jdbcType=VARCHAR},
+      </if>
+      <if test="gene != null" >
+        GENE = #{gene,jdbcType=VARCHAR},
+      </if>
+      <if test="missingArea != null" >
+        MISSING_AREA = #{missingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="exon != null" >
+        EXON = #{exon,jdbcType=VARCHAR},
+      </if>
+      <if test="inheritSource != null" >
+        INHERIT_SOURCE = #{inheritSource,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedDisease != null" >
+        RELATED_DISEASE = #{relatedDisease,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSize != null" >
+        AREA_SIZE = #{areaSize,jdbcType=VARCHAR},
+      </if>
+      <if test="pathogenicLevel != null" >
+        PATHOGENIC_LEVEL = #{pathogenicLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="mutationComment != null" >
+        MUTATION_COMMENT = #{mutationComment,jdbcType=VARCHAR},
+      </if>
+      <if test="missingType != null" >
+        MISSING_TYPE = #{missingType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCapcnvResult" >
+    update REPORT_EXPORT_CAPCNV_RESULT
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      CNV_ANALYSIS_PIC_ID = #{cnvAnalysisPicId,jdbcType=VARCHAR},
+      GENE = #{gene,jdbcType=VARCHAR},
+      MISSING_AREA = #{missingArea,jdbcType=VARCHAR},
+      EXON = #{exon,jdbcType=VARCHAR},
+      INHERIT_SOURCE = #{inheritSource,jdbcType=VARCHAR},
+      RELATED_DISEASE = #{relatedDisease,jdbcType=VARCHAR},
+      AREA_SIZE = #{areaSize,jdbcType=VARCHAR},
+      PATHOGENIC_LEVEL = #{pathogenicLevel,jdbcType=VARCHAR},
+      MUTATION_COMMENT = #{mutationComment,jdbcType=VARCHAR},
+      MISSING_TYPE = #{missingType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectByTaskId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from REPORT_EXPORT_CAPCNV_RESULT
+		where task_Id = #{taskID,jdbcType=VARCHAR}  
+  </select>
+</mapper>

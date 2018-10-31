@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>sanger检测</span>
+                            </li>
+                            <li class="active">
+                                <strong>报告数据</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>任务列表</h5>
+                        <a href="#" id="btn_assign" class="btn btn-sm btn-success">
+                            <i class="fa fa-plus"></i> 下达任务单
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form action="${base}/testing/reportSangerList.do" method="post" class="search-form form-inline">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">测序编号：</label>
+                                    <input type="text" class="form-control" name="sequencingCode" value="${(searcher.sequencingCode)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">营销中心：</label>
+                                    <select class="form-control" name="marketingCenter" data-value="${(searcher.marketingCenter)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">临床遗传</option>
+                                        <option value="2">临床肿瘤</option>
+                                        <option value="3">健康筛查</option>
+                                        <option value="4">科技服务</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fa fa-search"></i> 查询
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" class="check-controller" /></th>
+                                    <th class="index">序号</th>
+                                    <th>实验进度</th>
+                                    <th>测序编号</th>
+                                    <th>产品编号</th>
+                                    <th>样本编号</th>
+                                    <th>样本名称</th>
+                                    <th>营销中心</th>
+                                    <th>检测产品</th>
+                                    <th>送检单位</th>
+                                    <th>报告日期</th>
+                                    <th>客户姓名</th>
+                                    <th>业务负责人</th>
+                                    <th>技术负责人</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if tasks?? && tasks?has_content> <#list tasks as record>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="check-instance" value="${record.id!}" data-doctorAssist="${record.doctorAssist!}"/>
+                                    </td>
+                                    <td>${(record_index + 1)!?html}</td>
+                                    <td>${(record.completeNum)!?html}/${(record.totalNum)!?html}</td>
+                                    <td>${(record.sequencingCode)!?html}</td>
+                                    <td>${(record.productCode)!?html}</td>
+                                    <td>${(record.receivedSampleCode)!?html}</td>
+                                    <td>${(record.receivedSampleName)!?html}</td>
+                                    <td>${(record.marketingCenter)!?html}</td>
+                                    <td title="${(record.productName)!?html}"><#if record.productName?length gt 16>${(record.productName)[0..15]}...<#else>${(record.productName)!?html}</#if></td>
+                                    <td>${(record.customerCompanyName)!?html}</td>
+                                    <td><#if record.reportDate??>${record.reportDate?string('yyyy-MM-dd')}</#if></td>
+                                    <td>${(record.customerName)!?html}</td>
+                                    <td>${(record.businessLeader)!?html}</td>
+                                    <td>${(record.technicalPrincipal)!?html}</td>
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="14">暂无技术分析任务</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="assign_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">下达任务单-报告数据</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="assign_frame" src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="released">下达</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <script src="${system_js}/testing/sangerTest/process/report_sanger.js?v=1.0.1"></script>
+</body>
+</html>

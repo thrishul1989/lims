@@ -1,0 +1,96 @@
+<span id="table" style="display: none">
+    <style>
+#printTable td, #printTable th {
+   border: 1px solid ;  font-size: 15px; font-family: 宋体; font-weight: bold; color: black; width: 500px
+}
+
+#printTable tr{
+    height: 25px;
+}
+
+</style>
+<span id="printTable">
+
+						<div class="ibox-title">
+							<h5>样本清单</h5>
+						</div>
+                        <#if sampleBackApply.map?has_content>
+                        <#list sampleBackApply.map?keys as testKey>
+                        <table class="table table-striped table-bordered table-hover table-responsive">
+                                <tr>
+                                <th class="col-sm-1">订单编号：</th>
+                                <td class="col-sm-2">${testKey}</td>
+                                </tr>
+                          </table>  
+						<table class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>样本编号</th>
+                                    <th>样本名称</th>
+                                    <th>样本类型</th>
+                                    <th>核酸浓度</th>
+                                    <th>样本位置</th>
+                                    <th>样本体积</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                         <#list sampleBackApply.map[testKey] as sampleBackRelation>
+                            <tbody>
+                            <td>${(sampleBackRelation.sampleCode)!?html}</td>
+                            <td>${(sampleBackRelation.ownerName)!?html}</td>
+                            <td>${(sampleBackRelation.sampleTypeName)!?html}</td>
+                            <td></td>
+                            <td>${(sampleBackRelation.locationCode)!?html}</td>
+                                   <td class="volumn"></td>
+                                    <td class="remark"></td>
+                            </tbody>
+                            <#if sampleBackApply.backType=='1'>
+                            <#if (sampleBackRelation.testingSample)??>
+                             <tbody>
+                            <td>${(sampleBackRelation.testingSample.sampleCode)!?html}</td>
+                            <td>${(sampleBackRelation.ownerName)!?html}</td>
+                            <td>${(sampleBackRelation.testingSample.sampleTypeName)!?html}</td>
+                            <td>${(sampleBackRelation.testingSample.dnaAttributes.concn)!?html}</td>
+                            <td>${(sampleBackRelation.testingSample.locationCode)!?html}</td>
+                                    <td class="volumn"></td>
+                                    <td class="remark"></td>
+                            </tbody>
+                            </#if>
+                            </#if>
+                            </#list>
+							</table>
+                            </#list>
+                            </#if>
+                            <#if (sampleBackApply.status)??>
+                            <#if sampleBackApply.status=='1'>
+                            <div class="ibox-title">
+                            <h5>寄送信息</h5>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover table-responsive">
+                            </table>
+                            
+                            </#if>
+                            </#if>
+                            </span>
+<script src="${system_js}/LodopFuncs.js"></script>
+<script type="text/javascript">
+var LODOP;
+
+function myPreview()
+{
+    LODOP = getLodop();
+    LODOP.PRINT_INITA(0, 0, 522, 333, "打印控件功能演示");
+    LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+    createContent();
+    LODOP.PREVIEW();
+};
+
+function createContent()
+{
+    var strStyle = "<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse}</style>"
+
+        LODOP.ADD_PRINT_HTML(20,25,"95%",700,'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/animate.min.css" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">' + document.getElementById("table").innerHTML);
+        
+}
+
+</script>

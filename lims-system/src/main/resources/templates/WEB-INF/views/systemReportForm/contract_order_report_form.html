@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>合同报表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报表统计</a>
+							<li><a href="#">系统报表</a>
+							<li><a href="#">合同报表</a>
+						</ol>
+					</div>
+					<div class="ibox ibox-table">
+						<form action="#" method="post" class="form-horizontal m-t"
+							id="search_from">
+							<div class="form-group">
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="name" id="name"
+										placeholder="合同名称">
+								</div>
+								<div class="col-sm-2">
+									<div class="form-control" id="business" placeholder="请选择业务员"></div>
+									<input type="hidden" name="signUser" />
+								</div>
+								<div class="col-sm-2">
+									<select class='form-control' name="marketingCenter">
+										<option selected value="">--请选择营销中心--</option>
+										<#if testingTypeList??> 
+												<#list testingTypeList as entry>
+												<option value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+											</#if>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<select class="form-control" id="status"
+										name="status">
+										<option value="">--请选择状态--</option>
+										<option value="1">待办理</option>
+										<option value="2">已确认</option>
+										<option value="2-1">合同期满</option>
+										<option value="3">已结项</option>
+										<option value="0">草稿</option>
+									</select>
+								</div>
+								<input type="hidden" id="colNames" name="colNames">
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-sm btn-primary"
+										onclick="exportContract()"> <i class="fa fa-print"></i> 导出
+									</a>
+								</div>
+							</div>
+						</form>
+						<fieldset>
+							<legend>
+								<div>基本信息&nbsp; &nbsp; <input type="checkbox" id="baseInfoSelect" name="baseInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="合同编号" checked="checked">合同编号
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="合同名称">合同名称
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="合同状态">合同状态
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="合同有效期">合同有效期
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="合同截止日期">合同截止日期
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="营销中心">营销中心
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="业务员">业务员
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="签订日期">签订日期
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="是否入院">是否入院
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="开票形式">开票形式
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="启动方式">启动方式
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="baseInfo" value="备注说明">备注说明
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>甲方信息&nbsp; &nbsp; <input type="checkbox" id="partyAInfoSelect" name="partyAInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo" value="甲方">甲方
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo" value="联系人">联系人
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo" value="电话">电话
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo"  value="邮箱">邮箱
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo" value="邮编">邮编
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo"  value="发票抬头">发票抬头
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyAInfo" value="地址">地址
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>乙方信息&nbsp; &nbsp; <input type="checkbox" id="partyBInfoSelect" name="partyBInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="乙方">乙方
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="联系人">联系人
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="电话">电话
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="开户银行">开户银行
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="账号">账号
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="partyBInfo" value="开户名称">开户名称
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>成果交付&nbsp; &nbsp; <input type="checkbox" id="successDeliverySelect" name="successDeliverySelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="successDelivery" value="交付形式">交付形式
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="successDelivery" value="交付方式">交付方式
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>结算方式&nbsp; &nbsp; <input type="checkbox" id="settlementInfoSelect" name="settlementInfoSelect">全选</div>
+							</legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="settlementInfo"  value="结算方式">结算方式
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="settlementInfo"  value="付款明细">付款明细
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="settlementInfo"  value="合同总额">合同总额
+									</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>产品列表&nbsp; &nbsp; <input type="checkbox" id="productInfoSelect" name="productInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="productInfo" value="产品名称">产品名称
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="productInfo" value="单价">单价
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="productInfo" value="数量">数量
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="productInfo" value="价格">价格
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="productInfo" value="服务要求">服务要求
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>实验信息&nbsp; &nbsp; <input type="checkbox" id="testInfoSelect" name="testInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="testInfo" value="样本种属">样本种属
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="testInfo" value="样本类型">样本类型
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>合同原件&nbsp; &nbsp; <input type="checkbox" id="contractOriginalSelect" name="contractOriginalSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractOriginal" value="合同文件名">合同文件名
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractOriginal" value="更新时间">更新时间
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>合同对象信息&nbsp; &nbsp; <input type="checkbox" id="contractUserInfoSelect" name="contractUserInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="姓名">姓名
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="手机号">手机号
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="性别">性别
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="科室">科室
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="单位">单位
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="contractUserInfo" value="职称">职称
+							</div>
+						</fieldset>
+						<br>
+						<fieldset>
+							<legend>
+								<div>变更业务员信息&nbsp; &nbsp; <input type="checkbox" id="changeUserInfoSelect" name="changeUserInfoSelect">全选</div>
+							</legend>
+							<div class="col-sm-2">
+								<input type="checkbox" name="changeUserInfo" value="变更前业务员">变更前业务员
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="changeUserInfo" value="变更后业务员">变更后业务员
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="changeUserInfo" value="操作人">操作人
+							</div>
+							<div class="col-sm-2">
+								<input type="checkbox" name="changeUserInfo" value="操作时间">操作时间
+							</div>
+							
+						</fieldset>
+						<form action="${base}/testSheet/downloadFile" method="post"
+							name="hiddForm" id="hiddForm">
+							<input type="hidden" name="formValue" id="formValue" value="">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript">
+
+    //基本信息全选
+    $("#baseInfoSelect").click(function() {
+        if ($('#baseInfoSelect').is(':checked')) {
+            $("input:checkbox[name='baseInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='baseInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //甲方信息全选
+    $("#partyAInfoSelect").click(function() {
+        if ($('#partyAInfoSelect').is(':checked')) {
+            $("input:checkbox[name='partyAInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='partyAInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //乙方信息全选
+    $("#partyBInfoSelect").click(function() {
+        if ($('#partyBInfoSelect').is(':checked')) {
+            $("input:checkbox[name='partyBInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='partyBInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //成果交付全选
+    $("#successDeliverySelect").click(function() {
+        if ($('#successDeliverySelect').is(':checked')) {
+            $("input:checkbox[name='successDelivery']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='successDelivery']:checkbox").prop('checked', false);
+        }
+    });
+    //结算方式全选
+    $("#settlementInfoSelect").click(function() {
+        if ($('#settlementInfoSelect').is(':checked')) {
+            $("input:checkbox[name='settlementInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='settlementInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //产品列表全选
+    $("#productInfoSelect").click(function() {
+        if ($('#productInfoSelect').is(':checked')) {
+            $("input:checkbox[name='productInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='productInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //实验信息全选
+    $("#testInfoSelect").click(function() {
+        if ($('#testInfoSelect').is(':checked')) {
+            $("input:checkbox[name='testInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='testInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //合同原件全选
+    $("#contractOriginalSelect").click(function() {
+        if ($('#contractOriginalSelect').is(':checked')) {
+            $("input:checkbox[name='contractOriginal']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='contractOriginal']:checkbox").prop('checked', false);
+        }
+    });
+    //合同对象信息全选
+    $("#contractUserInfoSelect").click(function() {
+        if ($('#contractUserInfoSelect').is(':checked')) {
+            $("input:checkbox[name='contractUserInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='contractUserInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //变更业务员信息全选
+    $("#changeUserInfoSelect").click(function() {
+        if ($('#changeUserInfoSelect').is(':checked')) {
+            $("input:checkbox[name='changeUserInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='changeUserInfo']:checkbox").prop('checked', false);
+        }
+    });
+
+	var s = $('#business').magicSuggest(
+			{
+				width : 190,
+				highlight : true,
+				data : '${base}/business/businessSelect',
+				method : 'get',
+				queryParam : "realName",
+				maxSelection : 1,
+				displayField : "realName",
+				allowFreeEntries : false,
+				renderer : function(v) {
+					return '<div>' + '<div >' +
+
+					'<span>' + v.realName + '</span>'
+							+ '<span style="float:right;">' + v.phoneNum
+							+ '</span>' + '</div>'
+							+ '<div style="clear:both;"></div>';
+				}
+			});
+	function exportContract()
+	{
+		var colNameMap={};
+		var baseInfo = [];
+		var partyAInfo = [];
+		var partyBInfo = [];
+		var successDelivery = [];
+		var settlementInfo = [];
+		var productInfo = [];
+		var testInfo = [];
+		var contractOriginal = [];
+		var contractUserInfo = [];
+		var changeUserInfo = [];
+		$("input:checkbox[name='baseInfo']:checked").each(function() {
+			baseInfo.push($(this).val());
+		});
+		$("input:checkbox[name='partyAInfo']:checked").each(function() {
+			partyAInfo.push($(this).val());
+		});
+		$("input:checkbox[name='partyBInfo']:checked").each(function() {
+			partyBInfo.push($(this).val());
+		});
+		$("input:checkbox[name='successDelivery']:checked").each(function() {
+			successDelivery.push($(this).val());
+		});
+		$("input:checkbox[name='settlementInfo']:checked").each(function() {
+			settlementInfo.push($(this).val());
+		});
+		$("input:checkbox[name='productInfo']:checked").each(function() {
+			productInfo.push($(this).val());
+		});
+		$("input:checkbox[name='testInfo']:checked").each(function() {
+			testInfo.push($(this).val());
+		});
+		$("input:checkbox[name='contractOriginal']:checked").each(function() {
+			contractOriginal.push($(this).val());
+		});
+		$("input:checkbox[name='contractUserInfo']:checked").each(function() {
+			contractUserInfo.push($(this).val());
+		});
+		$("input:checkbox[name='changeUserInfo']:checked").each(function() {
+			changeUserInfo.push($(this).val());
+		});
+		if(baseInfo.length==0 && partyAInfo.length==0 && partyBInfo.length==0 && successDelivery.length==0 && settlementInfo.length==0 && productInfo.length==0 && testInfo.length==0 && contractOriginal.length==0 && contractUserInfo.length==0 && changeUserInfo.length==0)
+		{
+			alert("请至少选择一列!");
+			return false;
+		}
+		var flag = false;
+		if(baseInfo.length>0)
+		{
+			for(var i = 0;i<baseInfo.length;i++)
+			{
+				if("合同编号" == baseInfo[i])
+				{
+					flag =true;
+				}
+			}
+			colNameMap.baseInfo = baseInfo;
+		}
+		if(!flag)
+		{
+			alert("请选择合同编号!");
+			return false;
+		}
+		if(partyAInfo.length>0)
+		{
+			colNameMap.partyAInfo = partyAInfo;
+		}
+		if(partyBInfo.length>0)
+		{
+			colNameMap.partyBInfo = partyBInfo;
+		}
+		if(successDelivery.length>0)
+		{
+			colNameMap.successDelivery = successDelivery;
+		}
+		if(settlementInfo.length>0)
+		{
+			colNameMap.settlementInfo = settlementInfo;
+		}
+		if(productInfo.length>0)
+		{
+			colNameMap.productInfo = productInfo;
+		}
+		if(testInfo.length>0)
+		{
+			colNameMap.testInfo = testInfo;
+		}
+		if(contractOriginal.length>0)
+		{
+			colNameMap.contractOriginal = contractOriginal;
+		}
+		if(contractUserInfo.length>0)
+		{
+			colNameMap.contractUserInfo = contractUserInfo;
+		}
+		if(changeUserInfo.length>0)
+		{
+			colNameMap.changeUserInfo = changeUserInfo;
+		}
+		$('#colNames').val(JSON.stringify(colNameMap));
+		var business = $('#business').magicSuggest().getSelection()[0];
+		if(undefined != business){
+			$('input[name="signUser"]').val(business.id);
+		} 
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+
+		$.ajax({
+			type : "POST",
+			url : "/systemReportForm/contractDownload.do",
+			data : $('#search_from').serialize(),
+			success : function(sessionId) {
+				//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+				var timer=window.setInterval(function(){
+					$.ajax({
+						type : "GET",
+						url : "/testing/searchExportResult.do?sessionId="+sessionId,
+						success : function(result) {
+							if('' != result)
+							{
+								window.clearInterval(timer);
+								layerObject.close(loadindex);
+								$("#formValue").val(result);
+								$("#hiddForm").submit();
+							}
+						},
+						error : function() {
+							alert("failed");
+							layerObject.close(loadindex);
+						}
+					});
+				},5000);
+			},
+			error : function() {
+				alert("failed");
+				layerObject.close(loadindex);
+			}
+		});
+
+
+
+	}
+	
+</script>
+</html>

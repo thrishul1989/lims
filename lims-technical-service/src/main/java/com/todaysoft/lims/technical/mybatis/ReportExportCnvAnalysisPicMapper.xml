@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todaysoft.lims.technical.mybatis.ReportExportCnvAnalysisPicMapper">
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.ReportExportCnvAnalysisPic">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TASK_ID" jdbcType="VARCHAR" property="taskId" />
+    <result column="CNV_ANALYSIS_PIC_ID" jdbcType="VARCHAR" property="cnvAnalysisPicId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, TASK_ID, CNV_ANALYSIS_PIC_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_CNV_ANALYSIS_PIC
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from REPORT_EXPORT_CNV_ANALYSIS_PIC
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCnvAnalysisPic">
+ 	<selectKey keyProperty="id" resultType="String" order="BEFORE">
+		select replace(uuid(),'-','') from dual
+	</selectKey>
+    insert into REPORT_EXPORT_CNV_ANALYSIS_PIC (ID, TASK_ID, CNV_ANALYSIS_PIC_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{cnvAnalysisPicId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCnvAnalysisPic">
+    insert into REPORT_EXPORT_CNV_ANALYSIS_PIC
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="taskId != null">
+        TASK_ID,
+      </if>
+      <if test="cnvAnalysisPicId != null">
+        CNV_ANALYSIS_PIC_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisPicId != null">
+        #{cnvAnalysisPicId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCnvAnalysisPic">
+    update REPORT_EXPORT_CNV_ANALYSIS_PIC
+    <set>
+      <if test="taskId != null">
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisPicId != null">
+        CNV_ANALYSIS_PIC_ID = #{cnvAnalysisPicId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReportExportCnvAnalysisPic">
+    update REPORT_EXPORT_CNV_ANALYSIS_PIC
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      CNV_ANALYSIS_PIC_ID = #{cnvAnalysisPicId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByTaskId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from REPORT_EXPORT_CNV_ANALYSIS_PIC
+		where task_Id = #{taskID,jdbcType=VARCHAR}  
+  </select>
+  
+</mapper>

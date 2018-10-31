@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+.ifpass {
+	background-color: red;
+	border: 10px groove blue;
+	width: 300;
+	height: 300;
+	filter: progid:DXImageTransform.microsoft.gradient(gradienttype=1,
+		startColorStr=cyan, endColorStr=red);
+}
+</style>
+</head>
+<body class="gray-bg form-horizontal m-t">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">代办事项</a></li>
+							<li class="active"><strong>生信分析</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox form-horizontal m-t">
+					<div class="ibox-title">
+						<div class="form-group">
+							<input type="hidden" id="sheetid" value="${(sheet.id)!?html}">
+							<input type="hidden" id="semantic"
+								value="${(sheet.semantic)!?html}">
+								<input type="hidden" id="taskActivitiId" value="${sheet.activitiTaskId}"> <input type="hidden"
+								id="taskId" value="${(sheet.taskId)!?html}"> <label
+								class="col-sm-1 control-label">任务编号：</label>
+							<div class="col-sm-2">
+								<input type="text" class="form-control" name="code" id="code"
+									value="${(sheet.code)!?html}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">任务描述：</label> <label
+								class="col-sm-2 control-label" style="text-align: left">${(sheet.description)!?html}</label>
+						<input class="btn btn-primary" type="button" onclick="downloadData()" 
+									style="float: right;"	value="导出任务单"></input> 
+						</div>
+					</div>
+					<div class="ibox-content">
+						<table
+							class="table table-striped table-bordered table-hover table-responsive"
+							id="table">
+							<thead>
+								<tr>
+									<td>捕获测序号</td>
+									<td>数据编号</td>
+									<th>待分析样本</th>
+									<th>对照样本</th>
+									<th>文库号</th>
+									<th>接头编号</th>
+									<th>分析坐标</th>
+									<th>检测项目</th>
+									<th>样本名称</th>
+									<th>接收类型</th>
+									<th>受检人姓名</th>
+									<th>性别</th>
+									<th>送检单位</th>
+									<th>其他备注</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if sheet?has_content> <#list sheet.sheetTaskList as record>
+								<tr class="trData">
+									<input type="hidden" id="activitiTaskId"
+										value="${(record.activitiTaskId)!?html}">
+									<input type="hidden" id="testingSheetTaskId"
+										value="${(record.id)!?html}">
+									<input class="activitiTaskId" type="hidden" value="${(record.activitiTaskId)!?html}">	
+									<td class="wkbhCode">${(sheet.wkbhCode)!?html}</td>
+									<td class="testCode">${(record.testingCode)!?html}</td>
+									<td class="sourceSampleCode">${(record.originalCode)!?html}</td>
+									<td class="temporaryStorageLocation">${(record.temporaryStorageLocation)!?html}</td>
+									<td class="libraryCode">${(record.libraryCode)!?html}</td>
+									<td class="connectorId">${(record.connectorId)!?html}</td>
+									<td class="coordinate">${(record.coordinate)!?html}</td>
+									<td class="productName">${(record.productName)!?html}</td>
+									<td class="sampleType">${(record.sampleType)!?html}</td>
+									<td class="receiveType">${(record.receiveType)!?html}</td>
+									<td class="inspectName">${(record.inspectName)!?html}</td>
+									<td><@dict_entry_text category="ORDER_INSPECT_SEX"
+										value=record.sex /><input class="sex" type="hidden"
+										value="${(record.sex)!?html}">
+									</td>
+									<td class="institution">${(record.institution)!?html}</td>
+									<td class="beizhu">${(record.beizhu)!?html}</td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						<div class="row" style="margin-top: 34px">
+							<div class="col-lg-12">
+								<div class="ibox"
+									style="border: 2px solid #e7eaec; padding: 10px">
+									<label class="col-sm-2 control-label"
+										style="text-align: left; margin-bottom: 10px">不合格清单</label>
+									<div class="ibox-content" id="content">
+										<#if sheet?has_content> <#list sheet.sheetTaskList as recordt>
+										<div id="info${recordt.id}" data-id="${recordt.id}"
+											class="son" style="display: none">
+											<div class="form-group">
+												<label class="col-sm-1 control-label">样本编号：</label> <label
+													class="col-sm-1 control-label" style="text-align: left">${recordt.outputSamplecode!?html}
+												</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-1 control-label">不通过原因：</label>
+												<div class="col-sm-3">
+													<input type="text" class="form-control"
+														id="reason${recordt.id}" placeholder="浓度不达标" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-1 control-label">后续处理：</label>
+												<div class="checkbox">
+													<label><input type="radio"
+														name="radio${recordt.id}" value="3">&nbsp;异常</label><label><input
+														type="radio" name="radio${recordt.id}" value="2">&nbsp;重做</label>
+												</div>
+											</div>
+											<hr
+												style="border: 2px dotted #ccced0; border-bottom: 0; border-right: 0; border-left: 0; width: 100%;">
+										</div>
+										</#list> </#if>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-5">
+
+											<input type="submit" value="完成" class="btn btn-primary"
+												style="margin-right: 20px" onclick="sub()">
+											<button class="btn btn-primary" type="button"
+												onclick="history.go(-1)">返回</button>
+												
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue"  id="formValue" value="">
+</form>
+</body>
+
+
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script>
+    
+    function downloadData(){
+		var taskActivitiId = $("#taskActivitiId").val();
+		$.ajax({
+			 type:"POST",
+			 url:"${base}/testSheet/downloadBioinformaticAnalysis",
+			 data:{taskActivitiId:taskActivitiId},
+			 async: false,
+			 success:function(data){
+				$("#formValue").val(data);
+				$("#hiddForm").submit();
+		    },
+			 error:function(){
+				alert("failed");
+			 }
+		}); 
+	}     
+	function suc(obj) {
+		var dataid = $(obj).attr("data-id");
+		if ($("#info" + dataid).css("display") == "none") {
+			$("#info" + dataid).css("display", "block")
+		} else {
+			$("#info" + dataid).css("display", "none");
+		}
+	}
+	function sub() {
+		var bioInfo = [];
+		$(".trData").each(function(index,object){
+			data={};
+			   /* data.testingCode=$(".testCode").eq(index).text();
+			    data.wkbhCode=$(".wkbhCode").eq(index).text();
+			    data.originalCode=$(".originalCode").eq(index).text();
+			    data.temporaryStorageLocation=$(".temporaryStorageLocation").eq(index).text();
+			    data.libraryCode=$(".libraryCode").eq(index).text();
+			    data.connectorId=$(".connectorId").eq(index).text();
+			    data.coordinate=$(".coordinate").eq(index).text();
+			    data.productName=$(".productName").eq(index).text();
+			    data.testedName=$(".testedName").eq(index).text();
+			    data.receiveType=$(".receiveType").eq(index).text();
+			    data.sex=$(".sex").eq(index).val();
+			    data.institution=$(".institution").eq(index).text();
+			    data.beizhu=$(".beizhu").eq(index).text(); */
+			    data.activitiTaskId = $(".activitiTaskId").eq(index).val(); //工作流
+			    bioInfo.push(data);
+		});
+		console.log(bioInfo);
+		$.ajax({
+					type : "GET",
+					url : "${base}/testSheet/bioInfoSubmit.do",
+					data : {
+					req : JSON.stringify({
+									activitiTaskId : $("#activitiTaskId").val(),
+									testingSheetTaskId : $("#testingSheetTaskId").val(),
+									code : $("#code").val(),
+									id : $("#sheetid").val(),
+									sheetTaskList : bioInfo,
+									semantic : $("#semantic").val()
+								})
+					},
+					dataType : "json",
+					traditional : true,
+					success : function(data) {
+						window.location.href ="${base}/process/excuteList.do";
+					}
+				})
+	}
+</script>
+</html>
+

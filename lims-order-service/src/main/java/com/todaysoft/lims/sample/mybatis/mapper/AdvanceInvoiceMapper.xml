@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.sample.mybatis.mapper.AdvanceInvoiceMapper">
+
+    <resultMap id="BaseModel" type="com.todaysoft.lims.sample.entity.FinanceInvoiceTask">
+        <id column="ID" property="id" />
+        <result column="CATEGORY" property="category" />
+        <result column="RECORD_KEY" property="recordKey" />
+        <result column="INSTITUTION" property="institution" />
+        <result column="AMOUNT" property="amount" />
+        <result column="STATUS" property="status" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="SYNCHRO_STATUS" property="synchroStatus" />
+    </resultMap>
+
+    <sql id="BaseSelectLimit">
+        <if test="_parameter.offset != null and _parameter.limit != null" >
+            LIMIT #{_parameter.offset}, #{_parameter.limit}
+        </if>
+    </sql>
+
+    <sql id="BaseSelectFilters">
+        and fit.CATEGORY = '2' and fit.`STATUS` = '1'  and ia.ORDER_IDS IS NOT NULL
+        <if test="_parameter.institution != null" >
+            AND fit.INSTITUTION = #{_parameter.institution}
+        </if>
+        <if test="_parameter.code != null and _parameter.code != ''" >
+            AND ia.CODE = #{_parameter.code}
+        </if>
+
+        <if test="_parameter.testingType != null and _parameter.testingType != ''" >
+            AND ia.CREATOR_ID in (select a.USER_ID from APP_BUSINESS_CONFIG a where a.TESTING_TYPE = #{_parameter.testingType})
+        </if>
+
+        <if test="_parameter.creatorId != null and _parameter.creatorId != ''" >
+            <bind name="creatorPattern" value="'%'+_parameter.creatorId+'%'" />
+            AND ia.CREATOR_ID in (select bi.ID from BUSINESS_INFO bi where bi.REAL_NAME LIKE #{creatorPattern})
+        </if>
+
+        <if test="_parameter.customerId != null and _parameter.customerId != ''" >
+            <bind name="customerPattern" value="'%'+_parameter.customerId+'%'" />
+            AND ia.CUSTOMER_ID in (select c.id from APP_USER_INFO c where c.REAL_NAME LIKE #{customerPattern})
+        </if>
+
+        <if test="_parameter.applyTimeStart != null and _parameter.applyTimeStart != ''" >
+            AND ia.APPLY_TIME &gt;= #{_parameter.applyTimeStart}
+        </if>
+        <if test="_parameter.applyTimeEnd != null and _parameter.applyTimeEnd != ''" >
+            AND ia.APPLY_TIME &lt; #{_parameter.applyTimeEnd}
+        </if>
+    </sql>
+
+    <sql id="InvoiceApplySelectFilters">
+        <include refid="BaseSelectFilters"></include>
+        <if test="_parameter.solveStatus != null and _parameter.solveStatus == 1 " >
+            and ( fit.SYNCHRO_STATUS is NULL or fit.SYNCHRO_STATUS != 1 )
+            and  fit.RECORD_KEY IN (
+            SELECT
+            DISTINCT b.ID
+            FROM
+            (
+            SELECT
+            a.*,
+            substring_index( substring_index( a.ORDER_IDS, ',', b.help_topic_id + 1 ), ',',- 1 ) orderId
+            FROM
+            LIMS_INVOICE_APPLY a
+            JOIN mysql.help_topic b ON b.help_topic_id  &lt; ( length( a.ORDER_IDS ) - length( REPLACE ( a.ORDER_IDS, ',', '' ) ) + 1 )
+            WHERE 1=1
+            ORDER BY
+            a.id
+            ) b
+            LEFT JOIN LIMS_ORDER r ON r.id = b.orderId
+            LEFT JOIN LIMS_ORDER_DELAY d ON d.ORDER_ID = r.id
+            LEFT JOIN LIMS_ORDER_REDUCE e on e.ORDER_ID = r.ID
+            WHERE
+            d.`STATUS` is null or d.`STATUS` != '1'  or ( d.`STATUS` = '1' and r.AMOUNT + r.SUBSIDIARY_SAMPLE_AMOUNT - r.DISCOUNT_AMOUNT - r.INCOMING_AMOUNT - (CASE WHEN e.CHECK_AMOUNT is NULL THEN 0 ELSE e.CHECK_AMOUNT END) &lt;= 0))
+        </if>
+
+
+        <if test="_parameter.solveStatus != null and _parameter.solveStatus == 4 " >
+            and  fit.RECORD_KEY not IN (
+            SELECT
+            DISTINCT	b.ID
+            FROM
+            (
+            SELECT
+            a.*,
+            substring_index( substring_index( a.ORDER_IDS, ',', b.help_topic_id + 1 ), ',',- 1 ) orderId
+            FROM
+            LIMS_INVOICE_APPLY a
+            JOIN mysql.help_topic b ON b.help_topic_id &lt; ( length( a.ORDER_IDS ) - length( REPLACE ( a.ORDER_IDS, ',', '' ) ) + 1 )
+            WHERE 1=1
+            ORDER BY
+            a.id
+            ) b
+            LEFT JOIN LIMS_ORDER r ON r.id = b.orderId
+            LEFT JOIN LIMS_ORDER_DELAY d ON d.ORDER_ID = r.id
+            LEFT JOIN LIMS_ORDER_REDUCE e on e.ORDER_ID = r.ID
+            LEFT JOIN LIMS_GOLDEN_TAX_TEMPORARY g on g.ID = r.ID  and g.APPLY_ID is not null
+            WHERE
+            d.`STATUS` is null or d.`STATUS` != '1'  or ( d.`STATUS` = '1' and r.AMOUNT + r.SUBSIDIARY_SAMPLE_AMOUNT - r.DISCOUNT_AMOUNT - r.INCOMING_AMOUNT - (CASE WHEN e.CHECK_AMOUNT is NULL THEN 0 ELSE e.CHECK_AMOUNT END) &lt;= 0 and g.ID is NULL))
+        </if>
+    </sql>
+
+    <select id="countForAdvanceInvoiceSearcher" resultType="int" parameterType="com.todaysoft.lims.sample.dao.searcher.AdvanceInvoiceSearcher">
+        SELECT COUNT(t.id) FROM(
+        SELECT
+        fit.id
+        FROM LIMS_FINANCE_INVOICE_TASK fit
+        LEFT JOIN LIMS_INVOICE_APPLY ia ON ia.ID = fit.RECORD_KEY
+        WHERE 1=1
+        <include refid="InvoiceApplySelectFilters"></include>
+        ) t
+    </select>
+
+
+    <select id="searcherAdvanceInvoiceTasks" resultMap="BaseModel" parameterType="com.todaysoft.lims.sample.dao.searcher.AdvanceInvoiceSearcher">
+        SELECT fit.* FROM LIMS_FINANCE_INVOICE_TASK fit
+        LEFT JOIN LIMS_INVOICE_APPLY ia ON ia.ID = fit.RECORD_KEY
+        WHERE 1=1
+        <include refid="InvoiceApplySelectFilters"></include>
+        ORDER BY fit.UPDATE_TIME DESC
+        <include refid="BaseSelectLimit"></include>
+
+    </select>
+
+</mapper>

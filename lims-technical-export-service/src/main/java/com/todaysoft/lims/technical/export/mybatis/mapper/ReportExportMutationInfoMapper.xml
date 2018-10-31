@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.ReportExportMutationInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMutationInfo" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+    <result column="CLINICAL_JUDGMENT" property="clinicalJudgment" jdbcType="VARCHAR" />
+    <result column="GENE_SYMBOL" property="geneSymbol" jdbcType="VARCHAR" />
+    <result column="CHROMOSOMAL_LOCATION" property="chromosomalLocation" jdbcType="VARCHAR" />
+    <result column="EXON" property="exon" jdbcType="VARCHAR" />
+    <result column="NUCLEOTIDE_CHANGES" property="nucleotideChanges" jdbcType="VARCHAR" />
+    <result column="AMINO_ACID_CHANGES" property="aminoAcidChanges" jdbcType="VARCHAR" />
+    <result column="GENE_TYPE" property="geneType" jdbcType="VARCHAR" />
+    <result column="HIGHEST_MAF_NAME" property="highestMafName" jdbcType="VARCHAR" />
+    <result column="EFFECT" property="effect" jdbcType="VARCHAR" />
+    <result column="PATHOGENIC_ANALYSIS" property="pathogenicAnalysis" jdbcType="VARCHAR" />
+    <result column="INHERT" property="inhert" jdbcType="VARCHAR" />
+    <result column="DISEASE_PHENOTYPE" property="diseasePhenotype" jdbcType="VARCHAR" />
+    <result column="INHERT_SOURCE_NAME" property="inhertSourceName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="MutationFamilySangerResultInfoResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.MutationFamilySangerResultInfo" >
+    <result column="GENE_SYMBOL" property="geneSymbol" jdbcType="VARCHAR" />
+    <result column="CHROMOSOMAL_LOCATION" property="chromosomalLocation" jdbcType="VARCHAR" />
+    <result column="NUCLEOTIDE_CHANGES" property="nucleotideChanges" jdbcType="VARCHAR" />
+    <result column="AMINO_ACID_CHANGES" property="aminoAcidChanges" jdbcType="VARCHAR" /> 
+    <result column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <resultMap id="MutationFamilySangerReportSampleResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.MutationFamilySangerReportSample" >
+    <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="COMBINE_CODE" property="combineCode" jdbcType="VARCHAR" />
+    <result column="COMBINE_TYPE" property="combineType" jdbcType="VARCHAR" />    
+  </resultMap>
+  
+  <resultMap id="MutationFamilySangerReportPictureResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.MutationFamilySangerReportPicture" >
+    <result column="PIC_NAME" property="picName" jdbcType="VARCHAR" />
+    <result column="PIC_URL" property="picUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+	  ID, TASK_ID, OBJECT_ID, 
+      CLINICAL_JUDGMENT, GENE_SYMBOL, CHROMOSOMAL_LOCATION, 
+      EXON, NUCLEOTIDE_CHANGES, AMINO_ACID_CHANGES, 
+      GENE_TYPE, HIGHEST_MAF_NAME, EFFECT, 
+      PATHOGENIC_ANALYSIS, INHERT, DISEASE_PHENOTYPE, 
+      INHERT_SOURCE_NAME
+  </sql>
+  <sql id="MutationFamilySangerResultInfo_Column_List">
+	  GENE_SYMBOL,CHROMOSOMAL_LOCATION,NUCLEOTIDE_CHANGES,AMINO_ACID_CHANGES,OBJECT_ID
+  </sql>
+  <sql id="MutationFamilySangerReportSample_Column_List">
+	  SAMPLE_NAME,SAMPLE_CODE,COMBINE_CODE,COMBINE_TYPE
+  </sql>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMutationInfo" >
+ 	<selectKey keyProperty="id" resultType="String" order="BEFORE">
+		select replace(uuid(),'-','') from dual
+	</selectKey>
+    insert into REPORT_EXPORT_MUTATION_INFO (ID, TASK_ID, OBJECT_ID, 
+      CLINICAL_JUDGMENT, GENE_SYMBOL, CHROMOSOMAL_LOCATION, 
+      EXON, NUCLEOTIDE_CHANGES, AMINO_ACID_CHANGES, 
+      GENE_TYPE, HIGHEST_MAF_NAME, EFFECT, 
+      PATHOGENIC_ANALYSIS, INHERT, DISEASE_PHENOTYPE, 
+      INHERT_SOURCE_NAME)
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, 
+      #{clinicalJudgment,jdbcType=VARCHAR}, #{geneSymbol,jdbcType=VARCHAR}, #{chromosomalLocation,jdbcType=VARCHAR}, 
+      #{exon,jdbcType=VARCHAR}, #{nucleotideChanges,jdbcType=VARCHAR}, #{aminoAcidChanges,jdbcType=VARCHAR}, 
+      #{geneType,jdbcType=VARCHAR}, #{highestMafName,jdbcType=VARCHAR}, #{effect,jdbcType=VARCHAR}, 
+      #{pathogenicAnalysis,jdbcType=VARCHAR}, #{inhert,jdbcType=VARCHAR}, #{diseasePhenotype,jdbcType=VARCHAR}, 
+      #{inhertSourceName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMutationInfo" >
+    insert into REPORT_EXPORT_MUTATION_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="objectId != null" >
+        OBJECT_ID,
+      </if>
+      <if test="clinicalJudgment != null" >
+        CLINICAL_JUDGMENT,
+      </if>
+      <if test="geneSymbol != null" >
+        GENE_SYMBOL,
+      </if>
+      <if test="chromosomalLocation != null" >
+        CHROMOSOMAL_LOCATION,
+      </if>
+      <if test="exon != null" >
+        EXON,
+      </if>
+      <if test="nucleotideChanges != null" >
+        NUCLEOTIDE_CHANGES,
+      </if>
+      <if test="aminoAcidChanges != null" >
+        AMINO_ACID_CHANGES,
+      </if>
+      <if test="geneType != null" >
+        GENE_TYPE,
+      </if>
+      <if test="highestMafName != null" >
+        HIGHEST_MAF_NAME,
+      </if>
+      <if test="effect != null" >
+        EFFECT,
+      </if>
+      <if test="pathogenicAnalysis != null" >
+        PATHOGENIC_ANALYSIS,
+      </if>
+      <if test="inhert != null" >
+        INHERT,
+      </if>
+      <if test="diseasePhenotype != null" >
+        DISEASE_PHENOTYPE,
+      </if>
+      <if test="inhertSourceName != null" >
+        INHERT_SOURCE_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null" >
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalJudgment != null" >
+        #{clinicalJudgment,jdbcType=VARCHAR},
+      </if>
+      <if test="geneSymbol != null" >
+        #{geneSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="chromosomalLocation != null" >
+        #{chromosomalLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="exon != null" >
+        #{exon,jdbcType=VARCHAR},
+      </if>
+      <if test="nucleotideChanges != null" >
+        #{nucleotideChanges,jdbcType=VARCHAR},
+      </if>
+      <if test="aminoAcidChanges != null" >
+        #{aminoAcidChanges,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType != null" >
+        #{geneType,jdbcType=VARCHAR},
+      </if>
+      <if test="highestMafName != null" >
+        #{highestMafName,jdbcType=VARCHAR},
+      </if>
+      <if test="effect != null" >
+        #{effect,jdbcType=VARCHAR},
+      </if>
+      <if test="pathogenicAnalysis != null" >
+        #{pathogenicAnalysis,jdbcType=VARCHAR},
+      </if>
+      <if test="inhert != null" >
+        #{inhert,jdbcType=VARCHAR},
+      </if>
+      <if test="diseasePhenotype != null" >
+        #{diseasePhenotype,jdbcType=VARCHAR},
+      </if>
+      <if test="inhertSourceName != null" >
+        #{inhertSourceName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from REPORT_EXPORT_MUTATION_INFO
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	 <select id="selectByTaskId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from REPORT_EXPORT_MUTATION_INFO
+		where task_Id = #{taskID,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_PIC
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMutationInfo" >
+    update REPORT_EXPORT_MUTATION_INFO
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null" >
+        OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalJudgment != null" >
+        CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+      </if>
+      <if test="geneSymbol != null" >
+        GENE_SYMBOL = #{geneSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="chromosomalLocation != null" >
+        CHROMOSOMAL_LOCATION = #{chromosomalLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="exon != null" >
+        EXON = #{exon,jdbcType=VARCHAR},
+      </if>
+      <if test="nucleotideChanges != null" >
+        NUCLEOTIDE_CHANGES = #{nucleotideChanges,jdbcType=VARCHAR},
+      </if>
+      <if test="aminoAcidChanges != null" >
+        AMINO_ACID_CHANGES = #{aminoAcidChanges,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType != null" >
+        GENE_TYPE = #{geneType,jdbcType=VARCHAR},
+      </if>
+      <if test="highestMafName != null" >
+        HIGHEST_MAF_NAME = #{highestMafName,jdbcType=VARCHAR},
+      </if>
+      <if test="effect != null" >
+        EFFECT = #{effect,jdbcType=VARCHAR},
+      </if>
+      <if test="pathogenicAnalysis != null" >
+        PATHOGENIC_ANALYSIS = #{pathogenicAnalysis,jdbcType=VARCHAR},
+      </if>
+      <if test="inhert != null" >
+        INHERT = #{inhert,jdbcType=VARCHAR},
+      </if>
+      <if test="diseasePhenotype != null" >
+        DISEASE_PHENOTYPE = #{diseasePhenotype,jdbcType=VARCHAR},
+      </if>
+      <if test="inhertSourceName != null" >
+        INHERT_SOURCE_NAME = #{inhertSourceName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMutationInfo" >
+    update REPORT_EXPORT_MUTATION_INFO
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+      CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+      GENE_SYMBOL = #{geneSymbol,jdbcType=VARCHAR},
+      CHROMOSOMAL_LOCATION = #{chromosomalLocation,jdbcType=VARCHAR},
+      EXON = #{exon,jdbcType=VARCHAR},
+      NUCLEOTIDE_CHANGES = #{nucleotideChanges,jdbcType=VARCHAR},
+      AMINO_ACID_CHANGES = #{aminoAcidChanges,jdbcType=VARCHAR},
+      GENE_TYPE = #{geneType,jdbcType=VARCHAR},
+      HIGHEST_MAF_NAME = #{highestMafName,jdbcType=VARCHAR},
+      EFFECT = #{effect,jdbcType=VARCHAR},
+      PATHOGENIC_ANALYSIS = #{pathogenicAnalysis,jdbcType=VARCHAR},
+      INHERT = #{inhert,jdbcType=VARCHAR},
+      DISEASE_PHENOTYPE = #{diseasePhenotype,jdbcType=VARCHAR},
+      INHERT_SOURCE_NAME = #{inhertSourceName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectMutationFamilySangerResultInfoByTaskId" resultMap="MutationFamilySangerResultInfoResultMap"  parameterType="java.lang.String">
+		select
+		MUTATION_INFO.GENE_SYMBOL,MUTATION_INFO.CHROMOSOMAL_LOCATION,MUTATION_INFO.NUCLEOTIDE_CHANGES,MUTATION_INFO.AMINO_ACID_CHANGES,MUTATION_INFO.OBJECT_ID
+		from REPORT_EXPORT_MUTATION_INFO MUTATION_INFO
+		inner join LIMS_TESTING_TECHNICAL_ANALY_RECORD ANALY_RECORD
+		where task_Id = #{taskId,jdbcType=VARCHAR} and ANALY_RECORD.MUTATION_OBJECT_ID=MUTATION_INFO.OBJECT_ID and  ANALY_RECORD.VERIFY='验证' 
+		and (ANALY_RECORD.VERIFY_METHOD='Sanger' or ANALY_RECORD.VERIFY_METHOD='PCR-NGS')
+  </select>
+  
+  <select id="selectMutationFamilySangerReportSampleByMutationObjectId" resultMap="MutationFamilySangerReportSampleResultMap"  parameterType="java.lang.String">
+  	select 
+  	SAMPLE_VIEW.SAMPLE_CODE,SAMPLE_VIEW.SAMPLE_NAME,REPORT_SAMPLE.COMBINE_CODE,REPORT_SAMPLE.COMBINE_TYPE
+	from LIMS_TESTING_TECHNICAL_ANALY_RECORD ANALY_RECORD 
+	inner join LIMS_TESTING_TECHNICAL_ANALY_VERIFY ANALY_VERIFY on ANALY_RECORD.id=ANALY_VERIFY.RECORD_ID
+	inner join LIMS_TESTING_SANGER_VERIFY SANGER_VERIFY on ANALY_VERIFY.id=SANGER_VERIFY.VERIFY_RECORD
+	inner join LIMS_TESTING_REPORT_SAMPLE REPORT_SAMPLE on REPORT_SAMPLE.COMBINE_CODE=SANGER_VERIFY.COMBINE_CODE
+	inner join LIMS_ORDER_SAMPLE_VIEW SAMPLE_VIEW on REPORT_SAMPLE.SAMPLE_ID=SAMPLE_VIEW.SAMPLE_ID
+	where ANALY_RECORD.MUTATION_OBJECT_ID=#{mutationObjectId,jdbcType=VARCHAR} and ANALY_RECORD.VERIFY='验证'
+  </select>
+  
+  <select id="selectMutationFamilySangerPictureByCombineCode" resultMap="MutationFamilySangerReportPictureResultMap"  parameterType="java.lang.String">
+    select PIC_NAME,PIC_URL from LIMS_TESTING_DATA_PIC  
+		where DATA_CODE=#{combineCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

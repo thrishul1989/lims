@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库捕获</title>
+<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+
+
+
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+
+<link href="${system_css}/jquery.treetable.css" rel="stylesheet"
+	type="text/css">
+<link href="${system_css}/jquery.treetable.theme.default.css"
+	rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${system_js}/jquery-1.7.2.js"></script>
+<script src="${system_js}/jquery.treetable.js"></script>
+<script type="text/javascript">
+
+
+$(function() {
+
+	var jieotu=[];
+	//全选，取消
+	$("#allChecked").click(function() {
+		//判断当前点击的复选框处于什么状态$(this).is(":checked") 返回的是布尔类型
+		jieotu.length=0;
+		if ($(this).is(":checked")) {
+			var inputChoose=$(".checkbox");
+			//获取接头值，判断是否在，进而放入数组
+			$(".checkbox1").each(function(){
+				jietou1=$(this).val();
+				console.log(jietou1);
+				if($.inArray($(this).val(),jieotu)==-1){
+				jieotu.push(jietou1);
+				inputChoose.prop("checked", true);
+				} else{
+					alert("存在重复接头,系统已经自动完成筛选");
+					this.checked=false;
+				}  
+			});
+			console.log(jieotu);
+		} else {
+			var inputChoose=$(".checkbox");
+			inputChoose.prop("checked", false);
+			$(".checkbox1").each(function(){
+				//从数组中删除
+				jieotu.splice($.inArray($(this).val(),jieotu),1);
+			});
+			console.log(jieotu);
+		}
+	});
+	
+	//单选数据处理
+	$(".checkbox1").click(function(){
+		if($(this).is(":checked")){
+			jietou3=$(this).val();
+			//判断接头是否存在
+			if($.inArray(jietou3,jieotu)!=-1){
+				alert("该接头已经存在");
+				this.checked=false;
+			}else{
+			jieotu.push(jietou3);
+			}
+		}else{
+			jieotu.splice($.inArray($(this).val(),jieotu),1);
+		}
+		console.log(jieotu);
+	}) ;
+	
+	//探针组选处理
+ 	$(".checkbox2").click(function() {
+		//判断当前点击的复选框处于什么状态$(this).is(":checked") 返回的是布尔类型
+		var jietou4="";
+		if ($(this).is(":checked")) {
+			a=$(this).parents("tr").attr("data-tt-id"); 
+            inputChoose=$('[data-tt-parent-id='+a+']').find('.checkbox1');
+            //判断接头值是否存在
+            inputChoose.each(function(){
+            	jietou4=$(this).val();
+            	 if($.inArray(jietou4,jieotu)!=-1){
+            		 alert("存在重复接头");
+            		 return false;
+            	}else{
+            		jieotu.push(jietou4);
+            		inputChoose.prop("checked", true);
+            	} 
+            });
+		} else {    //取消选择
+			
+			a=$(this).parents("tr").attr("data-tt-id"); 
+            inputChoose=$('[data-tt-parent-id='+a+']').find('.checkbox1');
+            inputChoose.each(function(){
+            		//先判断是否选中，再从数组中删除
+            	if($(this).is(":checked")){
+    				jieotu.splice($.inArray($(this).val(),jieotu),1);
+            	}
+				
+			});
+			inputChoose.prop("checked", false);
+		}
+		
+		console.log(jieotu);
+	}); 
+});
+
+$("document").ready(
+		function() {
+			$(".batchAssine").click(
+					function() {//输出选中的值  
+						var businessObject = [];
+						$("input:checkbox:checked").each(function(e) {
+							if ($(this).next().val() != "") {
+								//存取流程实例id
+								businessObject.push($(this).next().val());
+								console.log(businessObject);
+							}
+						});
+						console.log("选中"+businessObject.length+"条任务");
+						if(businessObject.length < 1){
+							parent.parent.layer.alert('请至少选中一条任务！',{title:"提示"});
+						}else{
+							var semantic=$(this).prev().find('tbody').find('input').val();
+							var ids = businessObject.join(",");
+							parent.$("#create_task_form").attr(
+									"src",
+									"${base}/testingTask/list.do?activitiTaskId="+ ids+"&semantic="+semantic);
+							parent.$('#full').modal('show');
+						}
+					})
+		})
+
+
+    </script>
+</HEAD>
+
+<body>
+
+	<table id="example-advanced"  rules="none"
+		class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr >
+
+				<td ><input type="checkbox" name="allChecked" id="allChecked" class="checkbox  checkbox2"
+				value="" />MG-L380</td>
+				<th>文库样本编号</th>
+				<!-- <th>混样体积</th> -->
+				<th>探针</th>
+				<!-- <th>文库浓度</th> -->
+				<th>Index编号</th>
+				<th>样本类型</th>
+				<th>文库位置</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<!-- 遍历探针list -->
+		<tr data-tt-id="1" >
+			<td><input type="Checkbox" name="" class="checkbox  checkbox2"
+				id="MG-L380-1" value="" />MG-L380-1</td>
+				<td></td><td></td><td></td><td></td><td></td><td></td>
+		</tr>
+		<!-- 遍历探针文库list -->
+		<tr data-tt-id="1-1" data-tt-parent-id="1">
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="1" /> <input type="hidden" name="" value="a" /></td>
+			<td>11</td>
+			<td>11</td>
+		<!-- 	<td>11</td> -->
+			<td>11</td>
+			<!-- <td>11</td> -->
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+
+		</tr>
+		<tr data-tt-id="1-1" data-tt-parent-id="1">
+
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="2" /> <input type="hidden" name="" value="b" /></td>
+			<td>11</td>
+			<td>11</td>
+		
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+		</tr>
+		<tr data-tt-id="1-1" data-tt-parent-id="1">
+
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="3" /> <input type="hidden" name="" value="c" /></td>
+			<td>11</td>
+			
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+		</tr>
+		<tr data-tt-id="1-1" data-tt-parent-id="1">
+
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="4" /> <input type="hidden" name="" value="d" /></td>
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+		</tr>
+		<tr data-tt-id="2" >
+			<td><input type="Checkbox" name="" class="checkbox  checkbox2"
+				value="" />MG-L380-2</td>
+			<td></td><td></td><td></td><td></td><td></td><td></td>
+		</tr>
+		<tr data-tt-id="2-1" data-tt-parent-id="2">
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="1" /> <input type="hidden" name="" value="e" /></td>
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+		</tr>
+		<tr data-tt-id="2-1" data-tt-parent-id="2">
+			<td><input type="checkbox" name="" class="checkbox  checkbox1 "
+				value="2" /> <input type="hidden" name="" value="f" /></td>
+			<td>11</td>
+			<td>11</td>
+			<td>11</td>
+			
+			<td>11</td>
+			<td>11</td>
+			<td><a href="#"
+				onclick="onSingleTask({(record.taskActivityId)!?html},'${(record.semantic)!?html}')"
+				class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> 处理
+			</a></td>
+		</tr>
+
+	</table>
+	<a href="javascript:void(0)" id="btn5"
+		style="float: right; margin-top: 5px; margin-right: 50px"
+		class="btn btn-sm btn-success batchAssine"> <i class="fa fa-edit"></i>
+		批量处理
+	</a>
+		<#include "../inc/pagination.html" />
+	  <script>
+  	//加载treetable
+  	$("#example-advanced").treetable({ expandable: true });
+  
+  </script>
+
+</body>
+</HTML>

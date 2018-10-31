@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">关闭</span>
+    </button>
+    <h4 class="modal-title">节点配置</h4>
+</div>
+<form id="config_form" action="${base}/sample/pretesting_config.do" method="post">
+    <input type="hidden" name="receivedSampleId" value="${(receivedSampleId)!?html}">
+    <input type="hidden" name="testingSampleId" value="${(testingSampleId)!?html}">
+    <div class="modal-body">
+        <div class="form-horizontal m-t toggle-form">
+            <div class="form-group config-group config-group-default" id="config_group_default">
+                <label class="col-sm-3 control-label control-required">流程节点配置：</label>
+                <div class="col-sm-5">
+                    <select class="form-control config-task-select" id="first" required data-msg="请选择流程节点">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control config-step" style="display: none;">
+                        <option value="0">完成</option>
+                        <option value="1">下一步</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">保存</button>
+        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+    </div>
+</form>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        var setupSelectControl = function(inputSampleId, select)
+        {
+            $.get('${base}/sample/pretesting_tasks.do', {
+                inputSampleId : inputSampleId
+            }, function(tasks)
+            {
+                var task;
+                var option;
+                select.find('.dynamic-option').remove();
+
+                for ( var i in tasks)
+                {
+                    task = tasks[i];
+                    option = $('<option class="dynamic-option"></option>');
+                    option.append(task.taskName);
+                    option.attr('value', task.semantic);
+                    option.attr('data-osid', task.outputSampleId);
+                    select.append(option);
+                }
+            });
+        }
+
+        $('#config_form').validate();
+        
+        // 收样样本可选任务
+        setupSelectControl('${receivedSampleId!?html}', $('#first'));
+    });
+//-->
+</script>

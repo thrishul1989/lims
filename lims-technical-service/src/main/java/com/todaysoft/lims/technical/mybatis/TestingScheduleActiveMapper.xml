@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.TestingScheduleActiveMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SCHEDULE_ID" property="scheduleId" jdbcType="VARCHAR" />
+		<result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+		<result column="RUNNING_STATUS" property="runningStatus"
+			jdbcType="BIT" />
+		<result column="TASK_REFER" property="taskRefer" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, SCHEDULE_ID, TASK_ID, RUNNING_STATUS, TASK_REFER
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_SCHEDULE_ACTIVE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_SCHEDULE_ACTIVE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SCHEDULE_ACTIVE (ID,
+		SCHEDULE_ID, TASK_ID,
+		RUNNING_STATUS, TASK_REFER)
+		values
+		(#{id,jdbcType=VARCHAR}, #{scheduleId,jdbcType=VARCHAR},
+		#{taskId,jdbcType=VARCHAR},
+		#{runningStatus,jdbcType=BIT},
+		#{taskRefer,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SCHEDULE_ACTIVE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="scheduleId != null">
+				SCHEDULE_ID,
+			</if>
+			<if test="taskId != null">
+				TASK_ID,
+			</if>
+			<if test="runningStatus != null">
+				RUNNING_STATUS,
+			</if>
+			<if test="taskRefer != null">
+				TASK_REFER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleId != null">
+				#{scheduleId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskId != null">
+				#{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test="runningStatus != null">
+				#{runningStatus,jdbcType=BIT},
+			</if>
+			<if test="taskRefer != null">
+				#{taskRefer,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive">
+		update LIMS_TESTING_SCHEDULE_ACTIVE
+		<set>
+			<if test="scheduleId != null">
+				SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskId != null">
+				TASK_ID = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test="runningStatus != null">
+				RUNNING_STATUS = #{runningStatus,jdbcType=BIT},
+			</if>
+			<if test="taskRefer != null">
+				TASK_REFER = #{taskRefer,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive">
+		update LIMS_TESTING_SCHEDULE_ACTIVE
+		set SCHEDULE_ID =
+		#{scheduleId,jdbcType=VARCHAR},
+		TASK_ID = #{taskId,jdbcType=VARCHAR},
+		RUNNING_STATUS = #{runningStatus,jdbcType=BIT},
+		TASK_REFER =
+		#{taskRefer,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectBySearcher"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleActive"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_SCHEDULE_ACTIVE
+		where 1 = 1
+		<if test="id != null">
+			and ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="scheduleId != null">
+			and SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR}
+		</if>
+		<if test="taskId != null">
+			and TASK_ID = #{taskId,jdbcType=VARCHAR}
+		</if>
+		<if test="taskRefer != null">
+			and TASK_REFER = #{taskRefer,jdbcType=VARCHAR}
+		</if>
+		
+
+	</select>
+</mapper>

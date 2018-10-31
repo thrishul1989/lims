@@ -1,0 +1,24 @@
+<tr>
+    <td class="index"></td>
+    <td><input class="form-control columnName" type="text" required></td>
+     <td>
+		<select class="form-control type" required>
+			<option value="1">复选</option>
+			<option value="2">单选</option>
+			<option value="3">区间</option>
+		</select>
+	</td>
+    <td><select class="form-control semantic" required>
+        <option value="">--请选择--</option>
+        <@dict_entries category="DATA_TEMPLATE"> 
+            <#if entries??> 
+            <#list entries as entry>
+			<option value="${entry.value!}">${entry.text!?html}</option> 
+			</#list> 
+			</#if> 
+		</@dict_entries>
+    </select></td>
+    <td><input class="form-control groupName" type="text" required /></td>
+    <td><input class="form-control columnIndex" type="text" required onkeyup="checkInput(this)" maxlength = 9></td>
+    <td><a class="btn btn-sm btn-success remove" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56);"><i class="fa fa-trash"></i> 删除</a></td>
+</tr>

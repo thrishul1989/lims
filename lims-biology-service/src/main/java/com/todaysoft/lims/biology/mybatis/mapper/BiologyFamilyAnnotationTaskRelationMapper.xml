@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyFamilyAnnotationTaskRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationTaskRelation" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FAMILY_ANALYSIS_ID" property="familyAnalysisId" jdbcType="VARCHAR" />
+    <result column="ANNOTATION_ID" property="annotationId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FAMILY_ANALYSIS_ID, ANNOTATION_ID
+  </sql>
+
+  <select id="getListByFamilyId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    where FAMILY_ANALYSIS_ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationTaskRelation" >
+    insert into BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION (ID, FAMILY_ANALYSIS_ID, ANNOTATION_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{familyAnalysisId,jdbcType=VARCHAR}, #{annotationId,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="createRelationList" parameterType="java.util.List">
+    insert into BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION (ID, FAMILY_ANALYSIS_ID, ANNOTATION_ID)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id},#{item.familyAnalysisId},#{item.annotationId})
+    </foreach>
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationTaskRelation" >
+    insert into BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="familyAnalysisId != null" >
+        FAMILY_ANALYSIS_ID,
+      </if>
+      <if test="annotationId != null" >
+        ANNOTATION_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="familyAnalysisId != null" >
+        #{familyAnalysisId,jdbcType=VARCHAR},
+      </if>
+      <if test="annotationId != null" >
+        #{annotationId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationTaskRelation" >
+    update BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    <set >
+      <if test="familyAnalysisId != null" >
+        FAMILY_ANALYSIS_ID = #{familyAnalysisId,jdbcType=VARCHAR},
+      </if>
+      <if test="annotationId != null" >
+        ANNOTATION_ID = #{annotationId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationTaskRelation" >
+    update BIOLOGY_FAMILY_ANNOTATION_TASK_RELATION
+    set FAMILY_ANALYSIS_ID = #{familyAnalysisId,jdbcType=VARCHAR},
+      ANNOTATION_ID = #{annotationId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

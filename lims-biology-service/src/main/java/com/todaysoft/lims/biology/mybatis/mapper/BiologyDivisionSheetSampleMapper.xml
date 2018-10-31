@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyDivisionSheetSampleMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyDivisionSheetSample" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SHEET_ID" property="sheetId" jdbcType="VARCHAR" />
+    <result column="DIVISION_SAMPLE_ID" property="divisionSampleId" jdbcType="VARCHAR" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR" />
+    <result column="INDEX_CODE" property="indexCode" jdbcType="VARCHAR" />
+    <result column="IS_ADD" property="isAdd" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SHEET_ID, DIVISION_SAMPLE_ID, SAMPLE_CODE, DATA_CODE, INDEX_CODE, IS_ADD
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_DIVISION_SHEET_SAMPLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getTaskOperateInfoById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+        sample.*
+    FROM
+        BIOLOGY_DIVISION_SHEET_SAMPLE sample
+    WHERE
+        sample.SHEET_ID = (
+            SELECT
+                sheet.id
+            FROM
+                `BIOLOGY_DIVISION_SHEET` sheet
+            WHERE
+                sheet.TASK_ID = #{id,jdbcType=VARCHAR}
+            ORDER BY
+                sheet.CREATE_TIME DESC
+            LIMIT 1
+        );
+  </select>
+
+  <select id="getSamplesBySheetId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+      sample.*
+    FROM
+      BIOLOGY_DIVISION_SHEET_SAMPLE sample
+    WHERE
+      sample.SHEET_ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_DIVISION_SHEET_SAMPLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionSheetSample" >
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into BIOLOGY_DIVISION_SHEET_SAMPLE (ID, SHEET_ID, DIVISION_SAMPLE_ID, 
+      SAMPLE_CODE, DATA_CODE, INDEX_CODE, 
+      IS_ADD)
+    values (#{id,jdbcType=VARCHAR}, #{sheetId,jdbcType=VARCHAR}, #{divisionSampleId,jdbcType=VARCHAR}, 
+      #{sampleCode,jdbcType=VARCHAR}, #{dataCode,jdbcType=VARCHAR}, #{indexCode,jdbcType=VARCHAR}, 
+      #{isAdd,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionSheetSample" >
+    insert into BIOLOGY_DIVISION_SHEET_SAMPLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sheetId != null" >
+        SHEET_ID,
+      </if>
+      <if test="divisionSampleId != null" >
+        DIVISION_SAMPLE_ID,
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE,
+      </if>
+      <if test="dataCode != null" >
+        DATA_CODE,
+      </if>
+      <if test="indexCode != null" >
+        INDEX_CODE,
+      </if>
+      <if test="isAdd != null" >
+        IS_ADD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetId != null" >
+        #{sheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="divisionSampleId != null" >
+        #{divisionSampleId,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null" >
+        #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="indexCode != null" >
+        #{indexCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdd != null" >
+        #{isAdd,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionSheetSample" >
+    update BIOLOGY_DIVISION_SHEET_SAMPLE
+    <set >
+      <if test="sheetId != null" >
+        SHEET_ID = #{sheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="divisionSampleId != null" >
+        DIVISION_SAMPLE_ID = #{divisionSampleId,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null" >
+        DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="indexCode != null" >
+        INDEX_CODE = #{indexCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdd != null" >
+        IS_ADD = #{isAdd,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionSheetSample" >
+    update BIOLOGY_DIVISION_SHEET_SAMPLE
+    set SHEET_ID = #{sheetId,jdbcType=VARCHAR},
+      DIVISION_SAMPLE_ID = #{divisionSampleId,jdbcType=VARCHAR},
+      SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+      INDEX_CODE = #{indexCode,jdbcType=VARCHAR},
+      IS_ADD = #{isAdd,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

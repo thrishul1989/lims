@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.CnvAnalysisMonitorMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisMonitor" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SAMPLE_TEST_ID" property="sampleTestId" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID,SAMPLE_TEST_ID, TASK_ID, STATUS,CREATE_TIME,UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getBySampleAnalysisId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      <include refid="Base_Column_List" />
+    from
+      LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where
+      SAMPLE_TEST_ID = #{sampleAnalysisId,jdbcType=VARCHAR}
+    ORDER BY CREATE_TIME DESC limit 1;
+  </select>
+  
+    <select id="getCurrentTaskBySampleAnalysisId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      <include refid="Base_Column_List" />
+    from
+      LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where
+      SAMPLE_TEST_ID = #{sampleAnalysisId,jdbcType=VARCHAR}
+      AND STATUS = 0
+    ORDER BY CREATE_TIME DESC limit 1;
+  </select>
+
+  <select id="getByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      <include refid="Base_Column_List" />
+    from
+      LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where
+      TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getGoingCnvAnalysisList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from
+      LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where
+      STATUS = 0;
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisMonitor" >
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR (ID,SAMPLE_TEST_ID,
+      TASK_ID, STATUS,CREATE_TIME,UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR},#{sampleTestId,jdbcType=VARCHAR},
+      #{taskId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisMonitor" >
+    insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sampleTestId != null" >
+        SAMPLE_TEST_ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleTestId != null" >
+        #{sampleTestId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisMonitor" >
+    update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    <set >
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sampleTestId != null" >
+        SAMPLE_TEST_ID = #{sampleTestId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisMonitor" >
+    update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_MONITOR
+    set
+      SAMPLE_TEST_ID = #{sampleTestId,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      UPDATE_TIME = #{updateTime,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

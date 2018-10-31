@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户详情-用户管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+	<script type="text/javascript">
+
+
+	</script>
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/checkManagement/list.do">检测方法管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>检测管理详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>检测管理详情</h5>
+                    </div>
+                    <div class="ibox-content">
+                          <table class="table table-striped table-bordered table-hover table-details">
+                            <tr>
+                                <th class="col-sm-1">检测管理</th>
+                                <td class="col-sm-2">${data.name!?html}</td>
+                                
+                                <th class="col-sm-1">关联分析方法</th>
+                                <td class="col-sm-2">
+		                            <#if methodList ??>
+		                            <#list methodList as check>
+		                            ${check.name!?html} &nbsp;
+		                            </#list>
+		                            </#if>
+	                            </td>
+                                
+                                <th class="col-sm-1">检测配置</th>
+                                 <td class="col-sm-2">
+	                            <#if checkList ??>
+	                            <#list checkList as check>
+	                            ${check.taskName!?html} &nbsp
+	                            </#list>
+	                            </#if>
+	                            </td>
+	                            
+	                            
+	                            
+                            </tr>
+                        </table>
+                         <table class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th class="col-sm-1"  style="width:8.35%">检测管理描述</th>
+								<td class="col-sm-2" style="width: 100%">${(data.description)!?html}</td>
+							</tr>
+							
+						</table>
+						
+						<table class="table table-striped table-bordered table-hover table-details">
+						<tr>
+                        		<td>序号</td>
+								<td>探针名称</td>
+                      			<td>探针数据量</td>
+                      			<td>探针质量</td>
+                      		</tr>
+                      		<#if productProbes?has_content>
+                      			<#list productProbes as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			 <td>${d.probeName!?html}</td>
+								<td>${d.dataSize!?html}<@dict_entry_text category="COMPANY" value=d.unit /></td>
+                      			<td>${d.qualitySize!?html}<@dict_entry_text category="COMPANY" value=d.qualityUnit /></td>
+                      		</tr>
+                      			</#list><#else>
+                             <tr>
+                                 <td colspan="4">暂无相关明细</td>
+                             </tr>
+                             </#if>
+                             <tr>
+                                <th colspan="4"><div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-primary goback" type="button">返回</button>
+                                    </div></th>
+                            </tr>
+						</table>
+						
+						
+						
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/system.js"></script>
+</body>
+</html>

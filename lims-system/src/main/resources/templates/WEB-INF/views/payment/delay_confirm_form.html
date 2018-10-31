@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>延迟付款表单</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script> 
+
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+<script>
+
+var base = "${base}";
+var order = ${orderJson};
+var instrumentImg =[];
+
+$(function() {
+	
+	$('#instrumentImg').fileinput({
+        language: 'zh', // 设置语言
+        uploadUrl: base+'/order/upload.do', // 上传的地址
+        allowedFileExtensions : ['jpg', 'png','gif'],// 接收的文件后缀
+        maxFileSize: 5000,
+        validateInitialCount:true,
+        showUpload: true, // 是否显示上传按钮
+        showCaption: false,// 是否显示标题
+        maxFileCount: 2,
+        deleteUrl:base+'/order/deletePic.do',
+        showRemove:false,
+        initialPreview:[],
+        initialPreviewConfig:[],
+    }).on("fileuploaded", function(event, data) {
+    	if(data.response.fileList.length==1){
+    		instrumentImg.push(data.response.fileList[0])
+    	} else{
+    		$.each(data.response.fileList,function(index,obj){
+    			instrumentImg.push(obj)
+    		})
+    	}
+    }).on('filepredelete', function(event, key) {  
+    	instrumentImg.remove(key);
+    });
+	
+	$("#backconfirmForm").validate({
+		
+		submitHandler:function(form){
+			
+			$("#createButton").attr('disabled', 'disabled');
+			$("#createButton").val('确认中'); 
+			 var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load(); 
+			
+			$.ajax({
+	            type: "post",
+	            url: base+"/payment/confirmDelayOrder.do",
+	            data:{
+	            	orderId:$("#orderId").val(),
+	            	payType:$("#payType").val(),
+	            	posNo:$("#posNo").val(),
+	            	receiptRolls:$("#receiptRolls").val(),
+	            	transferNo:$("#transferNo").val(),
+	            	discountCouponId:$("#discountCouponId").val(),
+	            	paymenter:$("#paymenter").val(),
+	            	paymentTime:$("#paymentTime").val(),
+	            	checkAmount:$("#checkAmount").val(),
+	            	instrumentImg:instrumentImg.join(","),
+	            	remark:$("#remark").val(),
+	            },
+	            dataType: "json",
+	            success: function(data){
+	            	window.location.href=base+"/payment/delayConfirmList.do";
+	            	layerObject.close(loadindex);
+	            },
+	            error:function(){
+	            	layerObject.close(loadindex);
+	            	$("#createButton").removeAttr("disabled");
+	            	$("#createButton").val('确认'); 
+	            }
+	           
+	        });
+			
+			
+			
+		},
+        rules: {
+        	payType:{
+        		required:true,
+        	},
+        	posNo:{
+        		required:true,
+        	},
+        	receiptRolls:{
+        		required:true,
+        	},
+        	paymenter:{
+        		required:true,
+        	},
+        	paymentTime:{
+        		required:true,
+        	},
+        	checkAmount:{
+        		required:true,
+        		number:true,
+        		min:0.01
+        	},
+        	
+        },
+        messages: {
+        	
+        }
+    });
+	
+	if(order.reduceAmount <=0){
+	$("#discountCoupon").bsSuggest('init', {
+		url : "${base}/payment/couponList.do?userId="+order.ownerId,
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "realAmount",
+		effectiveFields : [ "realAmount","validEndDate" ],
+		effectiveFieldsAlias : {
+			realAmount:"金额",
+			validEndDate:"截止日期",
+			
+		}
+	}).on('onDataRequestSuccess', function (e, result) {
+	}).on('onSetSelectValue', function (e, keyword, data) {
+		$('#discountCouponId').val(data.id);
+		onSelectCoupon(data.realAmount);
+	}).on('onUnsetSelectValue', function () {
+		$("#realPrice").val(order.realPrice);
+		$("#checkAmount").val(order.realPrice);
+	});
+	}else{
+		$('#tipLabel').css("display","block");
+	}
+
+	
+	$(".transArea").css("display","none"); //默认是POS机方式，POS卡号隐藏
+	
+}); 
+
+
+function payTypeChange(obj){
+	if($(obj).val() == 4){
+		$(".hiddenArea").css("display","none");
+		$(".transArea").css("display","block");
+		
+	}else{
+		$(".hiddenArea").css("display","block");
+		$(".transArea").css("display","none");
+	}
+};
+
+
+function onSelectCoupon(obj){
+	var amount=obj;
+	if(typeof(amount) != 'undefined' && null != amount && "" != amount){
+		 if(accSub(order.realPrice,amount)>0){
+			$("#realPrice").val(accSub(order.realPrice,amount));
+			$("#checkAmount").val(accSub(order.realPrice,amount));
+		}else{
+			showTip("优惠券金额大于应付额，数据有误","错误提示");
+			//$(obj).val('');
+			$('#discountCouponId').val('');
+			$('#discountCoupon').val(''); //清空所选
+		} 
+	}
+	else{
+		$("#realPrice").val(order.realPrice);
+		$("#checkAmount").val(order.realPrice);
+	}
+}
+function clearDiscount(){
+	$('#discountCoupon').val('');
+	$("#realPrice").val(order.realPrice);
+	$("#checkAmount").val(order.realPrice);
+}
+		    
+</script>
+<style>
+.file-drop-zone {
+	height: auto
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated ">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">缴费业务</a></li>
+							<li class="active"><strong>付款确认</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>付款信息</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="backconfirmForm" class="form-horizontal m-t" action="#" method="post" enctype='application/json'>
+							<input type="hidden" name="orderId" id="orderId"  value="${(order.id)!?html}" />
+							
+							<input type="hidden" name="discountCouponId" id="discountCouponId"  value="" />
+							
+							<fieldset>
+							<div class="form-group">
+									<label class="col-sm-2 control-label control-required">订单编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code"
+											id="code" value="${(order.code)!?html}" readonly="readonly" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">支付方式：</label>
+									
+									<div class="col-sm-3">
+										<select class="form-control" name="payType" id="payType" onchange="payTypeChange(this)"  >
+											<option value="3">POS机支付</option>
+											<option value="4">转账支付</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="form-group transArea">
+									
+									<label class="col-sm-2 control-label control-required">转账卡号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="transferNo"
+												id="transferNo" value=""  />
+	                   				 </div>
+                    			</div>
+								
+								<div class="form-group hiddenArea">
+									
+									<label class="col-sm-2 control-label control-required">（交易）参考号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="posNo"
+												id="posNo" value=""  />
+	                   				 </div>
+                    			</div>
+                    			<div class="form-group hiddenArea">
+                   			 		<label class="col-sm-2 control-label control-required">收据单号：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="receiptRolls"
+												id="receiptRolls" value="" />
+                    				</div>
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">款项合计：</label>
+									<div class="col-sm-3">
+									<input type="text" class="form-control" 
+												value="${(order.realPrice)!?html}" readonly="readonly" />
+                    				</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">抵用券：</label>
+									
+									<div class="col-sm-3">
+										
+										<div class="input-group">
+										<input type="text" class="form-control" id="discountCoupon"  placeholder="可用的抵用券" />
+										<div class="input-group-btn">
+													<button type="button"
+														class="btn btn-default dropdown-toggle"
+														data-toggle="dropdown">
+														<span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu dropdown-menu-right" role="menu">
+													</ul>
+												</div>
+										<!-- /btn-group -->
+									</div>
+									<a href="javascript:clearDiscount()" >清空抵用券</a>
+									</div>
+									<label id="tipLabel" class="col-sm-2 control-label " style="display: none;color:red">减免金额：${(order.reduceAmount)!?html} <br/>
+									(已使用过减免，无法使用抵用券)</label>
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">应付款：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="realPrice"
+												id="realPrice" value="${(order.realPrice)!?html}" readonly="readonly" />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">付款人：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="paymenter"
+												id="paymenter" value=""   />
+                    				</div>
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">缴费日期：</label>
+									<div class="col-sm-3">
+									<input type="text" class="form-control laydate-icon " 
+												name="paymentTime" id="paymentTime"  value="" readonly="readonly"
+												style="height: 34px"
+												onclick="laydate({istime: true, format: 'YYYY-MM-DD' ,max: laydate.now()})" />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">确认到账金额：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="checkAmount"
+												id="checkAmount" value="${(order.realPrice)!?html}" />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label ">付款凭证：</label>
+									
+									<div class="col-sm-8">
+										<input id="instrumentImg"  type="file" multiple accept=".jpg,.png,.gif"
+											data-overwrite-initial="false" >
+									</div>
+                    				
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label">备注：</label>
+									
+									<div class="col-sm-3">
+									
+									 <textarea  class="form-control"name="remark" id="remark" 
+												style="width:1090px;height:100px;resize: none"></textarea>
+                    				</div>
+									
+								</div>
+								
+								
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"   class="btn btn-primary"  id="createButton" >确认</button>
+										<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+</html>

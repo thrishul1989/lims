@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报告处理</title>
+<!--[if lt IE 9]>
+<meta http-equiv="refresh" content="0;ie.html" />
+<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link rel="stylesheet" href="${plugins}/ladda-bootstrap-master/dist/ladda-themeless.min.css">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet">
+<style>
+    .file-drop-zone {
+        height: auto
+    }
+    .t .ms-sel-ctn {
+        background-position: 98%
+    }
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated kv-main">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li>
+                                <span>报告整合</span>
+                            </li>
+                            <li class="active">
+                                <strong>报告查看</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+	                <div class="ibox-title">
+	                    <h5>报告查看</h5>
+			            <a href="${base}/order/viewOrderByStatus.do?id=${data.orderId}&viewStatus=${(data.viewStatus)!?html}" class="btn btn-sm btn-primary">
+			            	<i class="fa fa-search-plus"></i> 检测详情
+			            </a>
+			            <a href="${base}/order/viewOrder.do?id=${data.orderId}" class="btn btn-sm btn-primary">
+			            	<i class="fa fa-search-plus"></i> 订单详情
+			            </a>
+	                </div>
+	                <div class="ibox-content">
+	                    <form id="report_handle_form" action="" method="post" class="search-form form-inline">
+	                    	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+	                    	<input type="hidden" id="id" name="id" value="${(data.id)!?html}"/>
+	                    	<input type="hidden" name="status" value="${(data.reportStatus)!?html}"/>
+	                    	<input type="hidden" id="orderCode" value="${(data.orderCode)!?html}"/>
+	                    	<input type="hidden" id="productCode" value="${(data.productCode)!?html}"/>
+	                    	<input type="hidden" id="iframe_sample" value="true"/>
+	                    	<input type="hidden" id="iframe_result" value="true"/>
+	                    	<input type="hidden" id="report_file_upload" value="false"/>
+	                    	<input type="hidden" id="currentSemantic" <#if data.testingMethods??><#list data.testingMethods as curmethod><#if curmethod_index == 0>value="${(curmethod.semantic)!?html}" type-value="${(curmethod.type)!?html}"</#if></#list></#if>/>
+	                       
+	                        <table class="table table-striped table-bordered table-hover table-details">
+                            <tr>
+                                <th class="col-sm-1">报告分类:</th>
+                                <td class="col-sm-2">
+                                	<#if data.reportType??>
+                                		<#if data.reportType = '1'>明确阳性</#if>
+                                		<#if data.reportType = '2'>疑似阳性</#if>
+                                		<#if data.reportType = '3'>可疑</#if>
+                                		<#if data.reportType = '4'>阴性</#if>
+                                	</#if>
+                                </td>
+                                <th class="col-sm-1">分析结果:</th>
+                                <td class="col-sm-2">
+                                	<#if data.analyType??>
+                                		<#if data.analyType='1'>发现与疾病表型相关的致病性突变</#if>
+                                		<#if data.analyType='2'>发现与疾病表型相关的疑似致病性突变</#if>
+                                		<#if data.analyType='3'>发现与疾病表型相关的可疑变异</#if>
+                                		<#if data.analyType='4'>未发现与疾病表型相关的明确致病性突变</#if>
+                                	</#if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">报告模板:</th>
+                                <td class="col-sm-2" colspan="3">
+                                	<@dict_entry_text category="REPORT_TYPE" value=data.reportTemplateType />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">结果说明:</th>
+                                <td class="col-sm-2" colspan="3">${(data.instruction)!?html}</td>
+                            </tr>
+                        </table>
+	                        
+                        </form>
+                        
+                        <div class="ibox-content">
+                        	<div class="ibox">
+								<ul id="myTab" class="nav nav-tabs">
+									<#if data.testingMethods??> <#list data.testingMethods as method>
+									<li <#if method.semantic == semantic>class="active"<#else></#if>><a href="#${(method.semantic)!?html}" data-toggle="tab" id="tab_${(method.semantic)!?html}" data-id="${(data.id)!?html}" data-semantic="${(method.semantic)!?html}" data-type="${(method.type)!?html}">${(method.name)!?html}</a></li>
+									</#list> </#if>
+								</ul>
+							</div>
+                        	<div class="ibox ibox-table">
+								<div id="myTabContent" class="tab-content">
+								<#if data.testingMethods??> <#list data.testingMethods as method>
+									<div <#if method.semantic == semantic> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="${(method.semantic)!?html}">
+										<iframe <#if method_index ==0>src="${base}/bpm/report/firstReview/getProcess.do?id=${(data.id)!?html}&&semantic=${(method.semantic)!?html}"<#else>src=""</#if>
+											style="background: white; width: 100%; height: 700px;"
+											frameborder="no" border="0" name="${(method.semantic)!?html}" id="iframe_${(method.semantic)!?html}"></iframe>
+									</div>
+								</#list> </#if>
+								</div>
+							</div>
+                        </div>
+	                </div>
+	            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+            	<div class="ibox">
+            		<div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-5">
+                        	<a href="${base}/bpm/report/firstReview/report_goBack.do?status=${(data.viewStatus)!?html}" class="btn btn-primary"> 返回</a>
+                        	<!-- <div class="col-sm-4 col-sm-offset-2">
+											<button class=" btn btn-primary " type="button"
+											onclick="goBack()">返回</button>
+									</div> -->
+                        </div>
+                    </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${plugins}/ladda-bootstrap-master/dist/spin.min.js"></script>
+<script src="${plugins}/ladda-bootstrap-master/dist/ladda.min.js"></script>
+<script src="${system_js}/jquery.lSelect.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script type="text/javascript">
+function goBack() {
+	window.history.back(-1);
+}
+<!--
+<#if data.combineUrl??>
+	$('#report_file_upload').val('true');
+</#if>
+
+var testingMethods = ${testingMethods};
+
+$('#myTab a').on('click',function(){
+	var $me = $(this);
+	var semantic = $me.data('semantic');
+	var id = $me.data('id');
+	var type = $me.data('type');
+	
+	var iframe_sample = $('#iframe_sample').val();
+	var iframe_result = $('#iframe_result').val();
+	
+	if(iframe_sample == 'true' && iframe_result == 'true'){
+		$('#iframe_' + semantic).attr('src', '${base}/bpm/report/firstReview/getProcess.do?id='+id+'&&semantic='+semantic);
+		for(var i = 0; i < testingMethods.length; i++){
+			if(semantic != testingMethods[i].semantic){
+				$('#iframe_' + testingMethods[i].semantic).attr('src', '');
+			}
+		}
+		
+	}else{
+		parent.layer.alert('当前页面数据未保存，请保存后再切换页面',{title:"提示"});
+		return false;
+	}
+});
+//-->
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

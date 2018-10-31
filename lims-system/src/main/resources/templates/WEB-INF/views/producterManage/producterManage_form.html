@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>生产商表单-生产商管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/demo.css" rel="stylesheet">
+<link href="${system_css}/layout.css" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+<script src="${system_js}/jquery.cxselect.min.js"></script>
+<!-- <script src="${system_js}/jquery.lSelect.js"></script> -->
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script><!-- 引入自定义包 -->
+<script type="text/javascript">
+
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/producterManage/list.do">生产商管理</a></li>
+							<li class="active"><strong>新增生产商</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<strong>新增生产商</strong>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal m-t toggle-form" id="choseForm"
+							action="${base}/producterManage/create.do" method="post">
+						<input type="hidden" id="id" name="id" value="${(producterManage.id)!?html}" />
+						<input type="hidden" id="producterManageNum" name="producterManageNum" value="${(producterManage.producterNo)!?html}" />
+							<div class="search-form">
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">生产商编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="producterNo" id="producterNo"
+											value="${(producterManage.producterNo)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">名称：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(producterManage.name)!?html}" />
+									</div>
+									
+								</div>
+
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">状态：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="state"  id="state"
+										value="${(producterManage.state)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label  control-required">电话：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="phone" id="phone"
+										value="${(producterManage.phone)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" >网址：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="website" id="website"
+										value="${(producterManage.website)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label">描述：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="description" id="description"
+										value="${(producterManage.description)!?html}" /> 
+								</div>
+							</div>
+								
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required" >联系人：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="contactName" id="contactName"
+										value="${(producterManage.contactName)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label  control-required">联系人电话：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="contactPhone" id="contactPhone"
+										value="${(producterManage.contactPhone)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group" >	
+								<label class="col-sm-2 control-label  control-required">请选择区域：</label>	
+									<div class="col-sm-3 " id="element_id" >
+										<select class="province form-control" name="province" data-value="${(producterManage.province)!?html}" ></select>
+									    <select class="city form-control"  name="city" data-value="${(producterManage.city)!?html}" ></select>
+									    <select class="area form-control" name="area" data-value="${(producterManage.area)!?html}"></select>
+									</div>	
+								<label class="col-sm-2 control-label">详细地址：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="address" id="address"
+											value="${(producterManage.address)!?html}" />
+									</div>		
+							</div>
+							
+							<div class="form-group" >	
+									<label class="col-sm-2 control-label">公司邮箱：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="email" id="email"
+											value="${(producterManage.email)!?html}" />
+									</div>
+							</div>	
+							<#if producterManage.emails?has_content>
+							<div id="div">
+							<#list producterManage.emails as myEmail>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" >联系人邮箱：</label>
+									<div class="col-sm-3" >
+										<input type="text" class="form-control" name="contactEmails" id="contactEmails"
+										value="${myEmail}" />
+									</div>
+										<a href='#' name='delete'>X</a>
+							</div>
+							</#list></div><#else>
+							<div id="div">
+							<div class="form-group" >
+								<label class="col-sm-2 control-label" >联系人邮箱：</label>
+								<div class="col-sm-3" style="clear: right;">
+										<input type="text" class="form-control" name="contactEmails" id="contactEmails"
+											value="${producterManage.contactEmails!?html}" />
+									</div>
+							</div>
+							</div>
+							</#if>
+
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class=" btn btn-primary " type="button" id="button">添加邮箱</button>
+									<button class=" btn btn-primary " type="button" id="sub">保存</button>
+									
+									<button class=" btn btn-primary " type="button"
+										onclick="goBack()">返回</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		
+	$(function(){
+		/* $("#areaId").lSelect({
+            url: "${base}/producterManage/area"
+        }); */
+        
+        bindListener();
+        $('#element_id').cxSelect({
+        	  url: '${system_js}/cityData.min.json',           
+        	  selects: ['province', 'city', 'area'], 
+        	  emptyStyle: 'none'
+        	});
+        $.cxSelect.defaults.url = '${system_js}/cityData.min.json';
+		$.cxSelect.defaults.nodata = 'none';
+
+	});
+	$("#button").click(function(){
+		var div = "<div class='form-group'><label class='col-sm-2 control-label '>联系人邮箱：</label><div class='col-sm-3' ><input type='text' class='form-control' name='contactEmails'/></div><div class='col-sm-1' ><a href='#' name='rmlink'>X</a></div></div>"
+		$("#div").append(div);
+		bindListener();
+	})
+		
+	function bindListener(){
+		 $("a[name=rmlink]").unbind().click(function(){
+  			$(this).parent().parent().remove();
+    })
+}
+	
+	$("a[name=delete]").click(function(){
+		var some = $(this).parent();
+		var emailVal =  $(this).parent().find($("input[name=contactEmails]")).val();
+		var id = $("#id").val();
+		 $.ajax({
+			url:"${base}/producterManage/deleteEmail.do",
+			type:"POST",
+			data:{id:id,emailVal:emailVal},
+			success:function(data){
+				some.remove();
+			},
+			error:function(){
+				alert("failed")
+			}
+			
+		}) 
+	});
+		function checkedForm(){
+			
+			 $("#choseForm").validate({
+		            rules: {
+		            	producterNo:  {
+		            		required:true,
+		            		maxlength: 64,
+		            		remote:{
+								url: "${base}/producterManage/validate.do?producterNo?"+$("#producterNo").val()
+							 }
+		            	},
+		            	phone: {
+		            		required:true,
+		            		isMobile: true
+		            	},
+		            	email:{
+		            		email:true
+		            	},
+		            	contactName: {
+		            		required:true,
+		            		maxlength: 64
+		            	},
+		            	contactPhone:  {
+		            		required:true,
+		            		isMobile: true
+		            	},
+		            	contactEmails:{
+		            		email:true
+		            	}
+		            },
+		            messages: {
+		            	producterNo:  {
+		            		remote:"生产商编号已存在，请重新输入！"
+		            	}
+		            }
+		        });
+			
+			
+		}
+	
+		
+	$(function(){
+			
+			var producterManageNum = $("#producterManageNum").val();
+			var updateID = '';
+			updateID  = $("#id").val();
+			if(updateID.length>0){
+				$("strong").html("修改生产商");
+		        $('#choseForm').attr('action', '${base}/producterManage/modify.do');
+		       
+			}else{
+				checkedForm();
+			} 
+			
+		$("#sub").click(function(){
+				if(producterManageNum != $("#producterNo").val()){
+					checkedForm();
+				}
+				 $("#choseForm").submit();
+			});
+		
+		});
+	
+	function goBack() {
+		window.history.back(-1);
+	}
+	</script>
+</body>
+</html>

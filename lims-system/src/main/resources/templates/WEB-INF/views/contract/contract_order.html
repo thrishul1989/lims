@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>合同管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<style>
+#L_REAGENT_contract_anchor{
+background-color: #e1e4e4
+}
+
+@media (max-width: 800px) { .table-responsive { width: 100%; margin-bottom: 15px; overflow-x: scroll; overflow-y: hidden; border: 0px solid #dddddd;  -webkit-overflow-scrolling: touch; } .table-responsive > .table { margin-bottom: 0; } .table-responsive > .table > thead > tr > th, .table-responsive > .table > tbody > tr > th, .table-responsive > .table > tfoot > tr > th, .table-responsive > .table > thead > tr > td, .table-responsive > .table > tbody > tr > td, .table-responsive > .table > tfoot > tr > td { white-space: nowrap; }
+
+</style>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ibox-table">
+				<div class="ibox-title">
+                       <h5>合同列表</h5>
+                       <div style="float:right">
+								<a href="javascript:history.go(-1)"  target="_self" style="padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+							</div>
+                    </div>
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                        <div class="col-sm-12">
+	                         <form id="searchcontract_from" action="${base}/order/getOrderByContract" method="post" class="search-form">
+	                            <input type='hidden' name="contractId" value="${searcher.contractId!?html}"/>
+	                            <div class="row m-b-xs">
+		                             <div class="col-sm-2">
+											<select class="form-control" id="testingStatus" name="testingStatus" data-value="${searcher.testingStatus!?html}">
+												<option value="">--请选择订单主状态--</option>
+												<option value="1">待检测下放</option>
+												<option value="2">检测中</option>
+												<option value="3">已暂停</option>
+												<option value="4">已取消</option>
+												<option value="5">已完成</option>
+											</select>
+									</div>
+		                            <div class="col-sm-2">
+											<select class="form-control" id="paymentStatus" name="paymentStatus" data-value="${searcher.paymentStatus!?html}">
+												<option value="">--请选择订单支付状态--</option>
+												<option value="0">待付款</option>
+												<option value="1">付款待确认</option>
+												<option value="2">已付款</option>
+											</select>
+									</div>
+									
+									<div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" class="form-control" name="custormer"   placeholder="客户" value="${searcher.custormer!?html}">
+	                                    </div>
+	                                </div>
+	                                <div class="col-sm-2">
+										<div class="input-group">
+											 <input type="text" class="form-control" name="signUser" 
+											 	 placeholder="业务员" value="${searcher.signUser!?html}">
+										</div>
+									</div>
+	                                    
+	                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <select class='form-control' name="marketingCenter"  data-value="${(searcher.marketingCenter)!?html}">
+                                    		<option value=''>请选择营销中心</option>
+                                    		<#list testingTypes as testingType>
+                                    		<option value='${testingType.id}'>${testingType.name}</option>
+                                    		</#list>
+                                    	</select>
+                                    </div>
+                                	</div>
+	                                <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <button type="submit" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 查询
+	                                        </button>
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('searchcontract_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form> 
+	                        <div class="table-responsive">
+	                        <table class="table table-bordered">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+	                                    <th>订单编号</th>
+	                                    <th>合同编号</th>
+	                                    <th>营销中心</th>
+	                                    <th>受检人</th>
+	                                    <th>客户</th>
+	                                    <th>业务员</th>
+	                                    <th>费用</th>
+	                                    <th>主状态</th>
+	                                    <th>付款状态</th>
+	                                    <th>下单时间</th>
+	                                    <th class="flexible-btns">操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                              <#if orders?has_content> 
+	                                <#list orders as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.code!?html}</td>
+	                                    <td>${record.contract.code!?html}</td>
+	                                    <td>
+	                                    	<#if record.contract.marketingCenter == 1>临床遗传</#if>
+	                                    	<#if record.contract.marketingCenter == 2>临床肿瘤</#if>
+	                                    	<#if record.contract.marketingCenter == 3>健康筛选</#if>
+	                                    	<#if record.contract.marketingCenter == 4>科技服务</#if>
+	                                    </td>
+	                                    <td>
+	                                    	<#if record.orderExamineeList?has_content>
+	                                    	<#list record.orderExamineeList as orderExaminee>
+	                                    	<#if orderExaminee_index == 0>
+	                                    	${orderExaminee.name}
+	                                    	<#else>
+	                                    	, ${orderExaminee.name}
+	                                    	</#if>
+	                                    	</#list>
+	                                		</#if>
+	                                    </td>
+	                                    <td><#if record.owner??>${record.owner.realName!?html}</#if></td>
+	                                    <td>${record.contract.signUsername!?html}</td>
+									    <td>${record.realPrice!?html}</td>
+									    <td>
+									   		<@dict_entry_text category="TESTING_STATUS" value=record.testingStatus />
+										</td>
+										<td>
+									   		<#if record.paymentStatus == 0>
+												<font class="label label-warning">待付款</font>
+											<#elseif record.paymentStatus==1 >
+												<font class="label label-info">付款待确认</font>
+											<#else>
+												<font class="label label-success">已付款</font>
+											</#if>
+										</td>
+										<td><#if record.submitTime??> ${(record.submitTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(record.submitTime)!?html} </#if></td>
+	                                   	<td class="flexible-btns">
+										    <a href="${base}/order/viewOrder.do?id=${record.id}&flag='123'"
+											class="btn btn-sm btn-success"> 
+											<i class="fa fa-search-plus"></i>查看
+										    </a> 
+									   </td>
+	                               		 </tr>
+	                                </#list>
+	                                </#if>
+	                            </tbody>  
+	                        </table>
+	                        </div>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+
+</script>
+                
+                
+</html>
+

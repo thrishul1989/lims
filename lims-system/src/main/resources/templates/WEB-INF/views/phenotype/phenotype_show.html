@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>表型管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+ <link href="${system_js}/bootstrap-fileinput-master/css/fileinput.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+            
+            <div class="ibox">
+                    <div class="ibox-title" style="border-color: white">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/phenotype/list.do">表型管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>表型列表</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+				<div class="ibox-title">
+                        <h5>表型列表</h5>
+                        <a class="btn btn-sm btn-success" onclick='insertData()'>
+								<i class="fa fa-download"></i> 保存导入的表型信息
+						</a>
+                    </div>
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                        <div class="col-sm-12">
+	                        <div class="table-responsive">
+	                        <table class="table table-bordered">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+	                                    <th>CHPO表型ID</th>
+	                                    <th>中文名称</th>
+	                                    <th>英文名称</th>
+	                                    <th>中文说明</th>
+	                                    <th>英文说明</th>
+	                                    <th class="flexible-btns">操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if list??>
+	                              <#if list?has_content> 
+	                                <#list list as record>
+	                                  <#if record.code != "">
+		                              <#if record.isOverwrite!?html == "1">
+		                              <tr style="background-color: #e3f190" class="datatr">
+		                              <#else>
+		                              <tr class="datatr">
+		                              </#if>
+		                              <#else>
+		                               <tr style="background-color: #f58585" class="datatr">
+		                              </#if>
+		                              
+                              
+                              
+                              
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.code!?html}</td>
+	                                    <td>${record.name!?html}</td>
+	                                    <td>${record.enName!?html}</td>
+	                                    <td>${record.description!?html}</td>
+	                                    <td>${record.descriptionEn!?html}</td>
+	                                   	<td class="flexible-btns">
+									    <a class="btn btn-sm btn-success" onclick='deleteField(this)'> 
+										<i class="fa fa-trash" ></i>删除
+									    </a>
+										</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                        </div>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+</body>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript">
+
+
+function insertData(){
+	var layerObject = parent.parent.layer;
+	var loadindex = layerObject.load();
+	
+	var phenoTypeList = new Array();
+	$.each($('.datatr'),function(index,obj){
+		var phenotype = {};
+		phenotype.code = $(this).find('td').eq(1).text();
+		phenotype.name = $(this).find('td').eq(2).text();
+		phenotype.enName = $(this).find('td').eq(3).text();
+		phenotype.description = $(this).find('td').eq(4).text();
+		phenotype.descriptionEn = $(this).find('td').eq(5).text();
+		phenoTypeList.push(phenotype);
+	});
+	
+	
+	var param=JSON.stringify(phenoTypeList);
+	console.info(param);
+ 	$.ajax({
+		type:"POST",
+		url:"${base}/phenotype/insertData.do",
+		data: {value:param},
+	    dataType: "text",	
+		success:function(flag){
+			if(flag){
+				window.location.href="${base}/phenotype/list.do";
+			}
+				layerObject.close(loadindex);
+		},
+		error:function(){
+        	layerObject.close(loadindex);
+        }
+	}); 
+}
+function deleteField(obj){
+	$(obj).parents('tr').remove();
+}
+</script>
+                
+                
+</html>
+

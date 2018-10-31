@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyFamilyAnnotationMonitorMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationMonitor" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="MONITOR_TASK_ID" property="monitorTaskId" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TASK_ID, MONITOR_TASK_ID, START_TIME, END_TIME, STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getByMonitorId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    where MONITOR_TASK_ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationMonitor" >
+    insert into BIOLOGY_FAMILY_ANNOTATION_MONITOR (ID, TASK_ID, MONITOR_TASK_ID, 
+      START_TIME, END_TIME, STATUS
+      )
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{monitorTaskId,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationMonitor" >
+    insert into BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="monitorTaskId != null" >
+        MONITOR_TASK_ID,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorTaskId != null" >
+        #{monitorTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="searchUncompleteTasks" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    b.*
+    from
+    BIOLOGY_FAMILY_ANNOTATION_MONITOR b
+    where
+    b.END_TIME IS NULL
+  </select>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationMonitor" >
+    update BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorTaskId != null" >
+        MONITOR_TASK_ID = #{monitorTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnnotationMonitor" >
+    update BIOLOGY_FAMILY_ANNOTATION_MONITOR
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      MONITOR_TASK_ID = #{monitorTaskId,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

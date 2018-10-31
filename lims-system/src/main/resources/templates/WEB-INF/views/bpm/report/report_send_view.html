@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报告发送-查看</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>报告发送</span></li>
+							<li class="active"><strong>查看</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<strong>查看</strong>
+					</div>
+					<div class="ibox ibox-table">
+						<div class="ibox-content">
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+                        			<td colspan="8" ><strong>基本信息</strong></td>
+                        		</tr>
+								<tr>
+									<th class="col-sm-1">报告编号</th>
+									<td class="col-sm-2">${(record.reportCode)!?html}</td>
+									<th class="col-sm-1">订单编号</th>
+									<td class="col-sm-2">${(record.orderCode)!?html}</td>
+									<th class="col-sm-1">报告模板</th>
+									<td class="col-sm-2">${(record.reportTemplateType)!?html}</td>
+									<th class="col-sm-1">报告分类</th>
+									<td class="col-sm-2">${(record.reportType)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">分析结果</th>
+									<td class="col-sm-2">${(record.analyResult)!?html}</td>
+									<th class="col-sm-1">结果说明</th>
+									<td class="col-sm-2" colspan="5">${(record.instruction)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">营销中心</th>
+									<td class="col-sm-2">${(record.marketingCenter)!?html}</td>
+									<th class="col-sm-1">合同编号</th>
+									<td class="col-sm-2">${(record.contractCode)!?html}</td>
+									<th class="col-sm-1">合同名称</th>
+									<td class="col-sm-2">${(record.contractName)!?html}</td>
+									<th class="col-sm-1">客户姓名</th>
+									<td class="col-sm-2">${(record.customerName)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">送检单位</th>
+									<td class="col-sm-2">${(record.customerCompanyName)!?html}</td>
+									<th class="col-sm-1">业务员姓名</th>
+									<td class="col-sm-2">${(record.salesmanName)!?html}</td>
+									<th class="col-sm-1">订单备注</th>
+									<td class="col-sm-2">${(record.orderRemark)!?html}</td>
+									<th class="col-sm-1">订单提交时间</th>
+									<td class="col-sm-2">${(record.orderSubmitTime)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">产品编号</th>
+									<td class="col-sm-2">${(record.productCode)!?html}</td>
+									<th class="col-sm-1">产品名称</th>
+									<td class="col-sm-2">${(record.productName)!?html}</td>
+									<th class="col-sm-1">产品负责人</th>
+									<td class="col-sm-2">${(record.productPrincipalName)!?html}</td>
+									<th class="col-sm-1">技术负责人</th>
+									<td class="col-sm-2">${(record.technicalPrincipalName)!?html}</td>
+								</tr>
+							</table>
+
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+                        			<td colspan="8" ><strong>受检人信息</strong></td>
+                        		</tr>
+								<tr>
+									<th class="col-sm-1">姓名</th>
+									<td class="col-sm-2">${(record.examinee.name)!?html}</td>
+									<th class="col-sm-1">性别</th>
+									<td class="col-sm-2">${(record.examinee.sex)!?html}</td>
+									<th class="col-sm-1">年龄</th>
+									<td class="col-sm-2">${(record.examinee.age)!?html}</td>
+									<th class="col-sm-1">病历号</th>
+									<td class="col-sm-2">${(record.examinee.recordNo)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">临床诊断</th>
+									<td class="col-sm-2">${(record.examinee.clinicalDiagnosis)!?html}</td>
+									<th class="col-sm-1">临床推荐理由</th>
+									<td class="col-sm-2">${(record.examinee.clinicalRecommend)!?html}</td>
+									<th class="col-sm-1">临床表型</th>
+									<td class="col-sm-2">${(record.examinee.clinicalPhenotype)!?html}</td>
+									<th class="col-sm-1">重点关注基因</th>
+									<td class="col-sm-2">${(record.examinee.foucsedGenes)!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">既往病史</th>
+									<td class="col-sm-2">${(record.examinee.medicalHistory)!?html}</td>
+									<th class="col-sm-1">家族病史</th>
+									<td class="col-sm-2">${(record.examinee.familyMedicalHistory)!?html}</td>
+								</tr>
+							</table>
+							
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+                        			<td colspan="6" ><strong>样本信息</strong></td>
+                        		</tr>
+								<tr>
+									<td>样本编号</td>
+									<td>样本类型</td>
+									<td>样本名称</td>
+									<td>样本业务类型</td>
+									<td>附属样本用途</td>
+									<td>附属样本家系关系</td>
+								</tr>
+								<#if record.samples?has_content><#list record.samples as sample>
+									<tr>
+										<td>${(sample.sampleCode)!?html}</td>
+										<td>${(sample.sampleTypeName)!?html}</td>
+										<td>${(sample.sampleName)!?html}</td>
+										<td>
+											<#if "1" == (sample.sampleBusinessType)>主样本</#if>
+											<#if "2" == (sample.sampleBusinessType)>附属样本</#if>
+											<#if "3" == (sample.sampleBusinessType)>科研样本</#if>
+										</td>
+										<td>
+											<#if (sample.samplePurpose)??>
+												<#if "1" == (sample.samplePurpose)>验证</#if>
+												<#if "2" == (sample.samplePurpose)>检测</#if>
+												<#if "3" == (sample.samplePurpose)>对照</#if>
+												<#if "4" == (sample.samplePurpose)>暂存</#if>
+											</#if>
+										</td>
+										<td>${(sample.sampleFamilyRelation)!?html}</td>
+									</tr>
+								</#list>
+								<#else>
+								<td colspan="6">暂无相关数据</td>
+								</#if>
+							</table>
+							
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+                        			<td colspan="7" ><strong>检测数据</strong></td>
+                        		</tr>
+								<tr>
+									<td>数据编号</td>
+									<td>检测方法</td>
+									<td>探针</td>
+									<td>lane号</td>
+									<td>文库号</td>
+									<td>文库接头</td>
+									<td>分析坐标</td>
+								</tr>
+								<#if record.testingDatas?has_content><#list record.testingDatas as t>
+									<tr>
+										<td>${(t.dataCode)!?html}</td>
+										<td>${(t.testingMethod)!?html}</td>
+										<td>${(t.probes)!?html}</td>
+										<td>${(t.lane)!?html}</td>
+										<td>${(t.libraryCode)!?html}</td>
+										<td>${(t.libraryIndex)!?html}</td>
+										<td>${(t.analyCoordinates)!?html}</td>
+									</tr>
+								</#list>
+								<#else>
+								<td colspan="7">暂无相关数据</td>
+								</#if>
+							</table>
+							
+							<strong>数据详情</strong>
+						
+							
+								
+						<ul id="myTab" class="nav nav-tabs">
+							<#if methods?has_content><#list methods as method>
+								<#if method_index == 0>
+								<li class="active"><a href="#${(method)!?html}" data-toggle="tab" id="tab_${(method)!?html}">${(method)!?html}</a></li>
+								<#else>
+								<li ><a href="#${(method)!?html}" data-toggle="tab" id="tab_${(method)!?html}">${(method)!?html}</a></li>
+								</#if>
+							</#list>
+							</#if>
+						</ul>
+					
+					<div id="myTabContent" class="tab-content">
+						<#if methods?has_content><#list methods as method>
+								<#if method_index == 0>
+									<div  class="tab-pane fade in active" id="${(method)!?html}" style="overflow: auto;">
+										<table class="table table-striped table-bordered table-hover table-details" style="min-width: 220%">
+											<#if method?contains("验证")>
+												<tr>
+													<th>突变来源</th>
+				                                    <th>验证样本</th>
+				                                    <th>合并编号</th>
+				                                    <th>家系关系</th>
+				                                    <th>样本名称</th>
+				                                    <th>样本编号</th>
+				                                    <th>基因</th>
+				                                    <th>外显子区域</th>
+				                                    <th>染色体位置</th>
+				                                    <#if method?contains("QPCR")>
+				                                    <th>上游内参基因</th>
+				                                    <th>下游内参基因</th>
+				                                    <th>对照样本</th>
+				                                    </#if>
+				                                    <#if method?contains("MLPA")>
+				                                    <th>核苷酸变化</th>
+				                                    </#if>
+				                                    <th>杂合/纯合</th>
+				                                    <#if method?contains("QPCR") || method?contains("MLPA")>
+				                                    <th>阴/阳性</th>
+				                                    <th>结论</th>
+				                                    </#if>
+				                                    <th>备注</th>
+				                                    <th>图片</th>
+				                                    <th>是否合格</th>
+			                                    </tr>
+												<#if verifyDataList?has_content><#list verifyDataList as verifyData>
+													<#if verifyData.verifyMethod == method><#if verifyData.verifySamples?has_content><#list verifyData.verifySamples as record>
+														<tr>
+														<#if record.isResampling == 1>
+						                                	<td class="mutationSource" style="color: #eb4f38">${(record.mutationSource)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.verifySample)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.combineCode)!?html}</td>
+						                                    <td class="familyRelation" style="color: #eb4f38">${(record.familyRelation)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.sampleName)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.sampleCode)!?html}</td>
+						                                    <td class="gene" style="color: #eb4f38">${(record.gene)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.exon)!?html}</td>
+						                                    <td class="chrLocation" style="color: #eb4f38">${(record.chrLocation)!?html}</td>
+						                                    <#else>
+						                                     <td class="mutationSource">${(record.mutationSource)!?html}</td>
+						                                    <td>${(record.verifySample)!?html}</td>
+						                                    <td>${(record.combineCode)!?html}</td>
+						                                    <td class="familyRelation">${(record.familyRelation)!?html}</td>
+						                                    <td>${(record.sampleName)!?html}</td>
+						                                    <td>${(record.sampleCode)!?html}</td>
+						                                    <td class="gene">${(record.gene)!?html}</td>
+						                                    <td>${(record.exon)!?html}</td>
+						                                    <td class="chrLocation">${(record.chrLocation)!?html}</td>
+						                                </#if>
+					                                    
+					                                    <#if method?contains("QPCR")>
+					                                    <td>${(record.upstreamGene)!?html}</td>
+					                                    <td>${(record.downstreamGene)!?html}</td>
+					                                    <td>${(record.refSample)!?html}</td>
+					                                    </#if>
+					                                    <#if method?contains("MLPA")>
+					                                    <td>${(record.nucleotideChanges)!?html}</td>
+					                                    </#if>
+														<td>
+															${(record.combineType)!?html}
+														</td>
+					                                    <#if method?contains("QPCR") || method?contains("MLPA")>
+					                                    <td>${(record.testResult)!?html}</td>
+					                                    <td>${(record.conclusion)!?html}</td>
+					                                    </#if>
+					                                    <td>${(record.remark)!?html}</td>
+					                                    <td><#if record.pictures?has_content>
+															<#list record.pictures as pic>
+					                                    	<#if pic_index == 0>
+																<a class="tooltips"  href="${base}/bpm/report/download.do?fileName=${pic.picName?replace('#','%23')+'/'+pic.picUrl!html}" data-toggle="tooltip" data-placement="left" data-html="true" title="<img width='200%' src='${base}/contract/download.do?fileName=${pic.picUrl!?html}' />" >
+																	${(pic.picName)!?html}
+																</a>
+					                                    	<#else>
+																,<a class="tooltips"  href="${base}/bpm/report/download.do?fileName=${pic.picName?replace('#','%23')+'/'+pic.picUrl!html}" data-toggle="tooltip" data-placement="left" data-html="true" title="<img width='200%' src='${base}/contract/download.do?fileName=${pic.picUrl!?html}' />" >
+																	${(pic.picName)!?html}
+																</a>
+					                                    	</#if>
+					                                    </#list> </#if></td>
+					                                    <td>
+					                                        <#if  record.isResampling != 1>
+					                                        	<div <#if !record.endFlag>style="display: none;"</#if>>
+					                                            <label> 
+					                                                    <#if record.qualified>合格</#if>  
+					                                            </label>
+					                                        	</div>
+					                                        </#if>
+					                                        
+					                                    </td>
+													</tr>
+													</#list></#if>
+													</#if>
+												</#list>
+												</#if>
+												<#else>
+													<#if methodDetails??><#if methodDetails["${(method)!?html}"]?has_content>
+													<#list methodDetails["${(method)!?html}"] as map>
+															<#if map_index == 0>
+																	<tr>
+																		<#list map?keys as key>
+																			<td>${key}</td>
+																		</#list>
+																	</tr>
+																	<tr>
+																		<#list map?keys as key>
+																			<td>${(map["${key}"])!?html}</td>
+																		</#list>
+																	</tr>
+																<#else>
+																	<tr>
+																		<#list map?keys as key>
+																			<td>${(map["${key}"])!?html}</td>
+																		</#list>
+																	</tr>
+																</#if>
+													</#list>
+													</#if><#else>
+															<td colspan="7">暂无相关数据</td></#if>		
+											</#if>
+										</table>
+									</div>
+								<#else>
+									<div  class="tab-pane fade" id="${(method)!?html}" style="overflow: auto;">
+										<table class="table table-striped table-bordered table-hover table-details" style="min-width: 220%">
+											<#if method?contains("验证")>
+												<tr>
+													<th>突变来源</th>
+				                                    <th>验证样本</th>
+				                                    <th>合并编号</th>
+				                                    <th>家系关系</th>
+				                                    <th>样本名称</th>
+				                                    <th>样本编号</th>
+				                                    <th>基因</th>
+				                                    <th>外显子区域</th>
+				                                    <th>染色体位置</th>
+				                                    <#if method?contains("QPCR")>
+				                                    <th>上游内参基因</th>
+				                                    <th>下游内参基因</th>
+				                                    <th>对照样本</th>
+				                                    </#if>
+				                                    <#if method?contains("MLPA")>
+				                                    <th>核苷酸变化</th>
+				                                    </#if>
+				                                    <th>杂合/纯合</th>
+				                                    <#if method?contains("QPCR") || method?contains("MLPA")>
+				                                    <th>阴/阳性</th>
+				                                    <th>结论</th>
+				                                    </#if>
+				                                    <th>备注</th>
+				                                    <th>图片</th>
+				                                    <th>是否合格</th>
+			                                    </tr>
+												<#if verifyDataList?has_content><#list verifyDataList as verifyData>
+													<#if verifyData.verifyMethod == method><#if verifyData.verifySamples?has_content><#list verifyData.verifySamples as record>
+														<tr>
+														<#if record.isResampling == 1>
+						                                	<td class="mutationSource" style="color: #eb4f38">${(record.mutationSource)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.verifySample)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.combineCode)!?html}</td>
+						                                    <td class="familyRelation" style="color: #eb4f38">${(record.familyRelation)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.sampleName)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.sampleCode)!?html}</td>
+						                                    <td class="gene" style="color: #eb4f38">${(record.gene)!?html}</td>
+						                                    <td style="color: #eb4f38">${(record.exon)!?html}</td>
+						                                    <td class="chrLocation" style="color: #eb4f38">${(record.chrLocation)!?html}</td>
+						                                    <#else>
+						                                     <td class="mutationSource">${(record.mutationSource)!?html}</td>
+						                                    <td>${(record.verifySample)!?html}</td>
+						                                    <td>${(record.combineCode)!?html}</td>
+						                                    <td class="familyRelation">${(record.familyRelation)!?html}</td>
+						                                    <td>${(record.sampleName)!?html}</td>
+						                                    <td>${(record.sampleCode)!?html}</td>
+						                                    <td class="gene">${(record.gene)!?html}</td>
+						                                    <td>${(record.exon)!?html}</td>
+						                                    <td class="chrLocation">${(record.chrLocation)!?html}</td>
+						                                </#if>
+					                                    
+					                                    <#if method?contains("QPCR")>
+					                                    <td>${(record.upstreamGene)!?html}</td>
+					                                    <td>${(record.downstreamGene)!?html}</td>
+					                                    <td>${(record.refSample)!?html}</td>
+					                                    </#if>
+					                                    <#if method?contains("MLPA")>
+					                                    <td>${(record.nucleotideChanges)!?html}</td>
+					                                    </#if>
+														<td>
+															${(record.combineType)!?html}
+														</td>
+					                                    <#if method?contains("QPCR") || method?contains("MLPA")>
+					                                    <td>${(record.testResult)!?html}</td>
+					                                    <td>${(record.conclusion)!?html}</td>
+					                                    </#if>
+					                                    <td>${(record.remark)!?html}</td>
+					                                    <td><#if record.pictures?has_content>
+															<#list record.pictures as pic>
+					                                    	<#if pic_index == 0>
+																<a class="tooltips"  href="${base}/bpm/report/download.do?fileName=${pic.picName?replace('#','%23')+'/'+pic.picUrl!html}" data-toggle="tooltip" data-placement="left" data-html="true" title="<img width='200%' src='${base}/contract/download.do?fileName=${pic.picUrl!?html}' />" >
+																	${(pic.picName)!?html}
+																</a>
+					                                    	<#else>
+																,<a class="tooltips"  href="${base}/bpm/report/download.do?fileName=${pic.picName?replace('#','%23')+'/'+pic.picUrl!html}" data-toggle="tooltip" data-placement="left" data-html="true" title="<img width='200%' src='${base}/contract/download.do?fileName=${pic.picUrl!?html}' />" >
+																	${(pic.picName)!?html}
+																</a>
+					                                    	</#if>
+					                                    </#list> </#if></td>
+					                                    <td>
+					                                        <#if  record.isResampling != 1>
+					                                        	<div <#if !record.endFlag>style="display: none;"</#if>>
+					                                            <label> 
+					                                                    <#if record.qualified>合格</#if>  
+					                                            </label>
+					                                        	</div>
+					                                        </#if>
+					                                        
+					                                    </td>
+													</tr>
+													</#list></#if>
+													</#if>
+												</#list>
+												</#if>
+												
+											<#else>
+												
+												<#if methodDetails??><#if methodDetails["${(method)!?html}"]?has_content>
+												<#list methodDetails["${(method)!?html}"] as map>
+														<#if map_index == 0>
+																<tr>
+																	<#list map?keys as key>
+																		<td>${key}</td>
+																	</#list>
+																</tr>
+																<tr>
+																	<#list map?keys as key>
+																		<td>${(map["${key}"])!?html}</td>
+																	</#list>
+																</tr>
+															<#else>
+																<tr>
+																	<#list map?keys as key>
+																		<td>${(map["${key}"])!?html}</td>
+																	</#list>
+																</tr>
+															</#if>
+												</#list>
+												</#if><#else>
+														<td colspan="7">暂无相关数据</td></#if>
+											</#if>
+										</table>
+									</div>
+								</#if>
+							</#list>
+						</#if>
+					</div>
+		
+							
+							<fieldset>
+								<div class="form-group ">
+
+												<label class="col-sm-1 control-label ">图片：</label>
+												<div class="col-sm-8">
+														<input type="file" name="familyFigures" multiple data-overwrite-initial="false"
+														id="familyFigures" />
+												</div>
+												
+										</div>
+										
+										<div class="form-group">
+											<div class="col-sm-4 col-sm-offset-4 text-center">
+		
+											<button class=" btn btn-primary " type="button"
+													onclick="goBack()">返回</button>
+											</div>
+									 </div>
+							</fieldset>			
+							
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${system_js}/system.js"></script>
+	<script src="${plugins}/pagination/jquery.pagination.js"></script>
+	<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+	<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+	<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+	<script type="text/javascript">
+	
+	var base = "${base}";
+
+	var familyFiguresInit = "";
+	var figuresInit = "";
+	var familyConfig=[];
+	var picInit3 =[];
+	var familyFile=[];
+
+	
+	<#if record.testingDatas?has_content><#list record.testingDatas as t>
+	<#if t.figures?has_content><#list t.figures as f>
+		console.info('${f.picUrl}');
+		picInit3.push("<img  src='/contract/download.do?fileName="+'${f.picUrl}'+"' class='file-preview-image' style='max-width:700px;height:200px;'/><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+'${f.picUrl}'+"'>下载</a>")
+		familyConfig.push({caption:'${f.picName}',width:'120px',key:'${f.picName}'});
+		familyFile.push('${f.picUrl}');
+	</#list></#if>
+	</#list></#if>
+	picInit3.join(",")
+	$(document).ready(function(){
+		$("#familyFigures").fileinput({
+			language: 'zh', // 设置语言
+	        uploadUrl: '/order/upload.do', 
+	        allowedFileExtensions : ['jpg', 'png','gif'],
+	        maxFileSize: 5000,
+	        showUpload: false, // 是否显示上传按钮
+	        showCaption: false,// 是否显示标题
+	        showRemove:false,
+	        initialPreview:picInit3,
+	        initialPreviewConfig:familyConfig,
+		});
+		
+		$('.btn.btn-primary.btn-file').css('display','none')
+	})
+	
+	function goBack() {
+		window.history.back(-1);
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>引物匹配&设计任务单</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>引物匹配&设计</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>引物匹配&设计</h5>
+                        <!-- <a href="#" class="btn btn-sm btn-primary" onclick="myPreview()">
+                            <i class="fa fa-print"></i> 打印任务单
+                        </a> -->
+                        <a href="#" class="btn btn-sm btn-primary" onclick="downloadData()">
+                            <i class="fa fa-print"></i> 导出任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearClass()">
+                            <i class="fa fa-print"></i> 导入数据
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="submit_form" class="form-horizontal m-t" action="${base}/testing/pcr_ngs_primer_design_submit.do" method="post">
+                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                            <input type="hidden" id="id" name="id" value="${(sheet.id)!?html}" />
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.code)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达人：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignerName)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">实验员：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${user!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达时间：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${((sheet.assignTime)?string('yyyy-MM-dd HH:mm:ss'))!}"
+                                        readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务描述：</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="3" readonly="readonly">${(sheet.description)!?html}</textarea>
+                                </div>
+                            </div>
+                            <div>
+	                            <table id="dataTable" class="table table-striped table-bordered table-hover table-responsive">
+	                                <thead>
+	                                    <tr>
+	                                        <th>序号</th>
+		                                    <th>突变基因</th>
+		                                    <th>外显子编号</th>
+
+		                                    <th>染色体编号</th>
+											<th>染色体位置</th>
+											 <th>状态</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                    <#if sheet??><#list sheet.tasks as record>
+	                                    <tr>
+		                                    <td>${(record_index + 1)!?html}</td>
+		                                    <td>${(record.gene)!?html}</td>
+		                                    <td>${(record.codingExon)!?html}</td>
+		                                    <td>${(record.chromosomeNumber)!?html}</td>
+											<td>${(record.chromosomeLocation)!?html}</td>
+											 <#if record.resubmit>
+                                                <td>
+                                                    <span style="color: red">异常（${(record.resubmitCount)!0}次）</span>
+                                                </td>
+                                                <#else>
+                                                    <td>
+                                                        <span style="color: green">正常</span>
+                                                    </td>
+                                            </#if>
+	                                    </tr>
+	                                    </#list></#if>
+	                                </tbody>
+	                            </table>
+                            </div>
+                            <div class="form-group"  id="uploadTableName" style="display: none;">
+                               	<label class="col-sm-1 control-label">分析结果：</label>
+                           	</div>
+                            <div id="uploadTable" style="display: none; overflow: auto">
+                            	<table id="uploadDataTable" class="table table-striped table-bordered table-hover table-responsive" style="min-width: 130%">
+	                                <thead>
+	                                    <tr>
+	                                        <th>序号</th>
+		                                    <th>突变基因</th>
+		                                    <th>外显子编号</th>
+		                                    <th>染色体编号</th>
+		                                    <th>染色体位置</th>
+		                                    
+		                                    <th>PCR起点</th>
+		                                    <th>PCR终点</th>
+		                                    <th>正向引物名</th>
+		                                    <th>正向引物序列</th>
+		                                    <th>反向引物名</th>
+		                                    
+		                                    <th>反向引物序列</th>
+		                                    <th>结果</th>
+		                                    <th>备注</th>
+		                                    <th>异常原因</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                	<#list sheet.tasks as record>
+	                                    <tr>
+	                                    	<input type="hidden" name="tasks[${record_index}].id" value="${(record.id)!?html}" />
+	                                        <input type="hidden" name="tasks[${record_index}].gene" class="geneInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].codingExon" class="codingExonInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].chromosomeNumber" class="chromosomeNumberInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].chromosomeLocation" class="chromosomeLocationInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].pcrStartPoint" class="pcrStartPointInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].pcrEndPoint" class="pcrEndPointInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].forwardPrimerName" class="forwardPrimerNameInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].forwardPrimerSequence" class="forwardPrimerSequenceInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].reversePrimerName" class="reversePrimerNameInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].reversePrimerSequence" class="reversePrimerSequenceInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].result" class="resultInput" />
+	                                        <input type="hidden" name="tasks[${record_index}].remark" class="remarkInput" />
+	                                        
+		                                    <td>${(record_index + 1)!?html}</td>
+		                                    <td class="gene"></td>
+		                                    <td class="codingExon"></td>
+		                                    <td class="chromosomeNumber"></td>
+		                                    <td class="chromosomeLocation"></td>
+		                                    
+		                                    <td class="pcrStartPoint"></td>
+		                                    <td class="pcrEndPoint"></td>
+		                                    <td class="forwardPrimerName"></td>
+		                                    <td class="forwardPrimerSequence"></td>
+		                                    <td class="reversePrimerName"></td>
+		                                    
+		                                    <td class="reversePrimerSequence"></td>
+		                                    <td class="result"></td>
+		                                    <td class="remark"></td>
+		                                    <td class="abnormalReason"></td>
+	                                    </tr>
+	                                    </#list>
+	                                </tbody>
+	                            </table>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5" style="margin-top: 10px;">
+                                    <button type="button" class="btn btn-primary" id="button_submit">完成任务</button>
+                                    <button type="button" class="btn btn-primary" onclick="history.go(-1)">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <#include "../../excelModelDialog/dna_qc_excel_model.html" />
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/pcr-ngs/test/pcr_ngs_primer_design_test.js?v=1.0.1"></script>
+<script type="text/javascript">
+</script>
+<#include "../print/pcr_ngs_primer_design_print_sheet.html" />
+</html>

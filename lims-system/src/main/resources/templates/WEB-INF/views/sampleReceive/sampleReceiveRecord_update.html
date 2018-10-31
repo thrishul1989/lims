@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>业务管理-修改样品接收</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script src="${system_js}/magicsuggest-min.js"></script>
+<!-- 时间控件 -->
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script type="text/javascript" src="${system_js}/util.js"></script>
+<script type="text/javascript" src="${system_js}/sampleReceive/init.js"></script>
+<script src="${plugins}/jquery.confirm-master/jquery.confirm.js"></script>
+<script src="${plugins}/jquery.confirm-master/jquery.confirm.min.js"></script>
+<script>
+
+function canDelete(obj){
+	  $.confirm({
+		    title:"提示",
+		    text:"确定删除该样本明细么？",
+		    confirm: function(button) {
+		    	var data = $(obj).attr('attId');
+		 	   $.ajax({
+		 		   type:"GET",
+		 		   url:"${base}/sampleReceive/deleteSampleDetail.do?id="+data,
+		 			success:function(flag){
+		 				if(flag){
+		 					 $(obj).parents('tr').remove();
+		 				}else{
+		 					parent.layer.alert('该样本已启动，不能删除!',{title:"提示"});
+		 				}
+		 			}
+		 	   });
+		    },
+		    confirmButton: "确定",
+		    cancelButton: "取消"
+	});
+}
+
+function reload(){
+	window.location.href="${base}/sampleReceive/modifySampleReceiveRecord.do?id=${data.id}";
+}
+
+
+
+function addForm(){
+	$('#sampleReceiveDetail').modal('show');
+}
+
+
+$("#subForm").validate({
+    submitHandler:function(form){
+    	var exp=$('#code').val();
+    	if(!exp && typeof(exp)!="undefined"){
+			parent.layer.alert('请输入送样类型！',{title:"提示"});
+			return false;
+		}
+        form.submit();
+        //reload();
+    },
+    
+		 rules: {
+			 sampleCount:{
+				 required:true,
+				 number:true,
+				 digits:true
+			 },
+			temporaryStorageAmount:{
+			 	 required:true,
+				 number:true 
+			}
+       
+		 },
+		 messages:{
+			 sampleCount:{
+				 required:"不能为空！" ,
+				 number:"请输入合法的数字"
+			 },
+			temporaryStorageAmount:{
+				required:"不能为空！" ,
+				number:"请输入合法的数字"
+			}
+		 }
+		
+	});
+
+</script>
+
+</head>
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<ol class="breadcrumb">
+								<li><a href="${base}/sampleReceive/list.do">样品接收</a></li>
+								<li class="active"><strong>样本接收详情</strong></li>
+							</ol>
+							
+						</div>
+					</div>
+					<div class="ibox">
+						<div class="ibox-title">
+						<strong>样本接收详情</strong>
+						<div style="float:right">
+								<a href="${base}/sampleReceive/list.do"  target="_self" style="padding: 0px;position: relative;right: 16px;float: right">
+									<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+						</div>
+					   </div>
+					 <div class="ibox ibox-table">
+                    <div class="ibox-content">
+                   
+                        <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>样本接收</strong></td>
+                        	</tr>
+                        	<#if data??>
+                            <tr>
+                                <th class="col-sm-1">接收单号</th>
+                                <td class="col-sm-2">
+                                	<input type="text" class="form-control" value="${data.id!?html}" readonly="readonly">
+                                </td>
+                                <th class="col-sm-1">接收编号</th>
+                                <td class="col-sm-2">
+                                 	<input type="text" class="form-control" value="${data.receiveCode!?html}" readonly="readonly">
+                                </td> 
+                                <th class="col-sm-1">关联项目</th>
+                                <td class="col-sm-2">
+                                	<input type="text" class="form-control" value="<#if project??>${project.name!?html}<#else></#if>" readonly="readonly">
+                                </td>
+                                <th class="col-sm-1">样本接收类型</th>
+                                <td class="col-sm-2">
+								<input type="text" class="form-control" value="<@dict_entry_text category='RECEIVING_TYPE' value=data.receiveType />" readonly="readonly">
+								</td>
+                            </tr>
+                       		<tr>
+                                <th class="col-sm-1">接受日期</th>
+                                <td>
+                                	<input type="text" class="form-control" value=" <#if data.acceptDate??>${(data.acceptDate)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(data.acceptDate)!?html} </#if>" readonly="readonly">
+                                </td>
+                       			<th class="col-sm-1">描述</th>
+                                <td>
+                               	 	<input type="text" class="form-control" value="<#if data.description??>${data.description!?html}<#else></#if>" readonly="readonly">
+                                </td>
+                                <th class="col-sm-1">关联订单</th>
+                                <td class="col-sm-2">
+                                	<input type="text" class="form-control" value= "<#if order??>${order.orderName!?html}<#else></#if>" readonly="readonly">
+                                </td>
+                       		</tr>
+                       		<#else>
+                                   <tr>
+                                       <td colspan="8">暂无相关记录</td>
+                                   </tr>
+                            </#if>
+                       		
+                       		
+                       		<tr>
+                        		<td colspan="8" ><strong>订单详情</strong></td>
+                        	</tr>
+                        	<#if order??>
+                        	<tr>
+                        		<th>订单名称</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.orderName??>${order.orderName!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                        		<th>受检人</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.subjectPname??>${order.subjectPname!?html}<#else></#if>" readonly="readonly">
+                      		 	
+                      		 	</td>
+                        		<th>检测产品</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.productName??>${order.productName!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                        		<th>重点关注基因</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.focusGenes??>${order.focusGenes!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                      		 </tr>	
+                      		 
+                      		 <tr>
+                        		<th>临床诊断</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.clinicalDiagnosis??>${order.clinicalDiagnosis!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                        		<th>病例摘要</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.caseSummary??>${order.caseSummary!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                        		<th>备注</th>
+                      		 	<td>
+                      		 		<input type="text" class="form-control" value="<#if order.remarks??>${order.remarks!?html}<#else></#if>" readonly="readonly">
+                      		 	</td>
+                      		 </tr>
+                      		 <#else>
+                                    <tr>
+                                        <td colspan="8">暂无关联订单</td>
+                                    </tr>
+                            </#if>
+                      		 
+                      		
+                        	</table >
+                        	<table class="table table-striped table-bordered table-hover ">
+                        	 <tr>
+                        		<td colspan="8" style="text-align:left"><strong>样本接受明细</strong></td>
+                        		<td><a href="javascript:addForm()" class="btn btn-sm btn-info" >
+			                            <i class="fa fa-plus"></i> 新增明细
+			                        </a></td>
+                        	</tr>
+                        	<tr>
+                        		<td>序号</td>
+								<td>样本实例编码</td>
+                      			<td>样本名称</td>
+                      			<td>样本数量</td> 
+                      			<td>样本用途</td> 
+                      			<td>临检存储位置</td> 
+                      			<td>长期存储位置</td> 
+                      			<td>状态</td>
+                      			<td>操作</td>
+                      		</tr>
+                      			<#if details?has_content>
+                      			<#list details as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			 <td>${d.sampleInstanceCode!?html}</td>
+								<td><#if (d.name)??>${d.name!?html}<#else></#if></td>
+                      			<td><#if (d.sampleCount)??>${d.sampleCount!?html}&nbsp;&nbsp;
+                      			(<@dict_entry_text category="COMPANY" value=d.company />)
+                      			</#if></td>
+                      			<td><#if (d.samplePurpose)??><@dict_entry_text category="SAMPLE_PURPOSE" value=d.samplePurpose /><#else></#if></td>
+                      		
+                      			<td><#if (d.temporaryStorageLocation)??>${d.temporaryStorageLocation!?html}<#else></#if></td>
+                      			<td><#if (d.longtermStorageLocation)??>${d.longtermStorageLocation!?html}<#else></#if></td>
+								<td><@dict_entry_text category="SAMPLE_RECEIVE_DETAIL_STATE" value=d.state /></td> 
+                      			<td><a  class="btn btn-sm btn-info" onclick="canDelete(this)" attId="${d.id}"><i class="fa fa-trash" ></i>删除</a></td>
+                      		</tr>
+                      		</#list><#else>
+                                    <tr>
+                                        <td colspan="9">暂无相关明细</td>
+                                    </tr>
+                                    </#if>
+                       		</table>
+                       		
+                    </div>
+                </div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+		
+<!-- ModalsampleReceiveDetail -->
+<div class="modal fade bs-example-modal-lg sampleReceiveDetail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="sampleReceiveDetail">
+	  <div class="modal-dialog modal-lg"  style="width: 1250px;">
+	   <div class="modal-content animated bounceInRight">
+	      <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">
+                   <span aria-hidden="true">&times;</span>
+                   <span class="sr-only">关闭</span>
+               </button>
+           </div>
+	    <div class="modal-content" style="height:450px">
+	     		<div class="ibox">
+					<div class="ibox-title">
+						<h5>新建样本接收明细-基本信息</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="subForm" class="form-horizontal m-t" action="${base}/sampleReceive/createSampleDetail.do" method="post" enctype='application/json'>
+							<fieldset>
+								<div class="form-group">
+								<input  type="hidden"  id="sampleId_hidden" value="" name="sampleId_hidden"></input>
+								<input  type="hidden"  id="code" value="" name="code"></input><!-- 接收样本类型名称 -->
+								<input  type="hidden"  id="id" value="${data.id!?html}" name="id"></input><!-- 接收样本父节点id -->
+								<label class="col-sm-2 control-label control-required" >送样类型:</label>
+								<div class="col-sm-2">
+								
+									<div class="input-group">
+				                        <input type="text" class="form-control" id="sampleId" name="sampleId"><!-- 接收样本类型ID -->
+				                        <div class="input-group-btn">
+				                            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				                                <span class="caret"></span>
+				                            </button>
+				                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+				                            </ul>
+				                        </div>
+				                    </div>
+									
+								
+								</div>
+								
+								<label class="col-sm-1 control-label control-required" >送样数量:</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="sampleCount"
+										id="sampleCount" value=""/>
+									
+								</div>
+								<label class="col-sm-1 control-label" >数量单位:</label>
+									<div class="col-sm-2">
+										<select  name="company" value="" class="form-control">
+											<@dict_entries category="COMPANY">
+				                                        <#if entries??>
+				                                        <#list entries as entry>
+				                                        <option value="${entry.value!}">${entry.text!?html}</option>
+				                                        </#list>
+				                                        </#if>
+				                               </@dict_entries>
+										</select>
+									</div>
+								</div>
+					
+								<div class="form-group" >
+									<label class="col-sm-2 control-label" >样本标识:</label>
+									<div class="col-sm-2">
+										<select class="form-control" id="sampleIdentification" name="sampleIdentification">
+
+												<@dict_entries category="SAMPLE_IDENTIFICATION">
+				                                        <#if entries??>
+				                                        <#list entries as entry>
+				                                        <option value="${entry.value!}">${entry.text!?html}</option>
+				                                        </#list>
+				                                        </#if>
+ 												</@dict_entries>
+										</select>
+									</div>
+									
+									<label class="col-sm-1 control-label" >是否合格:</label>
+									<div class="col-sm-2">
+										<select class="form-control" name="isQualified" >
+											<@dict_entries category="SAMPLE_ISQUALIFIED">
+			                                        <#if entries??>
+			                                        <#list entries as entry>
+			                                        <option value="${entry.value!}">${entry.text!?html}</option>
+			                                        </#list>
+			                                        </#if>
+				                             </@dict_entries>
+
+										</select>
+									</div>
+									<label class="col-sm-1 control-label" style="padding-top: 15px">备注:</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="reason" id="reason" value="" placeholder="备注原因" />
+									</div>
+									
+								</div>
+								
+								<div id="div" style="display: none;">
+									<div class="form-group" >
+									<label class="col-sm-2 control-label" >样本用途:</label>
+										<div class="col-sm-2">
+											<select class="form-control" name="samplePurpose">
+												<@dict_entries category="sample_purpose">
+			                                        <#if entries??>
+			                                        <#list entries as entry>
+			                                        <option value="${entry.value!}">${entry.text!?html}</option>
+			                                        </#list>
+			                                        </#if>
+			                                       </@dict_entries>
+											</select>
+										</div>
+										
+										<label class="col-sm-1 control-label" >样本关系:</label>
+										<div class="col-sm-2">
+											<select class="form-control" name="sampleRelationship">
+												 <@dict_entries category="sample_relationship">
+			                                        <#if entries??>
+			                                        <#list entries as entry>
+			                                        <option value="${entry.value!}">${entry.text!?html}</option>
+			                                        </#list>
+			                                        </#if>
+			                                       </@dict_entries>
+											</select>
+										</div>
+										<label class="col-sm-1 control-label"  style="">家系姓名:</label>
+										<div class="col-sm-2">
+											<input type="text" class="form-control" name="familyName"
+												id="familyName" value=""/>
+										</div>
+									</div>
+								</div>	
+									
+								<div class="form-group"  >
+									<label class="col-sm-2 control-label " >临时存储位置:</label>
+									<div class="col-sm-2">
+										<input type="text"  class="form-control" name="temporaryStorageLocation"
+											id="temporaryStorageLocation" value="自动生成" readonly="readonly"/>
+									</div>
+									
+									
+									<label class="col-sm-1 control-label control-required" >临时取样量:</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="temporaryStorageAmount"
+											id="temporaryStorageAmount" value=""/>
+										
+									</div>
+									
+									<label class="col-sm-1 control-label" >数量单位:</label>
+									<div class="col-sm-2">
+										<select   value="" class="form-control">
+											<@dict_entries category="COMPANY">
+				                                        <#if entries??>
+				                                        <#list entries as entry>
+				                                        <option value="${entry.value!}">${entry.text!?html}</option>
+				                                        </#list>
+				                                        </#if>
+				                               </@dict_entries>
+										</select>
+									</div>
+									
+								</div>
+									
+								<div class="form-group"  >
+									<label class="col-sm-2 control-label" >长期存储位置:</label>
+									<div class="col-sm-2" >
+										<input type="text" class="form-control" name="longtermStorageLocation" 
+											readonly="readonly"	id="longtermStorageLocation" value="自动生成"/>
+									</div>
+									
+									<label class="col-sm-1 control-label" >长期取样量:</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="longtermStorageAmount" id="longtermStorageAmount" 
+											readonly="readonly"	value="自动生成"/>
+										
+									</div>
+									
+									<label class="col-sm-1 control-label" >数量单位:</label>
+									<div class="col-sm-2">
+										<select   value="" class="form-control">
+											<@dict_entries category="COMPANY">
+				                                        <#if entries??>
+				                                        <#list entries as entry>
+				                                        <option value="${entry.value!}">${entry.text!?html}</option>
+				                                        </#list>
+				                                        </#if>
+				                               </@dict_entries>
+										</select>
+										
+									</div>
+									
+									
+								</div>
+								
+								<hr>
+								
+								<div class="form-group" id="inspectManDiv" >
+									<label class="col-sm-2 control-label" >受检人姓名:</label>
+										<div class="col-sm-2"> <!-- 关联订单时不可编辑 -->
+											<input  type="text"  class="form-control" name="inspectMan" 
+											id="inspectMan" value="<#if (order.subjectPname)??> ${(order.subjectPname)!?html}<#else></#if>"/>
+										</div>
+								</div>
+									
+								<div class="form-group" style="position: relative;left:160px;">
+										<div class="col-sm-2 col-sm-offset-2">
+											<button class="btn btn-primary" type="submit" >保存</button>
+										</div>
+										<div class="col-sm-1 ">
+											<input class="btn btn-primary" type="button" data-dismiss="modal" value="取消">
+										</div><!-- 添加明细 -->
+								</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+    </div><!-- modual content -->
+    </div>
+    
+  </div>
+</div> 
+<!-- Modal sampleReceiveDetail --> 
+		
+		
+	</body>
+</html>

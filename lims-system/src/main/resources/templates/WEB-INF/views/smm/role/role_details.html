@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>角色详情-角色管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/smm/user/list.do">角色管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>角色详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>角色详情</h5>
+                        <div style="float: right; margin-top: 7px">
+                            <button class="btn btn-sm btn-success goback " type="button">返回</button>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapseThree">角色：${data.name!?html}</a>
+                            </h4>
+                        </div>
+                        <div id="userBase" class="panel-collapse collapse in">
+                            <div class="ibox-content">
+                                <table class="table table-bordered" style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th class="index">序号</th>
+                                        <th>系统账号</th>
+                                        <th>姓名</th>
+                                        <th>性别</th>
+                                        <th>手机</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <#if userList?has_content>
+                                        <#list userList as record>
+                                            <tr>
+                                                <td>${record_index + 1}</td>
+                                                <td>${record.username!?html}</td>
+                                                <td>${record.name!?html}</td>
+                                                <td><#if (record.sex)??> <#if (record.sex)=="MALE">男 <#elseif
+                                                        (record.sex)=="FEMALE">女 <#else> </#if> </#if></td>
+                                                <td>${record.phone!?html}</td>
+                                                <td class="flexible-btns">
+                                                <a href="${base}/smm/user/display.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                    <i class="fa fa-search-plus"></i> 查看
+                                                </a>
+                                                </td>
+                                            </tr>
+                                        </#list>
+                                        <#else>
+                                            <tr>
+                                                <td colspan="6">暂无相关记录</td>
+                                            </tr>
+                                    </#if>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapseThree">权限信息</a>
+                            </h4>
+                        </div>
+                        <div id="menuBase" class="panel-collapse collapse in">
+                            <div class="ibox-content">
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">权限列表：</label>
+                                    <div class="col-sm-3">
+                                        <div id="authority_tree"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/details.form.js?v=1.0.1"></script>
+    <script type="text/javascript">
+
+        $(function()
+        {
+            var opts = {};
+            opts.data_url = '${base}/smm/role/roleAuthorities.do?roleId=${roleId}';
+            <#if data??>
+                opts.modify = true;
+                <#if data.authorities??>
+                    opts.checked_nodes = [];
+                    <#list data.authorities as authority>
+                        opts.checked_nodes.push('${authority}');
+                    </#list>
+                </#if>
+            </#if>
+            $.init(opts);
+        });
+
+    </script>
+</body>
+</html>

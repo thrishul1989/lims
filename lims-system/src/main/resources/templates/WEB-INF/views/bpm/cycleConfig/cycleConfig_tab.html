@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>周期配置tab</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ul id="myTab" class="nav nav-tabs">
+							<li class="active"><a href="#testingConfig" data-toggle="tab" id="tab_testingConfig">实验周期</a></li>
+							<li ><a href="#fixedConfig" data-toggle="tab" id="tab_fixedConfig">非实验周期</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div id="myTabContent" class="tab-content">
+						<div  class="tab-pane fade in active" id="testingConfig">
+							<iframe src="${base}/bpm/cycleConfig/testingConfigList.do"
+								style="background: white; width: 100%; height: 700px;"
+								frameborder="no" border="0" id="iframe_testingConfig"></iframe>
+						</div>
+						
+						<div  class="tab-pane fade" id="fixedConfig">
+							<iframe src=""
+								style="background: white; width: 100%; height: 700px; "
+								frameborder="no" border="0" id="iframe_fixedConfig"></iframe>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript">
+	$('body').on('click', '#tab_testingConfig', function(){
+		$('#iframe_testingConfig').attr('src', '${base}/bpm/cycleConfig/testingConfigList.do');
+		$('#iframe_fixedConfig').attr('src', '');
+	}).on('click', '#tab_fixedConfig', function(){
+		$('#iframe_fixedConfig').attr('src', '${base}/bpm/cycleConfig/fixedConfigList.do');
+		$('#iframe_testingConfig').attr('src', '');
+	});
+</script>
+</html>

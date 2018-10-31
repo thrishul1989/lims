@@ -1,0 +1,123 @@
+<!--    打印table -->
+<span id="table" style="display: none">
+<style>
+#printTable td, #printTable th {
+    border: 1px solid black; font-size: 15px; font-family: 宋体; font-weight: bold; color: black; width: 1000px
+}
+#printTable tr{
+	height: 35px;
+}
+
+#printTable {
+    border: 1px solid black;
+}
+</style>
+   <table id="printTable" class="table table-striped table-bordered table-hover table-responsive">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>实验任务编号</th>
+				<th>样本名称</th>
+				<th>原始样本编号</th>
+				<th>检测产品</th>
+				<th>突变基因</th>
+				<th>所用引物</th>
+				<th>处理方式</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<#if sheet??><#list sheet.tasks as record>
+			<tr>
+				<td>${(record_index+1)!?html}</td>
+				<td>${(record.dtTaskCode)!?html}</td>
+				<td>${(record.sampleName)!?html}</td>
+				<td>${(record.sampleCode)!?html}</td>
+				<td>${(record.products)!?html}</td>
+				<td>${(record.genes)!?html}</td>
+				<td>${(record.primers)!?html}</td>
+				<td></td>
+			</tr>
+			</#list></#if>
+		</tbody>
+	</table>
+</span>
+<script src="${system_js}/LodopFuncs.js"></script>
+<script>
+
+var LODOP;
+
+function myPreview()
+{
+    LODOP = getLodop();
+    LODOP.PRINT_INITA(0, 0, 522, 333, "打印控件功能演示");
+    LODOP.SET_PRINT_PAGESIZE(2, '210mm', '297mm', "A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+
+    createContent();
+
+    LODOP.PREVIEW();
+
+};
+
+function createContent() {
+    var strStyle = "<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse}</style>"
+
+    LODOP.ADD_PRINT_TEXT(84, "40%", "26%", 50, "数据分析任务单");
+    LODOP.SET_PRINT_STYLEA(1, "FontName", "宋体");
+    LODOP.SET_PRINT_STYLEA(1, "FontSize", 20);
+    LODOP.SET_PRINT_STYLEA(1, "ItemType", 1);
+    LODOP.SET_PRINT_STYLEA(1, "LinkedItem", 1);
+    LODOP.SET_PRINT_STYLEA(1, "Bold", 1);
+
+    LODOP.ADD_PRINT_HTM(70, "35%", "60%", 20,
+            "<hr style='background-color:black;color:black;height:1px' />");
+
+    LODOP.SET_PRINT_STYLEA(2, "Bold", 1);
+
+    LODOP.ADD_PRINT_TEXT(128, "4%", "8%", 50, "任务编号:");
+    LODOP.SET_PRINT_STYLEA(3, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(3, "FontSize", 11);
+    LODOP.ADD_PRINT_TEXT(128, "12%", "20%", 100, '${(sheet.code)!?html}');
+    LODOP.SET_PRINT_STYLEA(4, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(4, "FontSize", 11);
+
+    LODOP.ADD_PRINT_TEXT(128, "35%", "8%", 50, "下达人:");
+    LODOP.SET_PRINT_STYLEA(5, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(5, "FontSize", 11);
+    LODOP.ADD_PRINT_TEXT(128, "43%", "8%", 50, '${(sheet.assignerName)!?html}');
+    LODOP.SET_PRINT_STYLEA(6, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(6, "FontSize", 11);
+
+    LODOP.ADD_PRINT_TEXT(128, "51%", "8%", 50, "实验员:");
+    LODOP.SET_PRINT_STYLEA(7, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(7, "FontSize", 11);
+    LODOP.ADD_PRINT_TEXT(128, "59%", "8%", 50, '${user!?html}');
+    LODOP.SET_PRINT_STYLEA(8, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(8, "FontSize", 11);
+    
+    LODOP.ADD_PRINT_TEXT(126, "67%", "8%", 50, "下达时间:");
+    LODOP.SET_PRINT_STYLEA(9, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(9, "FontSize", 11);
+    LODOP.ADD_PRINT_TEXT(126, "75%", "20%", 50, '${(sheet.assignTime)!?string('yyyy-MM-dd HH:mm:ss')}');
+    LODOP.SET_PRINT_STYLEA(10, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(10, "FontSize", 11);
+    
+    LODOP.ADD_PRINT_TEXT(154, "4%", "8%", 30, "描述:");
+    LODOP.SET_PRINT_STYLEA(11, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(11, "FontSize", 11);
+    LODOP.ADD_PRINT_TEXT(154, "12%", "50%", 30, '${(sheet.description)!?html}');
+    LODOP.SET_PRINT_STYLEA(12, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(12, "FontSize", 11);
+
+    LODOP.ADD_PRINT_TABLE(196,2,"95%",300,'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/animate.min.css" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">' + document.getElementById("table").innerHTML);
+
+    LODOP.SET_PRINT_STYLEA(0, "Horient", 1);
+    LODOP.ADD_PRINT_TEXT(55, "78%", 210, 70, "北京迈基诺医学检验所");
+    LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+    LODOP.SET_PRINT_STYLEA(0, "FontSize", 13);
+    LODOP.SET_PRINT_STYLEA(0, "ItemType", 1); //1为页眉页脚，2为页号码，3为页数，0 为普通项。
+
+    LODOP.ADD_PRINT_IMAGE(0, 0, 300, 70,
+            "<img border='0' src='/static/plugins/img/logo.png'/>");
+}
+</script>

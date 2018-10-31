@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.UserAchiveMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.UserAchive" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="EMPLOYEE_NO" property="employeeNo" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="GENDER" property="gender" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="DATE" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="OFFICE_PHONE" property="officePhone" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="DEPT_ID" property="deptId" jdbcType="VARCHAR" />
+    <result column="LEADER_ID" property="leaderId" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, EMPLOYEE_NO, NAME, GENDER, BIRTHDAY, PHONE, OFFICE_PHONE, EMAIL, DEPT_ID, LEADER_ID, 
+    PROVINCE, CITY, COUNTY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_USER_ARCHIVE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_USER_ARCHIVE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.UserAchive" >
+    insert into LIMS_USER_ARCHIVE (ID, EMPLOYEE_NO, NAME, 
+      GENDER, BIRTHDAY, PHONE, 
+      OFFICE_PHONE, EMAIL, DEPT_ID, 
+      LEADER_ID, PROVINCE, CITY, 
+      COUNTY)
+    values (#{id,jdbcType=VARCHAR}, #{employeeNo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{phone,jdbcType=VARCHAR}, 
+      #{officePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR}, 
+      #{leaderId,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{county,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.UserAchive" >
+    insert into LIMS_USER_ARCHIVE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="employeeNo != null" >
+        EMPLOYEE_NO,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="gender != null" >
+        GENDER,
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="officePhone != null" >
+        OFFICE_PHONE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="deptId != null" >
+        DEPT_ID,
+      </if>
+      <if test="leaderId != null" >
+        LEADER_ID,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="county != null" >
+        COUNTY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeNo != null" >
+        #{employeeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="officePhone != null" >
+        #{officePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        #{leaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        #{county,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.UserAchive" >
+    update LIMS_USER_ARCHIVE
+    <set >
+      <if test="employeeNo != null" >
+        EMPLOYEE_NO = #{employeeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        GENDER = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="officePhone != null" >
+        OFFICE_PHONE = #{officePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        DEPT_ID = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        LEADER_ID = #{leaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        COUNTY = #{county,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.UserAchive" >
+    update LIMS_USER_ARCHIVE
+    set EMPLOYEE_NO = #{employeeNo,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      GENDER = #{gender,jdbcType=VARCHAR},
+      BIRTHDAY = #{birthday,jdbcType=DATE},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      OFFICE_PHONE = #{officePhone,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      DEPT_ID = #{deptId,jdbcType=VARCHAR},
+      LEADER_ID = #{leaderId,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      COUNTY = #{county,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

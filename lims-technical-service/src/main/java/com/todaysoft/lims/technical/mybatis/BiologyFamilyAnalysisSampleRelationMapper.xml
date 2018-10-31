@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.BiologyFamilyAnalysisSampleRelationMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyAnalysisSampleRelation">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="FAMILY_ANALYSIS_ID" property="familyAnalysisId"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, FAMILY_ANALYSIS_ID, SAMPLE_ID
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyAnalysisSampleRelation">
+		insert into BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION (ID,
+		FAMILY_ANALYSIS_ID, SAMPLE_ID
+		)
+		values (#{id,jdbcType=VARCHAR}, #{familyAnalysisId,jdbcType=VARCHAR},
+		#{sampleId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyAnalysisSampleRelation">
+		insert into BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="familyAnalysisId != null">
+				FAMILY_ANALYSIS_ID,
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="familyAnalysisId != null">
+				#{familyAnalysisId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				#{sampleId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyAnalysisSampleRelation">
+		update BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION
+		<set>
+			<if test="familyAnalysisId != null">
+				FAMILY_ANALYSIS_ID = #{familyAnalysisId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyAnalysisSampleRelation">
+		update BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION
+		set FAMILY_ANALYSIS_ID = #{familyAnalysisId,jdbcType=VARCHAR},
+		SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByFamilyAnalysisId" resultMap="BaseResultMap"
+		parameterType="string">
+		select * from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION where
+		FAMILY_ANALYSIS_ID = #{0}
+	</select>
+	
+	<select id="getRelationBySampleId" resultMap="BaseResultMap"
+		parameterType="string">
+		select r.* from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION r 
+		where r.FAMILY_ANALYSIS_ID in (
+			select i.FAMILY_ANALYSIS_ID from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION i where i.SAMPLE_ID = #{0} 
+		)
+	</select>
+	
+	
+	<select id="getRelationByFamilyId" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION where
+		FAMILY_ANALYSIS_ID=#{0}
+	</select>
+	
+</mapper>

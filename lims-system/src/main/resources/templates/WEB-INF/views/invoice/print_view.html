@@ -1,0 +1,51 @@
+<span id="table" style="display: none">
+    <style>
+#printTable td, #printTable th {
+   border: 1px solid ;  font-size: 15px; font-family: 宋体; font-weight: bold; color: black; width: 500px
+}
+
+#printTable tr{
+    height: 25px;
+}
+
+</style>
+<span id="printTable">
+
+						<div class="ibox-title">
+							<h5>收件信息</h5>
+						</div>
+                		<table class="table table-striped table-bordered table-hover table-responsive">
+										<tr>
+											<th class="col-sm-1">收件人：</th>
+											<td class="col-sm-1"><#if list ? has_content>${(list[0].recipientName)!?html}</#if></td>
+											<th class="col-sm-1">收件电话：</th>
+											<td class="col-sm-1"><#if list ? has_content>${(list[0].recipientPhone)!?html}</#if></td>
+										</tr>
+										<tr>
+											<th class="col-sm-1">收件地址：</th>
+											<td class="col-sm-1" colspan="3"><#if list ? has_content>${(list[0].recipientAddress)!?html}</#if></td>
+										</tr>
+									</table>
+                            </span>
+<script src="${system_js}/LodopFuncs.js"></script>
+<script type="text/javascript">
+var LODOP;
+
+function myPreview()
+{
+    LODOP = getLodop();
+    LODOP.PRINT_INITA(0, 0, 522, 333, "打印控件功能演示");
+    LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+    createContent();
+    LODOP.PREVIEW();
+};
+
+function createContent()
+{
+    var strStyle = "<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse}</style>"
+
+        LODOP.ADD_PRINT_HTML(20,25,"95%",700,'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/animate.min.css" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">' + document.getElementById("table").innerHTML);
+        
+}
+
+</script>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>项目管理-确认检测取消-详情</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<input type="hidden" id="orderId" value="${(searcher.orderId)!?html}"/>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>确认检测取消</span></li>
+							<li class="active"><strong>影响实验流程</strong></li>
+						</ol>
+						<div style="float:right">
+								<a href="javascript:history.go(-1)"  target="_self" style="margin-top:-18px;padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-content">
+						
+						<div id="orderScheduleDiv" align="center">
+							<i class="fa fa-spinner fa-spin fa-3x fa-fw text-navy"></i>
+						</div>
+						
+						<div class="col-sm-4 col-sm-offset-4 text-center" style="margin-top: -25px">
+							<button class=" btn btn-primary " type="button"	onclick="cancelScheduleConfirm()">确认取消</button>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		
+	</div>
+
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/hplus/content.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript">
+
+function cancelScheduleConfirm(sheduleId, op)
+{
+    parent.layer.confirm('确认操作？', {
+        btn : [ '是', '否' ]
+    }, function(index)
+    {
+
+        $.ajax({
+            type : "GET",
+            url : "${base}/order/cancelSheduleByOrderProduct.do",
+            data : {
+            	orderId: $('#orderId').val(),
+                productId:'${(searcher.productId)!?html}',
+                productCancelRecordId:'${(searcher.id)!?html}',
+            },
+            dataType : "json",
+            success : function(data)
+            {
+            	if(data.success){
+            		 window.location.href='${base}/order/app/cancelSechedulePaging.do';	
+            	}
+               
+            }
+        })
+        parent.layer.close(index);
+    }, function(index)
+    {
+
+        parent.layer.close(index);
+    });
+}
+
+
+    $(function(){
+    	
+		<!-- 异步获取 订单流程-->
+    	$.ajax({  
+            type: "get",  
+            dataType: "json",  
+            url: "/order/getOrderScheduleList.do",  
+            data: {  
+                orderId: $('#orderId').val(),
+                orderType:'${(searcher.orderType)!?html}',
+                productId:'${(searcher.productId)!?html}',
+            },  
+            success: function (data) { 
+				var strPage = "";
+            	if(data.length > 0)
+            	{
+            		for (var i=0; i<data.length;i++) { 
+            			var strDiv = "<div class=\"row\">"
+            				+"<div class=\"col-lg-12\">"
+            				+"<div class=\"ibox\">"
+            				+"<div class=\"ibox-title\">"
+            				+"<h5>"+data[i].productName+"</h5>"
+            				+"<div class=\"ibox-tools\">"
+            				+"<a class=\"collapse-link\"> <i class=\"fa fa-chevron-down\"></i>"
+            				+"</a>"
+            				+"</div>"
+            				+"</div>"
+            				+"<div class=\"ibox-content\">";
+            				
+            				var strTestingTable = "<table class=\"table table-striped table-bordered table-hover\">"
+            				+"<tr><td colspan=\"10\"><strong>检测样本列表</strong></td></tr>"
+            				+"<tr><td>样本编号</td><td>样本名称</td><td>检测方法</td><td>检测状态</td></tr>";
+            				
+            				var strVerifyTable = "<table class=\"table table-striped table-bordered table-hover\">"
+            				+"<tr><td colspan=\"11\"><strong>验证样本列表</strong></td></tr>"
+            				+"<tr><td>样本编号</td><td>样本名称</td><td>位点信息</td><td>验证方法</td>"
+            				+"<td>验证状态</td>"
+            				+"</tr>";
+            				
+            				var strDivEnd = "</div></div></div></div>";
+            				
+            				var strTr = "";
+                			var strTrVerify = "";
+            			strPage += strDiv+strTestingTable;
+            			if(null != data[i].testingsamples && data[i].testingsamples.length > 0)
+            			{
+            				for(var j = 0;j<data[i].testingsamples.length;j++)
+            				{
+            					strTr += "<tr>"+
+            					"<td>" + data[i].testingsamples[j].sampleCode + "</td>" +  
+                                "<td>" + data[i].testingsamples[j].sampleName + "</td>" +  
+                                "<td>" + data[i].testingsamples[j].methodName + "</td>" +  
+                                "<td>" + data[i].testingsamples[j].scheduleStatus + "</td></tr>";
+                                
+            				}
+            			}
+            			else
+            			{
+            				strTr += "<tr><td colspan=\"10\">暂无相关数据</td></tr>";
+            			}
+            			strPage += strTr+"</table>"+strVerifyTable;
+            			if(null != data[i].verificationSamples && data[i].verificationSamples.length > 0)
+            			{
+            				for(var j = 0;j<data[i].verificationSamples.length;j++)
+            				{
+            					strTrVerify += "<tr>"+
+            					"<td>" + data[i].verificationSamples[j].sampleCode + "</td>" +  
+                                "<td>" + data[i].verificationSamples[j].sampleName + "</td>" +  
+                                "<td>" + data[i].verificationSamples[j].chromosomeLocation + "</td>" +
+                                "<td>" + data[i].verificationSamples[j].methodName + "</td>" +  
+                                "<td>" + data[i].verificationSamples[j].scheduleStatus + "</td>";
+                                strTrVerify += "</tr>"; 
+            				}
+            			}
+            			else
+            			{
+            				strTrVerify += "<tr><td colspan=\"11\">暂无相关数据</td></tr>";
+            			}
+            			strPage += strTrVerify+"</table>"+strDivEnd;
+                    }  
+            	}
+            	
+                $('#orderScheduleDiv').html(strPage);
+            },  
+            error: function () {  
+                alert("failed")  
+            }  
+        });  
+    	
+    });
+ 
+
+    
+</script>
+</html>

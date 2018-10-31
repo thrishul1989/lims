@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>MLPA实验任务</title>
+    <link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="${system_css}/animate.min.css" rel="stylesheet">
+    <link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+    <link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+    <script src="${plugins}/layer/layer.min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+    <script src="${system_js}/system.js?v=1.0.1"></script>
+    <script src="${system_js}/testing/assign/mlpa_assign.js?v=1.1.6"></script>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <form id="testing_task_form" class="form-horizontal m-t" target="_parent" action="${base}/testing/mlpa_assign_submit.do"
+              method="post">
+              <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label control-required">实验员：</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="testerId" required data-msg="实验员不能为空">
+                        <option value="">请选择</option>
+                        <@bcm_members semantic = "MLPA"> <#list members as s>
+                        <option value="${s.id!?html}">${s.name!?html}</option>
+                        </#list> </@bcm_members>
+                    </select>
+                </div>
+                <label class="col-sm-2 control-label control-required">试剂盒：</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="reagentKit" name="reagentKitId" required data-msg="试剂盒不能为空">
+                        <option value="">请选择</option>
+                        <@bcm_testing_rkc node = "MLPA" pre_node = "MLPA"> <#list kits as kit>
+                        <option value="${kit.id!?html}" data-input-quantity="${kit.sampleInputQuantity!}" data-input-volume="${kit.sampleInputVolume!}" >${kit.name!?html}</option>
+                    </#list> </@bcm_testing_rkc>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务描述：</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="description" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12" style="overflow: auto">
+                    <table id="testing_task_detail_table" class="table table-striped table-bordered table-hover" style="min-width: 150%">
+                        <thead>
+                        <tr>
+                            <th>实验编号</th>
+                            <th>样本名称</th>
+                            <th>原始样本编号</th>
+                            <th>DNA浓度</th>
+                            <th>260:280</th>
+                            <th>260:230</th>
+                            <th>投入量</th>
+                            <th>加样体积</th>
+                            <th>补水体积</th>
+                            <th>属性</th>
+                            <th>MLPAProbe</th>
+                            <th>对照样本</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <#if modelTasks.groups??>
+                            <#assign indexNum=0 />
+                            <#list modelTasks.groups as group>
+                                <#assign probeGroup="a"/>
+                                <#if group.tasks??>
+                                    <#list group.tasks as record>
+                                        <#assign probeGroup=record.probe/>
+                                        <#if record_has_next><tr  <#if record_index == 0> class="record-start" </#if>><#else><#if record_index == 0> <tr class="record-one"> <#else><tr class="record-last"></#if></#if>
+
+                                        <td>${(record.testCode)!?html}</td>
+                                        <td>${(record.sampleName)!?html}</td>
+                                        <td>${(record.sampleCode)!?html}</td>
+                                        <td class="concentration">${((record.concentration)!0)?string('0.##')}</td>
+                                        <td>${((record.ratio2628)!0)?string('0.##')}</td>
+                                        <td>${((record.ratio2623)!0)?string('0.##')}</td>
+                                        <td><input type="text" class="form-control inputSize" value="${((record.inputSize)!0)?string('0.##')}"/></td>
+                                        <td class="addSampleVolume"></td>
+                                        <td class="addWaterVolume"></td>
+                                        <td><#if 1==record.attrType>待测<#else>对照</#if></td>
+                                        <td>${(record.probe)!?html}
+                                            <input type="hidden" name="tasks[${indexNum}].id" value="${record.id!}" />
+                                            <input type="hidden" name="tasks[${indexNum}].testCode"/>
+                                            <input type="hidden" class="addSampleVolumeInput" name="tasks[${indexNum}].addSampleVolume" />
+                                            <input type="hidden" class="addWaterVolumeInput" name="tasks[${indexNum}].addWaterVolume" />
+                                            <input type="hidden" name="tasks[${indexNum}].attrType" value="1" />
+                                            <input type="hidden" name="tasks[${indexNum}].probe" value="${(record.probe)!?html}" />
+                                            <input type="hidden" name="tasks[${indexNum}].type" value="${(record.type)!?html}" />
+                                            <input type="hidden" name="tasks[${indexNum}].orderFlag" />
+                                            <input type="hidden" name="tasks[${indexNum}].combineTaskId" value="${(record.combineTaskId)!?html}"/>
+                                        </td>
+
+                                        <#if record_index == 0>
+                                            <td><input type="text" class="form-control checkSample" value="${(group.referenceNumber)!?html}"/>
+                                            </td>
+                                        </#if>
+
+                                        </tr>
+                                        <#assign indexNum=indexNum+1/>
+                                    </#list><#assign x=group.referenceNumber/><#list 0..x as i><#if i<x><tr><td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>对照</td>
+                                    <td><input type="hidden" name="tasks[${indexNum}].id"/>
+                                        <input type="hidden" name="tasks[${indexNum}].testCode"/>
+                                        <input type="hidden" name="tasks[${indexNum}].attrType" value="2" />
+                                        <input type="hidden" name="tasks[${indexNum}].probe" value="${probeGroup}" />
+                                        <input type="hidden" name="tasks[${indexNum}].orderFlag" />
+                                    </td></tr><#assign indexNum=indexNum+1/></#if></#list>
+                        </#if>
+                        </#list>
+                        </#if>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

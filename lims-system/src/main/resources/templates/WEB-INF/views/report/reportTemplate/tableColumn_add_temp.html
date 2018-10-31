@@ -1,0 +1,48 @@
+<div class="form-group tableColumnTemp" style="height: 80; width: 100%; margin-left:0px; clear: both; border: 1px solid #cccccc; border-radius: 6px; padding: 10px 0;">
+	<a class="btn btn-sm btn-success removeTableColumn" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56); float: right; margin-right: 10px;"><i class="fa fa-trash"></i> 删除列定义</a>	
+	<label class="col-sm-2 control-label" style="width: 126px;">列定义：</label>
+	<div class="col-sm-8" style="margin-bottom: 10px">
+		<label class="col-sm-2 control-label" style="width: 70px; padding-left: 0; padding-right: 0">列索引：</label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control columnIndex" name="columnIndex" required/>
+		</div>
+		<label class="col-sm-2 control-label">变量类型：</label>
+		<div class="col-sm-4">
+			<select name="variableType" class="variableTypeValue" style="width: 140px; height: 30px;">
+				<option value="">请选择</option>
+				<option value="1">内置变量</option>
+				<option value="2">数据变量</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group builtin" style="display:none; width: 90%; clear: both; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+		<label class="col-sm-2 control-label" style="margin-left: 18px;">变量标识：</label>
+		<div class="col-sm-8" style="margin-left: 1px;">
+			<label class="col-sm-2 control-label">变量名称：</label>
+			<div class="col-sm-6">
+				<div class="form-control builtinVariable" placeholder="请选择内置变量"></div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group dataVariable" style="display:none; width: 90%; clear: both; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+		<label class="col-sm-2 control-label">数据类型：</label>
+		<div class="col-sm-10 dataVariableSelect">
+			<div class="col-sm-3">
+				<select name="dataType" class="dataTypeValue" style="width: 140px; height: 30px;">
+					<option value="">请选择</option>
+					<option value="1">导入数据</option>
+					<option value="2">图片</option>
+				</select>
+			</div>
+			<div class="col-sm-7 imageUpload" style="display:none; width: 550px;">
+				<label class="col-sm-2 control-label" style="width: 116px;">图片地址：</label>
+				<div class="col-sm-8">
+					<a href="#" class="btn btn-sm btn-primary uploadImg" style="float: right;">
+                           <i class="fa fa-upload"></i> 上传图片
+                       </a>
+					<input type="text" class="form-control imgUrl" style="width: 226px;" name="imgUrl" readonly/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

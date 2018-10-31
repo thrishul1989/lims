@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.OrderPaymentConfirmMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirm" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="OPOS_ID" property="oposId" jdbcType="VARCHAR" />
+    <result column="OTRS_ID" property="otrsId" jdbcType="VARCHAR" />
+    <result column="CHECK_ID" property="checkId" jdbcType="VARCHAR" />
+    <result column="CHECK_NAME" property="checkName" jdbcType="VARCHAR" />
+    <result column="CHECK_TIME" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="PAYMENT_TIME" property="paymentTime" jdbcType="TIMESTAMP" />
+    <result column="CHECK_AMOUNT" property="checkAmount" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="PAYMENTER" property="paymenter" jdbcType="VARCHAR" />
+    <result column="PAYMENT_TYPE" property="paymentType" jdbcType="BIT" />
+    <result column="PAY_TYPE" property="payType" jdbcType="BIT" />
+    <result column="TRANSFER_NO" property="transferNo" jdbcType="VARCHAR" />
+    <result column="POS_NO" property="posNo" jdbcType="VARCHAR" />
+    <result column="RECEIPT_ROLLS" property="receiptRolls" jdbcType="VARCHAR" />
+    <result column="TRADE_NO" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="TRADE_PARAMS" property="tradeParams" jdbcType="VARCHAR" />
+    <result column="MER_NUM" property="merNum" jdbcType="VARCHAR" />
+    <result column="TERM_ID" property="termId" jdbcType="VARCHAR" />
+    <result column="TRAN_DATE" property="tranDate" jdbcType="VARCHAR" />
+    <result column="REFER_NO" property="referNo" jdbcType="VARCHAR" />
+    <result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+    <result column="SERIAL_NO" property="serialNo" jdbcType="VARCHAR" />
+    <result column="O_BATCHNO" property="oBatchno" jdbcType="VARCHAR" />
+    <result column="O_SERIALNO" property="oSerialno" jdbcType="VARCHAR" />
+    <result column="TRAN_TYPE" property="tranType" jdbcType="VARCHAR" />
+    <result column="WANG_PAY_TYPE" property="wangPayType" jdbcType="VARCHAR" />
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+    <result column="EXT1" property="ext1" jdbcType="VARCHAR" />
+    <result column="EXT2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ADD_VAL" property="addVal" jdbcType="VARCHAR" />
+    <result column="RECONCILIATION_STATUS" property="reconciliationStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ORDER_ID, OPOS_ID, OTRS_ID, CHECK_ID, CHECK_NAME, CHECK_TIME, PAYMENT_TIME, CHECK_AMOUNT, 
+    REMARK, PAYMENTER, PAYMENT_TYPE, PAY_TYPE, TRANSFER_NO, POS_NO, RECEIPT_ROLLS, TRADE_NO, 
+    TRADE_PARAMS, MER_NUM, TERM_ID, TRAN_DATE, REFER_NO, BATCH_NO, SERIAL_NO, O_BATCHNO, 
+    O_SERIALNO, TRAN_TYPE, WANG_PAY_TYPE, ORDER_CODE, EXT1, EXT2, ADD_VAL,RECONCILIATION_STATUS
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirmExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_PAYMENT_CONFIRM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart >= 0" >
+      limit #{limitStart}, #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_PAYMENT_CONFIRM
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER_PAYMENT_CONFIRM
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirmExample" >
+    delete from LIMS_ORDER_PAYMENT_CONFIRM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirm" >
+    insert into LIMS_ORDER_PAYMENT_CONFIRM (ID, ORDER_ID, OPOS_ID, 
+      OTRS_ID, CHECK_ID, CHECK_NAME, 
+      CHECK_TIME, PAYMENT_TIME, CHECK_AMOUNT, 
+      REMARK, PAYMENTER, PAYMENT_TYPE, 
+      PAY_TYPE, TRANSFER_NO, POS_NO, 
+      RECEIPT_ROLLS, TRADE_NO, TRADE_PARAMS, 
+      MER_NUM, TERM_ID, TRAN_DATE, 
+      REFER_NO, BATCH_NO, SERIAL_NO, 
+      O_BATCHNO, O_SERIALNO, TRAN_TYPE, 
+      WANG_PAY_TYPE, ORDER_CODE, EXT1, 
+      EXT2, ADD_VAL)
+    values (#{id,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{oposId,jdbcType=VARCHAR}, 
+      #{otrsId,jdbcType=VARCHAR}, #{checkId,jdbcType=VARCHAR}, #{checkName,jdbcType=VARCHAR}, 
+      #{checkTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, #{checkAmount,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{paymenter,jdbcType=VARCHAR}, #{paymentType,jdbcType=BIT}, 
+      #{payType,jdbcType=BIT}, #{transferNo,jdbcType=VARCHAR}, #{posNo,jdbcType=VARCHAR}, 
+      #{receiptRolls,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{tradeParams,jdbcType=VARCHAR}, 
+      #{merNum,jdbcType=VARCHAR}, #{termId,jdbcType=VARCHAR}, #{tranDate,jdbcType=VARCHAR}, 
+      #{referNo,jdbcType=VARCHAR}, #{batchNo,jdbcType=VARCHAR}, #{serialNo,jdbcType=VARCHAR}, 
+      #{oBatchno,jdbcType=VARCHAR}, #{oSerialno,jdbcType=VARCHAR}, #{tranType,jdbcType=VARCHAR}, 
+      #{wangPayType,jdbcType=VARCHAR}, #{orderCode,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{addVal,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirm" >
+    insert into LIMS_ORDER_PAYMENT_CONFIRM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="oposId != null" >
+        OPOS_ID,
+      </if>
+      <if test="otrsId != null" >
+        OTRS_ID,
+      </if>
+      <if test="checkId != null" >
+        CHECK_ID,
+      </if>
+      <if test="checkName != null" >
+        CHECK_NAME,
+      </if>
+      <if test="checkTime != null" >
+        CHECK_TIME,
+      </if>
+      <if test="paymentTime != null" >
+        PAYMENT_TIME,
+      </if>
+      <if test="checkAmount != null" >
+        CHECK_AMOUNT,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="paymenter != null" >
+        PAYMENTER,
+      </if>
+      <if test="paymentType != null" >
+        PAYMENT_TYPE,
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE,
+      </if>
+      <if test="transferNo != null" >
+        TRANSFER_NO,
+      </if>
+      <if test="posNo != null" >
+        POS_NO,
+      </if>
+      <if test="receiptRolls != null" >
+        RECEIPT_ROLLS,
+      </if>
+      <if test="tradeNo != null" >
+        TRADE_NO,
+      </if>
+      <if test="tradeParams != null" >
+        TRADE_PARAMS,
+      </if>
+      <if test="merNum != null" >
+        MER_NUM,
+      </if>
+      <if test="termId != null" >
+        TERM_ID,
+      </if>
+      <if test="tranDate != null" >
+        TRAN_DATE,
+      </if>
+      <if test="referNo != null" >
+        REFER_NO,
+      </if>
+      <if test="batchNo != null" >
+        BATCH_NO,
+      </if>
+      <if test="serialNo != null" >
+        SERIAL_NO,
+      </if>
+      <if test="oBatchno != null" >
+        O_BATCHNO,
+      </if>
+      <if test="oSerialno != null" >
+        O_SERIALNO,
+      </if>
+      <if test="tranType != null" >
+        TRAN_TYPE,
+      </if>
+      <if test="wangPayType != null" >
+        WANG_PAY_TYPE,
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE,
+      </if>
+      <if test="ext1 != null" >
+        EXT1,
+      </if>
+      <if test="ext2 != null" >
+        EXT2,
+      </if>
+      <if test="addVal != null" >
+        ADD_VAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="oposId != null" >
+        #{oposId,jdbcType=VARCHAR},
+      </if>
+      <if test="otrsId != null" >
+        #{otrsId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null" >
+        #{checkId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null" >
+        #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentTime != null" >
+        #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkAmount != null" >
+        #{checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="paymenter != null" >
+        #{paymenter,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=BIT},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=BIT},
+      </if>
+      <if test="transferNo != null" >
+        #{transferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="posNo != null" >
+        #{posNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptRolls != null" >
+        #{receiptRolls,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeParams != null" >
+        #{tradeParams,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranDate != null" >
+        #{tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oBatchno != null" >
+        #{oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="oSerialno != null" >
+        #{oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="tranType != null" >
+        #{tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="wangPayType != null" >
+        #{wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="addVal != null" >
+        #{addVal,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirmExample" resultType="java.lang.Integer" >
+    select count(*) from LIMS_ORDER_PAYMENT_CONFIRM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LIMS_ORDER_PAYMENT_CONFIRM
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderId != null" >
+        ORDER_ID = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oposId != null" >
+        OPOS_ID = #{record.oposId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otrsId != null" >
+        OTRS_ID = #{record.otrsId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkId != null" >
+        CHECK_ID = #{record.checkId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkName != null" >
+        CHECK_NAME = #{record.checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkTime != null" >
+        CHECK_TIME = #{record.checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.paymentTime != null" >
+        PAYMENT_TIME = #{record.paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkAmount != null" >
+        CHECK_AMOUNT = #{record.checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymenter != null" >
+        PAYMENTER = #{record.paymenter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentType != null" >
+        PAYMENT_TYPE = #{record.paymentType,jdbcType=BIT},
+      </if>
+      <if test="record.payType != null" >
+        PAY_TYPE = #{record.payType,jdbcType=BIT},
+      </if>
+      <if test="record.transferNo != null" >
+        TRANSFER_NO = #{record.transferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.posNo != null" >
+        POS_NO = #{record.posNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiptRolls != null" >
+        RECEIPT_ROLLS = #{record.receiptRolls,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeNo != null" >
+        TRADE_NO = #{record.tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeParams != null" >
+        TRADE_PARAMS = #{record.tradeParams,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merNum != null" >
+        MER_NUM = #{record.merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.termId != null" >
+        TERM_ID = #{record.termId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tranDate != null" >
+        TRAN_DATE = #{record.tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.referNo != null" >
+        REFER_NO = #{record.referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.batchNo != null" >
+        BATCH_NO = #{record.batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serialNo != null" >
+        SERIAL_NO = #{record.serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oBatchno != null" >
+        O_BATCHNO = #{record.oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oSerialno != null" >
+        O_SERIALNO = #{record.oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tranType != null" >
+        TRAN_TYPE = #{record.tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wangPayType != null" >
+        WANG_PAY_TYPE = #{record.wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderCode != null" >
+        ORDER_CODE = #{record.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext1 != null" >
+        EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext2 != null" >
+        EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addVal != null" >
+        ADD_VAL = #{record.addVal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LIMS_ORDER_PAYMENT_CONFIRM
+    set ID = #{record.id,jdbcType=VARCHAR},
+      ORDER_ID = #{record.orderId,jdbcType=VARCHAR},
+      OPOS_ID = #{record.oposId,jdbcType=VARCHAR},
+      OTRS_ID = #{record.otrsId,jdbcType=VARCHAR},
+      CHECK_ID = #{record.checkId,jdbcType=VARCHAR},
+      CHECK_NAME = #{record.checkName,jdbcType=VARCHAR},
+      CHECK_TIME = #{record.checkTime,jdbcType=TIMESTAMP},
+      PAYMENT_TIME = #{record.paymentTime,jdbcType=TIMESTAMP},
+      CHECK_AMOUNT = #{record.checkAmount,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      PAYMENTER = #{record.paymenter,jdbcType=VARCHAR},
+      PAYMENT_TYPE = #{record.paymentType,jdbcType=BIT},
+      PAY_TYPE = #{record.payType,jdbcType=BIT},
+      TRANSFER_NO = #{record.transferNo,jdbcType=VARCHAR},
+      POS_NO = #{record.posNo,jdbcType=VARCHAR},
+      RECEIPT_ROLLS = #{record.receiptRolls,jdbcType=VARCHAR},
+      TRADE_NO = #{record.tradeNo,jdbcType=VARCHAR},
+      TRADE_PARAMS = #{record.tradeParams,jdbcType=VARCHAR},
+      MER_NUM = #{record.merNum,jdbcType=VARCHAR},
+      TERM_ID = #{record.termId,jdbcType=VARCHAR},
+      TRAN_DATE = #{record.tranDate,jdbcType=VARCHAR},
+      REFER_NO = #{record.referNo,jdbcType=VARCHAR},
+      BATCH_NO = #{record.batchNo,jdbcType=VARCHAR},
+      SERIAL_NO = #{record.serialNo,jdbcType=VARCHAR},
+      O_BATCHNO = #{record.oBatchno,jdbcType=VARCHAR},
+      O_SERIALNO = #{record.oSerialno,jdbcType=VARCHAR},
+      TRAN_TYPE = #{record.tranType,jdbcType=VARCHAR},
+      WANG_PAY_TYPE = #{record.wangPayType,jdbcType=VARCHAR},
+      ORDER_CODE = #{record.orderCode,jdbcType=VARCHAR},
+      EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      ADD_VAL = #{record.addVal,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirm" >
+    update LIMS_ORDER_PAYMENT_CONFIRM
+    <set >
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="oposId != null" >
+        OPOS_ID = #{oposId,jdbcType=VARCHAR},
+      </if>
+      <if test="otrsId != null" >
+        OTRS_ID = #{otrsId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null" >
+        CHECK_ID = #{checkId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null" >
+        CHECK_NAME = #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        CHECK_TIME = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentTime != null" >
+        PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkAmount != null" >
+        CHECK_AMOUNT = #{checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="paymenter != null" >
+        PAYMENTER = #{paymenter,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        PAYMENT_TYPE = #{paymentType,jdbcType=BIT},
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE = #{payType,jdbcType=BIT},
+      </if>
+      <if test="transferNo != null" >
+        TRANSFER_NO = #{transferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="posNo != null" >
+        POS_NO = #{posNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptRolls != null" >
+        RECEIPT_ROLLS = #{receiptRolls,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        TRADE_NO = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeParams != null" >
+        TRADE_PARAMS = #{tradeParams,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        MER_NUM = #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        TERM_ID = #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranDate != null" >
+        TRAN_DATE = #{tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        REFER_NO = #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        SERIAL_NO = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oBatchno != null" >
+        O_BATCHNO = #{oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="oSerialno != null" >
+        O_SERIALNO = #{oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="tranType != null" >
+        TRAN_TYPE = #{tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="wangPayType != null" >
+        WANG_PAY_TYPE = #{wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        EXT1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        EXT2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="addVal != null" >
+        ADD_VAL = #{addVal,jdbcType=VARCHAR},
+      </if>
+      <if test="reconciliationStatus != null" >
+        RECONCILIATION_STATUS = #{reconciliationStatus,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.order.mybatis.model.OrderPaymentConfirm" >
+    update LIMS_ORDER_PAYMENT_CONFIRM
+    set ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      OPOS_ID = #{oposId,jdbcType=VARCHAR},
+      OTRS_ID = #{otrsId,jdbcType=VARCHAR},
+      CHECK_ID = #{checkId,jdbcType=VARCHAR},
+      CHECK_NAME = #{checkName,jdbcType=VARCHAR},
+      CHECK_TIME = #{checkTime,jdbcType=TIMESTAMP},
+      PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+      CHECK_AMOUNT = #{checkAmount,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      PAYMENTER = #{paymenter,jdbcType=VARCHAR},
+      PAYMENT_TYPE = #{paymentType,jdbcType=BIT},
+      PAY_TYPE = #{payType,jdbcType=BIT},
+      TRANSFER_NO = #{transferNo,jdbcType=VARCHAR},
+      POS_NO = #{posNo,jdbcType=VARCHAR},
+      RECEIPT_ROLLS = #{receiptRolls,jdbcType=VARCHAR},
+      TRADE_NO = #{tradeNo,jdbcType=VARCHAR},
+      TRADE_PARAMS = #{tradeParams,jdbcType=VARCHAR},
+      MER_NUM = #{merNum,jdbcType=VARCHAR},
+      TERM_ID = #{termId,jdbcType=VARCHAR},
+      TRAN_DATE = #{tranDate,jdbcType=VARCHAR},
+      REFER_NO = #{referNo,jdbcType=VARCHAR},
+      BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+      SERIAL_NO = #{serialNo,jdbcType=VARCHAR},
+      O_BATCHNO = #{oBatchno,jdbcType=VARCHAR},
+      O_SERIALNO = #{oSerialno,jdbcType=VARCHAR},
+      TRAN_TYPE = #{tranType,jdbcType=VARCHAR},
+      WANG_PAY_TYPE = #{wangPayType,jdbcType=VARCHAR},
+      ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      EXT1 = #{ext1,jdbcType=VARCHAR},
+      EXT2 = #{ext2,jdbcType=VARCHAR},
+      ADD_VAL = #{addVal,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

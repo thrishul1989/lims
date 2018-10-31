@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>处理异常样本</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript"	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+
+<!-- <script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/hplus/content.min.js"></script> -->
+
+
+<script>
+
+
+
+	var base = "${base}";
+	
+
+
+
+</script>
+
+</head>
+
+
+
+<body class="gray-bg">
+		<div class="wrapper wrapper-content animated">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+					
+						<div class="ibox-title">
+							<strong>订单基本信息</strong>
+					    </div>
+					    
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                   
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>订单信息</strong></td>
+                        	</tr>
+                        
+                        
+                        	<#if order ??>
+                            <tr>
+                                <th class="col-sm-1">订单编号</th>
+                                <td class="col-sm-2">${(order.code)!?html} </td> 
+                                
+                                <th class="col-sm-1">订单状态</th>
+                                <td class="col-sm-2">
+                              			<@dict_entry_text category="ORDER_STATE" value=order.status />
+                               </td>
+                               
+                            </tr>
+                       		<tr>
+								
+                               <th class="col-sm-1">下单时间</th>
+                               <td class="col-sm-2"><#if order.submitTime??> ${(order.submitTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(order.submitTime)!?html} </#if></td>
+                       		   <th class="col-sm-1">下单人</th>
+                               <td class="col-sm-2">${(order.creatorName)!?html}</td>
+                               
+                       		</tr>
+                       		<tr>
+                               <th class="col-sm-1">业务员</th>
+                               <td class="col-sm-2">${(order.creatorName)!?html}</td>
+                       		   <th class="col-sm-1">客户</th>
+                               <td class="col-sm-2"><#if order.owner??>${(order.owner.name)!?html}</#if></td>
+                       		</tr>
+                       		
+                       		
+                       		<tr>
+                       		 <th class="col-sm-1">营销中心</th>
+                                <td class="col-sm-2">  
+                                		<#if order.orderType == "1">临床遗传</#if>
+										<#if order.orderType == "2">临床肿瘤</#if>
+										<#if order.orderType == "3">健康筛查</#if>
+										<#if order.orderType == "4">科技服务</#if>
+								</td>
+                       		</tr>
+                       		
+                            </#if>
+                            
+                            
+                       </table>  
+                       
+                       
+                       
+                        <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>样本信息</strong></td>
+                        	</tr>
+                        
+                        
+                        	<#if sampleInfo ??>
+                            <tr>
+                                <th class="col-sm-1">样本编号</th>
+                                <td class="col-sm-2">${(sampleInfo.sampleCode)!?html} </td> 
+                                
+                                <th class="col-sm-1">样本状态</th>
+                                <td class="col-sm-2">
+                              		<#if sampleInfo.transportStatus == 0>待送样</#if>
+                     				<#if sampleInfo.transportStatus == 1>送样中</#if>
+									<#if sampleInfo.transportStatus == 2>已接收样本</#if>
+									<#if sampleInfo.transportStatus == 3>异常样本</#if>
+									<#if sampleInfo.transportStatus == 4>已返样样本</#if>	
+									<#if sampleInfo.transportStatus == 5>已取消</#if>	
+                               </td>
+                               
+                            </tr>
+                       		<tr>
+								
+                               <th class="col-sm-1">样本名称</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleName)!?html}</td>
+                       		   <th class="col-sm-1">样本类型</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleTypeName)!?html}</td>
+                               
+                       		</tr>
+                       		<tr>
+                               <th class="col-sm-1">采样时间</th>
+                               <td class="col-sm-2"><#if sampleInfo.samplingDate??> ${(sampleInfo.samplingDate)!?string('yyyy-MM-dd')} </#if></td>
+                       		   <th class="col-sm-1">样本量</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleSize)!?html} ${(sampleInfo.unit)!?html}</td>
+                       		</tr>
+                       		
+                       		
+                       		<tr>
+                       		 <th class="col-sm-1">样本接收时间</th>
+                                <td class="col-sm-2">  
+                                		<#if sampleInfo.acceptSampleTime??> ${(sampleInfo.acceptSampleTime)!?string('yyyy-MM-dd')} </#if>
+								</td>
+								  <th class="col-sm-1">异常详情</th>
+                               <td class="col-sm-2">${(sampleInfo.errorReason)!?html}</td>
+                       		</tr>
+                       		
+                            </#if>
+                            
+                            
+                       </table>  
+                       
+                       
+                       
+                      <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox">
+                                    <div class="ibox-title">
+                                        <h5>处理意见</h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <form id="handle_errorsample_form" class="form-horizontal m-t" action="${base}/order/addErrorSample.do" method="post">
+                                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                                            <input type="hidden" name="orderId" value="${(order.id)!?html}">
+                                            <input type="hidden" name="sampleId" value="${(sampleInfo.id)!?html}"> <!-- 元样本id -->
+                                            <input type="hidden" name="id" value="${(searcher.id)!?html}"> <!-- 元样本id -->
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">处理策略：</label>
+                                                <div class="col-sm-10">
+                                                       <label><input type="radio" name="strategy" value="1" checked="checked">添加新样本</label>
+                                                       <label><input type="radio" name="strategy" value="2">不送样</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div  id="show1" >
+                                            
+                                            	<div class="form-group">
+
+														<label class="col-sm-2 control-label control-required">样本编号：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control"
+																name="mainSampleCode" id="mainSampleCode" value="" />
+														</div>
+
+														<label class="col-sm-2 control-label control-required">样本类型：</label>
+														<div class="col-sm-3">
+															<select class="form-control" name="sampleType"  onchange="showUnit(this)">
+																<option value=''>请选择样本类型</option>
+																<#if sample??> 
+																	<#list sample as entry>
+																	<option  value="${entry.id!?html}"  unit="${entry.receivingUnit!?html}"  >${entry.name!?html}</option>
+																</#list>
+																</#if>
+															</select>
+														</div>
+
+												</div>
+												
+												<div class="form-group">
+
+														<label class="col-sm-2 control-label control-required">样本量：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control"
+																name="sampleSize" value="" />
+														</div>
+
+														<label class="col-sm-2 control-label control-required">采样时间：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control laydate-icon"
+																name="samplingDate" value="" readonly="readonly"
+																style="height: 34px"
+																onclick="laydate({istime: true, format: 'YYYY-MM-DD',max: laydate.now()})" />
+														</div>
+
+												</div>
+												
+                                            
+                                            
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group" id="show2"  style="display: none">
+                                                <label class="col-sm-2 control-label control-required">备注：</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="4" name="remark" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-4 col-sm-offset-2">
+                                                    <button class="btn btn-primary" type="submit">确认</button>
+                                                    <button class="btn btn-primary goback" type="button">返回</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+           
+												
+					
+						
+           </div>
+         </div>
+                     
+                    
+                    
+                    
+                    
+             	 
+               </div>
+             </div>
+		</div>
+				
+				
+		</div>
+		
+	<script>
+    $(document).ready(function(){
+    	
+    	$('input:radio[name="strategy"]').change(function(){
+    		if($(this).val()==1){ //新加样本
+    			$("#show1").css("display","block"); 
+        		$("#show2").css("display","none"); 
+    		}else{
+    			$("#show1").css("display","none"); 
+        		$("#show2").css("display","block"); 
+    		}
+    		
+    	});
+    	
+    	
+    	
+    	
+    	$("#handle_errorsample_form").validate({
+    		submitHandler:function(form){
+    			form.submit();
+    		},
+            rules: {
+            	
+            	mainSampleCode:{
+            		required:true,
+            		remote: {
+             		    url: base+"/order/validateSampleCode.do",
+             		    type: "post",               
+             		    dataType: "json"          
+             		},
+             		rangelength:[9,9],
+             		alnum:true
+            	},
+            	sampleSize:{
+            		required:true,
+            		number:true,
+            		min:0.01
+            	},
+            	
+            	sampleType:{
+            		required:true
+            	},
+            	samplingDate:{
+            		required:true
+            	},
+               
+            },
+            messages: {
+            	mainSampleCode:{
+                	required: "请输样本编号",
+                	remote:"样本编号已经存在",
+                	rangelength:"样本编号长度不对,应该为9位"
+                },
+                sampleSize:{
+                	digits:"请输入整数"
+                },
+               
+            }
+        });
+    	
+    	
+    });
+    
+    
+    function showUnit(obj){
+    	
+    	var unit=$(obj).find('option:selected').attr('unit');
+    	if(typeof(unit) != 'undefined' && null != unit && "" != unit){
+    		
+ 			$(obj).parents().find('input[name="sampleSize"]').parent().prev().html(
+ 					"<span>*</span>样本量("+unit+")"		
+ 			);
+    	}
+    	else{
+    		$(obj).parents().find('input[name="sampleSize"]').parent().prev().html(
+    				"<span>*</span>样本量"		
+    		);
+    	}
+    }
+    
+</script>
+	
+</body>
+
+
+
+
+</html>

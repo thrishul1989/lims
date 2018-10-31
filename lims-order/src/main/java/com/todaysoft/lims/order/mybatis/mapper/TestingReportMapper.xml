@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.TestingReportMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.TestingReport" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+    <result column="CONTRACT_NUMBER" property="contractNumber" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+    <result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+    <result column="TEST_UNIT" property="testUnit" jdbcType="VARCHAR" />
+    <result column="CUSTOMER" property="customer" jdbcType="VARCHAR" />
+    <result column="ANAL_TYPE" property="analType" jdbcType="VARCHAR" />
+    <result column="BUSINESS_MAN" property="businessMan" jdbcType="VARCHAR" />
+    <result column="TECHNICAL_MAN" property="technicalMan" jdbcType="VARCHAR" />
+    <result column="PRODUCT_DUTY_MAN" property="productDutyMan" jdbcType="VARCHAR" />
+    <result column="MARKETING_CENTER" property="marketingCenter" jdbcType="VARCHAR" />
+    <result column="SHOULD_REPORT_DATE" property="shouldReportDate" jdbcType="TIMESTAMP" />
+    <result column="TOTAL_NUM" property="totalNum" jdbcType="INTEGER" />
+    <result column="COMPLETE_NUM" property="completeNum" jdbcType="INTEGER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REPORT_CODE" property="reportCode" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="FIRST_REVIEW_STATUS" property="firstReviewStatus" jdbcType="CHAR" />
+    <result column="SECOND_REVIEW_STATUS" property="secondReviewStatus" jdbcType="CHAR" />
+    <result column="REVIEWER_NAME" property="reviewerName" jdbcType="VARCHAR" />
+    <result column="RESUBMIT" property="resubmit" jdbcType="BIT" />
+    <result column="RESUBMIT_COUNT" property="resubmitCount" jdbcType="INTEGER" />
+    <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR" />
+    <result column="ANALY_RESULT" property="analyResult" jdbcType="VARCHAR" />
+    <result column="IF_REDO" property="ifRedo" jdbcType="BIT" />
+    <result column="REDO_COUNT" property="redoCount" jdbcType="INTEGER" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="BIT" />
+    <result column="SEND_STATUS" property="sendStatus" jdbcType="BIT" />
+    <result column="OPERATE_REMARK" property="operateRemark" jdbcType="VARCHAR" />
+    <result column="REPORT_TEMPLATE_TYPE" property="reportTemplateType" jdbcType="VARCHAR" />
+    <result column="ASSIGN_STATUS" property="assignStatus" jdbcType="BIT" />
+    <result column="ASSIGNER_ID" property="assignerId" jdbcType="VARCHAR" />
+    <result column="ASSIGNER_NAME" property="assignerName" jdbcType="VARCHAR" />
+    <result column="ASSIGN_DATE" property="assignDate" jdbcType="TIMESTAMP" />
+    <result column="RECEIVER_ID" property="receiverId" jdbcType="VARCHAR" />
+    <result column="RECEIVER_NAME" property="receiverName" jdbcType="VARCHAR" />
+    <result column="TECHNICAL_MAN_ID" property="technicalManId" jdbcType="VARCHAR" />
+    <result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_URL" property="dataUrl" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    ID, ORDER_ID, ORDER_CODE, CONTRACT_NUMBER, PRODUCT_ID, PRODUCT_CODE, PRODUCT_NAME, 
+    SAMPLE_ID, SAMPLE_CODE, SAMPLE_NAME, TEST_UNIT, CUSTOMER, ANAL_TYPE, BUSINESS_MAN, 
+    TECHNICAL_MAN, PRODUCT_DUTY_MAN, MARKETING_CENTER, SHOULD_REPORT_DATE, TOTAL_NUM, 
+    COMPLETE_NUM, CREATE_DATE, UPDATE_DATE, STATUS, REPORT_CODE, REPORT_NAME, FIRST_REVIEW_STATUS, 
+    SECOND_REVIEW_STATUS, REVIEWER_NAME, RESUBMIT, RESUBMIT_COUNT, REPORT_TYPE, ANALY_RESULT, 
+    IF_REDO, REDO_COUNT, DEL_FLAG, SEND_STATUS, OPERATE_REMARK, REPORT_TEMPLATE_TYPE, 
+    ASSIGN_STATUS, ASSIGNER_ID, ASSIGNER_NAME, ASSIGN_DATE, RECEIVER_ID, RECEIVER_NAME, 
+    TECHNICAL_MAN_ID, COMPLETE_DATE
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_REPORT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_TESTING_REPORT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  
+  <select id="search" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.request.MaintainReportRequest" >
+    select 
+    t.ID,
+    t.ORDER_ID,
+    t.PRODUCT_ID,
+    t.CREATE_DATE,
+    t.UPDATE_DATE,
+    t.REPORT_CODE,
+    SUBSTR(t.REPORT_NAME,LOCATE('_',t.REPORT_NAME)+1) AS REPORT_NAME,
+    p.DATA_URL
+    from LIMS_TESTING_REPORT t
+    join LIMS_ORDER_PRODUCT p ON t.ORDER_ID =p.ORDER_ID AND t.PRODUCT_ID=p.PRODUCT_ID
+    WHERE t.SECOND_REVIEW_STATUS ='1'
+    AND (t.SYNCHRONIZED_STATUS = '0' or t.SYNCHRONIZED_STATUS IS NULL)
+    ORDER BY UPDATE_DATE ASC
+  </select>
+  
+  <update id="updateLimsReportStatus" parameterType="com.todaysoft.lims.order.model.CallBackSampleModel">
+         UPDATE LIMS_TESTING_REPORT ltp set ltp.SYNCHRONIZED_STATUS = 1
+         WHERE ltp.ID in 
+         <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+   </update>
+  
+</mapper>

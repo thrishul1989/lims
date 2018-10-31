@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.BiologyDivisionFastqDataMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.BiologyDivisionFastqData">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+		<result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="METHOD_NAME" property="methodName" jdbcType="VARCHAR" />
+		<result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR" />
+		<result column="ANALYSIS_COORDINATE" property="analysisCoordinate"
+			jdbcType="VARCHAR" />
+		<result column="ANALYSIS_REQUIREMENT" property="analysisRequirement"
+			jdbcType="VARCHAR" />
+		<result column="SEQUENCING_CODE" property="sequencingCode"
+			jdbcType="VARCHAR" />
+		<result column="INDEX_CODE" property="indexCode" jdbcType="VARCHAR" />
+		<result column="FILE_Q_ONE" property="fileQOne" jdbcType="VARCHAR" />
+		<result column="MD_FIVE_ONE" property="mdFiveOne" jdbcType="VARCHAR" />
+		<result column="FILE_Q_TWO" property="fileQTwo" jdbcType="VARCHAR" />
+		<result column="MD_FIVE_TWO" property="mdFiveTwo" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="BIT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="ANNOTATE_STATUS" property="annotateStatus"
+			jdbcType="BIT" />
+		<result column="UPLOAD_DESC" property="uploadDesc" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CompareSampleResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.CompareSample">
+		<result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+		<result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR" />
+		<result column="METHOD_NAME" property="methodName" jdbcType="VARCHAR" />
+		<result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+		<result column="SEQUECING_CODE" property="sequecingCode"
+			jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="BAM_BAM" property="bamFile" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="SampleSexResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.SampleSex">
+		<result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		d.ID, d.SAMPLE_CODE,d.SAMPLE_ID,d.PRODUCT_CODE,
+		d.PRODUCT_NAME,d.METHOD_NAME,d.DATA_CODE,
+		d.ANALYSIS_COORDINATE,d.ANALYSIS_REQUIREMENT, d.SEQUENCING_CODE,
+		d.INDEX_CODE, d.FILE_Q_ONE,
+		d.MD_FIVE_ONE, d.FILE_Q_TWO,d.MD_FIVE_TWO,
+		d.STATUS, d.CREATE_TIME, d.UPDATE_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from BIOLOGY_DIVISION_FASTQ_DATA d
+		where d.ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getBySampleId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from BIOLOGY_DIVISION_FASTQ_DATA d
+		where d.SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from BIOLOGY_DIVISION_FASTQ_DATA
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyDivisionFastqData">
+		insert into BIOLOGY_DIVISION_FASTQ_DATA (ID,
+		SAMPLE_CODE,SAMPLE_ID,PRODUCT_CODE,PRODUCT_NAME,METHOD_NAME,
+		DATA_CODE,
+		ANALYSIS_COORDINATE,ANALYSIS_REQUIREMENT,SEQUENCING_CODE, INDEX_CODE, FILE_Q_ONE,
+		FILE_Q_TWO, STATUS, CREATE_TIME,
+		UPDATE_TIME)
+		values (#{id,jdbcType=VARCHAR},
+		#{sampleCode,jdbcType=VARCHAR},#{sampleId,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{methodName,jdbcType=VARCHAR},
+		#{dataCode,jdbcType=VARCHAR},
+		#{analysisCoordinate,jdbcType=VARCHAR},#{analysisRequirement,jdbcType=VARCHAR},
+		#{sequencingCode,jdbcType=VARCHAR}, #{indexCode,jdbcType=VARCHAR},
+		#{fileQOne,jdbcType=VARCHAR},
+		#{fileQTwo,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyDivisionFastqData">
+		insert into BIOLOGY_DIVISION_FASTQ_DATA
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="sampleCode != null">
+				SAMPLE_CODE,
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID,
+			</if>
+			<if test="productCode != null">
+				PRODUCT_CODE,
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME,
+			</if>
+			<if test="methodName != null">
+				METHOD_NAME,
+			</if>
+			<if test="dataCode != null">
+				DATA_CODE,
+			</if>
+			<if test="analysisCoordinate != null">
+				ANALYSIS_COORDINATE,
+			</if>
+			<if test="analysisRequirement != null">
+				ANALYSIS_REQUIREMENT,
+			</if>
+			<if test="sequencingCode != null">
+				SEQUENCING_CODE,
+			</if>
+			<if test="indexCode != null">
+				INDEX_CODE,
+			</if>
+			<if test="fileQOne != null">
+				FILE_Q_ONE,
+			</if>
+			<if test="fileQTwo != null">
+				FILE_Q_TWO,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleCode != null">
+				#{sampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				#{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="methodName != null">
+				#{methodName,jdbcType=VARCHAR},
+			</if>
+			<if test="dataCode != null">
+				#{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisCoordinate != null">
+				#{analysisCoordinate,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisRequirement != null">
+				#{analysisRequirement,jdbcType=VARCHAR},
+			</if>
+			<if test="sequencingCode != null">
+				#{sequencingCode,jdbcType=VARCHAR},
+			</if>
+			<if test="indexCode != null">
+				#{indexCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fileQOne != null">
+				#{fileQOne,jdbcType=VARCHAR},
+			</if>
+			<if test="fileQTwo != null">
+				#{fileQTwo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyDivisionFastqData">
+		update BIOLOGY_DIVISION_FASTQ_DATA
+		<set>
+			<if test="sampleCode != null">
+				SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="methodName != null">
+				METHOD_NAME = #{methodName,jdbcType=VARCHAR},
+			</if>
+			<if test="dataCode != null">
+				DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisCoordinate != null">
+				ANALYSIS_COORDINATE = #{analysisCoordinate,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisRequirement != null">
+				ANALYSIS_REQUIREMENT = #{analysisRequirement,jdbcType=VARCHAR},
+			</if>
+			<if test="sequencingCode != null">
+				SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR},
+			</if>
+			<if test="indexCode != null">
+				INDEX_CODE = #{indexCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fileQOne != null">
+				FILE_Q_ONE = #{fileQOne,jdbcType=VARCHAR},
+			</if>
+			<if test="fileQTwo != null">
+				FILE_Q_TWO = #{fileQTwo,jdbcType=VARCHAR},
+			</if>
+			<if test="mdFiveOne != null">
+				MD_FIVE_ONE = #{mdFiveOne,jdbcType=VARCHAR},
+			</if>
+			<if test="mdFiveTwo != null">
+				MD_FIVE_TWO = #{mdFiveTwo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyDivisionFastqData">
+		update BIOLOGY_DIVISION_FASTQ_DATA
+		set SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+		SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+		PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+		PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+		METHOD_NAME = #{methodName,jdbcType=VARCHAR},
+		DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+		ANALYSIS_COORDINATE = #{analysisCoordinate,jdbcType=VARCHAR},
+		ANALYSIS_REQUIREMENT = #{analysisRequirement,jdbcType=VARCHAR},
+		SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR},
+		INDEX_CODE = #{indexCode,jdbcType=VARCHAR},
+		FILE_Q_ONE = #{fileQOne,jdbcType=VARCHAR},
+		FILE_Q_TWO = #{fileQTwo,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=BIT},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectCompareSample" resultMap="CompareSampleResultMap"
+		parameterType="com.todaysoft.lims.technical.mybatis.parameter.CompareSampleSearch">
+	<![CDATA[ select DISTINCT sample.SAMPLE_CODE,orderSample.ORDER_CODE,fdata.PRODUCT_NAME,fdata.PRODUCT_CODE,fdata.DATA_CODE,
+				 fdata.METHOD_NAME,orderSample.SAMPLE_NAME,task.SEQUECING_CODE,task.CREATE_TIME,annotate.BAM_BAM
+	from 
+	(select * from NGS_SEQUECING_TASK order by create_time) task
+    left join BIOLOGY_DIVISION_FASTQ_DATA fdata on fdata.SEQUENCING_code=task.SEQUECING_code
+	left join BIOLOGY_DIVISION_SHEET_SAMPLE sample on fdata.data_code=sample.data_code
+	left join LIMS_ORDER_SAMPLE_DETAILS orderSample on orderSample.SAMPLE_code=sample.SAMPLE_code
+	left join BIOLOGY_INFO_ANNOTATE  annotate on fdata.data_code=annotate.DATA_CODE
+	where fdata.METHOD_NAME <> 'PCRNGS' and fdata.DATA_CODE <>#{currentFastqDateCode,jdbcType=VARCHAR}
+	 ]]>
+		<if test="productCode != null and productCode != ''">
+			and fdata.PRODUCT_CODE=#{productCode,jdbcType=VARCHAR}
+		</if>
+		<if test="methodName != null  and methodName != ''">
+			and fdata.METHOD_NAME=#{methodName,jdbcType=VARCHAR}
+		</if>
+		<if test="sampleCode != null and sampleCode != ''">
+			and sample.SAMPLE_CODE=#{sampleCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderCode != null and orderCode != ''">
+			and orderSample.ORDER_CODE=#{orderCode,jdbcType=VARCHAR}
+		</if>
+		limit 0,50
+	</select>
+
+
+	<select id="search" resultMap="BaseResultMap"
+		parameterType="com.todaysoft.lims.technical.model.searcher.SampleSearcher">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		BIOLOGY_DIVISION_FASTQ_DATA d
+		LEFT JOIN BIOLOGY_INFO_ANNOTATE a on d.DATA_CODE=a.DATA_CODE
+		<include refid="SearchFilters"></include>
+		<include refid="SearchLimit"></include>
+	</select>
+
+	<sql id="SearchFilters">
+		WHERE 1 = 1
+		<if test="_parameter.sampleCode != null and _parameter.sampleCode != ''">
+			AND d.SAMPLE_CODE = #{sampleCode}
+		</if>
+		<if test="_parameter.sampleId != null and _parameter.sampleId != ''">
+			AND d.SAMPLE_ID = #{sampleId}
+		</if>
+
+		<if test="_parameter.dataCode != null and _parameter.dataCode != ''">
+			AND d.DATA_CODE = #{dataCode}
+		</if>
+	</sql>
+
+	<sql id="SearchLimit">
+		<if test="_parameter.offset != null and _parameter.limit != null">
+			LIMIT #{_parameter.offset}, #{_parameter.limit}
+		</if>
+	</sql>
+
+	<select id="getPrimarySampleSexByCode" resultMap="SampleSexResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		ops.SAMPLE_CODE,oe.SEX
+		FROM
+		LIMS_ORDER_PRIMARY_SAMPLE ops
+		left JOIN
+		LIMS_ORDER_EXAMINEE oe on ops.EXAMINEE_ID=oe.id
+		WHERE
+		ops.SAMPLE_CODE=#{sampleCode,jdbcType=VARCHAR};
+	</select>
+
+	<select id="getSubSampleSexByCode" resultMap="SampleSexResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		subSample.SAMPLE_CODE,
+		dict.DICT_TEXT AS SEX
+		FROM
+		LIMS_ORDER_SUBSIDIARY_SAMPLE subSample
+		LEFT JOIN LIMS_DICT dict ON dict.DICT_VALUE = subSample.FAMILY_RELATION
+		WHERE
+		subSample.SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR}
+		AND dict.CATEGORY = 'FAMILY_RELATION';
+	</select>
+
+	<select id="selectByDataCode" parameterType="string" resultMap="BaseResultMap">
+		select * from BIOLOGY_DIVISION_FASTQ_DATA where DATA_CODE=#{0}
+	</select>
+
+</mapper>

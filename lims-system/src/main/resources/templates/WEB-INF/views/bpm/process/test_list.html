@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>实验</title>
+<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="${system_js}/handlebars-v4.0.5.js"></script> -->
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script>
+	$(function() {
+		$(".testUrl").click(function(){
+        var semantic= $(this).parents("tr").find(".semantic").val();
+        var activitiTaskId=$(this).parents("tr").find(".activitiTaskId").val();
+        var id=$(this).parents("tr").find(".id").val();
+        
+        switch(semantic){
+        case "DNA-EXT":$(this).attr(
+                "href",
+                "${base}/testing/dna_extract_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "DNA-QC" :$(this).attr(
+                "href",
+                "${base}/testing/dna_qc_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "CDNA-EXT" :$(this).attr(
+                "href",
+                "${base}/testing/cdna_extract_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "CDNA-QC" :$(this).attr(
+                "href",
+                "${base}/testing/cdna_qc_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "LIBRARY-CRE" :$(this).attr(
+                "href",
+                "${base}/testing/lib_create_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "LIBRARY-QC" :$(this).attr(
+                "href",
+                "${base}/testing/lib_qc_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "LIBRARY-CAP" :$(this).attr(
+                "href",
+                "${base}/testing/wk_catch_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "RQT" :$(this).attr(
+                "href",
+                "${base}/testing/rqt_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "POOLING" :$(this).attr(
+                "href",
+                "${base}/testing/pooling_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "QT" :$(this).attr(
+                "href",
+                "${base}/testing/qt_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "NGS-SEQ" :$(this).attr(
+                "href",
+                "${base}/testing/ontesting_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "NGS-SEQUECING" :$(this).attr(
+                "href",
+                "${base}/testing/ngsSequecing_test.do?&sheetId="+id);
+        break;
+        case "BIOLOGY-ANALY" :$(this).attr(
+                "href",
+                "${base}/testing/bioanalysis_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "TECHNICAL-ANALY" :$(this).attr(
+                "href",
+                "${base}/testing/tecanalys_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "PRIMER-DESIGN" :$(this).attr(
+                "href",
+                "${base}/testing/primer_design_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "PCR-ONE" :$(this).attr(
+                "href",
+                "${base}/testing/first_pcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "PCR-TWO" :$(this).attr(
+                "href",
+                "${base}/testing/second_pcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "DATA-ANALYSIS" :$(this).attr(
+                "href",
+                "${base}/testing/data_pcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "MLPA" :$(this).attr(
+                "href",
+                "${base}/testing/mlpa_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+        case "MLPA-DATA" :$(this).attr(
+                "href",
+                "${base}/testing/mlpa_data_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+        break;
+		case "DT" :$(this).attr(
+				"href",
+				"${base}/testing/dt_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "QPCR" :$(this).attr(
+				"href",
+				"${base}/testing/qpcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+
+		case "Long-PCR" :$(this).attr(
+				"href",
+				"${base}/testing/longpcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "Long-CRE" :$(this).attr(
+				"href",
+				"${base}/testing/longcre_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "Long-QC" :$(this).attr(
+				"href",
+				"${base}/testing/longqc_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "MULTI-PCR" :$(this).attr(
+				"href",
+				"${base}/testing/multipcr_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "MULTIPCR-QC" :$(this).attr(
+				"href",
+				"${base}/testing/multipcrqc_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "PCR-NGS-PRIMER-DESIGN" :$(this).attr(
+				"href",
+				"${base}/testing/pcr_ngs_primer_design_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "PCR-NGS" :$(this).attr(
+				"href",
+				"${base}/testing/pcr_ngs_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "PCR-NGS-DATA-ANALYSIS" :$(this).attr(
+				"href",
+				"${base}/testing/pcr_ngs_data_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "SANGER-PCR-ONE" :$(this).attr(
+				"href",
+				"${base}/testing/first_pcr_sanger_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "SANGER-PCR-TWO" :$(this).attr(
+				"href",
+				"${base}/testing/second_pcr_sanger_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "SANGER-DATA-ANALYSIS" :$(this).attr(
+				"href",
+				"${base}/testing/data_pcr_sanger_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "SANGER-DATA-REPORT" :$(this).attr(
+				"href",
+				"${base}/testing/report_sanger_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "FLUO-TEST" :$(this).attr(
+				"href",
+				"${base}/testing/fluo_test_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "FLUO-ANALYSE" :$(this).attr(
+				"href",
+				"${base}/testing/fluo_analyse_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "DT-DATA-ANALYSIS" :$(this).attr(
+				"href",
+				"${base}/testing/dt_data_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		case "MLPA-DATA-ANALYSIS" :$(this).attr(
+				"href",
+				"${base}/testing/mlpa_data_test.do?activitiTaskId="+activitiTaskId+"&id="+id);
+			break;
+		}
+		})
+	});
+	
+</script>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox-title">
+        <ol class="breadcrumb">
+            <li>
+                <span>检测实验</span>
+                <li class="active"><strong>实验任务</strong></li>
+            </li>
+        </ol>
+    </div>
+	<form id="search_from" action="" method="post"
+		class="search-form">
+		<div class="row m-b-xs">
+			<div class="col-sm-2">
+				<div class="form-group"></div>
+			</div>
+			<input type="hidden" id="pageSize" name="pageSize" value="10" />
+		</div>
+		<input type="hidden" id="pageTaskId" />
+	</form>
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<th>序号</th>
+			<th>实验名称</th>
+			<th>任务编号</th>
+            <th>任务描述</th>
+			<th>下达人</th>
+			<th>下达时间</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			<#if tasks??><#list tasks as record>
+			<tr><input type="hidden" class="semantic" value="${record.semantic!?html}" />
+				<td class="index">${record_index+1}</td>
+				<td>${(record.testingName)!?html}</td>
+				<td>${(record.testingCode)!?html}</td>
+                <td>${(record.remark)!?html}</td>
+				<td>${(record.assignerName)!?html}</td>
+				<td><#if (record.assignTime)??> ${(record.assignTime)!?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+                <input type="hidden" class="activitiTaskId" value="${record.activitiTaskId!?html}" />
+                <input type="hidden" class="id" value="${record.id!?html}" />
+				<td><a target="_self"  
+					href=""
+					class="btn btn-sm btn-success testUrl"> <i class="fa fa-plus"></i> 处理
+				</a></td>
+			</tr>
+			</#list><#else>
+			<tr>
+				<td colspan="7">暂无相关记录</td>
+			</tr>
+			</#if>
+		</tbody>
+	</table>
+	<!-- 分页查询 -->
+		<div class="modal fade" id="full" tabindex="-1" role="dialog"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content animated bounceInRight">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+							</button>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true"></button>
+						</div>
+						<div class="modal-body">
+							<iframe id="create_task_form" src=""
+								style="border: 0; width: 850px; height: 550px;"> </iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+</body>
+</html>

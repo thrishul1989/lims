@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户列表-用户管理</title>
+<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="${system_js}/handlebars-v4.0.5.js"></script> -->
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script  src="${system_js}/layer.js"></script> 
+<script>
+	$(function() {
+		//全选，取消
+		$("input[name='allChecked']").click(function() {
+			//判断当前点击的复选框处于什么状态$(this).is(":checked") 返回的是布尔类型
+			if ($(this).is(":checked")) {
+				var inputChoose=$(this).parent().parent().parent().next().find('tr td input');
+				inputChoose.prop("checked", true);
+			} else {
+				var inputChoose=$(this).parent().parent().parent().next().find('tr td input');
+				inputChoose.prop("checked", false);
+			}
+		});
+	});
+	$("document").ready(
+			function() {
+				$(".batchAssine").click(
+						function() {//输出选中的值  
+
+							var businessObject = [];
+							$("input:checkbox:checked").each(function(e) {
+
+								if ($(this).val() != "") {
+									//存取流程实例id
+									businessObject.push($(this).val());
+								
+								}
+							});
+							console.log("选中"+businessObject.length+"条任务");
+							if(businessObject.length < 1){
+								parent.parent.layer.alert('请至少选中一条任务！',{title:"提示"});
+							}else{
+								var semantic=$(this).prev().find('tbody').find('input').val();
+								var ids = businessObject.join(",");
+							  $("#create_task_form").attr(
+										"src",
+										"${base}/testingTask/list.do?activitiTaskId="+ ids+"&semantic="+semantic);
+								$('#full').modal('show');
+							}
+							
+
+						})
+						
+						
+			})
+	function onSingleTask(id,semantic){
+		//semantic = "";
+		$("#create_task_form").attr("src","${base}/testingTask/list.do?activitiTaskId="+ id+"&semantic="+semantic);
+	    $('#full').modal('show');
+	}
+
+
+$(function(){
+	var obj = ${index};
+	var tabContent=obj["index"];
+	var semantic=$('.taskTypeName').eq(0).val();
+	var taskId=$('.taskIdInput').eq(0).val();
+	$('.tabContent').eq(0).attr('src' ,"${base}/process/"+tabContent+"?taskTypeName="+semantic+"&id="+taskId);
+	if(taskId=='excute'){
+		 $('#excute').find('iframe').attr('src',"${base}/process/excuteList.do");
+	}
+	$('#myTab li:eq(0) a').tab('show');
+$('.tab_a').click(function(e){
+	$('#myTab li:eq(e) a').tab('show');
+	var semantic= $(this).nextAll().eq(0).val();
+	var taskId= $(this).nextAll().eq(1).val();
+	switch(semantic)
+	{
+	case 'DNA_QC':
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/QCList.do?taskTypeName="+semantic+"&id="+taskId);
+	  break;
+	case 'RNA_QC':
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/QCList.do?taskTypeName="+semantic+"&id="+taskId);
+	  break;
+	case 'WK_CREATE':
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/wkList.do?taskTypeName="+semantic+"&id="+taskId);
+	  break;
+	case 'LIBRARY_CATCH':
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/libaryCatchList.do?taskTypeName="+semantic+"&id="+taskId);
+	  break;
+	case 'WK_QC':
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/wkQCList.do?taskTypeName="+semantic+"&id="+taskId);
+	  break;
+	case 'excute':
+		 $('#excute').find('iframe').attr('src',"${base}/process/excuteList.do"); 
+	  break;
+	case 'XDDL':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/xddlList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'JDDL':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/jddlList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'ON_TEST':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/onTestList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'BIOINFORMATICS_ANALYZE':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/bioinformaticAnalysis.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'ANALYSIS':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/tecAnalysisList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;	
+	case 'REPORT_CREATE':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/reportCreateList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'REPORT_CHECK':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/reportCheckList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	case 'REPORT_MAIL':
+		$('#'+taskId).find('iframe').attr('src',"${base}/process/reportMailList.do?taskTypeName="+semantic+"&id="+taskId);
+		break;
+	default:
+		$('#'+taskId).find('iframe').attr('src' ,"${base}/process/DNA_list.do?taskTypeName="+semantic+"&id="+taskId); 
+	}
+}); 
+
+});
+
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/process/list.do">代办事项管理</a></li>
+							<li class="active"><strong>待办事项列表</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>待办事项列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="search_from" action="${base}/process/list1.do"
+							method="post" class="search-form">
+							<div class="row m-b-xs">
+								<div class="col-sm-2">
+									<div class="form-group"></div>
+								</div>
+								<input type="hidden" id="pageSize" name="pageSize" value="10" />
+							</div>
+							<input type="hidden" id="pageTaskId" />
+						</form>
+						<ul id="myTab" class="nav nav-tabs">
+							<#if taskList ??><#list taskList as task>
+							<li><a href="#${task.id}" data-toggle="tab" class="tab_a">${task.taskName}</a>
+								<input class="taskTypeName" type="hidden" name="taskTypeName"
+								value="${(task.taskTypeName)!?html}"> <input class="taskIdInput"
+								type="hidden" name="taskId" value="${task.id}"></li> </#list>
+							</#if>
+							<li><a href="#excute" data-toggle="tab" class="tab_a">实验任务</a>
+								<input class="taskIdInput" type="hidden" name="taskId"
+								value="excute"></li>
+						</ul>
+						<div id="myTabContent" class="tab-content">
+							<#if taskList ??><#list taskList as task>
+							<div class="tab-pane fade" id="${task.id}">
+								<iframe class="tabContent" src=""   
+									style="border: 0; width: 100%; height: 550px;"> </iframe>
+									
+							</div>
+							</#list> </#if>
+							<div class="tab-pane fade" id="excute">
+								<iframe class="tabContent" src="" 
+									style="border: 0; width: 100%; height: 550px;"> </iframe>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="full" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width: 900px">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-content" style="text-align: center">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true"></button>
+					</div>
+					<div class="modal-body">
+						<iframe id="create_task_form" src="" scrolling="yes"
+							style="border: 0; width: 850px; height: 550px;"> </iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

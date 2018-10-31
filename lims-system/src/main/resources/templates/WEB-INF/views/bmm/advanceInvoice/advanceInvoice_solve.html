@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>提前开票管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script id="invoiceTemp">
+	<#include "./add_invoice_temp.html" />
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>提前开票管理</span>
+                            </li>
+                            <li class="active">
+                                <strong>提前开票处理</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>提前开票处理</h5>
+                    </div>
+                    <div class="ibox-content">
+                    	<#include "./advanceInvoice_info.html" />
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox">
+									<div class="ibox-title">
+										<h5>开票信息</h5>
+										<div class="ibox-tools">
+											<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+											</a>
+										</div>
+									</div>
+									<form id="invoiceForm" class="form-horizontal m-t" action="${base}/bmm/advanceInvoice/solve.do" method="post">
+										<input id="id" name="id" type="hidden" value="${(record.id)!?html}"/>
+										<input id="solveStatus" name="solveStatus" type="hidden" value="${(record.solveStatus)!?html}"/>
+										<input id="content" name="content" type="hidden"/>
+										<input id="currentReceivable" type="hidden" value="${(record.currentReceivable)!?html}"/>
+										<input id="currentActualPay" type="hidden" value="${(record.currentActualPay)!?html}"/>
+										<input id="companyRatio" type="hidden" value="${((record.companyRatio)!0)?string('0.####################')}"/>
+										<input id="inspectionRatio" type="hidden" value="${((record.inspectionRatio)!0)?string('0.####################')}"/>
+										<input id="cqCompanyRatio" type="hidden" value="${((record.cqCompanyRatio)!0)?string('0.####################')}"/>
+										<input id="delayStatus" name="delayStatus" type="hidden" value="${delaySign}"/>
+										<input id="institution" type="hidden" value="${(institution)!?html}"/>
+										<div class="ibox-content invoiceInfo">
+											<div class="col-sm-3 form-group">
+												<a href="javascript:;" class="btn btn-sm btn-success addInvoice"><i class="fa fa-plus"></i> 添加开票信息</a>
+											</div>
+											<table class="table table-striped table-bordered table-hover invoiceTable">
+												<tr>
+													<th class="col-sm-1">开票单位：</th>
+													<td class="col-sm-2"><input class="form-control institution" type="text" name="institution" value="<#if record.institution??> <#if record.institution == "0">北京检验所 <#elseif record.institution == "1">北京迈基诺 <#elseif record.institution == "2">重庆迈基诺 <#else>重庆检验所</#if></#if>" readonly/></td>
+													<th class="col-sm-1">开票金额：</th>
+													<td class="col-sm-2"><input class="form-control invoiceAmount" type="text" name="invoiceAmount" value="0"/></td>
+													<th class="col-sm-1">开票订单号：</th>
+													<td class="col-sm-2 orderTd">
+														<div class="form-control  order" placeholder="请选择订单"></div>
+													</td>
+												</tr>
+												<tr>
+													<th>开票时间：</th>
+													<td><input class="form-control laydate-icon invoiceTime" type="text" value="${.now?string('yyyy-MM-dd')}" name="invoiceTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"/></td>
+													<th>开票单号：</th>
+													<td><input class="form-control invoicerNo" type="text" name="invoicerNo"/></td>
+													<th>开票人：</th>
+													<td>
+														<select class="form-control drawerId" name="drawerId">
+															<option value="">---请选择---</option>
+															<#if userlist??><#list userlist as user>
+															<option value="${user.id}">${user.name!?html}</option>
+															</#list></#if>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<th>领取人：</th>
+													<td><input class="form-control receiverName" type="text" name="receiverName"/></td>
+													<th colspan="4"><a class="btn btn-sm btn-success removeInvoice" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56); float: right;"><i class="fa fa-trash"></i> 删除此条开票信息</a></th>
+												</tr>
+											</table>
+										</div>
+										<div class="form-group">
+				                            <div class="col-sm-4 col-sm-offset-5">
+				                                <button type="button" class="btn btn-primary" id="button_solve">提交</button>
+				                                <button class="btn btn-primary goback" type="button">返回</button>
+				                            </div>
+				                        </div>
+									</form>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+                
+                
+                
+       <div class="modal fade" id="updateReceiveModal" tabindex="-1"   role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:880px;" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+					</button>
+				</div>
+				<div class="modal-content" style="padding:20px 30px ;">	
+					
+					
+						<form id="amountForm" class="form-horizontal m-t" action="${base}/bmm/advanceInvoice/updateOrderProductAmountSolve.do" method="post" style="clear:both;"
+							enctype='application/json'>
+							<input type="hidden"  class="form-control" readonly="readonly" name="id"  value="${(record.id)!?html}" />
+							<input type="hidden"  class="form-control" readonly="readonly" name="requestParams" id="requestParams" value="" />
+							<input type="hidden"  class="form-control" readonly="readonly" name="delaySign" id="delaySign" value="${delaySign}" />
+							<table class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+								<tr>
+									<td>序号</td>
+									<td>订单编号</td>
+									<td style="display: none">订单产品id</td>
+									<td>产品名称</td>
+									<td>产品金额(元)</td>
+								</tr>
+							</thead>
+							<tbody id="amount_table">
+								<#if record.orderUpdateList?has_content> 
+									<#list record.orderUpdateList as order>
+										<#if order.orderProductList?has_content> 
+											<#list order.orderProductList as entity>
+											<tr>
+												<td>${entity_index + 1}</td>
+												<#if entity_index==0>
+													<td rowspan="${order.orderProductList?size}">
+													
+													${(order.code)!?html}
+													<input type="hidden" id="orderId" value="${(order.id)!?html}"   />
+													
+													</td>
+													
+												</#if>
+												<td  style="display: none">${(entity.id)!?html}</td>
+												<td>${(entity.product.name)!?html}</td>
+												<td><input type="text" class="form-control"  value="${(entity.realProductPrice)!?html}" /></td>
+												
+											</tr>
+											</#list>
+										</#if>
+									</#list> 
+								</#if>
+							</tbody>
+						</table>
+							
+						</form>
+					
+					
+				</div>
+				
+				<div class="modal-footer">
+				 	<button type="button" class="btn btn-primary" id="update_submit">提交更改</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+           		</div>
+
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+    <script type="text/javascript" src="${plugins}/hplus/content.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js?v=1.0.0"></script>
+    <script type="text/javascript" src="${system_js}/magicsuggest-min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap-suggest.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${system_js}/myValidate.js"></script>
+    <script type="text/javascript" src="${system_js}/bmm/advanceInvoice.js"></script>
+    <script type="text/javascript">
+
+	 var delaySign =${delaySign}
+    $('#button_solve').click(function(){
+    	var orderList = ${orderList};
+    	var idArray = [];
+    	$('.orderTd div .ms-sel-ctn input').each(function(i,v){
+     	   var orderId = $(this).val();
+     	   if(i != 0 && "" != orderId){
+     		  idArray.push(orderId);
+     	   }
+        });
+    	
+    	//校验是否所有订单都已开票
+    	var orderCode = "";
+    	for(var i = 0; i < orderList.length ; i ++){
+    		var index = $.inArray(orderList[i].id, idArray);
+    		if(index == -1){
+                    if(orderCode == ""){
+                        orderCode = orderList[i].code;
+                    }else{
+                        orderCode = orderCode + "," + orderList[i].code;
+                    }
+
+    		}
+    	}
+    	if(orderCode != ""){
+    		parent.parent.layer.alert('编号为：' + orderCode + '的订单未开票', {title : "提示"});
+    		return false;
+    	}
+    	
+    	var flag = true;
+    	invoiceInfoList=[];
+    	var count = 0;
+    	var currentReceivable = $('#currentReceivable').val();
+        var currentActualPay = $('#currentActualPay').val();
+        $(".invoiceTable").each(function(){
+        	var invoiceTime=$(this).find(".invoiceTime").val();
+        	var invoicerNo=$(this).find(".invoicerNo").val();
+        	var drawerId=$(this).find(".drawerId").val();
+        	if("" == invoiceTime || "" == invoicerNo || "" == drawerId){
+        		parent.parent.layer.alert('开票信息必填项缺失', {title : "提示"});
+        		flag = false;
+        	}
+        	
+            invoiceInfo={};
+            var orderIds = "";
+            $(this).find('.orderTd div .ms-sel-ctn input').each(function(i,v){
+         	   var ids = $(this).val();
+         	   if(i != 0){
+         		   if(i == 1){
+         			   orderIds = ids;
+         		   }else{
+         			   orderIds = orderIds + "," + ids;
+         		   }
+         	   }
+            });
+            invoiceInfo.institution=$(this).find(".institution").val();
+            invoiceInfo.invoiceAmount=$(this).find(".invoiceAmount").val();
+            invoiceInfo.orderIds=orderIds;
+            invoiceInfo.invoiceTime=invoiceTime;
+            invoiceInfo.invoicerNo=invoicerNo;
+            invoiceInfo.drawerId=drawerId;
+            invoiceInfo.receiverName=$(this).find(".receiverName").val();
+            invoiceInfoList.push(invoiceInfo);
+            
+            count = Number(count) + Number($(this).find(".invoiceAmount").val());
+        });
+        var content=JSON.stringify(invoiceInfoList);
+        $("#content").val(content);
+        
+
+        if (delaySign =="1")
+		{
+            if(count != Number(currentReceivable)){
+                flag = false;
+                parent.parent.layer.alert('开票总金额与应收款不相等', {title : "提示"});
+            }
+		}
+		else
+		{
+            if(count != Number(currentActualPay)){
+                flag = false;
+                parent.parent.layer.alert('开票总金额与实付款不相等', {title : "提示"});
+            }
+		}
+
+        
+        if(flag){
+        	var checkFlag = true;
+        	$('#cost tbody tr').each(function(){
+        		var reduceStatus = $(this).find('.reduceStatus').val();
+        		var receivable = $(this).find('.receivable').text();
+        		var actualPayment = $(this).find('.actualPayment').text();
+        		if(reduceStatus == "0" || receivable != actualPayment){
+        			checkFlag = false;
+        		}
+        	});
+        	if(!checkFlag){
+        		
+				if($("#solveStatus").val()==2){   //可开票，应收款小于确认到账，必须增加订单应收款，使之对应
+        			
+        			var layerObject = parent.parent.layer;
+                    var buttons = [ '修改金额', '取消' ];
+
+                    layerObject.confirm('开票金额和实际收款金额不等,需修改订单应付款？', {
+                        icon : 3,
+                        title : '操作提示',
+                        btn : buttons,
+                        shade : 'transparent'
+                    }, function(index)
+                    {
+                    	$("#updateReceiveModal").modal('show');
+                        layerObject.close(index);
+                    }, function(index)
+                    {
+                        layerObject.close(index);
+                    });
+        			
+        		}else if($("#solveStatus").val()==1){ //待开票
+        			var layerObject = parent.parent.layer;
+                    var buttons = [ '继续开票', '修改金额' ];
+
+                    layerObject.confirm('开票金额和实际收款金额不等,继续开票还是修改订单应付款？', {
+                        icon : 3,
+                        title : '操作提示',
+                        btn : buttons,
+                        shade : 'transparent'
+                    }, function(index)
+                    {
+                    	$('#invoiceForm').submit();
+                        layerObject.close(index);
+                    }, function(index)
+                    {
+                    	$("#updateReceiveModal").modal('show');
+                        layerObject.close(index);
+                    });
+        		}
+                
+            }else{
+            	var layerObject = parent.parent.layer;
+                var buttons = [ '确定', '取消' ];
+                layerObject.confirm('订单应收款与确认到账相等,确定开票吗？', {
+                    icon : 3,
+                    title : '操作提示',
+                    btn : buttons,
+                    shade : 'transparent'
+                }, function(index)
+                {
+                	$('#invoiceForm').submit();
+                    layerObject.close(index);
+                }, function(index)
+                {
+                    layerObject.close(index);
+                });
+            }
+        }
+    });
+    
+
+    	 $("#update_submit").click( function(){
+    	    	var group=[];
+    	    	$("#amount_table tr ").each(function(i, v){
+    	    		var orderId = $(this).find("#orderId").val();
+    	    		if(orderId != undefined){
+    	    			var id = $(this).find('td').eq(2).text();
+    	    			var price = $(this).find('td').eq(4).find("input").val();
+    	    		}else{
+    	    			var id = $(this).find('td').eq(1).text();
+    	    			var price = $(this).find('td').eq(3).find("input").val();
+    	    		}
+    	    		
+    	    		var productAmount={"orderProductId":id,"orderProductPrice":price};
+    	    		group.push(productAmount);
+    	    	});
+    	    	$("#requestParams").val(JSON.stringify(group));
+    	    	console.info(JSON.stringify(group));
+    	    	$('#amountForm').submit();
+    	    });
+ 
+   
+    
+   $(document).ready(function(){
+	   
+	   
+	$("#amountForm").validate({
+		submitHandler:function(form){
+			form.submit();
+		},
+		rules: {
+	        	amount: {
+	        		required:true,
+	        		number:true,
+	        		min:0.01
+	        	},
+	        },
+	        messages: {
+	        	amount:  {
+	                required: "请输入订单产品费用",
+	            },
+	        }
+	 });
+   });
+    </script>
+</body>
+</html>

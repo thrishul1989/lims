@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>生产商管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+<style>
+#L_REAGENT_producterManage_anchor{
+background-color: #e1e4e4
+}
+</style>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" >
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/producterManage/list.do">生产商管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>生产商列表</strong>
+                            </li>
+                            
+                            
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    
+                    
+				<div class="ibox-title">
+                        
+                        <h5>生产商列表</h5>
+							<a href="${base}/producterManage/form.do" class="btn btn-sm btn-success">
+							<i class="fa fa-plus"></i> 新增
+						</a>
+                        
+                    </div>
+                    
+                    
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                    
+ 						<!-- <div class="col-sm-2">
+                            <div id="metadata_tree"></div>
+                        </div> -->
+                       
+                        <div class="col-sm-12">
+                        
+	                        <form id="searchProducterManage_from" action="${base}/producterManage/list.do" method="post" class="search-form">
+	                            <div class="row m-b-xs">
+		                              <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" name="producterNo" class="form-control" id="producterNo" placeholder="生产商编号" value="${(searcher.producterNo)!?html}">
+	                                    </div>
+	                                  </div>
+	                                  
+		                              <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" name="state" class="form-control" id="state" placeholder="状态" value="${(searcher.state)!?html}">
+	                                    </div>
+	                                  </div>
+	                                
+	                                <div class="col-sm-3">
+	                                    <div class="form-group">
+	                                        <button type="submit" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 查询
+	                                        </button>
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('searchProducterManage_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form>
+	                        <table class="table table-striped table-bordered table-hover">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+	                                    <th>生产商编号</th>
+	                                    <th>名称</th>
+	                                    <th>状态</th>
+	                                    <th>电话</th>
+	                                    <th>邮箱</th>
+	                                    <th>地址</th>
+	                                    <th>网址</th>
+	                                    <th>描述</th>
+	                                    <th>联系人</th>
+	                                    <th>联系人电话</th>
+	                                    <th>联系人邮箱</th>
+	                                    <th>省-市</th>
+	                                    <th>操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if pagination??>
+	                              <#if pagination.records?has_content> 
+	                                <#list pagination.records as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.producterNo!?html}</td>
+	                                    <td>${record.name!?html}</td>
+	                                    <td>${record.state!?html}</td>
+	                                    <td>${record.phone!?html}</td>
+	                                    <td>${record.email!?html}</td>
+	                                    <td>${record.address!?html}</td>
+	                                    <td>${record.website!?html}</td>
+	                                    <td>${record.description!?html}</td>
+	                                    <td>${record.contactName!?html}</td>
+	                                    <td>${record.contactPhone!?html}</td>
+	                                    <td>${record.contactEmails!?html}</td>
+	                                    <td>${record.province!?html}-${record.city!?html}</td>
+	                                   	<td><a href="${base}/producterManage/form.do?id=${record.id}"
+										class="btn btn-sm btn-success"> 
+										<i class="fa fa-edit"></i>修改
+									    </a> 
+									    <a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该生产商吗?"
+									    href="${base}/producterManage/delete.do?id=${record.id}"> 
+										<i class="fa fa-trash" ></i>删除
+									    </a>
+									    <a href="${base}/producterManage/view.do?id=${record.id}"
+										class="btn btn-sm btn-success"> 
+										<i class="fa fa-search-plus"></i>查看
+									    </a> 
+										</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+ 
+</body>
+
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script type="text/javascript">
+                <!--
+                    $(function()
+                    {
+                        var opts = {};
+                        opts.data_url = '${base}/metadata/types.do';
+                        opts.metadata_url = '${base}/metadata/list.do';
+                        
+                        $.init(opts);
+                       
+                    });
+                //-->
+                </script>
+                
+                
+</html>
+

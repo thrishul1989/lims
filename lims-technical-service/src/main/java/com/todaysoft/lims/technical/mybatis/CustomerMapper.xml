@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.CustomerMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.Customer">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="ROLE_TYPE" property="roleType" jdbcType="INTEGER" />
+		<result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+		<result column="PHONE_NUM" property="phoneNum" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="SALT" property="salt" jdbcType="VARCHAR" />
+		<result column="HEAD_IMG" property="headImg" jdbcType="VARCHAR" />
+		<result column="BIRTHDAY" property="birthday" jdbcType="DATE" />
+		<result column="SEX" property="sex" jdbcType="VARCHAR" />
+		<result column="INSTITUTION_ID" property="institutionId"
+			jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="ROOM_NUM" property="roomNum" jdbcType="VARCHAR" />
+		<result column="DEPT" property="dept" jdbcType="VARCHAR" />
+		<result column="POSITION" property="position" jdbcType="VARCHAR" />
+		<result column="LANDLINE" property="landline" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="ANALYSIS_TYPE" property="analysisType"
+			jdbcType="VARCHAR" />
+		<result column="COOPERATE" property="cooperate" jdbcType="VARCHAR" />
+		<result column="CHARACTERISTIC" property="characteristic"
+			jdbcType="VARCHAR" />
+		<result column="RESEARCH_FILED" property="researchFiled"
+			jdbcType="VARCHAR" />
+		<result column="INTRODUCTION" property="introduction" jdbcType="VARCHAR" />
+		<result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+		<result column="REGISTER_DATE" property="registerDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="INTEGER" />
+		<result column="DISABLE_STATUS" property="disableStatus"
+			jdbcType="INTEGER" />
+		<result column="ACTIVATE_STATUS" property="activateStatus"
+			jdbcType="INTEGER" />
+		<result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+		<association property="company"
+			javaType="com.todaysoft.lims.technical.mybatis.entity.Company">
+			<result column="NAME" property="name" jdbcType="VARCHAR" />
+			<result column="PINYIN" property="pinyin" jdbcType="VARCHAR" />
+			<result column="CODE" property="code" jdbcType="VARCHAR" />
+			<result column="LEVEL" property="level" jdbcType="VARCHAR" />
+			<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, ROLE_TYPE, REAL_NAME, PHONE_NUM, PASSWORD, SALT,
+		HEAD_IMG, BIRTHDAY,
+		SEX, INSTITUTION_ID,
+		ADDRESS, ROOM_NUM, DEPT,
+		POSITION, LANDLINE, EMAIL, ANALYSIS_TYPE, COOPERATE,
+		CHARACTERISTIC,
+		RESEARCH_FILED, INTRODUCTION, PARENT_ID, REGISTER_DATE, DEL_FLAG,
+		DISABLE_STATUS,
+		ACTIVATE_STATUS, CREATE_ID, CREATE_DATE, UPDATE_DATE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		cu.ID, cu.ROLE_TYPE, cu.REAL_NAME, cu.PHONE_NUM,
+		cu.PASSWORD, cu.SALT,
+		cu.HEAD_IMG, cu.BIRTHDAY,
+		cu.SEX,
+		cu.INSTITUTION_ID,
+		cu.ADDRESS, cu.ROOM_NUM, cu.DEPT,
+		cu.POSITION,
+		cu.LANDLINE, cu.EMAIL, cu.ANALYSIS_TYPE, cu.COOPERATE,
+		cu.CHARACTERISTIC,
+		cu.RESEARCH_FILED, cu.INTRODUCTION, cu.PARENT_ID,
+		cu.REGISTER_DATE, cu.DEL_FLAG,
+		cu.DISABLE_STATUS,
+		cu.ACTIVATE_STATUS,
+		cu.CREATE_ID, cu.CREATE_DATE, cu.UPDATE_DATE,
+		co.NAME, co.PINYIN,
+		co.CODE, co.LEVEL, co.ADDRESS
+
+		from APP_USER_INFO cu left join
+		APP_COMPANY co on cu.INSTITUTION_ID =
+		co.ID
+		where cu.ID =
+		#{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		APP_USER_INFO
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Customer">
+		insert into APP_USER_INFO (ID, ROLE_TYPE, REAL_NAME,
+		PHONE_NUM, PASSWORD, SALT,
+		HEAD_IMG, BIRTHDAY, SEX,
+		INSTITUTION_ID,
+		ADDRESS, ROOM_NUM,
+		DEPT, POSITION, LANDLINE,
+		EMAIL, ANALYSIS_TYPE,
+		COOPERATE,
+		CHARACTERISTIC, RESEARCH_FILED, INTRODUCTION,
+		PARENT_ID,
+		REGISTER_DATE, DEL_FLAG,
+		DISABLE_STATUS, ACTIVATE_STATUS, CREATE_ID,
+		CREATE_DATE, UPDATE_DATE)
+		values (#{id,jdbcType=VARCHAR},
+		#{roleType,jdbcType=INTEGER},
+		#{realName,jdbcType=VARCHAR},
+		#{phoneNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+		#{salt,jdbcType=VARCHAR},
+		#{headImg,jdbcType=VARCHAR},
+		#{birthday,jdbcType=DATE},
+		#{sex,jdbcType=VARCHAR},
+		#{institutionId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{roomNum,jdbcType=VARCHAR},
+		#{dept,jdbcType=VARCHAR},
+		#{position,jdbcType=VARCHAR},
+		#{landline,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR}, #{analysisType,jdbcType=VARCHAR},
+		#{cooperate,jdbcType=VARCHAR},
+		#{characteristic,jdbcType=VARCHAR},
+		#{researchFiled,jdbcType=VARCHAR},
+		#{introduction,jdbcType=VARCHAR},
+		#{parentId,jdbcType=VARCHAR}, #{registerDate,jdbcType=TIMESTAMP},
+		#{delFlag,jdbcType=INTEGER},
+		#{disableStatus,jdbcType=INTEGER},
+		#{activateStatus,jdbcType=INTEGER},
+		#{createId,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Customer">
+		insert into APP_USER_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="roleType != null">
+				ROLE_TYPE,
+			</if>
+			<if test="realName != null">
+				REAL_NAME,
+			</if>
+			<if test="phoneNum != null">
+				PHONE_NUM,
+			</if>
+			<if test="password != null">
+				PASSWORD,
+			</if>
+			<if test="salt != null">
+				SALT,
+			</if>
+			<if test="headImg != null">
+				HEAD_IMG,
+			</if>
+			<if test="birthday != null">
+				BIRTHDAY,
+			</if>
+			<if test="sex != null">
+				SEX,
+			</if>
+			<if test="institutionId != null">
+				INSTITUTION_ID,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="roomNum != null">
+				ROOM_NUM,
+			</if>
+			<if test="dept != null">
+				DEPT,
+			</if>
+			<if test="position != null">
+				POSITION,
+			</if>
+			<if test="landline != null">
+				LANDLINE,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="analysisType != null">
+				ANALYSIS_TYPE,
+			</if>
+			<if test="cooperate != null">
+				COOPERATE,
+			</if>
+			<if test="characteristic != null">
+				CHARACTERISTIC,
+			</if>
+			<if test="researchFiled != null">
+				RESEARCH_FILED,
+			</if>
+			<if test="introduction != null">
+				INTRODUCTION,
+			</if>
+			<if test="parentId != null">
+				PARENT_ID,
+			</if>
+			<if test="registerDate != null">
+				REGISTER_DATE,
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG,
+			</if>
+			<if test="disableStatus != null">
+				DISABLE_STATUS,
+			</if>
+			<if test="activateStatus != null">
+				ACTIVATE_STATUS,
+			</if>
+			<if test="createId != null">
+				CREATE_ID,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="roleType != null">
+				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="realName != null">
+				#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNum != null">
+				#{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				#{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="headImg != null">
+				#{headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionId != null">
+				#{institutionId,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="roomNum != null">
+				#{roomNum,jdbcType=VARCHAR},
+			</if>
+			<if test="dept != null">
+				#{dept,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				#{position,jdbcType=VARCHAR},
+			</if>
+			<if test="landline != null">
+				#{landline,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisType != null">
+				#{analysisType,jdbcType=VARCHAR},
+			</if>
+			<if test="cooperate != null">
+				#{cooperate,jdbcType=VARCHAR},
+			</if>
+			<if test="characteristic != null">
+				#{characteristic,jdbcType=VARCHAR},
+			</if>
+			<if test="researchFiled != null">
+				#{researchFiled,jdbcType=VARCHAR},
+			</if>
+			<if test="introduction != null">
+				#{introduction,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="registerDate != null">
+				#{registerDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="disableStatus != null">
+				#{disableStatus,jdbcType=INTEGER},
+			</if>
+			<if test="activateStatus != null">
+				#{activateStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Customer">
+		update APP_USER_INFO
+		<set>
+			<if test="roleType != null">
+				ROLE_TYPE = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="realName != null">
+				REAL_NAME = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNum != null">
+				PHONE_NUM = #{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				SALT = #{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="headImg != null">
+				HEAD_IMG = #{headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				BIRTHDAY = #{birthday,jdbcType=DATE},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionId != null">
+				INSTITUTION_ID = #{institutionId,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="roomNum != null">
+				ROOM_NUM = #{roomNum,jdbcType=VARCHAR},
+			</if>
+			<if test="dept != null">
+				DEPT = #{dept,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				POSITION = #{position,jdbcType=VARCHAR},
+			</if>
+			<if test="landline != null">
+				LANDLINE = #{landline,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="analysisType != null">
+				ANALYSIS_TYPE = #{analysisType,jdbcType=VARCHAR},
+			</if>
+			<if test="cooperate != null">
+				COOPERATE = #{cooperate,jdbcType=VARCHAR},
+			</if>
+			<if test="characteristic != null">
+				CHARACTERISTIC = #{characteristic,jdbcType=VARCHAR},
+			</if>
+			<if test="researchFiled != null">
+				RESEARCH_FILED = #{researchFiled,jdbcType=VARCHAR},
+			</if>
+			<if test="introduction != null">
+				INTRODUCTION = #{introduction,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="registerDate != null">
+				REGISTER_DATE = #{registerDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG = #{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="disableStatus != null">
+				DISABLE_STATUS = #{disableStatus,jdbcType=INTEGER},
+			</if>
+			<if test="activateStatus != null">
+				ACTIVATE_STATUS = #{activateStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				CREATE_ID = #{createId,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Customer">
+		update APP_USER_INFO
+		set ROLE_TYPE =
+		#{roleType,jdbcType=INTEGER},
+		REAL_NAME = #{realName,jdbcType=VARCHAR},
+		PHONE_NUM = #{phoneNum,jdbcType=VARCHAR},
+		PASSWORD =
+		#{password,jdbcType=VARCHAR},
+		SALT = #{salt,jdbcType=VARCHAR},
+		HEAD_IMG
+		= #{headImg,jdbcType=VARCHAR},
+		BIRTHDAY = #{birthday,jdbcType=DATE},
+		SEX = #{sex,jdbcType=VARCHAR},
+		INSTITUTION_ID =
+		#{institutionId,jdbcType=VARCHAR},
+		ADDRESS =
+		#{address,jdbcType=VARCHAR},
+		ROOM_NUM = #{roomNum,jdbcType=VARCHAR},
+		DEPT = #{dept,jdbcType=VARCHAR},
+		POSITION =
+		#{position,jdbcType=VARCHAR},
+		LANDLINE = #{landline,jdbcType=VARCHAR},
+		EMAIL = #{email,jdbcType=VARCHAR},
+		ANALYSIS_TYPE =
+		#{analysisType,jdbcType=VARCHAR},
+		COOPERATE =
+		#{cooperate,jdbcType=VARCHAR},
+		CHARACTERISTIC =
+		#{characteristic,jdbcType=VARCHAR},
+		RESEARCH_FILED =
+		#{researchFiled,jdbcType=VARCHAR},
+		INTRODUCTION =
+		#{introduction,jdbcType=VARCHAR},
+		PARENT_ID =
+		#{parentId,jdbcType=VARCHAR},
+		REGISTER_DATE =
+		#{registerDate,jdbcType=TIMESTAMP},
+		DEL_FLAG =
+		#{delFlag,jdbcType=INTEGER},
+		DISABLE_STATUS =
+		#{disableStatus,jdbcType=INTEGER},
+		ACTIVATE_STATUS =
+		#{activateStatus,jdbcType=INTEGER},
+		CREATE_ID =
+		#{createId,jdbcType=VARCHAR},
+		CREATE_DATE =
+		#{createDate,jdbcType=TIMESTAMP},
+		UPDATE_DATE =
+		#{updateDate,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

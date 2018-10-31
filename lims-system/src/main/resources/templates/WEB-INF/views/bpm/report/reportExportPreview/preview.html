@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>报告导出预览</title>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no,email=no">
+<meta http-equiv="Cache-Control" content="no-store"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="HandheldFriendly" content="true">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link rel="stylesheet" href="${system_css}/preview.css?v=1.0.0">
+<style type="text/css">
+	#waitMask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,.5);
+		display: none;
+	}
+	
+   #waitTip {
+   	 position: absolute;
+   	 left: 50%;
+   	 top: 10em;
+   	 margin-left: -5em;
+   	 padding: 2em;
+   	 width: 10em;
+   	 text-align: center;
+   	 color: white;	
+   }
+   
+   #waitTip .tip-txt {
+   	 font-size: 1.5em;
+   	 margin: 0 auto 10px;
+   }
+   
+   .disease-table {
+     table-layout:fixed !important;
+	}
+	.disease-table tbody td{
+     text-align: center;
+	}
+	
+</style>
+</head>
+<body>
+<#assign reportExportMutationInfos_index = 0>
+<#assign reportExportCapcnvResults_index = 0>
+<#assign reportExportCapcnvResultExplains_index = 0>
+<#assign reportExportMlpaDetectionResult_index = 0>
+<#assign reportExportDtDetectionResult_index = 0>
+    <div class="preview-wrap">
+        <article class="report-box">
+            <section class="report-hd">
+                <section class="report-logo">
+                    <img src="images/wjn_logo.png" alt="">
+                </section>
+                <section class="report-contact">
+                    <p class="num">${reportExportSampleBaseInfo.orderCode}_${reportExportSampleBaseInfo.sampleCode}_${reportExportSampleBaseInfo.examineeName}</p>
+                    <div class="er-code">
+                        <img src="images/ercode.png" alt="">
+                    </div>
+                    <!--<p class="company"><strong>北京迈基诺医学检验所</strong></p>-->
+                    <!--<p class="phone">电话：<em>010-87529591/400-003-5255</em></p>-->
+                </section>
+            </section>
+            <section class="report-cot">
+                <h1 class="report-title">基因分析报告</h1>
+                <section class="summary-table-box">
+                    <table class="summary-table">
+                        <tr>
+                            <th>样本编号：</th>
+                            <td class="can-edit" data-input="reportExportSampleBaseInfo.sampleCode">${reportExportSampleBaseInfo.sampleCode}</td>
+                            <th>姓    名：</th>
+                            <td class="can-edit" data-input="reportExportSampleBaseInfo.examineeName">${reportExportSampleBaseInfo.examineeName}</td>
+                            <th>性    别：</th>
+                            <td class="can-edit" data-input="reportExportSampleBaseInfo.sex">${reportExportSampleBaseInfo.sex}</td>
+                        </tr>
+                        <tr>
+                            <th>年    龄：</th>
+                            <td class="can-edit" data-input="reportExportSampleBaseInfo.age">${reportExportSampleBaseInfo.age}</td>
+                            <th>样本类型：</th>
+                               <td class="can-edit" data-input="reportExportSampleBaseInfo.sampleType">${reportExportSampleBaseInfo.sampleType}</td>
+                            <th>采样日期：</th>
+                             <td class="can-edit" data-input="reportExportSampleBaseInfo.samplingInfoDate">${reportExportSampleBaseInfo.samplingInfoDate}</td>
+                        </tr>
+                        <tr>
+                            <th>送检单位：</th>
+                            <td class="can-edit" colspan="3"  data-input="reportExportSampleBaseInfo.inspectionUnit">${reportExportSampleBaseInfo.inspectionUnit}</td>
+                            <th>病 历 号：</th>
+                            <td class="can-edit"  data-input="reportExportSampleBaseInfo.medicalRecordNumber">${reportExportSampleBaseInfo.medicalRecordNumber}</td>
+                        </tr>
+                        <tr>
+                            <th>分析项目 ：</th>
+                            <td colspan="5" class="can-edit" data-input="reportExportSampleBaseInfo.analysisProject">${reportExportSampleBaseInfo.analysisProject}</td>
+                        </tr>
+                        <tr>
+                            <th>临床诊断：</th>
+                            <td colspan="5" class="can-edit" data-input="reportExportSampleBaseInfo.clinicalDiagnosis">${reportExportSampleBaseInfo.clinicalDiagnosis}</td>
+                        </tr>
+                        <tr>
+                            <th>临床表型：</th>
+                            <td colspan="5" class="can-edit" data-input="reportExportSampleBaseInfo.clinicalPhenotype">${reportExportSampleBaseInfo.clinicalPhenotype}</td>
+                        </tr>
+                        <tr>
+                            <th>重点关注基因：</th>
+                            <td colspan="5" class="can-edit" data-input="reportExportSampleBaseInfo.focusOnGenes">${reportExportSampleBaseInfo.focusOnGenes}</td>
+                        </tr>
+                        <tr>
+                            <th>病史摘要：</th>
+                            <td colspan="5" class="can-edit" data-input="reportExportSampleBaseInfo.medicalHistoryDescription">${reportExportSampleBaseInfo.medicalHistoryDescription!?html}</td>
+                        </tr>
+                        <tr>
+                            <th>临床推荐理由：</th>
+                            <td colspan="5"  class="can-edit" data-input="reportExportSampleBaseInfo.familyHistoryDescription">${reportExportSampleBaseInfo.familyHistoryDescription!?html}</td>
+                        </tr>
+                    </table>
+                </section>
+                <section style="margin-top: 44px;">
+                    <section class="result-box result-ntc">
+                        <p><strong>报告整体分析结果：</strong><span >通过对疾病相关基因的分析，${reportExportSampleBaseInfo.analysisResult!?html}</span>
+                        </p>
+                    </section>
+                </section>
+                <section class="mr-b2">
+                    <h3 class="report-third-title">1.	与受检者临床表型高度相关的基因变异：</h3>
+                    <div class="gene-table-box">
+                        <table class="gene-table">
+                            <thead>
+                                <tr>
+                                    <th>基因</th>
+                                    <th>染色体位置</th>
+                                    <th>转录本外显子</th>
+                                    <th>核苷酸</th>
+                            		<th>氨基酸</th>
+                                    <th>纯合/杂合</th>
+                                    <th>MAF</th>
+                                    <th>预测</th>
+                                    <th>致病性分析</th>
+                                    <th>遗传方式</th>
+                                    <th>疾病/表型</th>
+                                    <th>变异来源</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+                              <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+									<tr>
+										<td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneSymbol">${record.geneSymbol!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].chromosomalLocation">${record.chromosomalLocation!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].exon">${record.exon!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].nucleotideChanges">${record.nucleotideChanges!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].aminoAcidChanges">${record.aminoAcidChanges!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneType">${record.geneType!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].highestMafName">${record.highestMafName!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].effect">${record.effect!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].pathogenicAnalysis">${record.pathogenicAnalysis!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhert">${record.inhert!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].diseasePhenotype">${record.diseasePhenotype!?html}</td>
+	                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhertSourceName">${record.inhertSourceName!?html}</td>
+									</tr>
+									<#assign reportExportMutationInfos_index = reportExportMutationInfos_index+1 >
+							 </#list>
+						   </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="remark-box">
+                        <p class="result-txt">
+                            <strong>参考文献：</strong>
+                            <#assign mutationInfoClinicalPhenotypeHighCorrelation_tag_index = 1 >
+                            <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+                              <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+                              	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.tagReportDisease??>
+                              		 [${mutationInfoClinicalPhenotypeHighCorrelation_tag_index}] 已报道过与${record.reportExportMutationInfoExplain.tagPublication!?html}相关：${record.reportExportMutationInfoExplain.tagReportDisease!?html}
+                              		<#assign mutationInfoClinicalPhenotypeHighCorrelation_tag_index = mutationInfoClinicalPhenotypeHighCorrelation_tag_index+1 >
+                              		 <br>
+                              	</#if>
+							 </#list>
+						   </#if>
+                         </p>
+                    </div>
+                    <p class="result-txt lv-1">
+                     <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+                             <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+                             	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.diseaseInfos??&&record.reportExportMutationInfoExplain.diseaseInfos?has_content>
+                              	 <#list record.reportExportMutationInfoExplain.diseaseInfos as diseaseInfoRecord>
+									<strong>${diseaseInfoRecord.disease}</strong>的临床表型：${diseaseInfoRecord.diseasePhenotype}	
+							 	</#list>
+                             	</#if>
+						 </#list>
+					</#if>
+                    </p>
+                    <h4 class="report-fourth-title">与临床表型高度相关的缺失重复分析结果：</h4>
+                    <p class="result-txt lv-2"><strong>CapCNV分析结果：</strong>该样本存在${highCorrelationMissingType!?html}，区域内OMIM致病基因列表如下：</p>
+                  	
+                  	<#if clinicalPhenotypeHighCorrelation?? && clinicalPhenotypeHighCorrelation?has_content>
+                        <#list clinicalPhenotypeHighCorrelation as record>
+							<div class="disease-table-box">
+		                        <table class="disease-table">
+		                            <thead>
+		                                <tr>
+		                                    <th>基因</th>
+		                                    <th>缺失/重复区域</th>
+		                                    <th>外显子</th>
+		                                    <th>遗传来源</th>
+		                                    <th>疾病/表型</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		                              <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+										<#list record.reportExportCapcnvResultList as cnvResultRecord>
+											 <tr>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].gene">${cnvResultRecord.gene}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].missingArea">${cnvResultRecord.missingArea}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].exon">${cnvResultRecord.exon}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].inheritSource">${cnvResultRecord.inheritSource}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].relatedDisease">${cnvResultRecord.relatedDisease}</td>
+		                               		 </tr>
+		                               		 <#assign reportExportCapcnvResults_index = reportExportCapcnvResults_index+1 >
+										</#list>
+									  </#if>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                    <p class="result-txt indent-2">该实验结果图如下：</p>
+		                    <div class="result-img-box">
+		                    	<#if record.cnvAnalysisPic??>
+		                    		<img src="${record.cnvAnalysisPic.imageUrl}" alt="">
+		                    	</#if>
+		                    </div>
+					 	</#list>
+					</#if>
+                  	
+                    <p class="result-txt lv-2">
+                        <strong>MLPA分析结果：</strong>该样本存在${mlpaHighCorrelationLocusType!?html}，区域内OMIM致病基因列表如下
+                    </p>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+      						<thead>
+                            <tr>
+                                <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeHighCorrelation??&&mlpaClinicalPhenotypeHighCorrelation?has_content>
+                                	<#list mlpaColumns as detectionResultColumn>
+                                		<th>${detectionResultColumn.showName}</th>
+                                	</#list>
+                                </#if> 
+                            </tr>
+                            </thead>
+                            <tbody>
+	                            <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeHighCorrelation??&&mlpaClinicalPhenotypeHighCorrelation?has_content>
+	                            	<#list mlpaClinicalPhenotypeHighCorrelation as detectionResult>
+			                            <tr>
+		                                	<#list mlpaColumns as detectionResultColumn>
+		                                		<th class="can-edit" data-input="mlpaDetectionResults[${reportExportMlpaDetectionResult_index}].result['${detectionResultColumn.columnName}']">${detectionResult.result[detectionResultColumn.columnName]}</th>
+		                                	</#list>
+			                            </tr>
+			                            <#assign reportExportMlpaDetectionResult_index = reportExportMlpaDetectionResult_index+1> 
+		                            </#list>
+	                            </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="result-txt indent-2">该实验结果图见附录<strong>X</strong></p>
+                    <p class="result-txt lv-2">
+                        <strong>与临床表型高度相关的动态突变检测结果：</strong>
+                    </p>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+                          <thead>
+                            <tr>
+                                <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeHighCorrelation??&&dtMutationClinicalPhenotypeHighCorrelation?has_content>
+                                	<#list dtColumns as detectionResultColumn>
+                                		<th>${detectionResultColumn.showName}</th>
+                                	</#list>
+                                </#if> 
+                            </tr>
+                            </thead>
+                            <tbody>
+	                            <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeHighCorrelation??&&dtMutationClinicalPhenotypeHighCorrelation?has_content>
+	                            	<#list dtMutationClinicalPhenotypeHighCorrelation as detectionResult>
+			                            <tr>
+		                                	<#list dtColumns as detectionResultColumn>
+		                                		<th class="can-edit" data-input="dtmutationDetectionResults[${reportExportDtDetectionResult_index}].result['${detectionResultColumn.columnName}']">${detectionResult.result[detectionResultColumn.columnName]}</th>
+		                                	</#list>
+			                            </tr>
+			                             <#assign reportExportDtDetectionResult_index = reportExportDtDetectionResult_index+1> 
+		                            </#list>
+	                            </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="result-txt indent-2">该实验结果图见附录<strong>X</strong></p>
+                    <h4 class="report-fourth-title">变异解读</h4>
+                    <ul class="jd-list">
+                        <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+                        	<li>
+	                         <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+                             	<#if record.reportExportMutationInfoExplain??>
+                              		<p>该样本分析到${record.reportExportMutationInfoExplain.geneSymbol}基因有1个${record.reportExportMutationInfoExplain.geneType}，根据ACMG指南，该变异判定为${record.reportExportMutationInfoExplain.pathogenicAnalysis}。ACMG证据如下：</p>
+                              	 	<#if record.reportExportMutationInfoExplain.evidenceInfos??&&record.reportExportMutationInfoExplain.evidenceInfos?has_content>
+	                              	 	<#list record.reportExportMutationInfoExplain.evidenceInfos as evidenceInfoRecord>
+											<p>${evidenceInfoRecord.name}：${evidenceInfoRecord.decription!?html}</p>
+								 		</#list>
+                             		</#if>
+                             	</#if>
+							 </#list>
+							  </li>
+						</#if>
+                       
+                         <#if clinicalPhenotypeHighCorrelation?? && clinicalPhenotypeHighCorrelation?has_content&&(clinicalPhenotypeHighCorrelation?size>0)>
+	                        <#list clinicalPhenotypeHighCorrelation as record>
+                              <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+								<#list record.reportExportCapcnvResultList as cnvResultRecord>
+									<#if cnvResultRecord_index==0><li></#if>
+									<p <#if cnvResultRecord_index!=0>style="margin-left: 45px;"</#if>>该样本分析到${cnvResultRecord.missingArea!?html}区域发生<span class="can-edit input-edit" data-input="reportExportCapcnvResultExplains[${reportExportCapcnvResultExplains_index}].areaSize">${cnvResultRecord.areaSize!?html}</span>${cnvResultRecord.missingType!?html}，为${cnvResultRecord.pathogenicLevel!?html}。</p>	
+									<p  <#if cnvResultRecord_index!=0>style="margin-left: 45px;"</#if> class="can-edit input-edit" data-input="reportExportCapcnvResultExplains[${reportExportCapcnvResultExplains_index}].mutationComment">${cnvResultRecord.mutationComment!?html}</p>
+									 <#assign reportExportCapcnvResultExplains_index = reportExportCapcnvResultExplains_index+1 >
+									<#if cnvResultRecord_index==0></li></#if>
+								</#list>
+							  </#if>
+						 	</#list>
+						</#if>
+                    </ul>
+                    <p class="result-txt lv-1"><strong>临床建议：</strong>请临床医生结合受检者的临床表现、家族史及其他检测结果综合分析</p>
+                    <h4 class="report-fourth-title">疾病信息</h4>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+                          <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+                          	<thead>
+		                            <tr>
+		                                <th style="width: 4em">基因</th>
+		                                <th style="width: 6em">遗传方式</th>
+		                                <th>疾病</th>
+		                                <th>疾病简介</th>
+		                                <th style="width: 7em;">疾病表型</th>
+		                            </tr>
+		                     </thead>
+		                    <tbody>
+	                         <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+                             	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.diseaseInfos??&&record.reportExportMutationInfoExplain.diseaseInfos?has_content>
+	                              	 	<#list record.reportExportMutationInfoExplain.diseaseInfos as diseaseInfoRecord>
+											<tr>
+												<#if diseaseInfoRecord_index==0><td rowspan="${record.reportExportMutationInfoExplain.diseaseInfos?size}">${record.reportExportMutationInfoExplain.geneSymbol}</td></#if>
+												<td>${diseaseInfoRecord.inhert}</td>
+												<td>${diseaseInfoRecord.disease}</td>
+												<td>${diseaseInfoRecord.diseaseInformation}</td>
+												<td>${diseaseInfoRecord.diseasePhenotype}</td>
+											</tr>
+								 		</#list>
+							 		
+                             	</#if>
+							 </#list>
+							</tbody>
+							</#if>
+                        </table>
+                    </div>
+                </section>
+                <section class="mr-b2">
+                    <h3 class="report-third-title">2.其他可疑变异：<span class="remark">以下其他可疑变异临床意义尚不明确，需进一步研究，以明确其与受检者临床表型的相关性。由临床医生根据受检者的临床表型及家族史完成最终的诊断评估。 </span></h3>
+                    <div class="gene-table-box">
+                        <table class="gene-table">
+                            <thead>
+                            <tr>
+                                <th>基因</th>
+                                <th>染色体位置</th>
+                                <th>转录本外显子</th>
+                                <th>核苷酸</th>
+                                <th>氨基酸</th>
+                                <th>纯合/杂合</th>
+                                <th>MAF</th>
+                                <th>预测</th>
+                                <th>致病性分析</th>
+                                <th>遗传方式</th>
+                                <th>疾病/表型</th>
+                                <th>变异来源</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+								 <#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+	                              <#list mutationInfoSuspiciousVariation as record>
+										<tr>
+											<td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneSymbol">${record.geneSymbol}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].chromosomalLocation">${record.chromosomalLocation}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].exon">${record.exon}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].nucleotideChanges">${record.nucleotideChanges}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].aminoAcidChanges">${record.aminoAcidChanges}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneType">${record.geneType}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].highestMafName">${record.highestMafName}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].effect">${record.effect}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].pathogenicAnalysis">${record.pathogenicAnalysis}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhert">${record.inhert!?html}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].diseasePhenotype">${record.diseasePhenotype!?html}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhertSourceName">${record.inhertSourceName}</td>
+										</tr>
+										<#assign reportExportMutationInfos_index = reportExportMutationInfos_index+1 >
+								 </#list>
+							   </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="remark-box">
+                        <p class="result-txt"><strong>参考文献：</strong>	
+                        	<#assign mutationInfoSuspiciousVariation_tag_index = 1 >
+                        	 <#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+                              <#list mutationInfoSuspiciousVariation as record>
+                              	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.tagReportDisease??>
+                              		 [${mutationInfoSuspiciousVariation_tag_index}] 已报道过与${record.reportExportMutationInfoExplain.tagPublication!?html}相关：${record.reportExportMutationInfoExplain.tagReportDisease!?html}
+                              		 <br>
+                             		<#assign mutationInfoSuspiciousVariation_tag_index = mutationInfoSuspiciousVariation_tag_index+1 >
+                              	</#if>
+							 </#list>
+						   </#if>
+                        </p>
+                    </div>
+                    <p class="result-txt lv-1">
+                    	<#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+                              <#list mutationInfoSuspiciousVariation as record>
+                              	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.diseaseInfos??&&record.reportExportMutationInfoExplain.diseaseInfos?has_content>
+	                              	 <#list record.reportExportMutationInfoExplain.diseaseInfos as diseaseInfoRecord>
+										<strong>${diseaseInfoRecord.disease}</strong>的临床表型：${diseaseInfoRecord.diseasePhenotype}	
+								 	</#list>
+                              	</#if>
+							 </#list>
+						</#if>
+                    </p>
+                    <h4 class="report-fourth-title">与临床表型相关的缺失重复分析结果：</h4>
+                    <p class="result-txt lv-2"><strong>CapCNV分析结果：</strong>该样本存在${correlationMissingType!?html}，区域内OMIM致病基因列表如下：</p>
+                    
+                    
+                     <#if clinicalPhenotypeCorrelation?? && clinicalPhenotypeCorrelation?has_content>
+                        <#list clinicalPhenotypeCorrelation as record>
+							<div class="disease-table-box">
+		                        <table class="disease-table">
+		                            <thead>
+		                                <tr>
+		                                    <th>基因</th>
+		                                    <th>缺失/重复区域</th>
+		                                    <th>外显子</th>
+		                                    <th>遗传来源</th>
+		                                    <th>疾病/表型</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		                              <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+										<#list record.reportExportCapcnvResultList as cnvResultRecord>
+											 <tr>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].gene" >${cnvResultRecord.gene}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].missingArea">${cnvResultRecord.missingArea}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].exon">${cnvResultRecord.exon}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].inheritSource">${cnvResultRecord.inheritSource}</td>
+			                                    <td class="can-edit" data-input="reportExportCapcnvResults[${reportExportCapcnvResults_index}].relatedDisease">${cnvResultRecord.relatedDisease}</td>
+		                               		 </tr>
+		                               		 <#assign reportExportCapcnvResults_index = reportExportCapcnvResults_index+1 >
+										</#list>
+									  </#if>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                    <p class="result-txt indent-2">该实验结果图如下：</p>
+		                    <div class="result-img-box">
+		                    	<#if record.cnvAnalysisPic??>
+		                    		<img src="${record.cnvAnalysisPic.imageUrl}" alt="">
+		                    	</#if>
+		                    </div>
+					 	</#list>
+					</#if>
+                    
+                    <p class="result-txt lv-2">
+                        <strong>MLPA分析结果：</strong>该样本存在${mlpaCorrelationLocusType!?html}，区域内OMIM致病基因列表如下
+                    </p>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+                        	<thead>
+                            <tr>
+                                <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeCorrelation??&&mlpaClinicalPhenotypeCorrelation?has_content>
+                                	<#list mlpaColumns as detectionResultColumn>
+                                		<th>${detectionResultColumn.showName}</th>
+                                	</#list>
+                                </#if> 
+                            </tr>
+                            </thead>
+                            <tbody>
+	                            <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeCorrelation??&&mlpaClinicalPhenotypeCorrelation?has_content>
+	                            	<#list mlpaClinicalPhenotypeCorrelation as detectionResult>
+			                            <tr>
+		                                	<#list mlpaColumns as detectionResultColumn>
+		                                		<th  class="can-edit" data-input="mlpaDetectionResults[${reportExportMlpaDetectionResult_index}].result['${detectionResultColumn.columnName}']">${detectionResult.result[detectionResultColumn.columnName]}</th>
+		                                	</#list>
+		                                	 <#assign reportExportMlpaDetectionResult_index = reportExportMlpaDetectionResult_index+1 >
+			                            </tr>
+		                            </#list>
+	                            </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="result-txt indent-2">该实验结果图见附录<strong>X</strong></p>
+                    <p class="result-txt lv-2">
+                        <strong>与临床表型相关的动态突变检测结果：</strong>
+                    </p>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+                        	<thead>
+	                            <tr>
+	                                <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeCorrelation??&&dtMutationClinicalPhenotypeCorrelation?has_content>
+	                                	<#list dtColumns as detectionResultColumn>
+	                                		<th>${detectionResultColumn.showName}</th>
+	                                	</#list>
+	                                </#if> 
+	                            </tr>
+                            </thead>
+                            <tbody>
+	                            <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeCorrelation??&&dtMutationClinicalPhenotypeCorrelation?has_content>
+	                            	<#list dtMutationClinicalPhenotypeCorrelation as detectionResult>
+			                            <tr>
+		                                	<#list dtColumns as detectionResultColumn>
+		                                		<th class="can-edit" data-input="dtmutationDetectionResults[${reportExportDtDetectionResult_index}].result['${detectionResultColumn.columnName}']">${detectionResult.result[detectionResultColumn.columnName]}</th>
+		                                	</#list>
+		                                	<#assign reportExportDtDetectionResult_index = reportExportDtDetectionResult_index+1 >
+			                            </tr>
+		                            </#list>
+	                            </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="result-txt indent-2">该实验结果图见附录<strong>X</strong></p>
+                    <h4 class="report-fourth-title">变异解读</h4>
+                    <ul class="jd-list">
+                        
+					<#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+					 <li>
+                        <#list mutationInfoSuspiciousVariation as record>
+                           	<#if record.reportExportMutationInfoExplain??>
+                            	 <p>该样本分析到${record.reportExportMutationInfoExplain.geneSymbol}基因有1个${record.reportExportMutationInfoExplain.geneType}，根据ACMG指南，该变异判定为${record.reportExportMutationInfoExplain.pathogenicAnalysis}。ACMG证据如下：</p>
+                            	<#if record.reportExportMutationInfoExplain.evidenceInfos??&&record.reportExportMutationInfoExplain.evidenceInfos?has_content>
+	                            	 <#list record.reportExportMutationInfoExplain.evidenceInfos as evidenceInfoRecord>
+										<p>${evidenceInfoRecord.name}：${evidenceInfoRecord.decription!?html}</p>
+								 	</#list>
+							 	</#if>
+                           	</#if>
+					 </#list>
+					  </li>
+					</#if>
+                       
+                      <#if clinicalPhenotypeCorrelation?? && clinicalPhenotypeCorrelation?has_content&&(clinicalPhenotypeCorrelation?size>0)>
+	                        <#list clinicalPhenotypeCorrelation as record>
+                              <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+								<#list record.reportExportCapcnvResultList as cnvResultRecord>
+									<#if cnvResultRecord_index==0><li></#if>
+									<p <#if cnvResultRecord_index!=0>style="margin-left: 45px;"</#if>>该样本分析到${cnvResultRecord.missingArea!?html}区域发生<span class="can-edit input-edit" data-input="reportExportCapcnvResultExplains[${reportExportCapcnvResultExplains_index}].areaSize">${cnvResultRecord.areaSize!?html}</span>${cnvResultRecord.missingType!?html}，为${cnvResultRecord.pathogenicLevel!?html}。</p>	
+									<p  <#if cnvResultRecord_index!=0>style="margin-left: 45px;"</#if>class="can-edit input-edit" data-input="reportExportCapcnvResultExplains[${reportExportCapcnvResultExplains_index}].mutationComment">${cnvResultRecord.mutationComment!?html}</p>
+									<#assign reportExportCapcnvResultExplains_index = reportExportCapcnvResultExplains_index+1 >
+									<#if cnvResultRecord_index==0></li></#if>
+								</#list>
+							  </#if>
+						 	</#list>
+						</#if>
+                    </ul>
+                    <p class="result-txt lv-1"><strong>临床建议：</strong>请临床医生结合受检者的临床表现、家族史及其他检测结果综合分析</p>
+                    <h4 class="report-fourth-title">疾病信息</h4>
+                    <div class="disease-table-box">
+                        <table class="disease-table">
+                          <#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+	                         <thead>
+	                            <tr>
+	                                <th style="width: 4em">基因</th>
+	                                <th style="width: 6em">遗传方式</th>
+	                                <th>疾病</th>
+	                                <th>疾病简介</th>
+	                                <th style="width: 7em;">疾病表型</th>
+	                            </tr>
+	                          </thead>
+	                          <tbody>
+	                         <#list mutationInfoSuspiciousVariation as record>
+                             	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.diseaseInfos??&&record.reportExportMutationInfoExplain.diseaseInfos?has_content>
+	                              	 	<#list record.reportExportMutationInfoExplain.diseaseInfos as diseaseInfoRecord>
+											<tr>
+												<#if diseaseInfoRecord_index==0><td rowspan="${record.reportExportMutationInfoExplain.diseaseInfos?size}">${record.reportExportMutationInfoExplain.geneSymbol}</td></#if>
+												<td>${diseaseInfoRecord.inhert}</td>
+												<td>${diseaseInfoRecord.disease}</td>
+												<td>${diseaseInfoRecord.diseaseInformation}</td>
+												<td>${diseaseInfoRecord.diseasePhenotype}</td>
+											</tr>
+								 		</#list>
+                             	</#if>
+							 </#list>
+							 </tbody>
+							</#if>
+                        </table>
+                    </div>
+                </section>
+                <section class="mr-b2">
+                    <h3 class="report-third-title">3. 其他隐性遗传(AR)杂合突变（理论上必须在两个等位基因均出现突变才可能致病）或与个人临床无明确关联的基因变异，仅供临床医生参考：</h3>
+                    <div class="gene-table-box">
+                        <table class="gene-table">
+                            <thead>
+                            <tr>
+                                <th>基因</th>
+                                <th>染色体位置</th>
+                                <th>转录本外显子</th>
+                                <th>核苷酸</th>
+                                <th>氨基酸</th>
+                                <th>纯合/杂合</th>
+                                <th>MAF</th>
+                                <th>预测</th>
+                                <th>致病性分析</th>
+                                <th>遗传方式</th>
+                                <th>疾病/表型</th>
+                                <th>变异来源</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+								<#if mutationInfoHeterozygousCarrier?? && mutationInfoHeterozygousCarrier?has_content>
+	                              <#list mutationInfoHeterozygousCarrier as record>
+										<tr>
+											<td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneSymbol">${record.geneSymbol}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].chromosomalLocation">${record.chromosomalLocation}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].exon">${record.exon}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].nucleotideChanges">${record.nucleotideChanges}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].aminoAcidChanges">${record.aminoAcidChanges}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].geneType">${record.geneType}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].highestMafName">${record.highestMafName}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].effect">${record.effect}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].pathogenicAnalysis">${record.pathogenicAnalysis}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhert">${record.inhert!?html}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].diseasePhenotype">${record.diseasePhenotype!?html}</td>
+		                                    <td class="can-edit" data-input="reportExportMutationInfos[${reportExportMutationInfos_index}].inhertSourceName">${record.inhertSourceName}</td>
+										</tr>
+										<#assign reportExportMutationInfos_index = reportExportMutationInfos_index+1 >
+								 </#list>
+							   </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="remark-box">
+                        <p class="result-txt"><strong>参考文献：</strong>
+                        	 <#assign mutationInfoHeterozygousCarrier_tag_index = 1 >
+                        	 <#if mutationInfoHeterozygousCarrier?? && mutationInfoHeterozygousCarrier?has_content>
+                              <#list mutationInfoHeterozygousCarrier as record>
+                              	<#if record.reportExportMutationInfoExplain??&&record.reportExportMutationInfoExplain.tagReportDisease??>
+                              		 [${mutationInfoHeterozygousCarrier_tag_index}] 已报道过与${record.reportExportMutationInfoExplain.tagPublication!?html}相关：${record.reportExportMutationInfoExplain.tagReportDisease!?html}
+                              		 <#assign mutationInfoHeterozygousCarrier_tag_index = mutationInfoHeterozygousCarrier_tag_index+1 >
+                              		 <br>
+                              	</#if>
+							 </#list>
+						   </#if>
+                        </p>
+                    </div>
+                    <p><strong>建议：</strong> 请结合个人疾病表型综合分析，以上结论均为基因分析结果，不是最终的诊断结果，仅供参考。</p>
+                    <h4 class="report-fourth-title">方法学：</h4>
+                    <p class="indent-2">测序分析</p>
+                    <h4 class="report-fourth-title">局限性：</h4>
+                    <p class="result-txt second-txt">1. 本检测项目只针对已知的与疾病相关的基因，一些尚未明确的基因不在检测范围内。</p>
+                    <p class="result-txt second-txt">2. 在数据分析时，为保证数据分析的精确性，目标区域内少部分测序质量过低的变异将被滤掉。</p>
+                    <p class="result-txt second-txt">3. 此检测方法可以分析到小片段缺失/插入变异，对于更大范围内的缺失/重复，也可以分析，但可信度会降低，需要另一种方法验证，可提供参考结果；NGS 无法检测出所有拷贝数变异，如果怀疑基因存在拷贝数变异，可以进行针对性的aCGH、SNP array或 MLPA分析。</p>
+                    <p class="result-txt second-txt">4. 对在捕获区域内的突变，如其所在区域为高 GC 含量区，高度重复序列区，或者在基因组其它位置存在高度同源序列，本方法可能存在一定的假阴性几率</p>
+                    <p class="result-txt second-txt">5. 调控区及深度内含子区可能存在的致病性变异无法检测。</p>
+                    <br>
+                    <p class="result-txt"><strong>注释：</strong></p>
+                    <br>
+                    <p class="result-txt second-txt">1. 如果受检者检测到了自发变异位点，该种情况下并不排除父母生殖腺镶嵌体突变的情况存在，建议遗传咨询。</p>
+                    <p class="result-txt second-txt">2. 参考基因组版本为GRCh37/hg19 ，核苷酸改变的位置信息是基于当前版本的基因组和转录本，不同基因组版本或不同转录本，这些信息可能会有所不同。</p>
+                    <p class="result-txt second-txt">3. hom/het/hemi：hom表示此突变位点为纯合突变，het表示此突变位点为杂合突变，hemi表示此突变位点为半合子突变。</p>
+                    <p class="result-txt second-txt">4. MAF：正常人群频率 1000 genomes（千人基因组）、ESP6500（NHLBI Exome Sequencing Project）、InHouse（迈基诺正常人数据库）、EXAC（The Exome Aggregation Consortium）和EXAC-EAS（EXAC约4000东亚人数据）。</p>
+                    <p class="result-txt second-txt">5.蛋白功能预测软件REVEL(rare exome variant ensemble learner) : Am J Hum Genet. 2016 Oct 6;99(4):877-885.[PMID: 27666373]</p>
+                    <p class="result-txt second-txt">6. 根据美国医学遗传学与基因组学会（ACMG）发布的变异解读指南进行致病性分析：pathogenic/致病性变异；likely pathogenic/疑似致病性变异；uncertain/临床意义未明变异；likely-benign/疑似良性变异；benign/良性变异。本检测只报告根据 ACMG 分级为“致病”、“疑似致病”、“临床意义未明”的变异，不报告“良性”及“疑似良性”等不具有临床意义的变异。 有明确家族史的病人，如果有相关家属的基因检测结果会更有助于定性疾病相关的突变。</p>
+                    <p class="result-txt second-txt">7. 遗传方式：AR表示常染色体隐性遗传；AD表示常染色体显性遗传；XR表示X染色体隐性遗传；XD表示X染色体显性遗传。</p>
+                    <p class="result-txt second-txt">8. 基因核苷酸变异的解释是基于目前对该基因的了解，随着研究的深入，这些解释也可能会发生改变。对于某些目前未知临床意义的变异或与其他疾病有关的变异未列在该报告中。</p>
+                </section>
+                <section class="mr-b2">
+                    <div class="declaration-box">
+                        <p><span class="ntc">*</span>本报告结果只对送检样品负责。</p>
+                        <p><span class="ntc">*</span>以上结论均为实验室分析数据，仅供参考。</p>
+                        <p><span class="ntc">*</span>本公司对以上分析结果保留最终解释权，如有疑义，请在收到结果后的  5 个工作日内与我们联系。</p>
+                    </div>
+                    <div class="qm-box">
+                        <div class="qm-item">
+                            <p>实验人员：	曹赛</p>
+                            <p>分析人员：</p>
+                        </div>
+                        <div class="qm-item">
+                            <p>报告签发：</p>
+                            <p>报告日期：</p>
+                        </div>
+                        <div class="qm-gz"><img src="images/zhang.png" alt=""></div>
+                    </div>
+                </section>
+            </section>
+            <section class="mr-b2">
+                <h3 class="report-third-title">附录：</h3>
+                <section class="mr-t1">
+                    <h3 class="report-third-title">附录1：家系分析结果展示</h3>
+                    <p>注：由于Sanger验证采用正向测序或反向测序，峰图显示的碱基有可能为被检测碱基的反向互补序列，如：c.163G>A，峰图可显示为G>A或其反向互补序列C>T。</p>
+                    <#if mutationFamilySangerResultInfos??&&mutationFamilySangerResultInfos?has_content>
+                  		 <#list mutationFamilySangerResultInfos as record>
+                  		 <table class="gene-table">
+                   		  <tr>
+                              <th>分析样本</th>
+                              <th>分析结果</th>
+                              <th>${record.geneSymbol}</th>
+                              <th>${record.chromosomalLocation}</th>
+                              <th>${record.nucleotideChanges}</th>
+                              <th>${record.aminoAcidChanges}</th>
+                          </tr>
+                          <#if record.mutationFamilySangerReportSamples??&&record.mutationFamilySangerReportSamples?has_content>
+                           	<#list record.mutationFamilySangerReportSamples as reportSampleRecord>
+                          	  <tr>
+	                              <td>${reportSampleRecord.sampleName}<br>${reportSampleRecord.sampleCode}</td>
+	                              <td>${reportSampleRecord.combineType!?html}</td>
+	                              <td colspan="4">
+	                              	  <#if reportSampleRecord.pictures??&&reportSampleRecord.pictures?has_content>
+	                              	  	<#list reportSampleRecord.pictures as reportPictureRecord>
+	                              	  		 <div>
+	                                    	  <img src="${base}/bpm/report/download.do?fileName=${reportPictureRecord.picName?replace('#','%23')+'/'+reportPictureRecord.picUrl!html}" alt="" >
+	                                	    </div>
+	                              	  	</#list>
+	                              	  </#if>
+	                              </td>
+	                          </tr>
+	                         </#list>
+                          </#if>
+                         </table>
+                  		 </#list>
+                    </#if>
+                        
+                </section>
+                <section class="mr-t1">
+                    <h3 class="report-third-title">附录2：MLPA分析结果</h3>
+					<#if mlpaReportExportDetectionResultPictures??&&mlpaReportExportDetectionResultPictures?has_content>
+						<#list mlpaReportExportDetectionResultPictures as detectionResultPictureRecord>
+		                     <div class="fl-img-box">
+		                        <img src="${base}/bpm/report/download.do?fileName=${detectionResultPictureRecord.picName?replace('#','%23')+'/'+detectionResultPictureRecord.picUrl!html}" alt="">
+		                    </div>	
+	                    </#list>
+					</#if>
+					<#if mlpaReportExportDetectionResultPictures??&&mlpaReportExportDetectionResultPictures?has_content>
+						 <p class="result-txt">分析说明：通常认定荧光信号强度介于0.75-1.25之间为正常</p>
+					</#if>                    
+                </section>
+                <section class="mr-t1">
+                    <h3 class="report-third-title">附录3：动态突变分析结果</h3>
+                	<#if dtReportExportDetectionResultPictures??&&dtReportExportDetectionResultPictures?has_content>
+						<#list dtReportExportDetectionResultPictures as detectionResultPictureRecord>
+		                     <div class="fl-img-box">
+		                        <img src="${base}/bpm/report/download.do?fileName=${detectionResultPictureRecord.picName?replace('#','%23')+'/'+detectionResultPictureRecord.picUrl!html}" alt="">
+		                    </div>	
+	                    </#list>
+					</#if>              
+					<#if dtReportExportDetectionResultPictures??&&dtReportExportDetectionResultPictures?has_content>
+						<p class="result-txt">分析说明：通常认定荧光信号强度介于0.75-1.25之间为正常</p>    
+					</#if>   
+                </section>
+            </section>
+
+        </article>
+    </div>
+    <div class="op-box">
+        <button type="button" id="editBtn">编辑</button>
+        <button type="button" id="exitPreviewBtn" value="${taskId!?html}">退出预览</button>
+        <button id="generateReportBtn">生成报告</a>
+        <button type="button" id="cancelEditBtn" style="display: none;">取消编辑</button>
+        <button id="saveEditBtn" style="display: none;">保存修改</button>
+    </div>
+    
+   <div id="waitMask">
+   		<div id="waitTip">
+	   		<p class="tip-txt">正在生成报告</p>
+	   		<i class="fa fa-spinner fa-spin fa-4x"></i>
+	   </div>
+   </div>
+    <form action="${base}/reportExportPreview/updateReportExport"  id="reportExportPreviewForm">
+   		<input hidden="hidden" name="reportExportSampleBaseInfo.id" value="${reportExportSampleBaseInfo.id}"/>
+   		<input hidden="hidden" name="reportExportSampleBaseInfo.taskId" value="${reportExportSampleBaseInfo.taskId}"/>
+   		<input hidden="hidden" name="reportExportSampleBaseInfo.orderCode" value="${reportExportSampleBaseInfo.orderCode}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.sampleCode" value="${reportExportSampleBaseInfo.sampleCode}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.examineeName" value="${reportExportSampleBaseInfo.examineeName}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.sex" value="${reportExportSampleBaseInfo.sex}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.age" value="${reportExportSampleBaseInfo.age}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.sampleType" value="${reportExportSampleBaseInfo.sampleType}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.samplingInfoDate" value="${reportExportSampleBaseInfo.samplingInfoDate}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.inspectionUnit" value="${reportExportSampleBaseInfo.inspectionUnit}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.medicalRecordNumber" value="${reportExportSampleBaseInfo.medicalRecordNumber}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.analysisProject" value="${reportExportSampleBaseInfo.analysisProject}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.clinicalDiagnosis" value="${reportExportSampleBaseInfo.clinicalDiagnosis}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.clinicalPhenotype" value="${reportExportSampleBaseInfo.clinicalPhenotype}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.focusOnGenes" value="${reportExportSampleBaseInfo.focusOnGenes}"/>
+    	<input hidden="hidden" name="reportExportSampleBaseInfo.medicalHistoryDescription" value="${reportExportSampleBaseInfo.medicalHistoryDescription!?html}"/>
+		<input hidden="hidden" name="reportExportSampleBaseInfo.familyHistoryDescription" value="${reportExportSampleBaseInfo.familyHistoryDescription!?html}"/>
+		<input hidden="hidden" name="reportExportSampleBaseInfo.analysisResult" value="${reportExportSampleBaseInfo.analysisResult!?html}"/>
+		<#assign mutationInfos_index = 0>
+      <#if mutationInfoClinicalPhenotypeHighCorrelation?? && mutationInfoClinicalPhenotypeHighCorrelation?has_content>
+          <#list mutationInfoClinicalPhenotypeHighCorrelation as record>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].id"  value="${record.id}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].taskId"  value="${record.taskId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].objectId"  value="${record.objectId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].clinicalJudgment"  value="${record.clinicalJudgment}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneSymbol"  value="${record.geneSymbol}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].chromosomalLocation"  value="${record.chromosomalLocation}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].exon"  value="${record.exon}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].nucleotideChanges"  value="${record.nucleotideChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].aminoAcidChanges"  value="${record.aminoAcidChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneType"  value="${record.geneType}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].highestMafName"  value="${record.highestMafName}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].effect"  value="${record.effect}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].pathogenicAnalysis"  value="${record.pathogenicAnalysis}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhert"  value="${record.inhert!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].diseasePhenotype"  value="${record.diseasePhenotype!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhertSourceName"  value="${record.inhertSourceName}"/>
+ 			 <#assign mutationInfos_index = mutationInfos_index+1 >
+		 </#list>
+	   </#if>
+		<#if mutationInfoSuspiciousVariation?? && mutationInfoSuspiciousVariation?has_content>
+		    <#list mutationInfoSuspiciousVariation as record>
+		     <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].id"  value="${record.id}"/>
+		     <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].taskId"  value="${record.taskId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].objectId"  value="${record.objectId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].clinicalJudgment"  value="${record.clinicalJudgment}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneSymbol"  value="${record.geneSymbol}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].chromosomalLocation"  value="${record.chromosomalLocation}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].exon"  value="${record.exon}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].nucleotideChanges"  value="${record.nucleotideChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].aminoAcidChanges"  value="${record.aminoAcidChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneType"  value="${record.geneType}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].highestMafName"  value="${record.highestMafName}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].effect"  value="${record.effect}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].pathogenicAnalysis"  value="${record.pathogenicAnalysis}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhert"  value="${record.inhert!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].diseasePhenotype"  value="${record.diseasePhenotype!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhertSourceName"  value="${record.inhertSourceName}"/>
+ 			 <#assign mutationInfos_index = mutationInfos_index+1 >
+		 </#list>
+	   </#if>
+	  <#if mutationInfoHeterozygousCarrier?? && mutationInfoHeterozygousCarrier?has_content>
+	       <#list mutationInfoHeterozygousCarrier as record>
+	         <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].id"  value="${record.id}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].taskId"  value="${record.taskId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].objectId"  value="${record.objectId}"/>
+             <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].clinicalJudgment"  value="${record.clinicalJudgment}"/>	         
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneSymbol"  value="${record.geneSymbol}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].chromosomalLocation"  value="${record.chromosomalLocation}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].exon"  value="${record.exon}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].nucleotideChanges"  value="${record.nucleotideChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].aminoAcidChanges"  value="${record.aminoAcidChanges}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].geneType"  value="${record.geneType}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].highestMafName"  value="${record.highestMafName}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].effect"  value="${record.effect}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].pathogenicAnalysis"  value="${record.pathogenicAnalysis}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhert"  value="${record.inhert!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].diseasePhenotype"  value="${record.diseasePhenotype!?html}"/>
+			 <input  hidden="hidden"  name="reportExportMutationInfos[${mutationInfos_index}].inhertSourceName"  value="${record.inhertSourceName}"/>
+ 			 <#assign mutationInfos_index = mutationInfos_index+1 >
+		 </#list>
+	   </#if>
+	  <#assign capcnvResults_index = 0> 
+	  
+	<#if clinicalPhenotypeHighCorrelation?? && clinicalPhenotypeHighCorrelation?has_content>
+       <#list clinicalPhenotypeHighCorrelation as record>	  
+		 <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+		 <#list record.reportExportCapcnvResultList as cnvResultRecord>	  
+		 	   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].id" value="${cnvResultRecord.id}"/>
+		 	   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].taskId" value="${cnvResultRecord.taskId}"/>
+		 	   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].cnvAnalysisPicId" value="${cnvResultRecord.cnvAnalysisPicId}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].gene" value="${cnvResultRecord.gene}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].missingArea" value="${cnvResultRecord.missingArea}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].exon" value="${cnvResultRecord.exon}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].inheritSource" value="${cnvResultRecord.inheritSource}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].relatedDisease" value="${cnvResultRecord.relatedDisease}"/>
+			   <#assign capcnvResults_index = capcnvResults_index+1> 
+		  </#list>
+		 </#if>
+	 </#list>
+	</#if>
+    
+   <#if clinicalPhenotypeCorrelation?? && clinicalPhenotypeCorrelation?has_content>
+      <#list clinicalPhenotypeCorrelation as record> 
+      <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+		<#list record.reportExportCapcnvResultList as cnvResultRecord>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].id" value="${cnvResultRecord.id}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].taskId" value="${cnvResultRecord.taskId}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].cnvAnalysisPicId" value="${cnvResultRecord.cnvAnalysisPicId}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].gene" value="${cnvResultRecord.gene}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].missingArea" value="${cnvResultRecord.missingArea}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].exon" value="${cnvResultRecord.exon}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].inheritSource" value="${cnvResultRecord.inheritSource}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResults[${capcnvResults_index}].relatedDisease" value="${cnvResultRecord.relatedDisease}"/>
+		   <#assign capcnvResults_index = capcnvResults_index+1> 
+	  </#list>
+	 </#if>
+	</#list>
+   </#if>
+   
+    <#assign capcnvResultExplains_index = 0>   
+	<#if clinicalPhenotypeHighCorrelation?? && clinicalPhenotypeHighCorrelation?has_content>
+       <#list clinicalPhenotypeHighCorrelation as record>	  
+		 <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+		 <#list record.reportExportCapcnvResultList as cnvResultRecord>	  
+		 	   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].id" value="${cnvResultRecord.id}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].areaSize" value="${cnvResultRecord.areaSize!?html}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].pathogenicLevel" value="${cnvResultRecord.pathogenicLevel!?html}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].mutationComment" value="${cnvResultRecord.mutationComment!?html}"/>
+			   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].missingType" value="${cnvResultRecord.missingType!?html}"/>
+			   <#assign capcnvResultExplains_index = capcnvResultExplains_index+1> 
+		  </#list>
+		 </#if>
+	 </#list>
+	</#if>
+    
+   <#if clinicalPhenotypeCorrelation?? && clinicalPhenotypeCorrelation?has_content>
+      <#list clinicalPhenotypeCorrelation as record> 
+      <#if record.reportExportCapcnvResultList?? && record.reportExportCapcnvResultList?has_content>
+		<#list record.reportExportCapcnvResultList as cnvResultRecord>
+		   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].id" value="${cnvResultRecord.id}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].areaSize" value="${cnvResultRecord.areaSize!?html}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].pathogenicLevel" value="${cnvResultRecord.pathogenicLevel!?html}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].mutationComment" value="${cnvResultRecord.mutationComment!?html}"/>
+		   <input hidden="hidden" name="reportExportCapcnvResultExplains[${capcnvResultExplains_index}].missingType" value="${cnvResultRecord.missingType!?html}"/>
+		   <#assign capcnvResultExplains_index = capcnvResultExplains_index+1> 
+	  </#list>
+	 </#if>
+	</#list>
+   </#if>
+   
+    <#assign mlpaDetectionResult_index = 0>   
+    <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeHighCorrelation??&&mlpaClinicalPhenotypeHighCorrelation?has_content>
+      	<#list mlpaClinicalPhenotypeHighCorrelation as detectionResult>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].id" value="${detectionResult.id}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].taskId" value="${detectionResult.taskId}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].methodName" value="${detectionResult.methodName}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].clinicalJudgment" value="${detectionResult.clinicalJudgment}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].result['taskResultId']" value="${detectionResult.result.taskResultId}"/>
+           	<#list mlpaColumns as detectionResultColumn>
+           		<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].result['${detectionResultColumn.columnName}']" value="${detectionResult.result[detectionResultColumn.columnName]}"/>
+           	</#list>
+        	<#assign mlpaDetectionResult_index = mlpaDetectionResult_index+1> 
+       </#list>
+   </#if>
+    <#if mlpaColumns?? && mlpaColumns?has_content&&mlpaClinicalPhenotypeCorrelation??&&mlpaClinicalPhenotypeCorrelation?has_content>
+      	<#list mlpaClinicalPhenotypeCorrelation as detectionResult>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].id" value="${detectionResult.id}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].taskId" value="${detectionResult.taskId}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].methodName" value="${detectionResult.methodName}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].clinicalJudgment" value="${detectionResult.clinicalJudgment}"/>
+          	<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].result['taskResultId']" value="${detectionResult.result.taskResultId}"/>
+           	<#list mlpaColumns as detectionResultColumn>
+           		<input hidden="hidden" name="mlpaDetectionResults[${mlpaDetectionResult_index}].result['${detectionResultColumn.columnName}']" value="${detectionResult.result[detectionResultColumn.columnName]}"/>
+           	</#list>
+        	<#assign mlpaDetectionResult_index = mlpaDetectionResult_index+1> 
+       </#list>
+   </#if>
+   
+   <#assign dtDetectionResult_index = 0>   
+   <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeHighCorrelation??&&dtMutationClinicalPhenotypeHighCorrelation?has_content>
+      	<#list dtMutationClinicalPhenotypeHighCorrelation as detectionResult>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].id" value="${detectionResult.id}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].taskId" value="${detectionResult.taskId}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].methodName" value="${detectionResult.methodName}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].clinicalJudgment" value="${detectionResult.clinicalJudgment}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${mlpaDetectionResult_index}].result['taskResultId']" value="${detectionResult.result.taskResultId}"/>
+           	<#list dtColumns as detectionResultColumn>
+           		<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].result['${detectionResultColumn.columnName}']" value="${detectionResult.result[detectionResultColumn.columnName]}"/>
+           	</#list>
+        	<#assign dtDetectionResult_index = dtDetectionResult_index+1> 
+       </#list>
+    </#if>
+    <#if dtColumns?? && dtColumns?has_content&&dtMutationClinicalPhenotypeCorrelation??&&dtMutationClinicalPhenotypeCorrelation?has_content>
+      	<#list dtMutationClinicalPhenotypeCorrelation as detectionResult>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].id" value="${detectionResult.id}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].taskId" value="${detectionResult.taskId}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].methodName" value="${detectionResult.methodName}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].clinicalJudgment" value="${detectionResult.clinicalJudgment}"/>
+          	<input hidden="hidden" name="dtmutationDetectionResults[${mlpaDetectionResult_index}].result['taskResultId']" value="${detectionResult.result.taskResultId}"/>
+           	<#list dtColumns as detectionResultColumn>
+           		<input hidden="hidden" name="dtmutationDetectionResults[${dtDetectionResult_index}].result['${detectionResultColumn.columnName}']" value="${detectionResult.result[detectionResultColumn.columnName]}"/>
+           	</#list>
+        	<#assign dtDetectionResult_index = dtDetectionResult_index+1> 
+       </#list>
+   </#if>
+
+   </form>
+
+	<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+	<script src="${system_js}/jquery.form.js"></script>
+	 <script type="text/javascript">
+		$('#editBtn').on('click',function(e){
+	       $(this).hide();
+	       $("#exitPreviewBtn").hide();
+	       $("#generateReportBtn").hide();
+	       $('#cancelEditBtn').show();
+	       $('#saveEditBtn').show();
+	       $('.can-edit').addClass('edit-wait').attr('contenteditable','plaintext-only');
+	       $('.can-edit').eq(0).focus();
+	       $('.input-edit').addClass('can-input').prepend('  ');
+	   });
+		
+	   $('#cancelEditBtn').on('click',function(e){
+	       $(this).hide();
+	       $("#saveEditBtn").hide();
+	       $('#editBtn').show();
+	       $("#exitPreviewBtn").show();
+	       $("#generateReportBtn").show();
+	       $('.can-edit').removeClass('edit-wait').attr('contenteditable',false);
+	       $('.input-edit').removeClass('can-input')
+	   });
+	   
+	   $('#exitPreviewBtn').on('click',function(e){
+	      var taskId=$(this).val();
+	      window.location.href="${base}/bpm/report/handle.do?id="+taskId+"&redirectStatus=9";
+	   });
+	
+	   $('.can-edit').on('input propertychange',function(e){
+	   		var $me = $(this);
+	   		var text = $me.text();
+	   		//var $input = $($me.data('input'));
+			$("input[name=\""+$me.data('input')+"\"]").attr("value",text);
+	   		//$input.val(text);
+	   });
+	   
+	   var DataDeal = {
+			 //将从form中通过$('#form').serialize()获取的值转成json
+ 		   formToJson: function (data) {
+ 			   data=data.replace(/&/g,"\",\"");
+                data=data.replace(/=/g,"\":\"");
+                data="{\""+data+"\"}";
+                return data;
+ 		    }
+		};
+
+	   
+		$(function(){
+			$("#saveEditBtn").on('click',function(e){
+				var options = {
+			            type: 'POST',
+			            //url: '${base}/reportExportPreview/updateReportExport',  
+			            dataType: 'json',  
+			        	success:function(data) {
+			        	 	console.log(data);
+			        	 	alert("保存成功");
+			        	},
+			            error:function(xhr, status, err) {
+			             	console.log(xhr);
+			            	if(xhr.status=='200'){
+			            		alert("保存成功");
+			            	}else{
+				                alert("保存失败");  
+			            	}
+			            }  
+			    };
+				
+				$("#reportExportPreviewForm").ajaxSubmit(options);   
+			});
+			
+	 	    $('#generateReportBtn').on('click',function(e){
+	 	    	$.ajax({
+	                type: "POST",
+	                dataType: "json",
+	                url: "${base}/reportExportPreview/generateWordReport/${taskId}" ,//url
+	                beforeSend: function(){
+	                	$("#waitMask").show();
+	                },
+	                complete: function(){
+	                	$("#waitMask").hide();
+	                },
+	                //data: $('#form1').serialize(),
+	                success: function (result) {
+	                    console.log(result);//打印服务端返回的数据(调试用)
+	                    window.location.href="${base}/reportExportPreview/downloadReport/"+result.reportUrl+"/"+result.reportName;
+	                },
+	    			error:function(data, XMLHttpRequest, textStatus, errorThrown){  
+	    				if(data.status=='200'){
+	    					console.log(data.reponseText); 
+	    					// window.location.href="${base}/reportExportPreview/downloadReport/"+result.reportUrl;
+	    				}else{
+	    					alert("生成失败");	
+	    				}
+	    			}
+	            });
+		    }); 
+		});
+	
+	$(function(){
+		parent.layer.closeAll();
+	});
+	   
+	</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script> 
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+
+
+<script>
+	
+	var system_js = "${system_js}";
+	var base = "${base}";
+	var order = ${orderJson};
+	
+</script>
+
+
+
+
+
+<style>
+
+.file-drop-zone {
+	height: auto
+}
+
+.t .ms-sel-ctn {
+	background-position: 98%
+}
+
+
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated kv-main">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li>修改订单</li>
+							<div style="float: right;">
+								<a href="#" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right">
+									<img src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5 style="font-weight: bold;">临检订单</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="orderForm" class="form-horizontal m-t" action=""
+							method="post" enctype='application/json'>
+
+
+							<fieldset>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#collapseOne"> 订单基本信息 </a>
+											</h4>
+										</div>
+										<div id="collapseOne" class="panel-collapse collapse in">
+
+											<div class="ibox-content">
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label control-required">订单编号：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="orderCode"
+															id="orderCode" value="${order.code!?html}" readonly="readonly" />
+													</div>
+
+													<label class="col-sm-2 control-label ">归属合同：</label>
+													<div class="col-sm-3">
+														<div class="form-control" id="hetong"
+															placeholder="请选择归属合同" disabled="disabled"></div>
+													</div>
+
+												</div>
+												
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label control-required">客户：</label>
+													<div class="col-sm-3">
+														  <div class="form-control" id="ownerId" placeholder="请选择客户" disabled="disabled"></div>
+													</div>
+
+													<label class="col-sm-2 control-label control-required">业务员：</label>
+														<div class="col-sm-3">
+														<input type="text" class="form-control"  name="creatorName" id="creatorName"
+														   placeholder="根据客户自动关联显示"  readonly="readonly" 
+														   value="${order.creatorName!?html}" /> 
+														<input type="hidden" name="creatorId" id="creatorId" readonly="readonly"
+														   value="${order.creatorId!?html}" >
+														</div>
+												</div>
+
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label control-required">客户参与方式：</label>
+													<div class="col-sm-3" style="padding-top: 5px">
+													
+														<@dict_entries category="ANALYSIS_TYPE">
+									                     <#if entries??>
+									                     <#list entries as entry>
+									                     	<input type="radio" name="doctorAssist" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>  value="${entry.value!}"  
+									                     	<#if (order.doctorAssist!?html) == entry.value > checked='checked'</#if> 
+									                     	 />${entry.text!?html}&nbsp;
+									                     </#list>
+									                     </#if>
+									                    </@dict_entries>
+													
+													
+													
+													
+													</div>
+
+													<label class="col-sm-2 control-label control-required">检测产品：</label>
+													<div class="col-sm-3" >
+														<div class="form-control" id="testProduct" <#if (order.sheduleStatus) gte 1 > disabled="disabled" </#if> ></div>
+													</div>
+
+
+
+												</div>
+
+
+												<div class="form-group">
+
+													<form id="zhiqingForm" class="form-horizontal m-t" action=""
+																				method="get" enctype="multipart/form-data">
+													
+																<label class="col-sm-2 control-label ">知情同意书：</label>
+																<div class="col-sm-8">
+																	<input type="file" name="zhiqing"  multiple   accept=".jpg,.png,.gif"
+																		id="zhiqing" />
+																	<b style="font-size:14px;color:#d70101;">温馨提示！</b>选择后请点击上传按钮！
+																</div>
+													</form>
+
+												</div>
+
+
+												<div class="form-group">
+													<label class="col-sm-2 control-label ">采样费用：</label>
+													<div class="col-sm-3">
+													  <input type="text" class="form-control"
+													   name="samplingAmount" id="samplingAmount"  value="<#if order.samplingAmount gt 0 >${(order.samplingAmount/100)!?string('0.##')}</#if>"  /> 
+													</div>
+												</div>
+
+
+
+											</div>
+										</div>
+									</div>
+
+
+
+
+
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#collapseTwo"> 受检人基本信息</a>
+											</h4>
+										</div>
+										<div id="collapseTwo" class="panel-collapse collapse in">
+											<div class="ibox-content">
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required">姓名：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" <#if order.sheduleStatus gte 2 > readonly="readonly" </#if>
+															name="examineeName" id="examineeName"  value="${OrderExaminee.name!?html}" />
+													</div>
+
+													<label class="col-sm-2 control-label control-required">性别：</label>
+
+													<div class="col-sm-3" style="padding-top: 7px">
+														
+															<@dict_entries category="SEX">
+										                     <#if entries??>
+										                     <#list entries as entry>
+										                     	<input type="radio" name="examineeSex" value="${entry.value}"  <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>
+										                     	<#if (OrderExaminee.sex)!?html == entry.value> checked="checked"</#if> />${entry.text!?html}
+										                     </#list>
+										                     </#if>
+										                    </@dict_entries>
+															
+
+													</div>
+
+												</div>
+
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required">出生日期：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control laydate-icon"
+															name="birthday" id="birthday" value="${OrderExaminee.birthday!?html}" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>
+															readonly="readonly" style="height: 34px"
+															 />
+													</div>
+
+													<label class="col-sm-2 control-label control-required">年龄：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="age"
+															id="age" value="${OrderExaminee.ageSnapshot!?html}" readonly="readonly" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if> />
+													</div>
+
+												</div>
+
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required">民族：</label>
+													<div class="col-sm-3">
+															<select class="form-control" name="nation" data-value="${OrderExaminee.nation!?html}" id="nation" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>>
+						                                        <option value="">请选择民族</option>
+						                                        <@dict_entries category="BASE_NATION">
+						                                        <#if entries??>
+						                                        <#list entries as entry>
+						                                       
+						                                        <option value="${entry.value!}" <#if OrderExaminee.nation??>
+						                                        <#if entry.value==OrderExaminee.nation >selected</#if></#if> >${entry.text!?html}</option>
+						                                        </#list>
+						                                        </#if>
+						                                        </@dict_entries>
+						                                    </select>
+														
+													</div>
+
+													<label class="col-sm-2 control-label ">籍贯：</label>
+														
+														<div class="col-sm-3 " >
+															 <input type="hidden" id="origin" name="origin"  
+														    value="${OrderExaminee.origin!?html}" treePath="${OrderExaminee.treePath!?html}"  <#if (order.sheduleStatus) gte 2 > disabled="true" </#if>    />
+															
+														</div>
+												</div>
+												
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label control-required">联系人：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="contactName"
+															id="contactName" value="${OrderExaminee.contactName!?html}" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if> />
+													</div>
+													<label class="col-sm-2 control-label control-required">联系电话：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="contactPhone"
+															id="contactPhone" value="${OrderExaminee.contactPhone!?html}" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if> />
+													</div>
+												
+												</div>
+
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label ">联系邮箱：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="contactEmail"
+															id="contactEmail" value="${OrderExaminee.contactEmail!?html}" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if> />
+													</div>
+
+													<label class="col-sm-2 control-label ">病例号：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="recordNo"
+															id="recordNo" value="${OrderExaminee.recordNo!?html}" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if> />
+													</div>
+
+
+												</div>
+												</div>
+											</div>
+										</div>
+										
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#collapseDisease"> 疾病信息 </a>
+											</h4>
+										</div>
+										<div id="collapseDisease" class="panel-collapse collapse in">
+											<div class="ibox-content">
+											
+												<div class="form-group">
+													<label class="col-sm-2 control-label ">临床诊断：</label>
+													<div class="col-sm-3">
+														<div class="form-control" id="disease" 
+															placeholder="请选择临床诊断" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>></div>
+													</div>
+												
+													<label class="col-sm-2 control-label ">临床表型：</label>
+													<div class="col-sm-3">
+														<div class="form-control" id="phenotype"
+															placeholder="请选择临床表型" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>></div>
+													</div>
+													
+												</div>
+												
+
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label ">重点关注基因：</label>
+													<div class="col-sm-8 t">
+														<div class="form-control" id="gene"
+															placeholder="请选择重点关注基因" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if> ></div>
+												</div>
+
+
+
+
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label ">病史摘要：</label>
+													<div class="col-sm-8">
+														<textarea  class="form-control" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if>
+															name="medicalHistory" id="medicalHistory" 
+															style="height:80px;resize: none">${OrderExaminee.medicalHistory!?html}</textarea>
+													</div>
+												</div>
+												
+												<!-- new -->
+												<div class="form-group">
+													<label class="col-sm-2 control-label ">家族史摘要：</label>
+													<div class="col-sm-8">
+														<textarea  class="form-control" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if>
+															name="medicalHistory" id="familyMedicalHistory" 
+															style="height:80px;resize: none">${OrderExaminee.familyMedicalHistory!?html}</textarea>
+													</div>
+												</div>
+												
+												<!-- new -->
+												<div class="form-group">
+													<label class="col-sm-2 control-label ">临床推荐理由：</label>
+													<div class="col-sm-8">
+														<textarea  class="form-control" <#if (order.sheduleStatus) gte 2 > readonly="readonly" </#if>
+															name="clinicalRecommend" id="clinicalRecommend" 
+															style="height:80px;resize: none">${OrderExaminee.clinicalRecommend!?html}</textarea>
+													</div>
+												</div>
+
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label ">病例：</label>
+													<div class="col-sm-8">
+														<input id="file-1" type="file" multiple 
+															  name="fujian" id="fujian">
+														<b style="font-size:14px;color:#d70101;">温馨提示！</b>选择后请点击上传按钮！
+													</div>
+												</div>
+
+
+												<!-- new -->
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label ">家系图：</label>
+													<div class="col-sm-8">
+														<input id="familyFigures" type="file" multiple
+															  name="familyFigures" id="familyFigures" accept=".jpg,.png,.gif">
+														<b style="font-size:14px;color:#d70101;">温馨提示！</b>选择后请点击上传按钮！
+													</div>
+												</div>
+
+											</div> 
+										</div>
+									</div><!-- 受检人信息 -->
+									
+									
+									
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#collapseThree"> 样本信息 </a>
+											</h4>
+										</div>
+										<div id="collapseThree" class="panel-collapse collapse in">
+
+											<div class="ibox-title">
+												<h5>主样本：</h5>
+
+												<!-- <a href="javascript:addMain()"
+													style="position: relative; bottom: 11px"
+													class="btn btn-sm btn-success" target="_self"> <i
+													class="fa fa-plus"></i> 新增主样本
+												</a> -->
+												
+												
+												<!-- <button type="button" onclick="addMain();"  <#if order.sheduleStatus gte 1 > disabled="disabled" </#if>  style="float:right; margin-right: 35px;"
+														class="btn btn-sm btn-success "  > <i class="fa fa-plus"></i> 新增主样本
+												</button> -->
+												
+												
+											</div>
+
+
+											<div class="ibox-content" id="mainContent">
+
+											</div>
+
+											<div class="ibox-title">
+												<h5>家属样本：</h5>
+
+											<!-- 	<a href="javascript:addSe()" style="position: relative; bottom: 11px"
+													class="btn btn-sm btn-success" target="_self"> <i
+													class="fa fa-plus"></i> 新增家属样本
+												</a> -->
+												
+												<button type="button" onclick="addSe();"  <#if order.sheduleStatus gte 1 > disabled="disabled" </#if>  style="float:right; margin-right: 35px;"
+														class="btn btn-sm btn-success "  > <i class="fa fa-plus"></i> 新增家属样本
+												</button>
+												
+											</div>
+
+
+											<div class="ibox-content" id="seContent">
+
+											</div>
+										</div>
+
+
+
+
+									</div>
+
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#receiveInfo"> 收件人信息 </a>
+											</h4>
+										</div>
+										<div id="receiveInfo" class="panel-collapse collapse in">
+
+											<div class="ibox-content" >
+											
+											<div class="form-group">
+	                                                <label class="col-sm-2 control-label">邮寄处理：</label>
+	                                                <div class="checkbox  col-sm-3">
+	                                                    <label> <input type="radio" name="sendStrategy" id="send"  <#if order.recipientName !='' > checked="checked"</#if> value="1">邮寄 </label>
+	                                                    
+	                                                    <label> <input type="radio" name="sendStrategy" id="notsend" <#if  order.recipientName ='' > checked="checked"</#if> value="0" >不邮寄 </label>
+	                                                </div>
+                                           		</div>
+											  <div id="send_info_div"  <#if order.recipientName ='' >  style="display: none" </#if>     >
+											
+												<div class="form-group">
+													<label class="col-sm-2 control-label control-required">收件人姓名：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control"
+															name="recipientName" id="recipientName" value="${order.recipientName!?html}" />
+													</div>
+
+													<label class="col-sm-2 control-label control-required">收件人联系方式：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control"
+															name="recipientPhone" id="recipientPhone" value="${order.recipientPhone!?html}" />
+													</div>
+
+												</div>
+
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label control-required">报告邮寄地址：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control"
+															name="recipientAddress" id="recipientAddress" value="${order.recipientAddress!?html}" />
+													</div>
+													
+												</div>
+												
+												</div>
+											</div>
+										</div>
+
+									</div>
+									
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" href="#charge"> 费用信息 </a>
+											</h4>
+										</div>
+										<div id="charge" class="panel-collapse collapse in">
+
+											<div class="ibox-content" style="position: relative;">
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label">发票抬头：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" <#if (order.sheduleStatus) gte 2 > readonly="readonly"  </#if>
+															name="invoiceTitle" id="invoiceTitle" value="${order.invoiceTitle!?html}" />
+													</div>
+												</div>
+												
+												<div class="form-group">
+
+													<label class="col-sm-2 control-label">总费用(元)：</label>
+													<div class="col-sm-3">
+															<div style="font-size: 52px;color: #eb4f38">￥<span id="productsPrice">${order.realPrice!?html}</span></div>
+															<input type="hidden" value="${order.amount!?html}" id="productsPrice_new" name="productsPrice" />
+															
+													</div>
+												</div>
+										
+											</div>
+										</div>
+
+									</div>
+									
+									
+									
+							<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<input type="submit"  class="btn btn-primary" id="createButton" value="提交订单"  />
+										<button class="btn btn-primary goback" type="button" >返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+
+								</div>
+
+
+
+
+
+
+
+
+
+
+
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+
+
+
+<!-- clone用 -->
+<span style="display: none">
+<#if order.orderSubsidiarySample?has_content>
+									<#list order.orderSubsidiarySample as record>
+
+									<select class="form-control "  id="${record.id}" <#if (order.sheduleStatus) gte 2 > disabled="disabled" </#if>
+										name="familyRelation" onchange="showSeName(this)"     >
+										<option value="">===请选择===</option> <@dict_entries
+										category="FAMILY_RELATION"> <#if entries??> <#list entries as
+										entry>
+										<option value="${entry.value!}" <#if (record.familyRelation)!?html == entry.value >selected="selected"</#if>>${entry.text!?html}</option>
+										</#list> </#if> </@dict_entries>
+									</select>
+									
+									</#list></#if>
+									
+									<select class="form-control "  
+										name="familyRelation" id="familyRelation" onchange="showSeName(this)" >
+										<option value="">===请选择===</option> 
+										<@dict_entries category="FAMILY_RELATION"> 
+											<#if entries??> 
+											<#list entries as	entry>
+											<option value="${entry.value!}" >${entry.text!?html}</option>
+											</#list> 
+											</#if> 
+										</@dict_entries>
+									</select>
+									
+									
+									<select class="form-control" name="purpose" id="purposeClone">
+										<option value="">请选择用途</option>
+										 <@dict_entries category="SAMPLE_PURPOSE">
+				                     <#if entries??>
+				                     <#list entries as entry>
+				                     	<option value="${entry.value}">${entry.text!?html}</option>
+				                     </#list>
+				                     </#if>
+				                    </@dict_entries>
+																
+								</select>
+															
+															
+					</span>
+	<!-- clone用 -->								
+									
+									
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_js}/bootstrap-fileinput-master/css/fileinput.css" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/coupon/couponApplyPaging.do">抵用券申请</a></li>
+							<li class="active"><strong>新申请</strong></li>
+							<div style="float: right;">
+								<a href="${base}/coupon/couponApplyPaging.do" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right"> <img
+									src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>抵用券新申请</h5>
+					</div>
+					<div class="ibox-content">
+
+						<form class="form-horizontal m-t toggle-form" action="" method="post">
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">申请标题：</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" name="applyTitle" id="applyTitle" value="" />
+								</div>
+
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">申请原因：</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" name="applyReason" id="applyReason" value="" />
+								</div>
+
+							</div>
+
+						</form>
+
+						<div style="float: right">
+
+							<a href="javascript:addCustomer()" class="btn btn-sm btn-success"> <i class="fa fa-plus"></i>
+								增加
+							</a> <a href="javascript:importExcel()" class="btn btn-sm btn-success"> <i class="fa fa-plus"></i>
+								导入
+							</a>
+
+
+						</div>
+
+
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+
+									<th>姓名</th>
+									<th>手机号</th>
+									<th>有效期起</th>
+									<th>有效期截止</th>
+									<th>面额(元)</th>
+									<th>张数</th>
+
+
+									<th>小计(元)</th>
+								</tr>
+							</thead>
+							<tbody id="dataTable">
+
+
+							</tbody>
+						</table>
+
+						<div class="form-group" style="height: 100%; overflow: hidden;">
+							<div class="col-sm-4 col-sm-offset-2 text-center">
+								<button class="btn btn-primary" onclick="saveData()">提交</button>
+								<a href="${base}/coupon/couponApplyPaging.do" class="btn btn-primary"   >返回</a>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!--     模态框 -->
+	<div class="modal fade" id="cc" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="margin-top: 200px">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 style="float: left">新增客户</h5>
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</div>
+					<div class="modal-body">
+
+						<div class="row">
+							<div class="col-lg-12">
+
+								<div class="ibox">
+
+									<div class="ibox-content">
+										<form class="form-horizontal m-t toggle-form" id="addForm" action="">
+											<fieldset>
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required">客户</label>
+													<div class="col-sm-4">
+														<div class="form-control" id="customer" name="customer" placeholder=""></div>
+													</div>
+													<label class="col-sm-2 control-label">手机号：</label>
+													<div class="col-sm-4 ">
+														<input type="text" class="form-control" name="phoneNum" id="phoneNum" value=""
+															readonly="readonly" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="col-sm-2 control-label control-required ">有效期起：</label>
+													<div class="col-sm-4">
+														<input type="text" class="form-control laydate-icon" id="validStartDate"
+															name="validStartDate" value="" placeholder="有效期起" style="height: 34px"
+															 />
+													</div>
+													<label class="col-sm-2 control-label control-required ">有效期止：</label>
+													<div class="col-sm-4">
+														<input type="text" class="form-control laydate-icon" id="validEndDate"
+															name="validEndDate" value="" placeholder="有效期止" style="height: 34px"
+															 />
+													</div>
+												</div>
+
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required ">面额：</label>
+													<div class="col-sm-4 ">
+														<input type="text" class="form-control" name="amount" id="amount" value="" />
+													</div>
+													<label class="col-sm-2 control-label control-required ">张数：</label>
+													<div class="col-sm-4 ">
+														<input type="text" class="form-control" name="amountCount" id="amountCount" value="" />
+													</div>
+												</div>
+
+
+
+												<div class="form-group">
+													<div class="col-sm-4 col-sm-offset-2 text-center">
+														<button class="btn btn-primary" type="submit">保存</button>
+														<input class="btn btn-primary" type="button" onclick="closeModal()" value="关闭" />
+													</div>
+												</div>
+
+
+											</fieldset>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 上传框 -->
+	<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">导入客户</h4>
+				</div>
+
+				<div class="modal-body">
+					<form action="${base}/coupon/uploadDetail.do" method="post" id="uploadForm" name="uploadForm"
+						enctype="multipart/form-data">
+						<input type="file" class="file" name="uploadData" accept=".xlsx,.xls" id="uploadData" />
+					</form>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="uploadData()">提交</button>
+					</div>
+				</div>
+
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script>
+
+
+var start = {
+		  elem: '#validStartDate',
+		  format: 'YYYY-MM-DD',
+		 
+		  max: '2099-06-16 23:59:59', //最大日期
+		  istime: true,
+		  istoday: true,
+		  choose: function(datas){
+		     end.min = datas; //开始日选好后，重置结束日的最小日期
+		     end.start = datas //将结束日的初始值设定为开始日
+		  }
+		};
+		var end = {
+		  elem: '#validEndDate',
+		  format: 'YYYY-MM-DD',
+		  min: laydate.now(),
+		  max: '2099-06-16 23:59:59',
+		  istime: true,
+		  istoday: false,
+		  choose: function(datas){
+		    start.max = datas; //结束日选好后，重置开始日的最大日期
+		  }
+		};
+		laydate(start);
+		laydate(end);
+		
+		
+		
+	$('#uploadData').fileinput({
+		language : 'zh', // 设置语言
+		uploadUrl : '', // 上传的地址
+		allowedFileExtensions : [ 'xlsx', 'xls' ],// 接收的文件后缀
+		showUpload : false, // 是否显示上传按钮
+		showCaption : false,// 是否显示标题
+		browseClass : "btn btn-primary", // 按钮样式
+		showRemove : false,
+		previewFileIcon : "<i class='glyphicon glyphicon-king'></i>",
+		
+	}).on("fileuploaded", function(event, data) {
+
+	});
+
+	$("#addForm").validate(
+			{
+				submitHandler : function(form) {
+
+					if (s.getSelection().length == 0) {
+						parent.layer.alert('请选择用户', {
+							title : "提示"
+						});
+						return false;
+
+					}
+					if ($("#validStartDate").val() > $("#validEndDate").val()) {
+						parent.layer.alert('请选择正确的起止时间！', {
+							title : "提示"
+						});
+						return false;
+					}
+					var data = s.getSelection()[0]
+					$('#dataTable').append(
+							'<tr><input type="hidden" name="customerId" value="'+data.id+'">'
+									+ '<td name="customerName">'
+									+ data.realName + '</td>'
+									+ '<td name="customerNum">'
+									+ $('#phoneNum').val() + '</td>'
+									+ '<td name="startDate">'
+									+ $('#validStartDate').val() + '</td>'
+									+ '<td name="endDate">'
+									+ $('#validEndDate').val() + '</td>'
+									+ '<td name="money">' + $('#amount').val()
+									+ '</td>' + '<td name="count">'
+									+ $('#amountCount').val() + '</td>'
+									+ '<td>' + $('#amount').val()
+									* $('#amountCount').val() + '</td>'
+									+ '</tr>');
+					$("#cc").modal('hide')
+
+				},
+				rules : {
+					validStartDate : {
+						required : true
+					},
+					validEndDate : {
+						required : true
+					},
+					amount : {
+						required : true,
+						decimal : true,
+						maxlength : 20
+					},
+					amountCount : {
+						required : true,
+						digits : true,
+						maxlength : 20
+					}
+				},
+				messages : {
+
+					amount : {
+
+						decimal : "请输入有效面额"
+					},
+					amountCount : {
+						digits : "请输入有效张数"
+					}
+
+				}
+
+			})
+	var s = $('#customer').magicSuggest(
+			{
+				width : 190,
+				highlight : true,
+				data : '${base}/customer/customerByTestingType.do?testingType=${testingType}',
+				method : 'get',
+				queryParam : "name",
+				maxSelection : 1,
+				displayField : "realName",
+				allowFreeEntries : false,
+				renderer : function(v) {
+					return '<div>' + '<div >' + '<div  class="probe">'
+							+ v.realName + '</div>' + '</div>'
+							+ '<div style="clear:both;"></div>';
+				}
+			});
+	$(s).on('selectionchange', function(e, m) {
+		var obj_ = this.getSelection()[0];
+		$("#phoneNum").val(obj_.phoneNum)
+
+	})
+
+	function addCustomer() {
+
+		$("#cc").modal('show');
+		$('#addForm')[0].reset();
+		s.clear();
+	}
+
+	function closeModal() {
+
+		$("#cc").modal('hide')
+	}
+
+	function importExcel() {
+		$("#uploadModal").modal('show')
+	}
+
+	function uploadData() {
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+
+		$('#uploadForm').ajaxSubmit(
+				{
+					type : 'post', // 提交方式 get/post
+					url : '${base}/coupon/uploadDetail.do', // 需要提交的 url
+					data : '',
+					success : function(data) {
+						layerObject.close(loadindex);
+						$("#uploadModal").modal('hide')
+
+						if ('2' == data.res) {//数据不完整
+							parent.layer.alert('数据不完整！请检查！', {
+								title : "提示"
+							});
+
+						} else if ("3" == data.res) {
+							parent.layer.alert('客户不存在！', {
+								title : "提示"
+							});
+
+						} else if ("4" == data.res) {
+							parent.layer.alert('时间格式不正确！', {
+								title : "提示"
+							});
+
+						} else if ("5" == data.res) {
+							parent.layer.alert('金额张数不正确！', {
+								title : "提示"
+							});
+
+						} else if ("1" == data.res) {
+							$.each(data.list, function(index, obj) {
+								$("#dataTable").append(
+										'<tr><input type="hidden" name="customerId" value="'+obj.userId+'">'
+												+ '<td name="customerName">'
+												+ obj.customerName + '</td>'
+												+ '<td name="customerNum">'
+												+ obj.customerMobile + '</td>'
+												+ '<td name="startDate">'
+												+ obj.validStartDate + '</td>'
+												+ '<td name="endDate">'
+												+ obj.validEndDate + '</td>'
+												+ '<td name="money">'
+												+ obj.amount_toyuan + '</td>'
+												+ '<td name="count">'
+												+ obj.couponCount + '</td>'
+												+ '<td>' + obj.amount_toyuan
+												* obj.couponCount + '</td>'
+												+ '</tr>');
+
+							})
+
+						}
+					}
+				})
+	}
+
+	//保存数据
+	function saveData() {
+		//组装数据
+		if ("" == $('#applyTitle').val() || "" == $('#applyReason').val()) {
+			parent.layer.alert('申请标题和申请原因不能为空！', {
+				title : "提示"
+			});
+			return false;
+		} else {
+			var data = $('#dataTable > tr');
+			if (data.length == 0) {
+				parent.layer.alert('请添加数据！', {
+					title : "提示"
+				});
+				return false;
+
+			} else {
+				var datas = [];
+				$.each(data, function(index, obj) {
+					var detail = {};
+					detail.userId = $(obj).find('input[name="customerId"]').val();
+					detail.validStartDate = $(obj).find('td[name="startDate"]').html();
+					detail.validEndDate = $(obj).find('td[name="endDate"]').html();
+					detail.amount = $(obj).find('td[name="money"]').html()*100;
+					detail.couponCount = $(obj).find('td[name="count"]').html();
+					datas.push(detail);
+				})
+				$.ajax({
+							type : "POST",
+							url : "${base}/coupon/add.do",
+							data : {req:JSON.stringify([{applyTitle:$('#applyTitle').val(),applyReason:$('#applyReason').val(),applyDetailList:datas}])},
+							dataType : "json",
+							success : function(data) {
+								if(data.res){
+									window.location.href="${base}/coupon/couponApplyPaging.do";
+									
+								}
+								else{
+									parent.layer.alert(data.resInfo, {
+										title : "提示"
+									});
+									window.location.href="${base}/coupon/couponApplyPaging.do";
+								}
+
+							}
+						});
+			}
+		}
+	}
+	
+
+</script>
+
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>角色表单-角色管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/smm/role/list.do">角色管理</a>
+                            </li>
+                            <li class="active">
+                                <strong class="toggle-title">新增角色</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5 class="toggle-title">新增角色</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="role_form" class="form-horizontal m-t" action="${base}/smm/role/create.do" method="post">
+                            <input type="hidden" name="id" id="id" value="${(data.id)!}" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label control-required">角色名称：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="name" id="name" value="${(data.name)!?html}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">角色权限：</label>
+                                <div class="col-sm-3">
+                                    <div id="authority_tree"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary goback" type="button">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/role.form.js"></script>
+    <script type="text/javascript">
+            
+                    $(function()
+                    {
+                        var opts = {};
+                        opts.data_url = '${base}/smm/role/authorities.do';
+                        
+                        <#if data??>
+                        opts.modify = true;
+                        opts.modify_title = '修改角色';
+                        opts.modify_action = '${base}/smm/role/modify.do';
+                        <#if data.authorities??>
+                        opts.checked_nodes = [];
+                        <#list data.authorities as authority>
+                            opts.checked_nodes.push('${authority}');
+                        </#list>
+                        </#if>
+                        </#if>
+                        
+                        $.init(opts);
+                    });
+                
+                </script>
+</body>
+</html>

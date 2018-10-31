@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库构建任务</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/libcre/library_create_assign.js?v=1.0.131"></script>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12" style="margin-top: 30px">
+            <form id="assign_form" class="form-horizontal m-t" action="${base}/testing/lib_create_assign_submit.do" method="post" target="_parent">
+                <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                <input type="hidden" name="param" id="param" />
+                <input type="hidden" name="executer" id="executer" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">构建试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="createReagentKit" name="createReagentKitId" required data-msg="构建试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "LIBRARY-CRE" sample = inputSampleTypeId!> <#list kits as kit>
+                            <option value="${kit.id!?html}" data-input-quantity="${kit.sampleInputQuantity!}"
+                                data-input-volume="${kit.sampleInputVolume!}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">构建实验员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="createTesterId" required data-msg="构建实验员不能为空">
+                            <option value="">===请选择===</option>
+                            <@bcm_members semantic = "LIBRARY-CRE"> <#list members as s>
+                            <option value="${s.id!?html}">${s.name!?html}</option>
+                            </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">质检试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="qualityControlReagentKitId" required data-msg="质检试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "LIBRARY-QC" pre_node = "LIBRARY-CRE"> <#list kits as kit>
+                            <option value="${kit.id!?html}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">质检实验员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="qualityControlTesterId" required data-msg="质检实验员不能为空">
+                            <option value="">===请选择===</option>
+                            <@bcm_members semantic = "LIBRARY-QC"> <#list members as s>
+                            <option value="${s.id!?html}">${s.name!?html}</option>
+                            </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">质检方法：</label>
+                    <div class="col-sm-10">
+                        <div class="checkbox-inline i-checks">
+                            <label><input type="checkbox" name="qualityControlMethods" class="method" value="Qubit" /> Qubit</label> <label><input
+                                    type="checkbox" name="qualityControlMethods" class="method" value="2100DNA" />2100DNA</label> <label><input
+                                    type="checkbox" name="qualityControlMethods" class="method" value="2100RNA" />2100RNA</label> <label><input
+                                    type="checkbox" name="qualityControlMethods" class="method" value="Nanodrop" checked="checked"/>Nanodrop</label> <label><input
+                                    type="checkbox" name="qualityControlMethods" class="method" value="琼脂糖电泳" checked="checked"/>琼脂糖电泳</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务描述：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" name="description" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">起始接头：</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" id="libIndex" name="libIndex" required data-msg="起始接头不能为空"/>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <table id="testing_task_detail_table" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>实验编号</th>
+                                <th>检测产品</th>
+                                <th>检测方法</th>
+                                <th>原始样本</th>
+                                <th>样本编号</th>
+                                <th>浓度（ng/ul）</th>
+                                <th>投入量</th>
+                                <th>投入体积</th>
+                                <th>补TE体积</th>
+                                <th>总体积</th>
+                                <th>接头</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <#if data.tasks??> <#list data.tasks as record>
+                            <tr>
+                                <td>${record.testingCode!?html}</td>
+                                <td>${(record.products)!?html}</td>
+                                <td>${(record.testingMethod)!?html}</td>
+                                <td>${record.originalSampleTypeName!?html}</td>
+                                <td>${record.sampleCode!?html}</td>
+                                <td class="input-sample-concn" data-concn="${record.concn!?string('0.00')}">${record.concn!?string('0.00')}</td>
+                                <td>
+                                    <input type="text" class="form-control input-sample-size" name="tasks[${record_index}].sampleInputSize" required
+                                        data-msg="" />
+                                    <input type="hidden" name="tasks[${record_index}].id" value="${record.id!}" />
+                                    <input type="hidden" name="tasks[${record_index}].testingCode" value="${record.testingCode!}" />
+                                    <input type="hidden" class="marker-sample-volume" name="tasks[${record_index}].sampleInputVolume" />
+                                    <input type="hidden" class="marker-te-volume" name="tasks[${record_index}].teInputVolume" />
+                                    <input type="hidden" class="marker-testing-volume" name="tasks[${record_index}].testingInputVolume" />
+                                </td>
+                                <td class="input-sample-volume"></td>
+                                <td class="input-te-volume"></td>
+                                <td class="input-testing-volume"></td>
+                                <td>
+                                    <input type="text" class="form-control input-library-index connect index" name="tasks[${record_index}].libraryIndex" required
+                                        data-msg=""/>
+                                </td>
+                            </tr>
+                            </#list> </#if>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

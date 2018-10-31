@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>需退款订单管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li <#if flag == 'wait'>class="active"<#else> </#if> ><a href="#unHandle" data-toggle="tab" id="unHandleTab">待处理</a></li>
+                        <li <#if flag == 'confirm'>class="active"<#else></#if> ><a href="#handled" data-toggle="tab" id="handledTab">已处理</a></li>
+                        <li style="float: right; padding: 0px">
+                            <a href="javascript:history.back(-1)" target="_self" style="padding: 0px; position: relative; top: 9px; right: 16px;">
+                            <img src="${system_images}/backbtn.png" style="height: 24px;" />
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="ibox ibox-table">
+                <div id="myTabContent" class="tab-content">
+                    <div <#if flag == 'wait'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="unHandle">
+                   <iframe <#if flag == 'wait'>src="${base}/payment/unHandleRefundList.do"<#else>src=""</#if>
+                   style="background: white; width: 100%; height: 700px; " frameborder="no" border="0" id="unHandle_frame">
+                   </iframe>
+                   </div>
+
+                   <div <#if flag == 'confirm'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="handled">
+                    <iframe <#if flag == 'confirm'>src="${base}/payment/handledRefundList.do"<#else>src=""</#if>
+                    style="background: white; width: 100%; height: 700px; " frameborder="no" border="0" id="handled_frame">
+                    </iframe>
+                    </div>
+
+
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript">
+
+    $('body').on('click', '#unHandleTab', function(){
+        $('#unHandle_frame').attr('src', '${base}/payment/unHandleRefundList.do');
+        $('#handled_frame').attr('src', '');
+    }).on('click', '#handledTab', function(){
+
+        $('#unHandle_frame').attr('src', '');
+        $('#handled_frame').attr('src', '${base}/payment/handledRefundList.do');
+    })
+
+</script>
+</html>
+

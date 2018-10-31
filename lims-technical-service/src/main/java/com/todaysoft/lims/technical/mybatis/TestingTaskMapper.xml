@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingTaskMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingTask">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="SEMANTIC" property="semantic" jdbcType="VARCHAR" />
+		<result column="INPUT_SAMPLE_ID" property="inputSampleId"
+			jdbcType="VARCHAR" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="END_TYPE" property="endType" jdbcType="BIT" />
+		<result column="STATUS" property="status" jdbcType="BIT" />
+		<result column="RESUBMIT" property="resubmit" jdbcType="BIT" />
+		<result column="RESUBMIT_COUNT" property="resubmitCount"
+			jdbcType="INTEGER" />
+		<result column="ORDER_MARKETING_CENTER" property="orderMarketingCenter"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CONTRACT_CODE" property="orderContractCode"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CONTRACT_NAME" property="orderContractName"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CUSTOMER_NAME" property="orderCustomerName"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CUSTOMER_ASSIST" property="orderCustomerAssist"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CUSTOMER_COMPANY" property="orderCustomerCompany"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_SALESMAN_NAME" property="orderSalesmanName"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="PRODUCT_TECH_PRINCIPALS" property="productTechPrincipals"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_REPORT_DEADLINE" property="productReportDeadline"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_METHOD_NAME" property="testingMethodName"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_TYPE" property="receivedSampleType"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_CODE" property="receivedSampleCode"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_NAME" property="receivedSampleName"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_SEX" property="receivedSampleSex"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_PURPOSE" property="receivedSamplePurpose"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_SAMPLING_TIME" property="receivedSampleSamplingTime"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_SAMPLE_TYPE" property="testingSampleType"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_SAMPLE_CODE" property="testingSampleCode"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_CAPTURE_PROBE_NAME" property="testingCaptureProbeName"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_CAPTURE_DATA_SIZE" property="testingCaptureDataSize"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_ANALY_DATA_CODE" property="testingAnalyDataCode"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_PRIMER_NAME" property="testingPrimerName"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_LANE_CODE" property="testingLaneCode"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_TASK_CODE" property="testingTaskCode"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+		<result column="ORDER_SUBMIT_TIME" property="orderSubmitTime"
+			jdbcType="TIMESTAMP" />
+		<result column="CONTRACT_MARKETING_CENTER" property="contractMarketingCenter"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_SAMPLE_TYPE_ID" property="testingSampleTypeId"
+			jdbcType="VARCHAR" />
+		<result column="FAMILY_RELATION" property="familyRelation"
+			jdbcType="VARCHAR" />
+		<result column="RECEIVED_SAMPLE_TYPE_ID" property="receivedSampleTypeId"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_VERIFY_SCHEME" property="testingVerifyScheme"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_COMBINECODE" property="testingCombinecode"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_PRIMER_REVERSENAME" property="testingPrimerReversename"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+		<result column="IF_URGENT" property="ifUrgent" jdbcType="BIT" />
+		<result column="URGENT_UPDATE_TIME" property="urgentUpdateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="URGENT_NAME" property="urgentName" jdbcType="VARCHAR" />
+		<result column="PLANNED_FINISH_DATE" property="plannedFinishDate"
+			jdbcType="TIMESTAMP" />
+		<result column="VERIFY_CHR_POSITION" property="verifyChrPosition"
+			jdbcType="LONGVARCHAR" />
+		<result column="TESTING_SAMPLE_ATTRIBUTES" property="testingSampleAttributes"
+			jdbcType="LONGVARCHAR" />
+		<result column="TESTING_INPUT_ARGS" property="testingInputArgs"
+			jdbcType="LONGVARCHAR" />
+		<result column="VERIFY_GENE" property="verifyGene" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, NAME, SEMANTIC, INPUT_SAMPLE_ID, START_TIME, END_TIME,
+		END_TYPE,
+		STATUS, RESUBMIT,
+		RESUBMIT_COUNT, ORDER_MARKETING_CENTER,
+		ORDER_CONTRACT_CODE, ORDER_CONTRACT_NAME,
+		ORDER_CUSTOMER_NAME,
+		ORDER_CUSTOMER_ASSIST, ORDER_CUSTOMER_COMPANY,
+		ORDER_SALESMAN_NAME,
+		PRODUCT_NAME, PRODUCT_TECH_PRINCIPALS, PRODUCT_REPORT_DEADLINE,
+		TESTING_METHOD_NAME,
+		RECEIVED_SAMPLE_TYPE, RECEIVED_SAMPLE_CODE,
+		RECEIVED_SAMPLE_NAME, RECEIVED_SAMPLE_SEX,
+		RECEIVED_SAMPLE_PURPOSE,
+		RECEIVED_SAMPLE_SAMPLING_TIME,
+		TESTING_SAMPLE_TYPE,
+		TESTING_SAMPLE_CODE,
+		TESTING_CAPTURE_PROBE_NAME,
+		TESTING_CAPTURE_DATA_SIZE, TESTING_ANALY_DATA_CODE,
+		TESTING_PRIMER_NAME,
+		TESTING_LANE_CODE, TESTING_TASK_CODE, ORDER_CODE,
+		ORDER_SUBMIT_TIME,
+		CONTRACT_MARKETING_CENTER,
+		TESTING_SAMPLE_TYPE_ID,
+		FAMILY_RELATION, RECEIVED_SAMPLE_TYPE_ID, TESTING_VERIFY_SCHEME,
+		TESTING_COMBINECODE, TESTING_PRIMER_REVERSENAME, PRODUCT_CODE,
+		IF_URGENT, URGENT_UPDATE_TIME,
+		URGENT_NAME, PLANNED_FINISH_DATE,VERIFY_CHR_POSITION, TESTING_SAMPLE_ATTRIBUTES,
+		TESTING_INPUT_ARGS, VERIFY_GENE
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		
+		from LIMS_TESTING_TASK
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TASK
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingTask">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_TASK (ID, NAME, SEMANTIC,
+		INPUT_SAMPLE_ID,
+		START_TIME, END_TIME,
+		END_TYPE, STATUS, RESUBMIT,
+		RESUBMIT_COUNT,
+		ORDER_MARKETING_CENTER, ORDER_CONTRACT_CODE,
+		ORDER_CONTRACT_NAME,
+		ORDER_CUSTOMER_NAME, ORDER_CUSTOMER_ASSIST,
+		ORDER_CUSTOMER_COMPANY,
+		ORDER_SALESMAN_NAME,
+		PRODUCT_NAME,
+		PRODUCT_TECH_PRINCIPALS,
+		PRODUCT_REPORT_DEADLINE,
+		TESTING_METHOD_NAME,
+		RECEIVED_SAMPLE_TYPE,
+		RECEIVED_SAMPLE_CODE, RECEIVED_SAMPLE_NAME,
+		RECEIVED_SAMPLE_SEX,
+		RECEIVED_SAMPLE_PURPOSE,
+		RECEIVED_SAMPLE_SAMPLING_TIME,
+		TESTING_SAMPLE_TYPE,
+		TESTING_SAMPLE_CODE, TESTING_CAPTURE_PROBE_NAME,
+		TESTING_CAPTURE_DATA_SIZE, TESTING_ANALY_DATA_CODE,
+		TESTING_PRIMER_NAME, TESTING_LANE_CODE, TESTING_TASK_CODE,
+		ORDER_CODE,
+		ORDER_SUBMIT_TIME, CONTRACT_MARKETING_CENTER,
+		TESTING_SAMPLE_TYPE_ID,
+		FAMILY_RELATION, RECEIVED_SAMPLE_TYPE_ID,
+		TESTING_VERIFY_SCHEME,
+		TESTING_COMBINECODE,
+		TESTING_PRIMER_REVERSENAME, PRODUCT_CODE,
+		IF_URGENT, URGENT_UPDATE_TIME, URGENT_NAME,
+		PLANNED_FINISH_DATE,
+		VERIFY_CHR_POSITION,
+		TESTING_SAMPLE_ATTRIBUTES, TESTING_INPUT_ARGS,
+		VERIFY_GENE)
+		values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{semantic,jdbcType=VARCHAR},
+		#{inputSampleId,jdbcType=VARCHAR},
+		#{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+		#{endType,jdbcType=BIT}, #{status,jdbcType=BIT},
+		#{resubmit,jdbcType=BIT}, #{resubmitCount,jdbcType=INTEGER},
+		#{orderMarketingCenter,jdbcType=VARCHAR},
+		#{orderContractCode,jdbcType=VARCHAR},
+		#{orderContractName,jdbcType=VARCHAR},
+		#{orderCustomerName,jdbcType=VARCHAR},
+		#{orderCustomerAssist,jdbcType=VARCHAR},
+		#{orderCustomerCompany,jdbcType=VARCHAR},
+		#{orderSalesmanName,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR},
+		#{productTechPrincipals,jdbcType=VARCHAR},
+		#{productReportDeadline,jdbcType=VARCHAR},
+		#{testingMethodName,jdbcType=VARCHAR},
+		#{receivedSampleType,jdbcType=VARCHAR},
+		#{receivedSampleCode,jdbcType=VARCHAR},
+		#{receivedSampleName,jdbcType=VARCHAR},
+		#{receivedSampleSex,jdbcType=VARCHAR},
+		#{receivedSamplePurpose,jdbcType=VARCHAR},
+		#{receivedSampleSamplingTime,jdbcType=VARCHAR},
+		#{testingSampleType,jdbcType=VARCHAR},
+		#{testingSampleCode,jdbcType=VARCHAR},
+		#{testingCaptureProbeName,jdbcType=VARCHAR},
+		#{testingCaptureDataSize,jdbcType=VARCHAR},
+		#{testingAnalyDataCode,jdbcType=VARCHAR},
+		#{testingPrimerName,jdbcType=VARCHAR},
+		#{testingLaneCode,jdbcType=VARCHAR},
+		#{testingTaskCode,jdbcType=VARCHAR},
+		#{orderCode,jdbcType=VARCHAR},
+		#{orderSubmitTime,jdbcType=TIMESTAMP},
+		#{contractMarketingCenter,jdbcType=VARCHAR},
+		#{testingSampleTypeId,jdbcType=VARCHAR},
+		#{familyRelation,jdbcType=VARCHAR},
+		#{receivedSampleTypeId,jdbcType=VARCHAR},
+		#{testingVerifyScheme,jdbcType=VARCHAR},
+		#{testingCombinecode,jdbcType=VARCHAR},
+		#{testingPrimerReversename,jdbcType=VARCHAR},
+		#{productCode,jdbcType=VARCHAR},
+		#{ifUrgent,jdbcType=BIT},
+		#{urgentUpdateTime,jdbcType=TIMESTAMP},
+		#{urgentName,jdbcType=VARCHAR},
+		#{plannedFinishDate,jdbcType=TIMESTAMP},
+		#{verifyChrPosition,jdbcType=LONGVARCHAR},
+		#{testingSampleAttributes,jdbcType=LONGVARCHAR},
+		#{testingInputArgs,jdbcType=LONGVARCHAR},
+		#{verifyGene,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingTask">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_TASK
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="semantic != null">
+				SEMANTIC,
+			</if>
+			<if test="inputSampleId != null">
+				INPUT_SAMPLE_ID,
+			</if>
+			<if test="startTime != null">
+				START_TIME,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+			<if test="endType != null">
+				END_TYPE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="resubmit != null">
+				RESUBMIT,
+			</if>
+			<if test="resubmitCount != null">
+				RESUBMIT_COUNT,
+			</if>
+			<if test="orderMarketingCenter != null">
+				ORDER_MARKETING_CENTER,
+			</if>
+			<if test="orderContractCode != null">
+				ORDER_CONTRACT_CODE,
+			</if>
+			<if test="orderContractName != null">
+				ORDER_CONTRACT_NAME,
+			</if>
+			<if test="orderCustomerName != null">
+				ORDER_CUSTOMER_NAME,
+			</if>
+			<if test="orderCustomerAssist != null">
+				ORDER_CUSTOMER_ASSIST,
+			</if>
+			<if test="orderCustomerCompany != null">
+				ORDER_CUSTOMER_COMPANY,
+			</if>
+			<if test="orderSalesmanName != null">
+				ORDER_SALESMAN_NAME,
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME,
+			</if>
+			<if test="productTechPrincipals != null">
+				PRODUCT_TECH_PRINCIPALS,
+			</if>
+			<if test="productReportDeadline != null">
+				PRODUCT_REPORT_DEADLINE,
+			</if>
+			<if test="testingMethodName != null">
+				TESTING_METHOD_NAME,
+			</if>
+			<if test="receivedSampleType != null">
+				RECEIVED_SAMPLE_TYPE,
+			</if>
+			<if test="receivedSampleCode != null">
+				RECEIVED_SAMPLE_CODE,
+			</if>
+			<if test="receivedSampleName != null">
+				RECEIVED_SAMPLE_NAME,
+			</if>
+			<if test="receivedSampleSex != null">
+				RECEIVED_SAMPLE_SEX,
+			</if>
+			<if test="receivedSamplePurpose != null">
+				RECEIVED_SAMPLE_PURPOSE,
+			</if>
+			<if test="receivedSampleSamplingTime != null">
+				RECEIVED_SAMPLE_SAMPLING_TIME,
+			</if>
+			<if test="testingSampleType != null">
+				TESTING_SAMPLE_TYPE,
+			</if>
+			<if test="testingSampleCode != null">
+				TESTING_SAMPLE_CODE,
+			</if>
+			<if test="testingCaptureProbeName != null">
+				TESTING_CAPTURE_PROBE_NAME,
+			</if>
+			<if test="testingCaptureDataSize != null">
+				TESTING_CAPTURE_DATA_SIZE,
+			</if>
+			<if test="testingAnalyDataCode != null">
+				TESTING_ANALY_DATA_CODE,
+			</if>
+			<if test="testingPrimerName != null">
+				TESTING_PRIMER_NAME,
+			</if>
+			<if test="testingLaneCode != null">
+				TESTING_LANE_CODE,
+			</if>
+			<if test="testingTaskCode != null">
+				TESTING_TASK_CODE,
+			</if>
+			<if test="orderCode != null">
+				ORDER_CODE,
+			</if>
+			<if test="orderSubmitTime != null">
+				ORDER_SUBMIT_TIME,
+			</if>
+			<if test="contractMarketingCenter != null">
+				CONTRACT_MARKETING_CENTER,
+			</if>
+			<if test="testingSampleTypeId != null">
+				TESTING_SAMPLE_TYPE_ID,
+			</if>
+			<if test="familyRelation != null">
+				FAMILY_RELATION,
+			</if>
+			<if test="receivedSampleTypeId != null">
+				RECEIVED_SAMPLE_TYPE_ID,
+			</if>
+			<if test="testingVerifyScheme != null">
+				TESTING_VERIFY_SCHEME,
+			</if>
+			<if test="testingCombinecode != null">
+				TESTING_COMBINECODE,
+			</if>
+			<if test="testingPrimerReversename != null">
+				TESTING_PRIMER_REVERSENAME,
+			</if>
+			<if test="productCode != null">
+				PRODUCT_CODE,
+			</if>
+			<if test="ifUrgent != null">
+				IF_URGENT,
+			</if>
+			<if test="urgentUpdateTime != null">
+				URGENT_UPDATE_TIME,
+			</if>
+			<if test="urgentName != null">
+				URGENT_NAME,
+			</if>
+			<if test="plannedFinishDate != null">
+				PLANNED_FINISH_DATE,
+			</if>
+			<if test="verifyChrPosition != null">
+				VERIFY_CHR_POSITION,
+			</if>
+			<if test="testingSampleAttributes != null">
+				TESTING_SAMPLE_ATTRIBUTES,
+			</if>
+			<if test="testingInputArgs != null">
+				TESTING_INPUT_ARGS,
+			</if>
+			<if test="verifyGene != null">
+				VERIFY_GENE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="semantic != null">
+				#{semantic,jdbcType=VARCHAR},
+			</if>
+			<if test="inputSampleId != null">
+				#{inputSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endType != null">
+				#{endType,jdbcType=BIT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="resubmit != null">
+				#{resubmit,jdbcType=BIT},
+			</if>
+			<if test="resubmitCount != null">
+				#{resubmitCount,jdbcType=INTEGER},
+			</if>
+			<if test="orderMarketingCenter != null">
+				#{orderMarketingCenter,jdbcType=VARCHAR},
+			</if>
+			<if test="orderContractCode != null">
+				#{orderContractCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderContractName != null">
+				#{orderContractName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerName != null">
+				#{orderCustomerName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerAssist != null">
+				#{orderCustomerAssist,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerCompany != null">
+				#{orderCustomerCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="orderSalesmanName != null">
+				#{orderSalesmanName,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productTechPrincipals != null">
+				#{productTechPrincipals,jdbcType=VARCHAR},
+			</if>
+			<if test="productReportDeadline != null">
+				#{productReportDeadline,jdbcType=VARCHAR},
+			</if>
+			<if test="testingMethodName != null">
+				#{testingMethodName,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleType != null">
+				#{receivedSampleType,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleCode != null">
+				#{receivedSampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleName != null">
+				#{receivedSampleName,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleSex != null">
+				#{receivedSampleSex,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSamplePurpose != null">
+				#{receivedSamplePurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleSamplingTime != null">
+				#{receivedSampleSamplingTime,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleType != null">
+				#{testingSampleType,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleCode != null">
+				#{testingSampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCaptureProbeName != null">
+				#{testingCaptureProbeName,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCaptureDataSize != null">
+				#{testingCaptureDataSize,jdbcType=VARCHAR},
+			</if>
+			<if test="testingAnalyDataCode != null">
+				#{testingAnalyDataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingPrimerName != null">
+				#{testingPrimerName,jdbcType=VARCHAR},
+			</if>
+			<if test="testingLaneCode != null">
+				#{testingLaneCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingTaskCode != null">
+				#{testingTaskCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderSubmitTime != null">
+				#{orderSubmitTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="contractMarketingCenter != null">
+				#{contractMarketingCenter,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleTypeId != null">
+				#{testingSampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="familyRelation != null">
+				#{familyRelation,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleTypeId != null">
+				#{receivedSampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="testingVerifyScheme != null">
+				#{testingVerifyScheme,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCombinecode != null">
+				#{testingCombinecode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingPrimerReversename != null">
+				#{testingPrimerReversename,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ifUrgent != null">
+				#{ifUrgent,jdbcType=BIT},
+			</if>
+			<if test="urgentUpdateTime != null">
+				#{urgentUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="urgentName != null">
+				#{urgentName,jdbcType=VARCHAR},
+			</if>
+			<if test="plannedFinishDate != null">
+				#{plannedFinishDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="verifyChrPosition != null">
+				#{verifyChrPosition,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testingSampleAttributes != null">
+				#{testingSampleAttributes,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testingInputArgs != null">
+				#{testingInputArgs,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="verifyGene != null">
+				#{verifyGene,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingTask">
+		update LIMS_TESTING_TASK
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="semantic != null">
+				SEMANTIC = #{semantic,jdbcType=VARCHAR},
+			</if>
+			<if test="inputSampleId != null">
+				INPUT_SAMPLE_ID = #{inputSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				START_TIME = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endType != null">
+				END_TYPE = #{endType,jdbcType=BIT},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=BIT},
+			</if>
+			<if test="resubmit != null">
+				RESUBMIT = #{resubmit,jdbcType=BIT},
+			</if>
+			<if test="resubmitCount != null">
+				RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+			</if>
+			<if test="orderMarketingCenter != null">
+				ORDER_MARKETING_CENTER =
+				#{orderMarketingCenter,jdbcType=VARCHAR},
+			</if>
+			<if test="orderContractCode != null">
+				ORDER_CONTRACT_CODE =
+				#{orderContractCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderContractName != null">
+				ORDER_CONTRACT_NAME =
+				#{orderContractName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerName != null">
+				ORDER_CUSTOMER_NAME =
+				#{orderCustomerName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerAssist != null">
+				ORDER_CUSTOMER_ASSIST =
+				#{orderCustomerAssist,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCustomerCompany != null">
+				ORDER_CUSTOMER_COMPANY =
+				#{orderCustomerCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="orderSalesmanName != null">
+				ORDER_SALESMAN_NAME =
+				#{orderSalesmanName,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productTechPrincipals != null">
+				PRODUCT_TECH_PRINCIPALS =
+				#{productTechPrincipals,jdbcType=VARCHAR},
+			</if>
+			<if test="productReportDeadline != null">
+				PRODUCT_REPORT_DEADLINE =
+				#{productReportDeadline,jdbcType=VARCHAR},
+			</if>
+			<if test="testingMethodName != null">
+				TESTING_METHOD_NAME =
+				#{testingMethodName,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleType != null">
+				RECEIVED_SAMPLE_TYPE =
+				#{receivedSampleType,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleCode != null">
+				RECEIVED_SAMPLE_CODE =
+				#{receivedSampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleName != null">
+				RECEIVED_SAMPLE_NAME =
+				#{receivedSampleName,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleSex != null">
+				RECEIVED_SAMPLE_SEX =
+				#{receivedSampleSex,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSamplePurpose != null">
+				RECEIVED_SAMPLE_PURPOSE =
+				#{receivedSamplePurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleSamplingTime != null">
+				RECEIVED_SAMPLE_SAMPLING_TIME =
+				#{receivedSampleSamplingTime,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleType != null">
+				TESTING_SAMPLE_TYPE =
+				#{testingSampleType,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleCode != null">
+				TESTING_SAMPLE_CODE =
+				#{testingSampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCaptureProbeName != null">
+				TESTING_CAPTURE_PROBE_NAME =
+				#{testingCaptureProbeName,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCaptureDataSize != null">
+				TESTING_CAPTURE_DATA_SIZE =
+				#{testingCaptureDataSize,jdbcType=VARCHAR},
+			</if>
+			<if test="testingAnalyDataCode != null">
+				TESTING_ANALY_DATA_CODE =
+				#{testingAnalyDataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingPrimerName != null">
+				TESTING_PRIMER_NAME =
+				#{testingPrimerName,jdbcType=VARCHAR},
+			</if>
+			<if test="testingLaneCode != null">
+				TESTING_LANE_CODE = #{testingLaneCode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingTaskCode != null">
+				TESTING_TASK_CODE = #{testingTaskCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderSubmitTime != null">
+				ORDER_SUBMIT_TIME =
+				#{orderSubmitTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="contractMarketingCenter != null">
+				CONTRACT_MARKETING_CENTER =
+				#{contractMarketingCenter,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSampleTypeId != null">
+				TESTING_SAMPLE_TYPE_ID =
+				#{testingSampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="familyRelation != null">
+				FAMILY_RELATION = #{familyRelation,jdbcType=VARCHAR},
+			</if>
+			<if test="receivedSampleTypeId != null">
+				RECEIVED_SAMPLE_TYPE_ID =
+				#{receivedSampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="testingVerifyScheme != null">
+				TESTING_VERIFY_SCHEME =
+				#{testingVerifyScheme,jdbcType=VARCHAR},
+			</if>
+			<if test="testingCombinecode != null">
+				TESTING_COMBINECODE =
+				#{testingCombinecode,jdbcType=VARCHAR},
+			</if>
+			<if test="testingPrimerReversename != null">
+				TESTING_PRIMER_REVERSENAME =
+				#{testingPrimerReversename,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null">
+				PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ifUrgent != null">
+				IF_URGENT = #{ifUrgent,jdbcType=BIT},
+			</if>
+			<if test="urgentUpdateTime != null">
+				URGENT_UPDATE_TIME =
+				#{urgentUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="urgentName != null">
+				URGENT_NAME = #{urgentName,jdbcType=VARCHAR},
+			</if>
+			<if test="plannedFinishDate != null">
+				PLANNED_FINISH_DATE =
+				#{plannedFinishDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="verifyChrPosition != null">
+				VERIFY_CHR_POSITION =
+				#{verifyChrPosition,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testingSampleAttributes != null">
+				TESTING_SAMPLE_ATTRIBUTES =
+				#{testingSampleAttributes,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testingInputArgs != null">
+				TESTING_INPUT_ARGS =
+				#{testingInputArgs,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="verifyGene != null">
+				VERIFY_GENE = #{verifyGene,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingTask">
+		update LIMS_TESTING_TASK
+		set NAME =
+		#{name,jdbcType=VARCHAR},
+		SEMANTIC = #{semantic,jdbcType=VARCHAR},
+		INPUT_SAMPLE_ID = #{inputSampleId,jdbcType=VARCHAR},
+		START_TIME =
+		#{startTime,jdbcType=TIMESTAMP},
+		END_TIME =
+		#{endTime,jdbcType=TIMESTAMP},
+		END_TYPE = #{endType,jdbcType=BIT},
+		STATUS = #{status,jdbcType=BIT},
+		RESUBMIT = #{resubmit,jdbcType=BIT},
+		RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+		ORDER_MARKETING_CENTER = #{orderMarketingCenter,jdbcType=VARCHAR},
+		ORDER_CONTRACT_CODE = #{orderContractCode,jdbcType=VARCHAR},
+		ORDER_CONTRACT_NAME = #{orderContractName,jdbcType=VARCHAR},
+		ORDER_CUSTOMER_NAME = #{orderCustomerName,jdbcType=VARCHAR},
+		ORDER_CUSTOMER_ASSIST = #{orderCustomerAssist,jdbcType=VARCHAR},
+		ORDER_CUSTOMER_COMPANY = #{orderCustomerCompany,jdbcType=VARCHAR},
+		ORDER_SALESMAN_NAME = #{orderSalesmanName,jdbcType=VARCHAR},
+		PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+		PRODUCT_TECH_PRINCIPALS = #{productTechPrincipals,jdbcType=VARCHAR},
+		PRODUCT_REPORT_DEADLINE = #{productReportDeadline,jdbcType=VARCHAR},
+		TESTING_METHOD_NAME = #{testingMethodName,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_TYPE = #{receivedSampleType,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_CODE = #{receivedSampleCode,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_NAME = #{receivedSampleName,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_SEX = #{receivedSampleSex,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_PURPOSE = #{receivedSamplePurpose,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_SAMPLING_TIME =
+		#{receivedSampleSamplingTime,jdbcType=VARCHAR},
+		TESTING_SAMPLE_TYPE =
+		#{testingSampleType,jdbcType=VARCHAR},
+		TESTING_SAMPLE_CODE =
+		#{testingSampleCode,jdbcType=VARCHAR},
+		TESTING_CAPTURE_PROBE_NAME =
+		#{testingCaptureProbeName,jdbcType=VARCHAR},
+		TESTING_CAPTURE_DATA_SIZE
+		=
+		#{testingCaptureDataSize,jdbcType=VARCHAR},
+		TESTING_ANALY_DATA_CODE =
+		#{testingAnalyDataCode,jdbcType=VARCHAR},
+		TESTING_PRIMER_NAME =
+		#{testingPrimerName,jdbcType=VARCHAR},
+		TESTING_LANE_CODE =
+		#{testingLaneCode,jdbcType=VARCHAR},
+		TESTING_TASK_CODE =
+		#{testingTaskCode,jdbcType=VARCHAR},
+		ORDER_CODE =
+		#{orderCode,jdbcType=VARCHAR},
+		ORDER_SUBMIT_TIME =
+		#{orderSubmitTime,jdbcType=TIMESTAMP},
+		CONTRACT_MARKETING_CENTER =
+		#{contractMarketingCenter,jdbcType=VARCHAR},
+		TESTING_SAMPLE_TYPE_ID =
+		#{testingSampleTypeId,jdbcType=VARCHAR},
+		FAMILY_RELATION =
+		#{familyRelation,jdbcType=VARCHAR},
+		RECEIVED_SAMPLE_TYPE_ID =
+		#{receivedSampleTypeId,jdbcType=VARCHAR},
+		TESTING_VERIFY_SCHEME =
+		#{testingVerifyScheme,jdbcType=VARCHAR},
+		TESTING_COMBINECODE =
+		#{testingCombinecode,jdbcType=VARCHAR},
+		TESTING_PRIMER_REVERSENAME =
+		#{testingPrimerReversename,jdbcType=VARCHAR},
+		PRODUCT_CODE =
+		#{productCode,jdbcType=VARCHAR},
+		IF_URGENT = #{ifUrgent,jdbcType=BIT},
+		URGENT_UPDATE_TIME = #{urgentUpdateTime,jdbcType=TIMESTAMP},
+		URGENT_NAME = #{urgentName,jdbcType=VARCHAR},
+		PLANNED_FINISH_DATE =
+		#{plannedFinishDate,jdbcType=TIMESTAMP},
+		VERIFY_CHR_POSITION =
+		#{verifyChrPosition,jdbcType=LONGVARCHAR},
+		TESTING_SAMPLE_ATTRIBUTES =
+		#{testingSampleAttributes,jdbcType=LONGVARCHAR},
+		TESTING_INPUT_ARGS =
+		#{testingInputArgs,jdbcType=LONGVARCHAR},
+		VERIFY_GENE =
+		#{verifyGene,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectBySearcher"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingTask"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+
+		from LIMS_TESTING_TASK
+		where 1=1
+
+		<if test="semantic != null">
+			and SEMANTIC = #{semantic,jdbcType=VARCHAR}
+		</if>
+		<if test="inputSampleId != null">
+			and INPUT_SAMPLE_ID = #{inputSampleId,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+</mapper>

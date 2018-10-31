@@ -1,0 +1,362 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>新增探针</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>	
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<style>
+	button.btn.btn-default.dropdown-toggle {
+	    padding: 14px;
+	    background-color: white;
+	    color: #c5c5c5;
+	    border-color: #e5e6e7;
+	    
+}
+ 
+</style>
+
+<script>
+
+$().ready(function () {
+    var a;
+    var geneLabel=$('#gene').parent().prev();
+    
+    if($('#testingPlatForm').find('option:selected').text()!='MLPA验证') {
+        geneLabel.hide();
+    $('#gene').hide();
+    }
+    
+    $('#testingPlatForm').change(function(){
+        if($(this).find('option:selected').text()=='MLPA验证') {
+            $('#gene').show();
+            geneLabel.show();
+        }else{
+            geneLabel.hide();
+            $('#gene').hide();
+            $('#geneId').val('');
+        }
+     });
+   
+    $("#probeForm").validate({
+        rules: {
+        	code:  {
+        		required:true,
+        		maxlength: 10,
+        		remote: {
+        		    url: "${base}/probe/validate.do",     //后台处理程序
+        		    type: "post",               //数据发送方式
+        		    dataType: "json",           //接受数据格式   
+        		    data: {                     //要传递的数据
+        		        code: function() {
+        		            return $("#code").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+        	},
+        	name: {
+        		required:true,
+        		maxlength: 20,
+        		remote: {
+        		    url: "${base}/probe/validate.do",     //后台处理程序
+        		    type: "post",               //数据发送方式
+        		    dataType: "json",           //接受数据格式   
+        		    data: {                     //要传递的数据
+        		        name: function() {
+        		            return $("#name").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+        	},
+
+			testingPlatForm: {
+        		required:true,
+        		maxlength: 32
+        	},
+			enabled: {
+        		required:true,
+        		maxlength: 248
+        	},
+        	geneId:{
+        	    required:true,
+                maxlength: 248
+        	},
+           
+        },
+        messages: {
+        	code:  {
+                required: "请输入探针编号",
+                maxlength: "探针编号不能超过10个字符",
+            	remote:"编号已经存在"
+            },
+            name:  {
+            	required: "请输入探针名称",
+            	maxlength: "探针名称不能超过20个字符",
+            	remote:"名称已经存在"
+            },
+
+			testingPlatForm: {
+            	required: "请选择检测平台"
+        	},
+        	enabled: {
+        		required: "请选择状态"
+        	},
+        	geneId: {
+                required: "请选择基因"
+            },
+        }
+   
+       
+    });
+    
+ var testingMethod=$('#testingMethod').magicSuggest({
+     width: 190,
+     highlight: true,
+     data:'${base}/bcm/testing/methods/testingMethodList.do?',
+     method:'get',
+     queryParam:"key",
+     allowFreeEntries:false,
+     renderer: function(v){
+     return '<div>' +
+         '<div >' +
+             '<div  class="probe">' + v.name + '</div>' +
+             '</div>' +
+         '<div style="clear:both;"></div>';
+     }
+ })
+ 
+   $(testingMethod).on('selectionchange', function(e,m){
+    var values='';
+    var testingMethodId=[];
+    var testingMethodIds=$('#testingMethod').magicSuggest().getSelection();
+    $.each(testingMethodIds,function(index,obj){
+        testingMethodId.push(obj.id);
+    })
+    var tIds = testingMethodId.join(",");
+    $('#testingMethodId').val(tIds);
+    $('#testingMethod .ms-sel-item').each(function(){
+        var value=$(this).text();
+        values=(values+value).trim();
+        a=values;
+       if(values!='MLPA验证MLPA检测'&&values!='MLPA检测MLPA验证'&&values!='MLPA验证'&&values!='MLPA检测'){
+                geneLabel.hide();
+                $('#gene').hide();
+            }else{
+                geneLabel.show();
+                $('#gene').show(); 
+            }
+    })
+    })
+<#if testingMethodList??>
+    <#if testingMethodList!='[]'>
+    $('#testingMethod').magicSuggest().setSelection(${testingMethodList});
+        var principalId=[];
+        var productPrincipalList=$('#testingMethod').magicSuggest().getSelection();
+        $.each(productPrincipalList,function(index,obj){
+            principalId.push(obj.id);
+        })
+        var principalIds = principalId.join(",");
+        $("#testingMethodId").val(principalIds);
+    </#if>
+    </#if>
+    
+    
+    //changeFormAttr();
+    
+    var s=  $('#gene').magicSuggest({
+        width: 190,
+        highlight: true,
+        data:'${base}/gene/list.do?',
+        method:'get',
+        queryParam:"key",
+        allowFreeEntries:false,
+        renderer: function(v){
+        return '<div>' +
+            '<div >' +
+                '<div  class="probe">' + v.name + '</div>' +
+                '</div>' +
+            '<div style="clear:both;"></div>';
+        }
+        
+    });
+    
+    <#if geneList??>
+    <#if geneList!='[]'>
+    $('#gene').magicSuggest().setSelection(${geneList});
+        var principalId=[];
+        var productPrincipalList=$('#gene').magicSuggest().getSelection();
+        $.each(productPrincipalList,function(index,obj){
+            principalId.push(obj.id);
+        })
+        var principalIds = principalId.join(",");
+        $("#geneId").val(principalIds);
+    </#if>
+    </#if>
+    $(s).on('selectionchange', function(e,m){
+    var principalId=[];
+    var productPrincipalList=$('#gene').magicSuggest().getSelection();
+    $.each(productPrincipalList,function(index,obj){
+        principalId.push(obj.id);
+    })
+    var principalIds = principalId.join(",");
+    $("#geneId").val(principalIds);
+    })
+    
+    $("form").submit( function(e){
+           if(a=='MLPA验证MLPA检测'||a=='MLPA检测MLPA验证'||a=='MLPA验证'||a=='MLPA验证'){
+               if($('#geneId').val()==''){
+                   parent.layer.alert('请选择基因！',{title:"提示"});
+               return false; // 返回值为false，将阻止表单提交
+               }
+            }
+    } );
+
+    
+});   
+
+
+
+</script>
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">探针</a></li>
+							
+							<li class="active"><strong>${(flag)!?html}</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>探针</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="probeForm" class="form-horizontal m-t"
+							action="${base}/probe/probeModify.do" method="post"
+							enctype='application/json'>
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<input type="hidden" name="id" id="id" value="${(probe.id)!?html}" />
+							<fieldset>
+								<div class="form-group">
+
+
+										<label class="col-sm-2 control-label control-required">探针编号：</label>
+										<div class="col-sm-3">
+											<input type="text" class="form-control" name="code"
+												id="code" value="<#if probe.code??>${(probe.code)!?html}<#else>系统自动生成</#if>"  readonly="readonly"/>
+										</div>
+
+										<label class="col-sm-2 control-label control-required">探针名称：</label>
+
+										<div class="col-sm-3">
+											<input type="text" class="form-control" name="name"
+												id="name" value="${(probe.name)!?html}" />
+										</div>
+
+								 </div>
+
+								<div class="form-group">
+
+									<label class="col-sm-2 control-label control-required">适用检测平台：</label>
+									<div class="col-sm-3">
+                                    <input type="hidden" name="testingPlatForm" id="testingMethodId"  />
+                                    <div class="form-control" id="testingMethod" placeholder="请选择检测平台"></div>
+                                    </div>
+                                
+                                <label class="col-sm-2 control-label control-required" >基因：</label>
+                                
+                                <div class="col-sm-3">
+                                <input type="hidden" name="geneId" id="geneId"  />
+                                    <div class="form-control" id="gene" placeholder="请选择基因"></div>
+                                </div>
+								</div>
+								<div class="form-group">
+								
+									
+									<label class="col-sm-2 control-label control-required">状态：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="enabled" data-value=${(probe.enabled)!} >
+                                        <option value="">请选择状态</option>
+                                   
+                                        <option value="0"  <#if probe.enabled??><#if probe.enabled==0 >selected</#if></#if>>可用</option>
+                                        <option value="1"  <#if probe.enabled??><#if probe.enabled==1 >selected</#if></#if>>不可用</option>
+                                      
+                                    </select>
+									</div>
+									
+									<label class="col-sm-2 control-label">备注：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="remark"
+											id="remark" value="${(probe.remark)!?html}" />
+
+									</div>
+									
+								</div>
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"  class="btn btn-primary" >保存</button>
+										<button class="btn btn-primary goback" type="button" >返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+								
+                          
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+
+</html>

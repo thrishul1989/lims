@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>检测实验</span></li>
+							<li class="active"><strong>数据分析复核</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>数据复核任务列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/testing/technical_recheck_list.do"
+							method="post" class="search-form form-inline" id="tecanalys_form">
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">测序编号：</label> <input type="text"
+										class="form-control" name="testingSequencingCode"
+										value="${(searcher.testingSequencingCode)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">合同编号：</label> <input type="text"
+										class="form-control" name="orderContractCode"
+										value="${(searcher.orderContractCode)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">检测产品：</label> <input type="text"
+										class="form-control" name="productName"
+										value="${(searcher.productName)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">客户姓名：</label> <input type="text"
+										class="form-control" name="orderCustomerName"
+										value="${(searcher.orderCustomerName)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">是否参与：</label> <select
+										class="form-control" name="orderCustomerAssist"
+										data-value="${(searcher.orderCustomerAssist)!?html}">
+										<option value="">所有类型</option>
+										<option value="1/0">参与技术分析</option>
+										<option value="0/1">参与报告评审</option>
+										<option value="1/1">参与技术分析与报告评审</option>
+										<option value="0/0">不参与</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">送检单位：</label> <input type="text"
+										class="form-control" name="orderCustomerCompany"
+										value="${(searcher.orderCustomerCompany)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">技术负责人：</label> <input type="text"
+										class="form-control" name="productTechPrincipals"
+										value="${(searcher.productTechPrincipals)!?html}">
+								</div>
+							</div>
+
+							<!-- <div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">产品负责人：</label> <input type="text"
+										class="form-control" name="productDuty"
+										value="${(searcher.productDuty)!?html}">
+								</div>
+							</div>
+ 							-->
+
+						<!-- 	<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">营销中心：</label> <select
+										class="form-control" name="marketingCenter"
+										data-value="${(searcher.marketingCenter)!?html}">
+										<option value="">所有类型</option>
+										<option value="1">临床遗传</option>
+										<option value="2">临床肿瘤</option>
+										<option value="3">健康筛查</option>
+										<option value="4">科技服务</option>
+									</select>
+								</div>
+							</div> -->
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">是否加急：</label> <select
+										class="form-control" name="ifUrgent"
+										data-value="${(searcher.ifUrgent)!?html}">
+										<option value="">所有类型</option>
+										<option value="1">是</option>
+										<option value="0">否</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-sm btn-success">
+									<i class="fa fa-search"></i> 查询
+								</button>
+								<button type="button" class="btn btn-sm btn-success"
+									onclick="clearCondition('tecanalys_form')">
+									<i class="fa fa-remove"></i> 清空
+								</button>
+							</div>
+						</form>
+					</div>
+					<div class="ibox-content" style="overflow: scroll;">
+						<table class="table table-striped table-bordered table-hover" >
+							<thead>
+								<tr>
+									
+									<th class="index">序号</th>
+									<th>测序编号</th>
+									<th>数据编号</th>
+									<th>订单编号</th>
+									<th>样本编号</th>
+									<th>样本名称</th>
+									<th>营销中心</th>
+									<th>检测产品</th>
+									<th>客户姓名</th>
+									<th>是否参与</th>
+									<th>送检单位</th>
+									<th>技术负责人</th>
+									<th>报告日期</th>
+									<th>是否正常</th>
+									<th>应完成日期</th>
+									<th>是否加急</th>
+
+									<th>补测次数</th>
+									<th>原Lane号</th>
+
+
+									<th class="flexible-btns">操作</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								  <#if res??> <#list res?keys as key>
+								  <#list res[key] as record>
+								  <#if record_index == 0>
+								  <tr>
+
+
+									<td rowspan="${res[key]?size}">${key_index + 1}</td>
+									<td>${(record.testingSequencingCode)!?html}</td>
+									<td>${(record.testingAnalyDataCode)!?html}</td>
+									<td>${(record.orderCode)!?html}</td>
+									<td>${(record.receivedSampleCode)!?html}</td>
+									<td>${(record.receivedSampleName)!?html}</td>
+									<td>${(record.orderMarketingCenter)!?html}</td>
+									<td title="${(record.productName)!?html}">${(record.productName)!?html}</td>
+									<td>${(record.orderCustomerName)!?html}</td>
+									<td><@dict_entry_text category="ANALYSIS_TYPE"
+										value=record.orderCustomerAssist /></td>
+									<td>${(record.orderCustomerCompany)!?html}</td>
+									<td>${(record.productTechPrincipals)!?html}</td>
+									<td>${record.productReportDeadline!?html}</td>
+									<#if record.resubmit == 1>
+									<td><span style="color: red">异常（${(record.resubmitCount)!0}次）</span>
+									</td> <#else>
+									<td><span style="color: green">正常</span></td> </#if>
+									<td><#if (record.plannedFinishDate)??><#if
+										(record.plannedFinishDate)?string("yyyy-MM-dd") !=
+										"1970-01-01">${(record.plannedFinishDate)?string("yyyy-MM-dd")}</#if></#if></td>
+									<td><#if record.ifUrgent??> <#if record.ifUrgent ==	1>是</#if> </#if></td>
+									<td>${(record.resubmitCount)!?html}</td>
+									<td>${(record.otestingSequencingCode)!?html}</td>
+									<td class="flexible-btns" rowspan="${res[key]?size}">
+									<#if record.status == 4>
+										<a	href="${base}/testing/filter.jsp?sampleCode=${(record.receivedSampleCode)!?html}&dataCode=${(record.testingAnalyDataCode)!?html}&familyGroupId=${key!?html}&recheckTag=1&id=${record.id!?html}">复核</a>
+									<#else>
+										已复核
+									</#if>
+									</td>
+
+
+								</tr>
+								<#else>
+								 <tr>
+
+										
+									<td>${(record.testingSequencingCode)!?html}</td>
+									<td>${(record.testingAnalyDataCode)!?html}</td>
+									<td>${(record.orderCode)!?html}</td>
+									<td>${(record.receivedSampleCode)!?html}</td>
+									<td>${(record.receivedSampleName)!?html}</td>
+									<td>${(record.orderMarketingCenter)!?html}</td>
+									<td title="${(record.productName)!?html}">${(record.productName)!?html}</td>
+									<td>${(record.orderCustomerName)!?html}</td>
+									<td><@dict_entry_text category="ANALYSIS_TYPE"
+										value=record.orderCustomerAssist /></td>
+									<td>${(record.orderCustomerCompany)!?html}</td>
+									<td>${(record.productTechPrincipals)!?html}</td>
+									<td>${record.productReportDeadline!?html}</td>
+									<#if record.resubmit == 1>
+									<td><span style="color: red">异常（${(record.resubmitCount)!0}次）</span>
+									</td> <#else>
+									<td><span style="color: green">正常</span></td> </#if>
+									<td><#if (record.plannedFinishDate)??><#if
+										(record.plannedFinishDate)?string("yyyy-MM-dd") !=
+										"1970-01-01">${(record.plannedFinishDate)?string("yyyy-MM-dd")}</#if></#if></td>
+									<td><#if record.ifUrgent??> <#if record.ifUrgent ==	1>是</#if> </#if></td>
+									<td>${(record.resubmitCount)!?html}</td>
+									<td>${(record.otestingSequencingCode)!?html}</td>
+
+
+								</tr>
+								
+								  </#if>
+								
+								</#list>
+								</#list> <#else>
+								<tr>
+									<td colspan="15">暂无技术分析任务</td>
+								</tr>
+								</#if>
+							</tbody>
+						</table>
+					</div>
+					<#include "../../inc/pagination.html" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+	<script src="${system_js}/system.js?v=1.0.0"></script>
+	<script src="${plugins}/pagination/jquery.pagination.js"></script>
+
+</body>
+</html>

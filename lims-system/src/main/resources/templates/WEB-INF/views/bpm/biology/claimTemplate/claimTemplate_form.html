@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>分析要求配置</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/html" id="addTemp">
+<#include "./claimTemplate_add_temp.html" />
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/claimTemplate/list.do">分析要求配置</a>
+                            </li>
+                            <li class="active">
+                                <strong class="toggle-title">新增分析要求</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5 class="toggle-title">新增内容要求</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="claimTemplate_form" class="form-horizontal toggle-form" action="${base}/claimTemplate/create.do" method="post">
+                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                        	<input id="id" type="hidden" name="id" value="${(data.id)!?html}"/>
+                        	<div class="form-group">
+								<label class="col-sm-2 control-label control-required">分析内容：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="name" id="name" value="${(data.name)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">名称：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="symbol" id="symbol" value="${(data.symbol)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">描述：</label>
+								<div class="col-sm-8">
+									<textarea  class="form-control"
+											name="explanation" id="explanation"
+											style="height:80px;resize: none">${(data.explanation)!?html}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">配置模板：</label>
+								<div class="col-sm-3">
+									<select name="templateId" id="templateId" class="form-control" required>
+											<option value="">--请选择--</option>
+											<#if dataTemplateList??><#list dataTemplateList as entry>
+											<option value="${entry.id!}"<#if data??><#if entry.id==data.templateId!?html >selected</#if></#if> >${entry.name!?html}</option> </#list>
+											</#if>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">配置默认值：</label>
+								<div class="col-sm-9">
+									<div id="requestChoose"></div>
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+		                                    <tr>
+		                                        <th class="col-sm-1">序号</th>
+		                                        <th class="col-sm-2">突变数据项</th>
+		                                        <th class="col-sm-3">筛选项</th>
+		                                        <th class="col-sm-2">默认值</th>
+		                                        <th class="col-sm-1">排序</th>
+		                                        <th class="col-sm-1">操作</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                	<#if data??>
+		                                		<#if (data.columnList)?has_content> <#list data.columnList as column>
+		                                			<#if column_index == 0>
+		                                			<tr>
+				                                        <td class="index">${column_index + 1}</td>
+				                                        <td>
+				                                        	<select name="columnList[${column_index}].dataTemplateColumnId" class="form-control dataTemplateColumnId" required>
+	        													<option value="">--请选择--</option>
+	        													<#if dataTemplateColumnList??><#list dataTemplateColumnList as entry>
+																	<option value="${entry.id!}" attr-semantic="${entry.semantic!?html}" attr-type="${entry.type!?html}" <#if data??><#if entry.id==column.dataColumnId!?html >selected</#if></#if> >${entry.columnName!?html}</option> </#list>
+																</#if>
+    														</select>
+				                                        </td>
+				                                        <td>
+				                                        	<#if "3"==column.type!?html>
+				                                        		<div style="display: none; width: 100%;" class="moveDiv">
+																<div style="display: table-cell;"><div class="form-control filterName" id="filterName${column_index}"
+																	placeholder="请选择"></div>
+																	</div>
+																<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+															</div>	
+				                                        		<#else>
+				                                        		<div style="display: table; width: 100%;" class="moveDiv">
+																<div style="display: table-cell;"><div class="form-control filterName" id="filterName${column_index}"
+																	placeholder="请选择"></div>
+																	</div>
+																<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+															</div>	
+				                                        	</#if>
+															<input type="hidden" name="columnList[${column_index}].filterName" class="inputFilterName"/>
+				                                        </td>
+				                                        <td>
+					                                        <#if "1"==column.type!?html>
+					                                        	<div style="display: inline;" class="defaultValueMoveDiv">
+																	<div class="form-control defaultValue" id="defaultValue${column_index}" 
+																		placeholder="请选择"></div>
+																</div>
+																<#else>
+																<div style="display: none;" class="defaultValueMoveDiv">
+																	<div class="form-control defaultValue" id="defaultValue${column_index}" 
+																		placeholder="请选择"></div>
+																</div>
+					                                        </#if>
+				                                        	<#if "2"==column.type!?html>
+				                                        		<div style="display: inline;" class="radioDiv">
+																<select name="columnList[${column_index}].radioValue" class="form-control radioValue">
+																	<option value="">--请选择--</option>
+																	<#if column.filterItemsList??><#list column.filterItemsList as entry>
+																		<option value="${entry.name!}"<#if entry.name==column.radioValue!?html >selected</#if> >${entry.name!?html}</option> </#list>
+																	</#if>
+																</select>
+																</div>
+																<#else>
+																<div style="display: none;" class="radioDiv">
+																<select name="columnList[${column_index}].radioValue" class="form-control radioValue">
+																	<option value="">--请选择--</option>
+																</select>
+																</div>
+				                                        	</#if>
+															<input type="hidden" name="columnList[${column_index}].defaultValue" class="inputDefaultValue"/>
+															
+															<#if "3"==column.type!?html>
+																<div style="display: inline;" class="rangeDiv">
+																<input class="rangeValue1" name="columnList[${column_index}].rangeValue1" type="text" style="width: 60px;" value="${column.rangeValue1!?html}"/>-<input class="rangeValue2" name="columnList[${column_index}].rangeValue2" type="text" style="width: 60px;" value="${column.rangeValue2!?html}"/>
+															</div>
+															<#else>
+																<div style="display: none;" class="rangeDiv">
+																<input class="rangeValue1" name="columnList[${column_index}].rangeValue1" type="text" style="width: 60px;"/>-<input class="rangeValue2" name="columnList[${column_index}].rangeValue2" type="text" style="width: 60px;"/>
+															</div>
+															</#if>
+														</td>
+				                                        
+				                                        <td><input name="columnList[${column_index}].columnIndex" class="form-control columnIndex" type="text" value="${column.columnIndex!?html}" required onkeyup="checkInput(this)" maxlength = 9>
+				                                        	<input name="columnList[${column_index}].id" type="hidden" class="id" value="${column.id!?html}"/></td>
+				                                        <td>
+															<a href="javascript:;" class="btn btn-sm btn-success add"><i class="fa fa-plus"></i> 新增列</a>
+														</td>
+				                                    </tr>
+		                                			<#else>
+		                                			<tr>
+				                                        <td class="index">${column_index + 1}</td>
+				                                        <td>
+				                                        	<select name="columnList[${column_index}].dataTemplateColumnId" class="form-control dataTemplateColumnId" required>
+	        													<option value="">--请选择--</option>
+	        													<#if dataTemplateColumnList??><#list dataTemplateColumnList as entry>
+																	<option value="${entry.id!}" attr-semantic="${entry.semantic!?html}" attr-type="${entry.type!?html}" <#if data??><#if entry.id==column.dataColumnId!?html >selected</#if></#if> >${entry.columnName!?html}</option> </#list>
+																</#if>
+    														</select>
+				                                        </td>
+				                                        <td>
+				                                        	<#if "3"==column.type!?html>
+				                                        		<div style="display: none; width: 100%;" class="moveDiv">
+																<div style="display: table-cell;"><div class="form-control filterName" id="filterName${column_index}"
+																	placeholder="请选择"></div>
+																	</div>
+																<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+															</div>
+															<#else>
+																<div style="display: table; width: 100%;" class="moveDiv">
+																<div style="display: table-cell;"><div class="form-control filterName" id="filterName${column_index}"
+																	placeholder="请选择"></div>
+																	</div>
+																<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+															</div>	
+				                                        	</#if>
+															<input type="hidden" name="columnList[${column_index}].filterName" class="inputFilterName"/>
+				                                        </td>
+				                                        <td>
+															<#if "1"==column.type!?html>
+					                                        	<div style="display: inline;" class="defaultValueMoveDiv">
+																	<div class="form-control defaultValue" id="defaultValue${column_index}" 
+																		placeholder="请选择"></div>
+																</div>
+																<#else>
+																<div style="display: none;" class="defaultValueMoveDiv">
+																	<div class="form-control defaultValue" id="defaultValue${column_index}" 
+																		placeholder="请选择"></div>
+																</div>
+					                                        </#if>
+				                                        	<#if "2"==column.type!?html>
+				                                        		<div style="display: inline;" class="radioDiv">
+																<select name="columnList[${column_index}].radioValue" class="form-control radioValue">
+																	<option value="">--请选择--</option>
+																	<#if column.filterItemsList??><#list column.filterItemsList as entry>
+																		<option value="${entry.name!}"<#if entry.name==column.radioValue!?html >selected</#if> >${entry.name!?html}</option> </#list>
+																	</#if>
+																</select>
+																</div>
+																<#else>
+																<div style="display: none;" class="radioDiv">
+																<select name="columnList[${column_index}].radioValue" class="form-control radioValue">
+																	<option value="">--请选择--</option>
+																</select>
+																</div>
+				                                        	</#if>
+															<input type="hidden" name="columnList[${column_index}].defaultValue" class="inputDefaultValue"/>
+															
+															<#if "3"==column.type!?html>
+																<div style="display: inline;" class="rangeDiv">
+																<input class="rangeValue1" name="columnList[${column_index}].rangeValue1" type="text" style="width: 60px;" value="${column.rangeValue1!?html}"/>-<input class="rangeValue2" name="columnList[${column_index}].rangeValue2" type="text" style="width: 60px;" value="${column.rangeValue2!?html}"/>
+															</div>
+															<#else>
+																<div style="display: none;" class="rangeDiv">
+																<input class="rangeValue1" name="columnList[${column_index}].rangeValue1" type="text" style="width: 60px;"/>-<input class="rangeValue2" name="columnList[${column_index}].rangeValue2" type="text" style="width: 60px;"/>
+															</div>
+															</#if>
+														</td>
+														<td><input name="columnList[${column_index}].columnIndex" class="form-control columnIndex" type="text" value="${column.columnIndex!?html}" required onkeyup="checkInput(this)" maxlength = 9>
+															<input name="columnList[${column_index}].id" type="hidden" class="id" value="${column.id!?html}"/></td>
+														<td>
+															<a class="btn btn-sm btn-success remove" href="javascript:;" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56);"><i class="fa fa-trash"></i> 删除</a>
+														</td>
+				                                    </tr>
+		                                			</#if>
+		                                		</#list> </#if>
+		                                	<#else>
+		                                    <tr>
+		                                        <td class="index">1</td>
+		                                        <td>
+		                                        	<select name="columnList[${0}].dataTemplateColumnId" class="form-control dataTemplateColumnId" required>
+	        											<option value="">--请选择--</option>
+    												</select>
+		                                        </td>
+		                                        <td>
+				                                    <!-- <select name="columnList[${0}].filterName" class="form-control filterName" required>
+														<option value="">--请选择--</option>
+													</select> -->
+													<div style="display: table; width: 100%;" class="moveDiv">
+														<div style="display: table-cell;"><div class="form-control filterName" id="filterName0"
+															placeholder="请选择"></div>
+															</div>
+														<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+													</div>	
+													<input type="hidden" name="columnList[${0}].filterName" class="inputFilterName"/>	 
+				                                </td>
+		                                        <td>
+		                                        	
+													<div style="display: none;" class="defaultValueMoveDiv">
+														<div class="form-control defaultValue" id="defaultValue0" 
+															placeholder="请选择"></div>
+													</div>
+													<input type="hidden" name="columnList[${0}].defaultValue" class="inputDefaultValue"/>
+													<div style="display: none;" class="rangeDiv">
+														<input class="rangeValue1" name="columnList[${0}].rangeValue1" type="text" style="width: 60px;"/>-<input class="rangeValue2" name="columnList[${0}].rangeValue2" type="text" style="width: 60px;"/>
+													</div>
+													<div style="display: none;" class="radioDiv">
+														<select name="columnList[${0}].radioValue" class="form-control radioValue">
+															<option value="">--请选择--</option>
+														</select>
+													</div>
+												</td>
+		                                        <td><input name="columnList[${0}].columnIndex" class="form-control columnIndex" type="text" required onkeyup="checkInput(this)" maxlength = 9/></td>
+		                                        <td>
+													<a href="javascript:;" class="btn btn-sm btn-success add"><i class="fa fa-plus"></i> 新增列</a>
+												</td>
+		                                    </tr>
+		                                    </#if>
+		                                </tbody>
+									</table>
+								</div>
+							</div>
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-5" style="margin-top: 10px;">
+									<button type="button" class="btn btn-primary" id="btn" onclick="subForm(this)">保存</button>
+									<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+								</div>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="modal fade" id="add_dialog" tabindex="-1" role="dialog"	aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated bounceInRight"	style="width: 550px; margin-left: 160px; margin-top: 100px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">添加筛选项</h4>
+					</div>
+					<div class="modal-body">
+						<div>
+							<form action="#" method="post" class="search-form form-inline"
+								id="remark_form">
+								<input type="hidden" id="semantic" name="semantic" value="" />
+								<div style="width: 450px;">
+									<div class="form-group">
+										<label class="control-label">筛选项：</label> <input type="text"
+											class="form-control" id="filterNameValue" style="width: 350px;" />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="add_but">确定</button>
+						<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+</body>
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${system_js}/claimTemplate/claimTemplate.js?v=1.0.0"></script>
+<script type="text/javascript">
+var base = "${base}";
+var flag = false;
+var b = null;
+var c = null;
+$(function(){
+	<#if data??>
+	$('.toggle-title').empty().append('修改分析要求');
+	$('.toggle-form').attr('action','${base}/claimTemplate/modify.do');
+	<#if data.columnList?has_content>
+		<#if data.columnList[0].filterName?has_content>
+			b = ${data.columnList[0].filterName};
+		</#if>
+		<#if data.columnList[0].defaultValue?has_content>
+			c = ${data.columnList[0].defaultValue};
+		</#if>
+	    
+		<#list data.columnList as col >
+		<#if col_index != 0>
+			var cola = eval('${col.filterName}');
+			var semantic=null;
+			<#if col.semantic??>
+				semantic = '${col.semantic}';
+			</#if>
+			//console.info(cola);
+			var opts = {
+					width: 190,
+				    highlight: true,
+				    data:'${base}/claimTemplate/getItemList.do',
+				    method:'get',
+				    queryParam:"name",
+				    allowFreeEntries:false,
+				    dataUrlParams:{semantic:semantic},
+				    renderer: function(v){
+				    return '<div>' +
+				        '<div >' +
+				        
+				            '<div  class="probe">' + v.name + '</div>' +
+				           
+				        '<div style="clear:both;"></div>';
+				    }	
+			};
+			$('#filterName${col_index}').magicSuggest(opts);
+			if(null != cola)
+			{
+				$('#filterName${col_index}').magicSuggest(opts).setSelection(cola);
+			}
+			$($('#filterName${col_index}').magicSuggest(opts)).on('beforeload', function(e, s){
+			var $tr = $('#filterName${col_index}').closest('tr');
+	        var attrSemantic = $tr.find(".dataTemplateColumnId").find("option:selected").attr("attr-semantic");
+	        if(null != attrSemantic || undefined != attrSemantic)
+	        {
+	        	s.setDataUrlParams({semantic:attrSemantic});
+	        }
+	        else
+	        {
+	        	s.setDataUrlParams({semantic:''});
+	        }
+			}); 
+			<#if col.type??>
+			<#if col.type == '1'>
+				var colb = null;
+				<#if col.defaultValue??>
+					var colb = eval('${col.defaultValue}');
+				</#if>
+				$('#defaultValue${col_index}').magicSuggest(opts);
+				if(null != colb)
+				{
+					$('#defaultValue${col_index}').magicSuggest(opts).setSelection(colb);
+				}
+				$($('#defaultValue${col_index}').magicSuggest(opts)).on('beforeload', function(e, s){
+					var $tr = $('#defaultValue${col_index}').closest('tr');
+			        var attrSemantic = $tr.find(".dataTemplateColumnId").find("option:selected").attr("attr-semantic");
+			        if(null != attrSemantic || undefined != attrSemantic)
+			        {
+			        	s.setDataUrlParams({semantic:attrSemantic});
+			        }
+			        else
+			        {
+			        	s.setDataUrlParams({semantic:''});
+			        }
+				}); 
+			</#if>
+			</#if>
+		</#if>
+	</#list>
+	</#if>
+	</#if>
+	
+	var filterName=$('#filterName0').magicSuggest({
+	    width: 190,
+	    highlight: true,
+	    data:'${base}/claimTemplate/getItemList.do',
+	    method:'get',
+	    queryParam:"name",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	           
+	        '<div style="clear:both;"></div>';
+	    }
+	})
+	if(null != b)
+	{
+		filterName.setSelection(b);
+	}
+	 $(filterName).on('beforeload', function(e, s){
+		var $tr = $('#filterName0').closest('tr');
+		//console.info($tr); 
+        var attrSemantic = $tr.find(".dataTemplateColumnId").find("option:selected").attr("attr-semantic");
+        if(null != attrSemantic || undefined != attrSemantic)
+        {
+        	s.setDataUrlParams({semantic:attrSemantic});
+        }
+        else
+        {
+        	s.setDataUrlParams({semantic:''});
+        }
+	}); 
+	var defaultValue=$('#defaultValue0').magicSuggest({
+	    width: 190,
+	    highlight: true,
+	    data:'${base}/claimTemplate/getItemList.do',
+	    method:'get',
+	    queryParam:"name",
+	    dataUrlParams:{
+	    	semantic:"acmgs"
+	    },
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	           
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	if(null != c)
+	{
+		defaultValue.setSelection(c);
+	}
+	$(defaultValue).on('beforeload', function(e, s){
+		var $tr = $('#defaultValue0').closest('tr');
+		//console.info($tr); 
+        var attrSemantic = $tr.find(".dataTemplateColumnId").find("option:selected").attr("attr-semantic");
+        if(null != attrSemantic || undefined != attrSemantic)
+        {
+        	s.setDataUrlParams({semantic:attrSemantic});
+        }
+        else
+        {
+        	s.setDataUrlParams({semantic:''});
+        }
+	}); 
+	
+//添加保存
+$('#add_but').on('click', function() {
+	var filterNameValue = $('#filterNameValue').val();
+	var semantic = $('#semantic').val();
+    	
+	if('' == filterNameValue){
+		parent.layer.alert('请输入筛选项',{title:"提示"});
+	}else{
+		$.ajax({
+			 type:"POST",
+			 traditional: true,
+			 url: '${base}/claimTemplate/saveItem.do',
+			 data:{
+				name : filterNameValue,
+                semantic : semantic
+                },
+			 async: false,
+			 success:function(data){
+				{
+					parent.layer.alert("添加成功",{title:"提示"});
+					$('.table tbody tr').each(function(i,v){
+						var $radio = $(this).find('td').eq(3).find('.radioValue');
+						if(!$radio.is(":hidden"))
+						{
+							$radio.append("<option value="+filterNameValue+">"+filterNameValue+"</option>");
+						}
+					});
+				 }
+				 $('#add_dialog').modal('hide');
+		    },
+			 error:function(){
+				parent.layer.alert('操作失败',{title:"提示"});
+			}
+		});
+	}
+});
+});
+function subForm(obj){
+	var arr = [];
+	var tr_ = $(obj).parents('form').find('tbody tr');
+	tr_.each(function(i,v){
+		arr.push($(v).find('td').eq(4).find('input').val());
+	});
+	if(isRepeat(arr)){
+		alert("排序列有重复值！")
+		return false;
+	}
+	$('.table tbody tr').each(function(i,v){
+		var type = $(this).find(".dataTemplateColumnId").find("option:selected").attr("attr-type");
+		var arr =[];
+		var arr2 =[];
+		var arrName=[];//2018.2.6  单选判断
+		var selectVal = null;//2018.2.6  单选判断
+		var role = $('#filterName'+i).magicSuggest().getSelection();
+		$.each(role,function(index,obj){
+            arr.push(obj.id);
+        })
+        $("input[name=\"columnList["+i+"].filterName\"]").val(arr.join(","));
+		if(1==type)
+		{
+			var dv = $('#defaultValue'+i).magicSuggest().getSelection();
+			 $.each(dv,function(index,obj){
+		            arr2.push(obj.id);
+		     })
+		     $("input[name=\"columnList["+i+"].defaultValue\"]").val(arr2.join(","));
+		}
+        if(2==type)
+        {
+        	$.each(role,function(index,obj){
+                arrName.push(obj.name);
+            })
+        	selectVal = $(this).find(".radioValue").find("option:selected").val();
+        }
+        //2018.2.1  判断
+        console.info(type);
+        if(1==type)
+        {
+        	  if(null != arr && arr.length > 0)
+              {
+              	if(null != arr2 && arr2.length > 0)
+              	{
+              		if(arr2.length > arr.length)
+                  	{
+                  		flag = true;
+                  		alert("第"+(i+1)+"行：默认值与筛选项不匹配！");
+                  		return false;
+                  	}
+              		else
+              		{
+              			var aStr = arr.toString();
+              			for(var k = 0;k<arr2.length;k++)
+              			{
+              				if(aStr.indexOf(arr2[k]) == -1)
+              				{
+              					flag = true;
+                          		alert("第"+(i+1)+"行：默认值与筛选项不匹配！");
+              					return false;
+              				}
+              				else
+              				{
+              					flag = false;
+              				}
+              			}
+              		} 
+              	}
+              	else
+              	{
+              		flag = false;
+              	}
+              }
+              else
+              {
+              	if(null != arr2 && arr2.length > 0)
+              	{
+                  		flag = true;
+                  		alert("第"+(i+1)+"行：默认值与筛选项不匹配！");
+                  		return false;
+              	}
+              	else
+              	{
+              		flag = false;
+              	}
+              }
+        }
+        
+        if(2==type)
+        {
+        	 if(null != arrName && arrName.length > 0)
+             {
+             	if(null != selectVal)
+             	{
+             			var aStr = arrName.toString();
+             				if(aStr.indexOf(selectVal) == -1)
+             				{
+             					flag = true;
+                         		alert("第"+(i+1)+"行：默认值与筛选项不匹配！");
+             					return false;
+             				}
+             				else
+             				{
+             					flag = false;
+             				}
+             	}
+             	else
+             	{
+             		flag = false;
+             	}
+             }
+             else
+             {
+             	if(null != selectVal )
+             	{
+                 		flag = true;
+                 		alert("第"+(i+1)+"行：默认值与筛选项不匹配！");
+                 		return false;
+             	}
+             	else
+             	{
+             		flag = false;
+             	}
+             }
+        }
+
+	});
+	console.info(flag);
+	if(!flag){
+		$('#claimTemplate_form').submit();
+	}
+}
+
+function isRepeat(arr){ 
+	var hash = {}; 
+	for(var i =0;i<arr.length;i++) 
+	{
+		if(null != arr[i] && "" != arr[i])
+		{
+			if(hash[arr[i]]) 
+			{
+				return true; 
+			}
+			else
+			{
+				hash[arr[i]] = true;
+			}
+		}
+	} 
+	return false;  
+} 
+//添加
+	function add(e)
+	{
+		var $tr = $(e).closest('tr');
+		var semantic = $tr.find('.dataTemplateColumnId').find("option:selected").attr("attr-semantic");
+		if(null == semantic || ""== semantic || undefined == semantic || "undefined"==semantic)
+		{
+			alert("请先选择突变数据项！");
+			return false;
+		}
+		$('#semantic').val(semantic);
+		$('#filterNameValue').val("");
+		$('#add_dialog').modal('show');
+	}
+
+	function checkInput(e)
+	{
+		var o = $(e).val();
+	    var temp_amount = '';
+	    if (/[^\d]/.test(o)) { //替换非数字字符
+	      var temp_amount = o.replace(/[^\d]/g, '');
+	    }else if (/^[0]*/g.test(o)) {
+	      var temp_amount = RegExp.rightContext;
+	    }
+	    $(e).val(temp_amount);
+	}
+</script>
+</html>

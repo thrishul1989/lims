@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+
+</style>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+
+<script type="text/javascript">
+
+var order = ${orderJson};
+var familyGroupId ="${searcher.familyGroupId}";
+console.info(familyGroupId);
+$(function(){
+	
+	var disease=$('#disease').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/disease/diseaseSelect.do',
+	    method:'get',
+	    queryParam:"name",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	            '<div  class="probe">' + v.name + '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	var phenotype=	$('#phenotype').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/phenotype/getPhenotypeSelected.do',
+	    method:'get',
+	    queryParam:"name",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	            '<div  class="probe">' + v.name + '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	var gene= $('#gene').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/disease/geneSelect.do',
+	    method:'get',
+	    queryParam:"symbol",
+	    displayField:'symbol',
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	            '<div  class="probe">' + v.symbol + '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	var examineeDiseaselist=order.orderExamineeList[0].orderExamineeDiagnosis;
+	var examineeDiseases=[];
+	$.each(examineeDiseaselist,function(index,obj){
+		examineeDiseases.push(obj.disease)
+	});
+	 $('#disease').magicSuggest().setSelection(examineeDiseases);
+
+	//初始化临床表型
+	var examineePhenotypeList=order.orderExamineeList[0].orderExamineePhenotype;
+	var examineePhenotypes=[];
+	$.each(examineePhenotypeList,function(index,obj){
+		examineePhenotypes.push(obj.phenotype)
+	});
+	 $('#phenotype').magicSuggest().setSelection(examineePhenotypes);
+
+	//初始化关注基因
+	var geneList=order.orderExamineeList[0].orderExamineeGene;
+	var examineeGenes=[];
+	$.each(geneList,function(index,obj){
+		examineeGenes.push(obj.gene)
+	});
+	 $('#gene').magicSuggest().setSelection(examineeGenes);
+	
+});
+
+
+function modidOrderyDisease(){
+	
+	
+	//临床表型
+	var pt=$('#phenotype').magicSuggest().getSelection();
+	var ptid=[];
+	$.each(pt,function(index,obj){
+		ptid.push(obj.id);
+	})
+	var phenotypes = ptid.join(",");
+	
+	//临床诊断
+	var ds=$('#disease').magicSuggest().getSelection();
+	
+	var dsid=[];
+	$.each(ds,function(index,obj){
+		dsid.push(obj.id);
+	})
+	var diseases = dsid.join(",");
+	
+	//关注基因
+	var gn=$('#gene').magicSuggest().getSelection();
+	var gnid=[];
+	$.each(gn,function(index,obj){
+		gnid.push(obj.id);
+	})
+	var genes = gnid.join(",");
+	
+	$.ajax({
+        type: "POST",
+        url: "${base}/order/modifyOrderDisease.do",
+        data: {
+        		id:order.id,
+	        	orderExamineePhenotype:phenotypes,
+	        	orderExamineeDiagnosis:diseases,
+	        	orderExamineeGene:genes,
+	        	familyGroupId:familyGroupId
+        	},
+        dataType: "json",
+        success: function(data){
+            if (data.flag == 0)
+			{
+                window.location.href="${base}/testing/technicalanaly_sampleinfo.do?orderId="+order.id+"&familyGroupId="+familyGroupId
+                $('#modify_order_disease').modal('hide')
+                alert('正在打分中...请稍后操作！');
+			}
+			else
+			{
+                window.location.href="${base}/testing/technicalanaly_sampleinfo.do?orderId="+order.id+"&familyGroupId="+familyGroupId
+            }
+        },
+        error:function(){
+        }	 
+    });
+	
+	
+}
+
+</script>
+
+
+</head>
+<body class="gray-bg">
+		<div class="wrapper wrapper-content animated">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>订单信息</strong></td>
+                        	</tr>
+                        	<#if record ??>
+                            <tr>
+                                <th class="col-sm-1">订单编号</th>
+                                <td class="col-sm-2">${(record.code)!?html} </td> 
+                                <th class="col-sm-1">订单日期</th>
+                                <td class="col-sm-2">
+                                <#if record.submitTime??> ${(record.submitTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(record.submitTime)!?html} </#if>
+                                </td> 
+ 								<th class="col-sm-1">所属合同</th>
+                                <td class="col-sm-2"><#if record.contract??> ${(record.contract.name)!?html} </#if></td>
+                            </tr>
+                       		<tr>
+                       		    <th class="col-sm-1">客户</th>
+                                <td class="col-sm-2">
+                              		<#if record.owner?? >${(record.owner.name)!?html} </#if>	
+                              	</td>
+                             	<th class="col-sm-1">送检单位</th>
+                                <td class="col-sm-2">
+                             		<#if record.owner??> <#if record.owner.company??> ${(record.owner.company.name)!?html} </#if></#if>	
+                             	</td>
+                             	
+                             	<th class="col-sm-1">科室</th>
+                                <td class="col-sm-2">
+                                	<#if record.owner??> <@dict_entry_text category="BASE_DEPT" value=record.owner.dept /> </#if>	
+                                </td>
+                       		</tr>
+                       		<tr>
+                       		   <th class="col-sm-1">业务员</th>
+                               <td class="col-sm-2">${(record.creatorName)!?html} </td>
+                             
+                       		   <#if record.orderType != "4" >  
+                                <th class="col-sm-1">客户参与</th>
+                                <td class="col-sm-2">
+                               		<@dict_entry_text category="ANALYSIS_TYPE" value=record.doctorAssist />
+								</td>
+							  </#if>
+                       		</tr>
+                       		
+                           </#if>
+                            
+                            
+                       </table>  
+                  
+                                                
+                         <table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="8"><strong>受检人信息</strong></td>
+                        	</tr>
+                        	<#if record.orderExamineeList?has_content>
+                      			<#list record.orderExamineeList as d>
+                        	<tr>
+                        		
+								<th class="col-sm-1">名称</th>
+								<td class="col-sm-2">${d.name!?html}</td>
+								<th class="col-sm-1">性别</th>
+								<td class="col-sm-2"><@dict_entry_text category="SEX" value=d.sex /></td>
+								<th class="col-sm-1">出生日期</th>
+								<td class="col-sm-2">${d.birthday!?html}</td>
+							</tr>
+							<tr>
+								
+								<th class="col-sm-1">年龄</th>
+								<td class="col-sm-2"><#if d.ageSnapshot??>${d.ageSnapshot!?html}<#else> 0 </#if></td>
+								<th class="col-sm-1">民族</th>
+								<td class="col-sm-2"><@dict_entry_text category="BASE_NATION" value=d.nation /></td>
+								<th class="col-sm-1">籍贯</th>
+								<td class="col-sm-2">${d.originFullName!?html}</td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">联系人</th>
+								<td class="col-sm-2">${d.contactName!?html}</td>
+								<th class="col-sm-1">联系电话</th>
+								<td class="col-sm-2">${d.contactPhone!?html}</td>
+								<th class="col-sm-1">联系邮箱</th>
+								<td class="col-sm-2">${d.contactEmail!?html}</td>
+                      		</tr>
+                      		<tr>
+								<th class="col-sm-1">报告收件人姓名</th>
+                                <td class="col-sm-2">${(record.recipientName)!?html}</td>
+                                <th class="col-sm-1">收件人联系电话</th>
+                                <td class="col-sm-2">${(record.recipientPhone)!?html}</td>
+                                <th class="col-sm-1">收件人邮寄地址</th>
+                                <td class="col-sm-2">${(record.recipientAddress)!?html}</td>
+                      			
+                      		</tr>
+                      		<tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="3">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                          
+                          </table>
+                          
+                          
+                          
+                      <table class="table table-striped table-bordered table-hover table-details"  >     
+                        <tr>
+                      		<td colspan="8"><strong>疾病信息</strong>
+                      		
+                      		<div style="float:right ; margin-right:5px "> 
+                      		 	<!-- <a  href="${base}/order/modifyOrderDiesase.do?id=${record.id}" class="btn btn-sm btn-success"> 
+                      		 	<i	class="fa fa-edit"></i>修改疾病信息
+								</a> -->
+								
+								<a class="btn btn-sm btn-success" data-toggle="modal"	data-target="#modify_order_disease">修改疾病信息 </a>
+                      		</div>
+                      		</td>
+                      	</tr>
+                        <#if record.orderExamineeList?has_content>
+                      		<#list record.orderExamineeList as d>
+                        	<tr>
+                        		<th class="col-sm-1">临床诊断</th>
+                        		<td class="col-sm-2"><#if d.orderExamineeDiagnosis?has_content>
+                      				<#list d.orderExamineeDiagnosis as o>
+                      				 	<#if o_index == 0>
+                      					${(o.disease.name)!?html} 
+                      					 <#else>
+                                    	 , ${o.disease.name!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+                      			</td>
+                      			<th class="col-sm-1">临床表型</th>
+                      			<td class="col-sm-2"><#if d.orderExamineePhenotype?has_content>
+                      				<#list d.orderExamineePhenotype as o>
+                      				 	<#if o_index == 0>
+                      					${(o.phenotype.name)!?html} 
+                      					 <#else>
+                                    	 , ${o.phenotype.name!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+                      			</td> 
+                      			
+                        		<th class="col-sm-1">重点关注基因</th>
+                        		<td class="col-sm-2"><#if d.orderExamineeGene?has_content>
+                      				<#list d.orderExamineeGene as o>
+                      				 	<#if o_index == 0>
+                      					${(o.gene.symbol)!?html} 
+                      					 <#else>
+                                    	 , ${o.gene.symbol!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+                      			</td> 
+                      		</tr>
+                      		<tr>
+								<th class="col-sm-1">病史摘要</th>
+								<td class="col-sm-2">${d.medicalHistory!?html}</td>
+								<th class="col-sm-1">家族史摘要</th>
+								<td class="col-sm-2">${d.familyMedicalHistory!?html}</td>
+								<th class="col-sm-1">临床推荐理由</th>
+								<td class="col-sm-2">${d.clinicalRecommend!?html}</td>
+                      		</tr>
+                      		
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="3">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                
+                        </table>
+                        
+                        
+                        <table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="8"><strong>主样本信息</strong></td>
+                        	</tr>
+                        	<#if record.orderPrimarySample?has_content>
+                      		<#list record.orderPrimarySample as d>
+                        	<tr>
+								<th class="col-sm-1">样本编号</th>
+								<td class="col-sm-2">${(d.sampleCode)!?html}</td>
+								<th class="col-sm-1">样本类型</th>
+								<td class="col-sm-2">${(d.sampleTypeName)!?html} </td>
+								<th class="col-sm-1">样本量</th>
+								<td class="col-sm-2">${(d.sampleSize)!?html}${(d.samplereceivingUnit)!?html}</td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">采样时间</th>
+								<td class="col-sm-2">${(d.samplingDate)!?html}</td>
+								<th class="col-sm-1">样本状态</th>
+								<td class="col-sm-2">
+                      					<#if d.samplePackageStatus ??>
+                      						<#if d.samplePackageStatus == 0>待送样</#if>
+	                      					<#if d.samplePackageStatus == 1>送样中</#if>
+											<#if d.samplePackageStatus == 2>已接收样本</#if>
+											<#if d.samplePackageStatus == 3>异常样本</#if>
+											<#if d.samplePackageStatus == 4>已返样样本</#if>
+											<#if d.samplePackageStatus == 5>已取消</#if>
+										</#if>
+								</td>
+								<th class="col-sm-1">检测产品</th>
+								<td class="col-sm-2">
+									<#if record.orderProductList?has_content>
+		                      			<#list record.orderProductList as p>
+		                      				<#if p_index == 0 >
+		                      					${(p.product.name)!?html}
+		                      				<#else>
+		                      					, ${(p.product.name)!?html}
+		                      				</#if>
+		                      			</#list>
+		                      		</#if>
+								</td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                               </#if>
+                           </table>
+                           
+                           
+                           
+                           
+                          <table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="12"><strong>家属样本信息</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>样本编号</td>
+								<td>姓名</td>
+								<td>年龄</td>
+								<td>家属关系</td>
+								<td>样本用途</td>
+								<td>样本类型</td>
+								<td>样本量</td>
+								<td>采样时间</td>
+								<td>样本状态</td>
+                      		</tr>
+                      		
+                      		<#if record.orderSubsidiarySample?has_content>
+                      		<tr>
+                      			<#list record.orderSubsidiarySample as d>
+                      			<td>${d_index+1}</td> 
+                      			<td>${(d.sampleCode)!?html}</td>
+                      			<td>${(d.ownerName)!?html}</td>
+                      			<td>${(d.ownerAge)!?html}</td>
+                      			<td><@dict_entry_text category="FAMILY_RELATION" value=d.familyRelation /></td>
+                      			<td><#if d.purpose != "0" > <@dict_entry_text category="SAMPLE_PURPOSE" value=d.purpose /><#else>  </#if></td>
+                      			<td>${(d.sampleTypeName)!?html}</td>
+                      			<td>${(d.sampleSize)!?html}${(d.samplereceivingUnit)!?html}</td>
+                      			<td>${(d.samplingDate)!?html}</td>
+                      			<td><#if d.samplePackageStatus ??>
+                      					<#if d.samplePackageStatus == 0>待送样</#if>
+                      					<#if d.samplePackageStatus == 1>送样中</#if>
+										<#if d.samplePackageStatus == 2>已接收样本</#if>
+										<#if d.samplePackageStatus == 3>异常样本</#if>
+										<#if d.samplePackageStatus == 4>已返样样本</#if>
+										<#if d.samplePackageStatus == 5>已取消</#if>
+									</#if>
+								</td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="12">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+
+                         </table>
+                         
+                       	 
+                    </div>
+                </div>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+		
+		
+		<div class="modal fade" id="modify_order_disease" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 600px">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+					</button>
+				</div>
+				<div class="modal-content" style="padding:30px 30px ; ">	
+				
+				<form id="productForm" class="form-horizontal m-t"	action="#" method="post"	enctype='application/json'>
+							
+						<div class="form-group">
+							<label class="col-sm-3 control-label ">临床诊断：</label>
+							<div class="col-sm-9">
+								<div class="form-control" id="disease" 	placeholder="请选择临床诊断" ></div>
+							</div>
+						
+						</div>
+						<div class="form-group">
+						
+						    <label class="col-sm-3 control-label ">临床表型：</label>
+							<div class="col-sm-9">
+								<div class="form-control" id="phenotype" placeholder="请选择临床表型" ></div>
+							</div>
+							
+						</div>
+
+						<div class="form-group">
+
+							<label class="col-sm-3 control-label ">重点关注基因：</label>
+							<div class="col-sm-9">
+								<div class="form-control" id="gene"	placeholder="请选择重点关注基因"  ></div>
+						 </div>
+						
+					 </div>
+					 
+					 		
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-4">
+							<input type="button"  class="btn btn-primary"  value="保存" onclick="modidOrderyDisease()" />
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+		
+		
+		
+		
+		
+	</body>
+
+                
+                
+</html>
+

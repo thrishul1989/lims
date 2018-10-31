@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="${system_js}/handlebars-v4.0.5.js"></script> -->
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/wk_create.js?v=1.0.0"></script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>文库构建</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>文库构建任务列表</h5>
+                        <@smm_security_resource resource = "/testing/wk_create_assign.do">
+                        <a href="#" id="btn_assign" class="btn btn-sm btn-success">
+                            <i class="fa fa-plus"></i> 下达任务单
+                        </a>
+                        </@smm_security_resource>
+                        <a href="#" id="btn_choose96" class="btn btn-sm btn-success">
+                            <i class="fa fa-edit"></i> 勾选前96项
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="search_from" action="${base}/testing/wk_create_tasks.do" method="post" class="search-form form-inline">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">订单类型：</label>
+                                    <select class="form-control" name="orderType" data-value="${(searcher.orderType)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">临床遗传</option>
+                                        <option value="2">临床肿瘤</option>
+                                        <option value="3">健康筛查</option>
+                                        <option value="4">科技服务</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">原始样本类型：</label>
+                                    <select class="form-control" name="sampleType" data-value="${(searcher.sampleType)!?html}">
+                                        <option value="">所有类型</option>
+                                        <@bcm_samples type = "1"> <#list samples as s>
+                                        <option value="${s.name!?html}">${s.name!?html}</option>
+                                        </#list> </@bcm_samples>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">样本编号：</label>
+                                    <input type="text" class="form-control" name="sampleCode" value="${(searcher.sampleCode)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">样本名称：</label>
+                                    <input type="text" class="form-control" name="sampleName" value="${(searcher.sampleName)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">合同编号：</label>
+                                    <input type="text" class="form-control" name="contractCode" value="${(searcher.contractCode)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">检测产品：</label>
+                                    <input type="text" class="form-control" name="products" value="${(searcher.products)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">是否正常：</label>
+                                    <select class="form-control" name="resubmit" data-value="${(searcher.resubmit)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="false">正常</option>
+                                        <option value="true">异常</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">是否加急：</label>
+                                    <select class="form-control" name="ifUrgent" data-value="${(searcher.ifUrgent)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-success" style="margin-top: 0;">
+                                    <i class="fa fa-search"></i> 查询
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')">
+                                    <i class="fa fa-remove"></i> 清空
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="check-controller" /></th>
+                                <th class="index">序号</th>
+                                <th>订单类型</th>
+                                <th>检测产品</th>
+                                <th>原始样本类型</th>
+                                <th>原始样本编号</th>
+                                <th>原始样本名称</th>
+                                <th>样本用途</th>
+                                <th>样本类型</th>
+                                <th>样本编号</th>
+                                <th>浓度(ng/ul)</th>
+                                <th>合同编号</th>
+                                <th>检测方法</th>
+                                <th>是否正常</th>
+                                <th>应完成日期</th>
+                                <th>说明</th>
+                                 <th>创建时间</th>
+                                <th>是否加急</th>
+                                <th>出入库状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <#if tasks?? && tasks?has_content> <#list tasks as record>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="check-instance" value="${record.id!}" data-sample-type="${record.sampleTypeId!}" data-storage-status="${record.storageStatus!}" />
+                                </td>
+                                <td>${record_index+1}</td>
+                                <td>${(record.orderType)!?html}</td>
+                                <td title="${(record.products)!?html}"><#if (record.products)?? && record.products?length gt 16>${(record.products)[0..15]}...<#else>${(record.products)!?html}</#if></td>
+                                <td>${(record.originalSampleTypeName)!?html}</td>
+                                <td>${(record.originalSampleCode)!?html}</td>
+                                <td>${(record.originalSampleName)!?html}</td>
+                                <td><@dict_entry_text category="SAMPLE_PURPOSE" value=record.purpose />
+                                <td>${(record.sampleTypeName)!?html}</td>
+                                <td>${(record.sampleCode)!?html}</td>
+                                 <td>${(record.concn)!?html}</td>
+                                <td>${(record.contractCode)!?html}</td>
+                                <td>${(record.testingMethod)!?html}</td>
+                                <td>
+                                    <#if record.resubmit>
+                                    <span style="color: red">异常（${(record.resubmitCount)!0}次）</span>
+                                    <#else>
+                                    <span style="color: green">正常</span>
+                                    </#if>
+                                </td>
+                                <td><#if (record.plannedFinishDate)??><#if (record.plannedFinishDate)?string("yyyy-MM-dd") != "1970-01-01">${(record.plannedFinishDate)?string("yyyy-MM-dd")}</#if></#if></td>
+                                <td>${(record.remark)!?html}</td>
+                                <td><#if (record.startTime)??><#if (record.startTime)?string("yyyy-MM-dd HH:mm:ss") != "1970-01-01 00:00:00">${(record.startTime)?string("yyyy-MM-dd HH:mm:ss")}</#if></#if></td>
+                                <td>
+                                    	<#if record.ifUrgent??>
+                                    		<#if record.ifUrgent == 1>是</#if>
+                                    	</#if>
+                                   </td>
+                                
+                                <#if record.storageStatus??>
+                                <#if record.storageStatus == 2>
+                                <td class='storageStatus'>
+                                    <span style="color: red">已出库</span>
+                                </td>
+                                <#elseif record.storageStatus == 1>
+                                <td class='storageStatus'>
+                                    <span style="color: green">未出库</span>
+                                </td>
+                                </#if>
+                                <#else>
+                                 <td class='storageStatus'>
+                                       <span style="color: blue">未入库</span>
+                                   </td>
+                                </#if>
+                            </tr>
+                            </#list> <#else>
+                            <tr>
+                                <td colspan="15">暂无文库构建任务</td>
+                            </tr>
+                            </#if>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="full" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">下达任务单-文库构建</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="assign_frame" src="" name ='assign_frame'target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="released">下达</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form action="/testing/wk_create_assign.do" target="assign_frame" method="post" id="testForm">
+            <input type="hidden" id="keys" name="keys">
+            <input type="hidden" id="sampleType" name="sampleType">
+        </form>
+    </div> 
+</body>
+</html>

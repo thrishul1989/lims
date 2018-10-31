@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>修改系统参数配置</title>
+	<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+	<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+		  rel="stylesheet">
+	<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+		  rel="stylesheet">
+	<link href="${system_css}/animate.min.css" rel="stylesheet">
+	<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+	<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+
+	<!-- 表单验证 -->
+	<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+				&times;
+			</button>
+			<div class="ibox">
+				<div class="ibox-title">
+					<ol class="breadcrumb">
+						<li><a href="${base}/config/list.do">系统参数配置管理</a></li>
+						<li class="active"><strong>修改系统参数</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="ibox">
+				<div class="ibox-title">
+					<ol class="breadcrumb">
+						<li class="active"><strong>系统参数配置</strong></li>
+					</ol>
+				</div>
+
+				<div class="ibox-content" >
+					<form class="form-horizontal m-t toggle-form" id="configForm"
+						  action="${base}/config/modify.do" method="post">
+						<input type="hidden" id="id" name="id" value="${(data.id)!?html}" />
+						<div class="search-form">
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">配置名称：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="configName" id="configName" value="${(data.configName)!?html}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">key：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="key" id="key" readonly="readonly"	value="${(data.key)!?html}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">value：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="value" id="value" value="${(data.value)!?html}" />
+									<input type="hidden" class="form-control" name="maintainType" id="maintainType"  value="${(data.maintainType)!?html}" />
+									<input type="hidden" class="form-control" name="valueType" id="valueType"  value="${(data.valueType)!?html}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-2 text-center">
+								<button class=" btn btn-primary " type="button" id="sub">保存</button>
+								<button type="button" class="btn btn-primary" id="goback">返回</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+			<!-- </div>
+        </div> -->
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#sub').on('click',function(){
+		$('#configForm').submit();
+	})
+	$("#goback").on('click',function(){
+		window.history.back(-1);
+	})
+
+	$('#value').blur(function(){
+		var value = $(this).val();
+		var valueType = $('#valueType').val();
+		if(1 == valueType){
+			if(isNaN(value)){
+				parent.parent.layer.alert('此配置项值必须为数字！', {title : "提示"});
+				$(this).val('');
+			}
+		}
+	});
+</script>
+</body>
+</html>

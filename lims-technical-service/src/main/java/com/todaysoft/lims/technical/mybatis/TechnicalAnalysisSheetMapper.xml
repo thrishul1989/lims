@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TechnicalAnalysisSheetMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.model.TechnicalAnalysisSheetModel" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />  <!--这里的TASK_ID实际上是FAMILY_GROUP_ID-->
+    <result column="TESTER_ID" property="testerId" jdbcType="VARCHAR" />
+    <result column="TESTER_NAME" property="testerName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="getSheetByFamilyGroupId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+		sheet.ID,
+		sheet.CODE,
+		sheet.TESTER_NAME,
+		sheet.CREATE_TIME
+		FROM
+		TECHNICAL_ANALYSIS_SHEET sheet
+    where
+    sheet.TASK_ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+    <select id="getSheet" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        sheet.TASK_ID,
+        sheet.CODE,
+        sheet.TESTER_NAME,
+        sheet.CREATE_TIME
+        FROM
+        TECHNICAL_ANALYSIS_SHEET sheet
+        where
+        sheet.ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

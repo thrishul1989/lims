@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.ReceivedSampleMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.ReceivedSample" >
+    <id column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+    <result column="BUSINESS_TYPE" property="businessType" jdbcType="BIT" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="TYPE_ID" property="typeId" jdbcType="VARCHAR" />
+    <result column="TYPE_NAME" property="typeName" jdbcType="VARCHAR" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+    <result column="SAMPLE_SIZE" property="sampleSize" jdbcType="DECIMAL" />
+    <result column="SAMPLING_DATE" property="samplingDate" jdbcType="TIMESTAMP" />
+    <result column="PURPOSE" property="purpose" jdbcType="BIT" />
+    <result column="LS_LOCATION" property="lsLocation" jdbcType="VARCHAR" />
+    <result column="LS_SIZE" property="lsSize" jdbcType="DECIMAL" />
+    <result column="LS_STATUS" property="lsStatus" jdbcType="BIT" />
+    <result column="TS_LOCATION" property="tsLocation" jdbcType="VARCHAR" />
+    <result column="TS_SIZE" property="tsSize" jdbcType="DECIMAL" />
+    <result column="TS_STATUS" property="tsStatus" jdbcType="BIT" />
+    <result column="PROCESS_STATUS" property="processStatus" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SAMPLE_ID, BUSINESS_TYPE, ORDER_ID, TYPE_ID, TYPE_NAME, SAMPLE_CODE, SAMPLE_NAME, 
+    SAMPLE_SIZE, SAMPLING_DATE, PURPOSE, LS_LOCATION, LS_SIZE, LS_STATUS, TS_LOCATION, 
+    TS_SIZE, TS_STATUS, PROCESS_STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_RECEIVED_SAMPLE
+    where SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBySampleCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from LIMS_RECEIVED_SAMPLE
+    where SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_RECEIVED_SAMPLE
+    where SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReceivedSample" >
+    insert into LIMS_RECEIVED_SAMPLE (SAMPLE_ID, BUSINESS_TYPE, ORDER_ID, 
+      TYPE_ID, TYPE_NAME, SAMPLE_CODE, 
+      SAMPLE_NAME, SAMPLE_SIZE, SAMPLING_DATE, 
+      PURPOSE, LS_LOCATION, LS_SIZE, 
+      LS_STATUS, TS_LOCATION, TS_SIZE, 
+      TS_STATUS, PROCESS_STATUS)
+    values (#{sampleId,jdbcType=VARCHAR}, #{businessType,jdbcType=BIT}, #{orderId,jdbcType=VARCHAR}, 
+      #{typeId,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, #{sampleCode,jdbcType=VARCHAR}, 
+      #{sampleName,jdbcType=VARCHAR}, #{sampleSize,jdbcType=DECIMAL}, #{samplingDate,jdbcType=TIMESTAMP}, 
+      #{purpose,jdbcType=BIT}, #{lsLocation,jdbcType=VARCHAR}, #{lsSize,jdbcType=DECIMAL}, 
+      #{lsStatus,jdbcType=BIT}, #{tsLocation,jdbcType=VARCHAR}, #{tsSize,jdbcType=DECIMAL}, 
+      #{tsStatus,jdbcType=BIT}, #{processStatus,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReceivedSample" >
+    insert into LIMS_RECEIVED_SAMPLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sampleId != null" >
+        SAMPLE_ID,
+      </if>
+      <if test="businessType != null" >
+        BUSINESS_TYPE,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="typeId != null" >
+        TYPE_ID,
+      </if>
+      <if test="typeName != null" >
+        TYPE_NAME,
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE,
+      </if>
+      <if test="sampleName != null" >
+        SAMPLE_NAME,
+      </if>
+      <if test="sampleSize != null" >
+        SAMPLE_SIZE,
+      </if>
+      <if test="samplingDate != null" >
+        SAMPLING_DATE,
+      </if>
+      <if test="purpose != null" >
+        PURPOSE,
+      </if>
+      <if test="lsLocation != null" >
+        LS_LOCATION,
+      </if>
+      <if test="lsSize != null" >
+        LS_SIZE,
+      </if>
+      <if test="lsStatus != null" >
+        LS_STATUS,
+      </if>
+      <if test="tsLocation != null" >
+        TS_LOCATION,
+      </if>
+      <if test="tsSize != null" >
+        TS_SIZE,
+      </if>
+      <if test="tsStatus != null" >
+        TS_STATUS,
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sampleId != null" >
+        #{sampleId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=BIT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleName != null" >
+        #{sampleName,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleSize != null" >
+        #{sampleSize,jdbcType=DECIMAL},
+      </if>
+      <if test="samplingDate != null" >
+        #{samplingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="purpose != null" >
+        #{purpose,jdbcType=BIT},
+      </if>
+      <if test="lsLocation != null" >
+        #{lsLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="lsSize != null" >
+        #{lsSize,jdbcType=DECIMAL},
+      </if>
+      <if test="lsStatus != null" >
+        #{lsStatus,jdbcType=BIT},
+      </if>
+      <if test="tsLocation != null" >
+        #{tsLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="tsSize != null" >
+        #{tsSize,jdbcType=DECIMAL},
+      </if>
+      <if test="tsStatus != null" >
+        #{tsStatus,jdbcType=BIT},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReceivedSample" >
+    update LIMS_RECEIVED_SAMPLE
+    <set >
+      <if test="businessType != null" >
+        BUSINESS_TYPE = #{businessType,jdbcType=BIT},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        TYPE_ID = #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleName != null" >
+        SAMPLE_NAME = #{sampleName,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleSize != null" >
+        SAMPLE_SIZE = #{sampleSize,jdbcType=DECIMAL},
+      </if>
+      <if test="samplingDate != null" >
+        SAMPLING_DATE = #{samplingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="purpose != null" >
+        PURPOSE = #{purpose,jdbcType=BIT},
+      </if>
+      <if test="lsLocation != null" >
+        LS_LOCATION = #{lsLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="lsSize != null" >
+        LS_SIZE = #{lsSize,jdbcType=DECIMAL},
+      </if>
+      <if test="lsStatus != null" >
+        LS_STATUS = #{lsStatus,jdbcType=BIT},
+      </if>
+      <if test="tsLocation != null" >
+        TS_LOCATION = #{tsLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="tsSize != null" >
+        TS_SIZE = #{tsSize,jdbcType=DECIMAL},
+      </if>
+      <if test="tsStatus != null" >
+        TS_STATUS = #{tsStatus,jdbcType=BIT},
+      </if>
+      <if test="processStatus != null" >
+        PROCESS_STATUS = #{processStatus,jdbcType=BIT},
+      </if>
+    </set>
+    where SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.ReceivedSample" >
+    update LIMS_RECEIVED_SAMPLE
+    set BUSINESS_TYPE = #{businessType,jdbcType=BIT},
+      ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      TYPE_ID = #{typeId,jdbcType=VARCHAR},
+      TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+      SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      SAMPLE_NAME = #{sampleName,jdbcType=VARCHAR},
+      SAMPLE_SIZE = #{sampleSize,jdbcType=DECIMAL},
+      SAMPLING_DATE = #{samplingDate,jdbcType=TIMESTAMP},
+      PURPOSE = #{purpose,jdbcType=BIT},
+      LS_LOCATION = #{lsLocation,jdbcType=VARCHAR},
+      LS_SIZE = #{lsSize,jdbcType=DECIMAL},
+      LS_STATUS = #{lsStatus,jdbcType=BIT},
+      TS_LOCATION = #{tsLocation,jdbcType=VARCHAR},
+      TS_SIZE = #{tsSize,jdbcType=DECIMAL},
+      TS_STATUS = #{tsStatus,jdbcType=BIT},
+      PROCESS_STATUS = #{processStatus,jdbcType=BIT}
+    where SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+  </update>
+</mapper>

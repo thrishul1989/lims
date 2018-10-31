@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>财务报表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+
+function export_order_include_shedule(){
+	
+	var start = $('#firststart').val();
+	var end = $('#firstend').val();
+    	
+	if('' == start || '' == end ){
+		parent.layer.alert('请输入下单时间',{title:"提示"});
+	}else{
+		
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+		  	$.ajax({
+		    type : "POST",
+		    url : "/order/exportOrderIncludeScheduleFile.do",
+		    data : $('#export_order_include_shedule_form').serialize(),
+		    success : function(sessionId) {
+				var timer=window.setInterval(function(){
+					$.ajax({
+						type : "GET",
+						url : "/testing/searchExportResult.do?sessionId="+sessionId,
+						success : function(result) {
+							if('' != result)
+							{
+								window.clearInterval(timer);
+								layerObject.close(loadindex);
+								$("#formValue").val(result);
+								$("#hiddForm").submit();
+							}
+						},
+						error : function() {
+							alert("failed");
+							layerObject.close(loadindex);
+						}
+					});
+				},5000);
+		    	
+		    },
+		    error : function() {
+		        alert("failed");
+		        layerObject.close(loadindex);
+		    }
+		});
+	}
+
+}
+
+
+function export_order_info(){
+	
+	var start = $('#start').val();
+	var end = $('#end').val();
+    	
+	if('' == start || '' == end ){
+		parent.layer.alert('请输入下单时间',{title:"提示"});
+	}else{
+		
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+	
+      	$.ajax({
+        type : "POST",
+        url : "/order/exportOrderFinancialFile.do",
+        data : $('#export_form').serialize(),
+        success : function(sessionId) {
+    		var timer=window.setInterval(function(){
+    			$.ajax({
+    				type : "GET",
+    				url : "/testing/searchExportResult.do?sessionId="+sessionId,
+    				success : function(result) {
+    					if('' != result)
+    					{
+    						window.clearInterval(timer);
+    						layerObject.close(loadindex);
+    						$("#formValue").val(result);
+    						$("#hiddForm").submit();
+    					}
+    				},
+    				error : function() {
+    					alert("failed");
+    					layerObject.close(loadindex);
+    				}
+    			});
+    		},5000);
+        	
+        },
+        error : function() {
+            alert("failed");
+            layerObject.close(loadindex);
+        }
+    });  
+	}
+}
+
+
+function export_contract_info(){
+	
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+	
+      	$.ajax({
+        type : "POST",
+        url : "/contract/exportContractFinancialFile.do",
+        data : $('#contract_export_from').serialize(),
+        success : function(sessionId) {
+    		var timer=window.setInterval(function(){
+    			$.ajax({
+    				type : "GET",
+    				url : "/testing/searchExportResult.do?sessionId="+sessionId,
+    				success : function(result) {
+    					if('' != result)
+    					{
+    						window.clearInterval(timer);
+    						layerObject.close(loadindex);
+    						$("#formValue").val(result);
+    						$("#hiddForm").submit();
+    					}
+    				},
+    				error : function() {
+    					alert("failed");
+    					layerObject.close(loadindex);
+    				}
+    			});
+    		},5000);
+        	
+        },
+        error : function() {
+            alert("failed");
+            layerObject.close(loadindex);
+        }
+    });  
+	
+}
+
+function export_order_excludecontract_info(){
+	var start = $('#excludecontract_start').val();
+	var end = $('#excludecontract_end').val();
+    	
+	if('' == start || '' == end ){
+		parent.layer.alert('请输入下单时间',{title:"提示"});
+	}else{
+		
+	
+	var layerObject = parent.parent.layer;
+	var loadindex = layerObject.load();
+  	$.ajax({
+    type : "POST",
+    url : "/order/exportOrderExcludeContractFile.do",
+    data : $('#search_from_exclude_contract').serialize(),
+    success : function(sessionId) {
+		var timer=window.setInterval(function(){
+			$.ajax({
+				type : "GET",
+				url : "/testing/searchExportResult.do?sessionId="+sessionId,
+				success : function(result) {
+					if('' != result)
+					{
+						window.clearInterval(timer);
+						layerObject.close(loadindex);
+						$("#formValue").val(result);
+						$("#hiddForm").submit();
+					}
+				},
+				error : function() {
+					alert("failed");
+					layerObject.close(loadindex);
+				}
+			});
+		},5000);
+    	
+    },
+    error : function() {
+        alert("failed");
+        layerObject.close(loadindex);
+    }
+});  
+	}
+}
+
+</script>
+
+</head>
+<body >
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报表统计</a>
+							<li><a href="#">财务报表</a>
+						</ol>
+					</div>
+					
+					
+					
+					
+			<div class="ibox ibox-table">	
+				
+				<div class="ibox-title">
+					<h5>成本统计:</h5>
+				</div>
+				<div class="ibox-content">
+				 <form action="#" method="post"	class="form-horizontal m-t" id="export_order_include_shedule_form">
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" name="start" id="firststart" placeholder="下单开始时间起"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value="${(searcher.start)!?html}"/>
+							</div>
+							
+							<div class="col-sm-2">
+								<input type="text"  class="form-control laydate-icon" name="end" id="firstend" placeholder="下单开始时间止"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										 value="${(searcher.end)!?html}"/>
+							</div>
+							
+							<div class="col-sm-2">
+									<select class="form-control" id="testingStatus" name="testingStatus" >
+											<option value="">--请选择订单主状态--</option>
+											<option value="-1">待完善</option>
+											<option value="1">待检测下放</option>
+											<option value="2">检测中</option>
+											<option value="4">已取消</option>
+											<option value="5">已完成</option>
+									</select>
+							</div>
+							
+							<div class="col-sm-2">
+								<a href="#" class="btn btn-sm btn-primary"  onclick="export_order_include_shedule()" >
+					          	 <i class="fa fa-print"></i> 成本统计导出
+				    			</a>
+							</div>
+							
+						</div>
+						
+					
+				</form>	 
+			</div>
+							
+			
+			
+			<div class="ibox ibox-table">	
+				
+				<div class="ibox-title">
+					<h5>订单财务统计:</h5>
+				</div>
+				<div class="ibox-content">
+			 	<form action="#" method="post"	class="form-horizontal m-t" id="export_form">
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<input type="text" id="start" class="form-control laydate-icon" name="start" placeholder="下单开始时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value=""/>
+							</div>
+							
+							<div class="col-sm-2">
+								<input type="text" id="end" class="form-control laydate-icon" name="end" placeholder="下单结束时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value=""/>
+							</div>
+							<div class="col-sm-2">
+								<a href="#" class="btn btn-sm btn-primary"  onclick="export_order_info()" >
+							           <i class="fa fa-print"></i> 订单财务导出
+							    </a>
+							</div>
+							</div>
+				</form>	 
+			</div>
+		</div>
+				
+			
+			
+			
+		<div class="ibox ibox-table">	
+			
+			<div class="ibox-title">
+				<h5>合同信息统计:</h5>
+			</div>
+			<div class="ibox-content">
+			<form action="#" method="post"	class="form-horizontal m-t" id="contract_export_from">
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<select class="form-control"  name="marketingCenter" >
+											<option value="">请选择营销中心</option>
+											<option value="1">临床遗传</option>
+											<option value="2">临床肿瘤</option>
+											<option value="3">健康筛查</option>
+											<option value="4">科技服务</option>
+									</select>
+								</div>
+							
+								<div class="col-sm-2">
+									<input type="text" name="code" class="form-control"  placeholder="合同编号" >
+								</div>
+								
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-sm btn-primary"  onclick="export_contract_info()" >
+								           <i class="fa fa-print"></i> 合同信息导出
+								    </a>
+								</div>
+							
+							</div>
+			</form>	 
+		</div>
+	</div>					
+							
+		<div class="ibox ibox-table">	
+			
+			<div class="ibox-title">
+				<h5>临床订单开票和回款明细:</h5>
+			</div>
+			<div class="ibox-content">					
+			<form action="#" method="post"	class="form-horizontal m-t" id="search_from_exclude_contract">
+							<div class="form-group" >
+							
+								<div class="col-sm-2">
+									<select class="form-control"  name="paymentStatus" >
+											<option value="">请选择支付状态</option>
+											<option value="0">未支付</option>
+											<option value="1">待付款确认</option>
+											<option value="2">已付款</option>
+									</select>
+								</div>
+								
+								 <div class="col-sm-2">
+									<select class="form-control"  name="invoiceStatus" >
+											<option value="">请选择发票状态</option>
+											<option value="0">未开票</option>
+											<option value="1">已开票</option>
+									</select>
+								</div> 
+							
+								<div class="col-sm-2">
+								
+									<input type="text"  class="form-control laydate-icon" name="start" id="excludecontract_start" placeholder="下单开始时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value="${(searcher.start)!?html}"/>
+								</div>
+							
+							<div class="col-sm-2">
+								<input type="text"  class="form-control laydate-icon" name="end" id="excludecontract_end" placeholder="下单结束时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value="${(searcher.end)!?html}"/>
+							</div>
+							
+							<div class="col-sm-2">
+								<a href="#" class="btn btn-sm btn-primary"  onclick="export_order_excludecontract_info()" >
+							           <i class="fa fa-print"></i> 临床订单导出
+							    </a>
+							</div>
+							
+							</div>
+			</form>	 
+		</div>
+	</div>
+			
+				 	<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+				        <input type="hidden" name="formValue" id="formValue" value="">
+				    </form>	
+				    
+				    </div>
+				    
+				    
+	
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+</body>
+
+
+</html>

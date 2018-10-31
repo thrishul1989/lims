@@ -1,0 +1,274 @@
+<style>
+.sys-info-table caption{
+background-color: #cccccc;
+color: black;
+font-weight: bold;
+}
+</style>
+
+
+<div class="modal fade" id="exampleModalLong" tabindex="-3"
+	role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog" role="document" style="min-width: 80%;">
+		<div class="modal-content">
+			<div class="modal-header">
+
+			
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="">
+					<table class="sys-info-table">
+						<caption class="caption">变异信息汇总</caption>
+						<thead>
+							<tr>
+								<th>ACMG致病性分级</th>
+								<th>Mygeno_InterACMG</th>
+								<th>基因</th>
+								<th>染色体位置</th>
+								<th>变异信息</th>
+								<th>纯合/杂合</th>
+								<th>测序深度</th>
+								<th>突变频率</th>
+								<th>dbSNP</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr>
+								<td class="inner" id="tag1"></td>
+								<td class="inner" id="tag2"></td>
+								<td class="inner" id="tag3"></td>
+								<td class="inner" id="tag4"></td>
+								<td class="inner" id="tag5"></td>
+								<td class="inner" id="tag6"></td>
+								<td class="inner" id="tag7"></td>
+								<td class="inner" id="tag8"></td>
+								<td class="inner" id="tag9"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">ACMG致病性分级证据</caption>
+						<tbody id="tag51">
+
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">家系携带信息</caption>
+						<tbody>
+							<tr>
+								<td class="table-active">变异来源</td>
+								<td colspan="7" class="pt-2 pb-2"><label for=""
+									class="mb-0 mr-2 " id="tag33">未知</label> <!-- 										<button type="button" class="btn btn-secondary" -->
+									<!-- 											style="font-size: inherit; padding: .125rem .375rem;">验证该位点</button> -->
+								</td>
+							</tr>
+							<tr>
+								<td class="table-active">先证者父亲</td>
+								<td class="inner" id="tag10"></td>
+								<td class="table-active">测序深度</td>
+								<td class="inner" id="tag11"></td>
+								<td class="table-active">先证者母亲</td>
+								<td class="inner" id="tag12"></td>
+								<td class="table-active">测序深度</td>
+								<td class="inner" id="tag13"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">疾病表型关联度打分</caption>
+						<tbody>
+							<tr>
+								<td class="table-active" style="width: 12.5%;">Phenolyzer</td>
+								<td style="width: 20%;" class="inner" id="tag14"></td>
+								<td class="table-active" style="width: 12.5%;">EXOMISER</td>
+								<td class="inner" id="tag15"></td>
+								<td class="table-active" style="width: 12.5%;">Total_Score</td>
+								<td class="inner" id="tag16"></td>
+							</tr>
+							<tr>
+								<td class="table-active">先证者临床表型</td>
+								<td colspan="5" class="inner" id="tag50"></td>
+							</tr>
+							<tr class="table-active">
+								<td colspan="2">关联疾病|遗传方式</td>
+								<td colspan="2">疾病信息</td>
+								<td colspan="2">疾病表型</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="inner" id="tag17"></td>
+								<td colspan="2" class="inner" id="tag18"></td>
+								<td colspan="2" class="inner" id="tag19"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">正常人频率</caption>
+						<tbody>
+							<tr class="table-active">
+								<td>Highest-MAF</td>
+								<td>Inhouse</td>
+								<td>esp6500si</td>
+								<td>1000g2015aug_all</td>
+								<td>ExAC_ALL</td>
+
+							</tr>
+							<tr>
+								<td class="inner" id="tag20"></td>
+								<td class="inner" id="tag21"></td>
+								<td class="inner" id="tag22"></td>
+								<td class="inner" id="tag23"></td>
+								<td class="inner" id="tag24"></td>
+
+							</tr>
+
+							<tr class="table-active">
+
+								<td>ExAC_EAS</td>
+								<td>gnomAD_ALL</td>
+								<td>gnomAD_exome_EAS</td>
+								<td>gnomAD_genome_ALL</td>
+								<td>gnomAD_genome_EAS</td>
+							</tr>
+							<tr>
+
+								<td class="inner" id="tag25"></td>
+								<td class="inner" id="tag26"></td>
+								<td class="inner" id="tag52"></td>
+								<td class="inner" id="tag53"></td>
+								<td class="inner" id="tag54"></td>
+							</tr>
+
+
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">Evidence</caption>
+						<tbody>
+							<tr>
+								<td class="table-active">HGMD</td>
+								<td id="tag55"></td>
+								<td id="tag56"></td>
+								<td id="tag57"></td>
+								<td id="tag58"></td>
+							</tr>
+							<tr>
+								<td class="table-active">ClinVar</td>
+								<td colspan="4" class="inner" id="tag34"></td>
+							</tr>
+							<tr>
+								<td class="table-active">InterVar</td>
+								<td colspan="4" class="inner" id="tag35"></td>
+							</tr>
+							<tr>
+								<td class="table-active">MutInDatabase</td>
+								<td colspan="4" class="inner" id="tag36"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mr_t20">
+					<table class="sys-info-table">
+						<caption class="caption">蛋白功能预测</caption>
+						<tbody>
+							<tr class="table-active">
+								<td>SIFT</td>
+								<td>Polyphen2</td>
+								<td>MutationTaster</td>
+								<td>GERP++</td>
+								<td>MCAP</td>
+								<td>SPIDEX</td>
+							</tr>
+							<tr>
+								<td class="inner" id="tag27"></td>
+								<td class="inner" id="tag28"></td>
+								<td class="inner" id="tag29"></td>
+								<td class="inner" id="tag30"></td>
+								<td class="inner" id="tag31"></td>
+								<td class="inner" id="tag32"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!--<div class="modal-footer">-->
+			<!--<div class="txt_c ub-f1">-->
+			<!--<button type="button" class="btn btn-primary" data-dismiss="modal" style="width: 150px; margin-right: 50px;">筛选</button>-->
+			<!--<button type="button" class="btn btn-outline-primary" style="width: 150px;">重置筛选</button>-->
+			<!--</div>-->
+			<!--</div>-->
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="level" tabindex="-3" role="dialog"
+	aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">
+					<button class="btn btn-outline-secondary btn-sm">Mygeno_InterACMG证据清单</button>
+				</h5>
+
+
+
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="mr_t20" style="height: 400px; overflow: auto">
+
+
+					<table class="sys-info-table">
+						<tbody>
+							<input type="hidden" id="mongoId" value="">
+							<tr class="table-active" id="evidenceDetail">
+								<td>致病性证据</td>
+								<td>证据说明</td>
+								<td>个数</td>
+
+							</tr>
+							<@dict_entries category="INTERACMG"> 
+								<#list entries as entry>
+								<tr>
+									<td class="evidence" >${entry.value!?html}</td>
+									<td class="desc"><input type="text"	class="form-control sys-input desc" value=""></td>
+									<td class="inner"><input type="text" class="form-control sys-input evidenceValue" value="" style="width: 50px"></td>
+								</tr>
+	
+								</#list> 
+							</@dict_entries>
+
+
+						</tbody>
+					</table>
+					<input type="button" class="btn btn-outline-secondary btn-sm"
+						value="提交" onclick="subEvidence()">
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+

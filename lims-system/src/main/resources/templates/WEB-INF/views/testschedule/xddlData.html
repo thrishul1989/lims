@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+.ifpass {
+	background-color: red;
+	border: 10px groove blue;
+	width: 300;
+	height: 300;
+	filter: progid:DXImageTransform.microsoft.gradient(gradienttype=1,
+		startColorStr=cyan, endColorStr=red);
+}
+</style>
+
+</head>
+<body class="gray-bg form-horizontal m-t">
+
+<input type="hidden" value="${sheet.sendName!?html}" id="sendName">
+<input type="hidden" value="${sheet.sendDate?string('yyyy-MM-dd')}" id="createDate">
+<input type="hidden" value="${sheet.testingName!?html}" id="testingName">
+<input type="hidden" value="${sheet.description!?html}" id="description">
+<input type="hidden" value="" id="designDataAmount">
+<input type="hidden" value="" id="reagent">
+<input type="hidden" value="" id="reagentCode">
+<input type="hidden" value="" id="outLibNumber">
+
+
+	<form id="sheetsForm">
+		<input type="hidden" name="sheetsContent" id="sheets" /> <input
+			type="hidden" name="taskActivitiId" id="taskActivitiId"
+			value="${taskActivitiId!?html}" />
+			<!-- <input type="hidden" name="sheetsContent"  value="${taskActivitiId!?html}" />  -->
+	</form>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">代办事项</a></li>
+							<li class="active"><strong>相对定量</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox form-horizontal m-t">
+					<div class="ibox-title">
+						<div class="form-group">
+							<input type="hidden" id="sheetid" value="${sheet.id}"> <input
+								type="hidden" id="semantic" value="${sheet.semantic}"> <input
+								type="hidden" id="taskId" value="${sheet.taskId}">
+								<input type="hidden" id="taskActivitiId" value="${sheet.activitiTaskId}"> <label
+								class="col-sm-1 control-label">任务编号：</label>
+							<div class="col-sm-2">
+								<input type="text" class="form-control" name="code" id="code"
+									value="${sheet.code!?html}" readonly="readonly" />
+							</div>
+							 <button class="btn btn-primary" type="button" onclick="subCT()">上传数据</button> 
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">任务描述：</label> <label
+								class="col-sm-2 control-label" style="text-align: left">${sheet.description!?html}</label>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">扩增倍数：</label> <label
+								class="col-sm-2 control-label" style="text-align: left"><input
+								type="text" id="mix" class="form-control"
+								style="width: 80px; display: initial" /></label>
+								
+								<input class="btn btn-primary" type="button" onclick="downloadData()" 
+									style="float: right;"	value="导出任务单"></input> 
+							
+								<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" 
+									style="float: right; margin-right: 10px;" type="button">导入数据</button>
+									
+							
+					  <input class="btn btn-primary" type="button" onclick="myPreview(0)" value="打印相对定量预览" style="float: right; margin-right: 10px;"></input> 
+					
+					  <input class="btn btn-primary" type="button" onclick="myPreview(1)" value="打印汇总预览" style="float: right; margin-right: 10px;"></input> 
+			
+			
+			
+						</div>
+					</div>
+					<div class="ibox-content">
+						<table
+							class="table table-striped table-bordered table-hover table-responsive"
+							id="table">
+							<thead>
+								<tr>
+									<th>实验编号</th>
+									<th>捕获样本</th>
+									<th>探针</th>
+									<th class="flexible-btns">CT值</th>
+									<th>产物相对量</th>
+									<th>设计数据量</th>
+									<th>体积</th>
+									<th>混合体积</th>
+									<th>VolumeRatioToMix</th>
+									<th>微调倍数</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if sheet?has_content> <#list sheet.sheetTaskList as record>
+								<tr class="data">
+									<input type="hidden" id="taskactiviti${record.id}"
+										value="${record.activitiTaskId}">
+									<td class="index">${record_index + 1}</td>
+									<!-- <td class="testingCode">${record.testingCode!?html}</td> -->
+									<td class="testingCode">${record.outputSamplecode!?html}</td>
+									<td class="probeName">${record.probeName!?html}</td>
+									<td class="flexible-btns CTInput"><input type="text"
+										id="CT${record.id}" class="form-control CT"
+										style="width: 80px; display: initial" <#if
+										record.taskResult??> value="${record.taskResult.CT!?html}" </#if> /></td>
+									<td class="productRelativeAmount"><#if
+										record.taskResult??>${record.taskResult.productRelativeAmount!?html}</#if></td>
+									<td class="dataSize">${record.dataSize!?html}</td>
+									<td class="volume"><#if
+										record.taskResult??>${record.taskResult.volume!?html}</#if></td>
+									<td class="mixedVolume"><#if
+										record.taskResult??>${(record.taskResult.mixedVolume)!?html}</#if></td>
+									<td class="volumeRatioToMix"><#if
+										record.taskResult??>${(record.taskResult.volumeRatioToMix)!?html}</#if></td>
+									<td class="flexible-btns"><input type="text"
+										class="form-control vRMix"
+										style="width: 80px; display: initial" /></td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						<span id="table2" style="display: none">
+						<table
+							class="table table-striped table-bordered table-hover table-responsive"
+							 >
+							<thead>
+								<tr>
+									<th>MGL-380</th>
+									<th>Probe</th>
+									<th>捕获浓度</th>
+									<th >稀释加水体积</th>
+									<th>终浓度（ng/ul）</th>
+									<th>数据量</th>
+									<th>样本投入量(ul)</th>
+									<th>样本位置</th>
+									<th>CT</th>
+									<th>检测方法</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								<#if sheet?has_content> <#list sheet.sheetTaskList as record>
+								<tr class="">
+								
+									<td class="">？</td>
+									<!-- <td class="testingCode">${record.testingCode!?html}</td> -->
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+									<td class="">？</td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						</span>
+						
+						
+						<span id="table3" style="display: none">
+						<table
+							class="table table-striped table-bordered table-hover table-responsive"
+							id="table">
+							<thead>
+								<tr>
+									<th>实验编号</th>
+									<th>捕获样本</th>
+									<th>探针</th>
+									<th class="flexible-btns">CT值</th>
+									<th>产物相对量</th>
+									<th>设计数据量</th>
+									<th>体积</th>
+									<th>混合体积</th>
+									<th>VolumeRatioToMix</th>
+									<th>微调倍数</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if sheet?has_content> <#list sheet.sheetTaskList as record>
+								<tr class="data1">
+									<input type="hidden" id="taskactiviti${record.id}"
+										value="${record.activitiTaskId}">
+									<td class="index">${record_index + 1}</td>
+									<!-- <td class="testingCode">${record.testingCode!?html}</td> -->
+									<td class="testingCode">${record.outputSamplecode!?html}</td>
+									<td class="probeName">${record.probeName!?html}</td>
+									<td class="flexible-btns CTInput"></td>
+									<td class="productRelativeAmount"><#if
+										record.taskResult??>${record.taskResult.productRelativeAmount!?html}</#if></td>
+									<td class="dataSize">${record.dataSize!?html}</td>
+									<td class="volume"><#if
+										record.taskResult??>${record.taskResult.volume!?html}</#if></td>
+									<td class="mixedVolume"><#if
+										record.taskResult??>${(record.taskResult.mixedVolume)!?html}</#if></td>
+									<td class="volumeRatioToMix"><#if
+										record.taskResult??>${(record.taskResult.volumeRatioToMix)!?html}</#if></td>
+									<td class="flexible-btns"></td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						</span>
+						
+						
+						
+						<div class="row" style="margin-top: 34px">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-5">
+										<input type="submit" value="确定" class="btn btn-primary"
+											style="margin-right: 20px" onclick="sub()">
+										<button class="btn btn-primary" type="button"
+											onclick="history.go(-1)">返回</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel">上传Excel文件</h4> 
+            </div> 
+           <form id="uploadForm" action="" enctype="multipart/form-data">
+            <div class="modal-body">
+				<input type="file" class="file" name="uploadData" id="uploadData" accept=".xlsx,.xls"/>
+			</div> 
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+                <button type="button" class="btn btn-primary" id="butt">提交</button> 
+            </div> 
+            </form>
+        </div><!-- /.modal-content --> 
+    </div><!-- /.modal --> 
+</div>	
+<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue"  id="formValue" value="">
+	</form>
+</body>
+
+
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script type="text/javascript" src="${plugins}/layer/layer.min.js"></script>
+    <script  src="${system_js}/LodopFuncs.js"></script> 
+    <script src="${system_js}/fileinput.min.js"></script>
+    <script>
+    var LODOP;
+    function downloadData(){
+		var taskActivitiId = $("#taskActivitiId").val();
+		$.ajax({
+			 type:"POST",
+			 url:"${base}/testSheet/downloadXDDLData",
+			 data:{taskActivitiId:taskActivitiId},
+			 async: false,
+			 success:function(data){
+				$("#formValue").val(data);
+				$("#hiddForm").submit();
+		    },
+			 error:function(){
+				alert("failed");
+			 }
+		}); 
+	}     
+  //扩增
+	  $("#mix").blur(function(){
+	    	 var mixData=$('#mix').val();
+	    	 if(isNaN(mixData)){
+	    		 alert('请输入数字');
+	    	 }else{
+	    		 $(".mixedVolume").each(function(){
+	    			 $(this).text(($(this).parents(".data").find(".volume").text()*mixData).toFixed(2));
+	    		 });
+	    		 $(".volumeRatioToMix").each(function(){
+	    			 $(this).text(($(this).parents(".data").find(".volume").text()*mixData).toFixed(2));
+	    		 });
+	    		 
+	    	 }
+	      });
+     function subCT(){
+     	var sheetTaskList=[];
+    $('.CT').each(function()	{
+ 	   var sheet={};
+ 	   sheet.ct=$(this).val();
+ 	   sheetTaskList.push(sheet);
+    });
+     	console.log(sheetTaskList);
+ 		var sheets = JSON.stringify(sheetTaskList);
+ 		$("#sheets").val(sheets);
+ 		$("#sheetsForm").submit();
+      }
+    $(document).ready(function(){
+    	
+    	//微调
+    	$(".vRMix").blur(function(){
+    		var debugInput=$(this).val();
+    		if(debugInput!=""&&!isNaN(debugInput)){//判断非空，非数字
+    		  $(this).parents(".data").find(".volumeRatioToMix").text($(this).parents(".data").find(".mixedVolume").text()*$(this).val());
+    		}
+    		});
+    	  
+    	});
+    
+    function sub(){
+    	sheetList=[];
+    	$(".data").each(function(i){
+    		var sheet={};
+    		sheet.testingCode=$(".testingCode").eq(i).text();
+    		sheet.probeName=$(".probeName").eq(i).text();
+    		sheet.CT=$(".CT").eq(i).val();//CT
+    	    sheet.volume=$(".mixedVolume").eq(i).text();//混合体积
+    	    sheet.volumeRatioToMix=$(".volumeRatioToMix").eq(i).text();//设计数据
+    	    sheet.dataSize=$(".dataSize").eq(i).text();
+    	    sheetList.push(sheet);
+    	});
+    	var sheets = JSON.stringify(sheetList);
+    	
+    	$("#sheets").val(sheets);
+    	$("#sheetsForm").attr("action","${base}/testSheet/xddlData.do");
+    	$("#sheetsForm").submit(); 
+    }
+    
+
+	function myPreview(obj) { 
+	
+	//动态添加列
+	$(".addFlag").append("<th class='removeFlag'>浓度(ng/ul)</th><th class='removeFlag'>体积(ul)</th><th class='removeFlag'>A260/280</th><th class='removeFlag'>A260/230</th>")
+	$(".addFlag2").append("<td class='removeFlag'></td><td class='removeFlag'></td><td class='removeFlag'></td><td class='removeFlag'></td>");
+	
+	
+	
+	$("th").css('border','solid 1px black');$("td").css('border','solid 1px black');$("table").css('border','solid 1px black');$("tr").css('height','40px')
+	
+	
+	
+	
+	LODOP=getLodop();  
+	LODOP.PRINT_INITA(0,0,522,333,"打印控件功能演示");
+	LODOP.SET_PRINT_PAGESIZE(2,0,0,"A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+
+	createContent(obj);
+	
+	//LODOP.ADD_PRINT_HTM(100,10,"100%","100%","<!DOCTYPE html>"+document.getElementsByTagName("html")[0].innerHTML);
+
+  	LODOP.PREVIEW();
+
+  	$("th").css('border','');$("td").css('border','');$("table").css('border','');$("tr").css('height','')
+  	
+  	//一处动态列
+  	$(".removeFlag").remove();
+  	
+};
+
+function createContent(obj){
+	var strStyle="<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse}</style>"
+	
+
+		LODOP.ADD_PRINT_TEXT(84,"40%","26%",50,"相对定量任务单");
+		LODOP.SET_PRINT_STYLEA(1,"FontName","宋体");       
+		LODOP.SET_PRINT_STYLEA(1,"FontSize",20);
+		LODOP.SET_PRINT_STYLEA(1,"ItemType",1);
+		LODOP.SET_PRINT_STYLEA(1,"LinkedItem",1);
+		LODOP.SET_PRINT_STYLEA(1, "Bold", 1);
+		
+	LODOP.ADD_PRINT_HTM(70,"35%","60%",20,"<hr style='background-color:black;color:black;height:1px' />");
+		
+		LODOP.SET_PRINT_STYLEA(2, "Bold", 1);
+	
+	
+	
+	
+		LODOP.ADD_PRINT_TEXT(148,"4%","8%",50,"任务编号:");
+	    LODOP.SET_PRINT_STYLEA(3, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(3,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"12%","12%",100,document.getElementById("code").value);
+	    LODOP.SET_PRINT_STYLEA(4, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(4,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"26%","8%",50,"下发人:");
+	    LODOP.SET_PRINT_STYLEA(5, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(5,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"32%","6%",50,document.getElementById("sendName").value);
+	    LODOP.SET_PRINT_STYLEA(6, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(6,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"39%","8%",50,"下发日期:");
+	    LODOP.SET_PRINT_STYLEA(7, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(7,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"47%","19%",50,document.getElementById("createDate").value);
+	    LODOP.SET_PRINT_STYLEA(8, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(8,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"58%","8%",50,"接收日期:");
+	    LODOP.SET_PRINT_STYLEA(9, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(9,"FontSize",11);
+	    LODOP.ADD_PRINT_TEXT(148,"66%","19%",50,document.getElementById("createDate").value);
+	    LODOP.SET_PRINT_STYLEA(10, "Bold", 1);
+	    LODOP.SET_PRINT_STYLEA(10,"FontSize",10);
+		
+		LODOP.ADD_PRINT_TEXT(148,"77%","8%",30,"实验员:");
+		 LODOP.SET_PRINT_STYLEA(11, "Bold", 1);
+		  LODOP.SET_PRINT_STYLEA(11,"FontSize",11);
+		LODOP.ADD_PRINT_TEXT(148,"84%","15%",30,document.getElementById("testingName").value);
+		 LODOP.SET_PRINT_STYLEA(12, "Bold", 1);
+		  LODOP.SET_PRINT_STYLEA(12,"FontSize",11);
+	
+	 
+	LODOP.ADD_PRINT_TEXT(186,"4%","8%",30,"设计数据量:");
+	 LODOP.SET_PRINT_STYLEA(13, "Bold", 1);
+	  LODOP.SET_PRINT_STYLEA(13,"FontSize",11);
+	LODOP.ADD_PRINT_TEXT(186,"12%","11%",30,document.getElementById("designDataAmount").value); 
+	 LODOP.SET_PRINT_STYLEA(14, "Bold", 1);
+	  LODOP.SET_PRINT_STYLEA(14,"FontSize",11);
+	  
+		LODOP.ADD_PRINT_TEXT(186,"24.5%","8%",30,"试剂名称:");
+		 LODOP.SET_PRINT_STYLEA(15, "Bold", 1);
+		  LODOP.SET_PRINT_STYLEA(15,"FontSize",11);
+		  LODOP.ADD_PRINT_TEXT(186,"32%","8%",30,document.getElementById("reagent").value);
+		  LODOP.SET_PRINT_STYLEA(16, "Bold", 1);
+		  LODOP.SET_PRINT_STYLEA(16,"FontSize",11);
+		  
+			LODOP.ADD_PRINT_TEXT(186,"39%","8%",30,"试剂编号:");
+			 LODOP.SET_PRINT_STYLEA(17, "Bold", 1);
+			  LODOP.SET_PRINT_STYLEA(17,"FontSize",11);
+			  LODOP.ADD_PRINT_TEXT(186,"47%","8%",30,document.getElementById("reagentCode").value);
+			  LODOP.SET_PRINT_STYLEA(18, "Bold", 1);
+			  LODOP.SET_PRINT_STYLEA(18,"FontSize",11);
+		
+			  
+				LODOP.ADD_PRINT_TEXT(186,"58%","8%",30,"出库反应数:");
+				 LODOP.SET_PRINT_STYLEA(19, "Bold", 1);
+				  LODOP.SET_PRINT_STYLEA(19,"FontSize",11);
+				  LODOP.ADD_PRINT_TEXT(186,"66%","8%",30,document.getElementById("outLibNumber").value);
+				  LODOP.SET_PRINT_STYLEA(20, "Bold", 1);
+				  LODOP.SET_PRINT_STYLEA(20,"FontSize",11);
+				  
+				  
+				  LODOP.ADD_PRINT_TEXT(230,"7%","8%",30,"描述:");
+					 LODOP.SET_PRINT_STYLEA(21, "Bold", 1);
+					  LODOP.SET_PRINT_STYLEA(21,"FontSize",11);
+					LODOP.ADD_PRINT_TEXT(230,"12%","50%",30,document.getElementById("description").value); 
+					 LODOP.SET_PRINT_STYLEA(22, "Bold", 1);
+					  LODOP.SET_PRINT_STYLEA(22,"FontSize",11);
+					  
+					  
+			  
+		  if(obj==1){
+				$("#table3").css('display',"block");
+			  LODOP.ADD_PRINT_TABLE(253,2,"100%",300,'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/animate.min.css" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">'+document.getElementById("table3").innerHTML); 
+			  $("#table3").css('display',"none");
+		  }
+		  else{
+			$("#table2").css('display',"block");
+			  LODOP.ADD_PRINT_TABLE(253,2,"100%",300,'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/animate.min.css" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">'+document.getElementById("table2").innerHTML);   
+			  $("#table2").css('display',"none");
+		  }
+	
+	 //LODOP.SET_PRINT_STYLEA(21,"Stretch",2);//(可变形)扩展缩放模式
+	//LODOP.NewPageA(); 分页
+	//打印整个页面中指定为 div 的ID 内的 table
+	//LODOP.ADD_PRINT_TABLE(528,"5%","90%",328,strStyle+document.getElementById("testing_task_detail_table").innerHTML); 
+	
+	
+	 LODOP.SET_PRINT_STYLEA(0,"Horient",1); 
+	 LODOP.ADD_PRINT_TEXT(55,"78%",210,70,"北京迈基诺医学检验所");
+	 LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+	  LODOP.SET_PRINT_STYLEA(0,"FontSize",13);
+	 LODOP.SET_PRINT_STYLEA(0,"ItemType",1);	 //1为页眉页脚，2为页号码，3为页数，0 为普通项。
+	 
+	 
+	 
+	 LODOP.ADD_PRINT_IMAGE(0,0,300,70,"<img border='0' src='/static/plugins/img/logo.png'/>");
+	 //LODOP.SET_PRINT_STYLEA(1,"Stretch",2);//(可变形)扩展缩放模式
+}	
+
+$("#butt").click(function(){
+	   
+	   
+    var excelFileName = $('#uploadData').val();
+	var formatStr = '';
+	var index = excelFileName.lastIndexOf('.');
+	if(excelFileName.length == 0){
+		parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+		return ;
+	}else if(index > 0){
+		formatStr = excelFileName.substring(index);
+		if(!(".xlsx" == formatStr||".xls" == formatStr)){
+			parent.layer.alert('请上传excel文件',{title:"提示"});
+			return ;
+		}
+	}
+	   
+  $.ajax({
+	    url: '${base}/testSheet/uploadXDDLAmount',
+	    type: 'POST',
+	    cache: false,
+	    data: new FormData($('#uploadForm')[0]),
+	    processData: false,
+	    contentType: false
+	}).done(function(list) {
+		 if(list==''){
+				  parent.layer.alert('Excel页面没有数据！',{title:"提示"});
+			  }else{
+ 			  $('.CT').each(function(i,v){
+ 				  $(this).val(list[i]);
+ 			  });
+			  }
+		 $('#myModal').modal('hide');
+		/*  subCT(); */
+	}).fail(function(res) {});
+});         
+    </script>
+</html>
+

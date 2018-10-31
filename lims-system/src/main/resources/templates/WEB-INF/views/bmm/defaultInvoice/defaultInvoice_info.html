@@ -1,0 +1,220 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>订单信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover ">
+					<tr>
+						<th>订单编号：</th>
+						<td>${(record.code)!?html}</td>
+						<th>订单状态：</th>
+						<td><@dict_entry_text category='ORDER_STATE' value=record.status /></td>
+					</tr>
+					<tr>
+						<th>下单时间：</th>
+						<td><#if record.createTime??>${(record.createTime)!?string('yyyy-MM-dd ')}</#if></td>
+						<th>下单人：</th>
+						<td>${(record.creatorId)!?html}</td>
+					</tr>
+					<tr>
+						<th>合同编号：</th>
+						<td><#if record.contract??>${(record.contract.code)!?html}</#if></td>
+						<th>营销中心：</th>
+						<td>${(record.orderType)!?html}</td>
+					</tr>
+					<tr>
+						<th>业务员：</th>
+						<td>${(record.creatorName)!?html}</td>
+						<th>客户：</th>
+						<td>${(record.ownerName)!?html}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>收件信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover ">
+					<tr>
+						<th>收件人：</th>
+						<td>${(record.recipientName)!?html}</td>
+						<th>联系电话：</th>
+						<td>${(record.recipientPhone)!?html}</td>
+					</tr>
+						<tr>
+						<th>收件地址：</th>
+						<td colspan="3">${(record.recipientAddress)!?html}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>费用信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover ">
+					<tr>
+						<th>发票抬头：</th>
+						<td>${(record.invoiceTitle)!?html}</td>
+						<th>发票类型：</th>
+						<td>
+							<#if record.billingType??>
+								<#if record.billingType == 1>
+								电子普通发票
+								<#elseif record.billingType == 2>
+								纸质普通发票
+								<#elseif record.billingType == 0>
+								电子普通发票
+								</#if>
+							</#if>
+						</td>
+					</tr>
+					<tr>
+						<th>发票抬头类型：</th>
+						<td>
+						<#if record.headerType??>
+						<@dict_entry_text category="HEADER_TYPE" value=record.headerType />
+						</#if>
+						</td>
+						<#if record.headerType??>
+						<#if record.headerType==1>
+						<th>企业税号：</th>
+			        	<td>${(record.dutyParagraph)!?html}</td>
+						</#if>
+						</#if>
+					</tr>
+					<tr>
+						<th>付款方式：</th>
+						<td><#if record.payType??>
+							<#if record.payType == "0"> <#if  record.actualPayment gt 0 >对账<#else>未付款</#if></#if>
+							<#if record.payType == "1">支付宝</#if>
+							<#if record.payType == "2">支付宝扫码</#if>
+							<#if record.payType == "3">POS机支付</#if>
+							<#if record.payType == "4">转账支付</#if></#if>
+						</td>
+						<th>产品总价：</th>
+						<td>${((record.amount/100)!0)?string('0.##')}</td>
+                   </tr>
+					<#if record.billingType??>
+					<#if record.billingType==1>
+					<tr>
+						<th>邮箱：</th>
+						<td>${(record.mailbox)!?html}</td>
+					</tr>
+					</#if>
+					</#if>
+					<tr>
+						<th>附属样本费用：</th>
+						<td>${((record.subsidiarySampleAmount/100)!0)?string('0.##')}</td>
+						<th>抵用券：</th>
+						<td>${((record.discountAmount/100)!0)?string('0.##')}</td>
+					</tr>
+					<#if record.orderReduce?? && record.orderReduce?has_content>
+					<tr>
+						<th>申请减免：</th>
+						<td >是</td>
+					</tr>
+					<tr>
+						<th>审批状态：</th>
+						<td><@dict_entry_text category='COUPON_APPLY_STATE' value=record.reduceStatus /></td>
+						<th>审批减免：</th>
+						<td>${((record.checkAmount)!0)?string('0.##')}</td>
+					</tr>
+					<#else>
+					<tr>
+						<th>申请减免：</th>
+						<td>否</td>
+					</tr>
+					</#if>
+					<tr>
+						<th>应付款：</th>
+						<td  id="actualPay">${((record.payable)!0)?string('0.##')}  </td>
+						<th>已退款：</th>
+						<td>${((record.refundAmount)!0)?string('0.##')}</td>
+					</tr>
+					<tr>
+						<th>应收款：</th>
+						<td id="receivable">${((record.receivable)!0)?string('0.##')}</td>
+
+						<th>实收款：</th>
+						<td id="actualPayment">${((record.actualPayment)!0)?string('0.##')}</td>
+					</tr>
+					<#if record.solveStatus == 1>
+					<tr>
+                        <th>需补款：</th>
+                        <td>
+							<#if record.fillingAmount lt 0>
+							 0
+							 <#else>
+							${((record.fillingAmount)!0)?string('0.##')}
+							</#if>
+						</td>
+					</tr>
+					</#if>
+				</table>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>收款方</th>
+							<th>应收款</th>
+							<th>实收款</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>北京迈基诺公司</td>
+							<td >${(((record.receivable) * (record.companyRatio))!0)?string('0.##')}</td>
+							<td >${(((record.actualPayment) * (record.companyRatio))!0)?string('0.##')}</td>
+						</tr>
+
+						<tr>
+							<td>北京检验所</td>
+							<td >${(((record.receivable) * (record.inspectionRatio))!0)?string('0.##')}</td>
+							<td >${(((record.actualPayment) * (record.inspectionRatio))!0)?string('0.##')}</td>
+						</tr>
+
+						<tr>
+							<td>重庆迈基诺公司</td>
+							<td >${(((record.receivable) * (record.cqCompanyRatio))!0)?string('0.##')}</td>
+							<td >${(((record.actualPayment) * (record.cqCompanyRatio))!0)?string('0.##')}</td>
+						</tr>
+
+						<tr>
+							<td>重庆检验所</td>
+							<td >${(((record.receivable) * (1 - record.cqCompanyRatio - record.companyRatio - record.inspectionRatio))!0)?string('0.##')}</td>
+							<td>${(((record.actualPayment) * (1 - record.cqCompanyRatio - record.companyRatio - record.inspectionRatio))!0)?string('0.##')}</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

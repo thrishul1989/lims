@@ -1,0 +1,442 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>新增探针</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>	
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${system_js}/jquery.cxselect.min.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<style>
+button.btn.btn-default.dropdown-toggle {
+    padding: 14px;
+    background-color: white;
+    color: #c5c5c5;
+    border-color: #e5e6e7;
+</style>
+
+
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">客户</a></li>
+							
+							<li class="active"><strong>${(flag)!?html}</strong></li>
+						</ol>
+						
+						<div style="float: right; margin-top: -20px">
+							<a href="javascript:history.go(-1)" target="_self"
+								style="padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+						
+						
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>客户</h5>
+					</div>
+					<div class="ibox-content">
+					<input type="hidden" name="id" id="id" value="${(customer.id)!?html}" />
+						<form id="customerForm" class="form-horizontal m-t"
+							action="" method="post"
+							enctype='application/json'>
+							
+						
+							<fieldset>
+							<div class="form-group">
+								
+									
+									<label class="col-sm-2 control-label control-required">客户姓名：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="realName"
+											id="realName" value="${(customer.realName)!?html}" />
+									</div>
+									
+									<label class="col-sm-2 control-label control-required">性别：</label>
+									
+									<div class="col-sm-3">
+								<select class="form-control" name="sex" data-value="${(customer.sex)!}" id="sex">
+                                        <option value="">请选择性别</option>
+                                        <@dict_entries category="SEX">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if customer.sex??><#if entry.value==customer.sex!?html >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+									</div>
+									
+								</div>
+								
+								<div class="form-group">
+								
+									
+									<label class="col-sm-2 control-label">出生年月：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control laydate-icon"
+															name="birthday" id="birthday" value="${customer.birthday!?html}"
+															readonly="readonly" style="height: 34px"
+															onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" />
+											
+											
+
+								
+									
+									
+									</div>
+								
+								<label class="col-sm-2 control-label control-required">所属单位：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" class="form-control"
+												data-id="${(customer.company.id)!?html}"
+												id="company"
+												value="${(customer.company.name)!?html}">
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+									
+									
+                                    
+                                  
+									
+								</div>
+								
+								<div class="form-group">
+								
+									<label class="col-sm-2 control-label">科室：</label>
+										<div class="col-sm-3">
+									<select class="form-control" name="dept" data-value="${(customer.dept)!}" id="dept">
+                                        <option value="">请选择科室</option>
+                                        <@dict_entries category="BASE_DEPT">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if customer.dept??><#if entry.value==customer.dept >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+									
+									</div>
+									<label class="col-sm-2 control-label control-required">邮箱：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="email"
+											id="email" value="${(customer.email)!?html}" />
+											
+											
+
+								
+									
+									
+									</div>
+									
+									
+									
+									
+								</div>
+								
+								
+								<div class="form-group">
+								
+								<label class="col-sm-2 control-label control-required ">手机号：</label>	
+									<div class="col-sm-3 "  >
+									<input type="text" class="form-control" name="phoneNum"
+											id="phoneNum" value="${(customer.phoneNum)!?html}" />
+									</div>	
+									
+										
+										<label class="col-sm-2 control-label">办公楼/房间号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="roomNum"
+											id="roomNum" value="${(customer.roomNum)!?html}" />
+											
+											
+
+								
+									
+									
+									</div>
+									
+									
+									
+										
+								</div>
+								
+							<div class="form-group">
+							<label class="col-sm-2 control-label  ">座机：</label>	
+									<div class="col-sm-3 "  >
+									<input type="text" class="form-control" name="landLine"
+											id="landLine" value="${(customer.landLine)!?html}" />
+									</div>	
+									
+									<label class="col-sm-2 control-label">职位/职称：</label>
+										<div class="col-sm-3">
+									<select class="form-control" name="position" data-value="${(customer.position)!}" id="position">
+                                        <option value="">请选择职位</option>
+                                        <@dict_entries category="POSITION">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if customer.position??><#if entry.value==customer.position >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+                                    
+                                    
+							
+							</div>
+								</div>
+								
+								
+								<div class="form-group">
+							<label class="col-sm-2 control-label  control-required">合作方向：</label>	
+									<div class="col-sm-3 "  >
+									<select class="form-control" name="cooperate" data-value="${(customer.cooperate)!}" id="cooperate">
+                                        <option value="">请选择合作方向</option>
+                                        <@dict_entries category="COOPERATE">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if customer.cooperate??><#if entry.value==customer.cooperate >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+									</div>	
+									
+									<label class="col-sm-2 control-label control-required">是否参与分析：</label>
+										<div class="col-sm-3">
+									<select class="form-control" name="analyseType" data-value="${(customer.analyseType)!}" id="analyseType">
+                                        <option value="">请选择</option>
+                                        <@dict_entries category="ANALYSIS_TYPE">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if customer.analyseType??><#if entry.value==customer.analyseType >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+                                    
+                                    
+							
+							</div>
+								</div>
+								
+								<div class="form-group">
+								<label class="col-sm-2 control-label  ">单位地址：</label>	
+								<div class="col-sm-8 "  >
+									<input type="text" class="form-control" name="address"
+											id="address" value="${(customer.landline)!?html}" readonly="readonly"/>
+									</div>	
+								</div>
+								
+								<div class="form-group">
+								<label class="col-sm-2 control-label  ">就诊特点：</label>	
+								<div class="col-sm-8 "  >
+									<input type="text" class="form-control" name="characteristic"
+											id="characteristic" value="${(customer.characteristic)!?html}" />
+									</div>	
+								</div>
+								
+								<div class="form-group">
+								<label class="col-sm-2 control-label  ">擅长领域：</label>	
+								<div class="col-sm-8 "  >
+									<input type="text" class="form-control" name="researchFiled"
+											id="researchFiled" value="${(customer.researchFiled)!?html}" />
+									</div>	
+								</div>
+								
+								<div class="form-group">
+								<label class="col-sm-2 control-label  ">简介：</label>	
+								<div class="col-sm-8 "  >
+									<input type="text" class="form-control" name="introduction"
+											id="introduction" value="${(customer.introduction)!?html}" />
+									</div>	
+								</div>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"  class="btn btn-primary" >保存</button>
+										<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+								
+								
+                          
+                          
+                          
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+
+<script>
+$().ready(function () {
+	
+	$('#address').val(<#if customer.company?? && customer.company.province?? && customer.company.city?? && customer.company.county??>'${customer.company.province.name}'+'${customer.company.city.name}'<#if customer.company.county??>+'${customer.company.county.name}'</#if>+'${customer.company.address}'</#if>)
+	
+
+	
+	
+	
+	$("#company").bsSuggest('init', {
+		url : "${base}/company/getCompanys.do?name=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "name",
+		effectiveFields : [ "name" ],
+		effectiveFieldsAlias : {
+			name : "单位名称"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+	
+	
+	
+	
+	$("#customerForm").validate({
+		submitHandler: function(form) {      
+			
+			//教研匹配框
+			if($("#company").attr("data-id")==""||$("#company").attr("data-id")==null){
+				parent.layer.alert('请选择正确的单位！',{title:"提示"});
+				return false;
+			}
+	
+			$.ajax({
+	            type: "POST",
+	            url: "${base}/customer/customerModify.do",
+	            data: {id:$("#id").val(),realName:$("#realName").val(),sex:$("#sex").val(),
+	            	birthday:$("#birthday").val(),companyId:$("#company").attr("data-id"),dept:$("#dept").val(),
+	            	email:$("#email").val(),phoneNum:$("#phoneNum").val(),roomNum:$("#roomNum").val(),landLine:$("#landLine").val(),
+	            	position:$("#position").val(),cooperate:$("#cooperate").val(),analyseType:$("#analyseType").val(),
+	            	characteristic:$("#characteristic").val(),researchFiled:$("#researchFiled").val(),introduction:$("#introduction").val()},
+	            dataType: "json",
+	            success: function(data){
+	            	window.location.href = "${base}/customer/list.do";
+	           }
+	        });
+			
+			
+		},
+		   
+		   
+	    rules: {
+	    	realName:  {
+	    		required:true,
+	    		
+	    	},
+	    	
+	    	sex: {
+	    		required:true,
+	    		maxlength: 20
+	    	},
+	    	
+	    	email: {
+	    		required:true,
+	    		
+	    	},
+	    	cooperate:{
+	    		required:true,
+	    		
+	    	},
+	    	analyseType:{
+	    		required:true,
+	    		
+	    	},
+	    	
+	    	phoneNum:{
+	    		required:true,
+	    		maxlength: 20
+	    	}
+	       
+	    }
+	
+		
+	
+	
+	
+})
+
+
+})
+</script>
+
+
+
+</html>

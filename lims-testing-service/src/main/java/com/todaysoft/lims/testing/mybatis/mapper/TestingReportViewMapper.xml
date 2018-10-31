@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.testing.mybatis.mapper.TestingReportViewMapper" >
+
+  <resultMap id="TestingSheetMap" type="com.todaysoft.lims.testing.mybatis.model.TestingSheetModel" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TESTER_ID" property="testerId" jdbcType="VARCHAR" />
+    <result column="TESTER_NAME" property="testerName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getSheetByOrderIdAndProjectId" resultMap="TestingSheetMap">
+    SELECT
+	sheet.ID,sheet.TESTER_ID,sheet.TESTER_NAME
+    FROM
+        LIMS_TESTING_SHEET sheet
+    left join LIMS_TESTING_SHEET_TASK sheetTask on sheet.ID=sheetTask.SHEET_ID
+    LEFT JOIN LIMS_TESTING_TASK task ON sheetTask.TESTING_TASK_ID = task.ID
+    LEFT JOIN LIMS_TESTING_SCHEDULE_HISTORY sch ON task.ID = sch.TASK_ID
+    LEFT JOIN LIMS_TESTING_SCHEDULE sc ON sc.ID = sch.SCHEDULE_ID
+    WHERE
+        sc.ORDER_ID = #{arg0}
+    AND sc.PRODUCT_ID = #{arg1}
+    AND task.SEMANTIC IN (
+	'TECHNICAL-ANALY',
+	'SANGER-DATA-ANALYSIS',
+	'MLPA-DATA-ANALYSIS',
+	'FLUO-ANALYSE',
+	'DT-DATA-ANALYSIS'
+  )
+  </select>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.CnvAnalysisVerifyMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisVerify" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="IS_FAMILY_TEST_ANALYSIS" property="isFamilyTestAnalysis" jdbcType="INTEGER" />
+    <result column="FAMILY_TEST_METHOD" property="familyTestMethod" jdbcType="VARCHAR" />
+    <result column="VERIFY_FAMILY_SAMPLE_CODE" property="verifyFamilySampleCode" jdbcType="VARCHAR" />
+    <result column="VERIFY_SAMPLE_RELATION" property="verifySampleRelation" jdbcType="VARCHAR" />
+    <result column="CNV_ANALYSIS_RESULT_ID" property="cnvAnalysisResultId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, IS_FAMILY_TEST_ANALYSIS, FAMILY_TEST_METHOD, VERIFY_FAMILY_SAMPLE_CODE, VERIFY_SAMPLE_RELATION, 
+    CNV_ANALYSIS_RESULT_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisVerify" >
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY (ID, IS_FAMILY_TEST_ANALYSIS, FAMILY_TEST_METHOD, 
+      VERIFY_FAMILY_SAMPLE_CODE, VERIFY_SAMPLE_RELATION, 
+      CNV_ANALYSIS_RESULT_ID)
+    values (#{id,jdbcType=VARCHAR}, #{isFamilyTestAnalysis,jdbcType=INTEGER}, #{familyTestMethod,jdbcType=VARCHAR}, 
+      #{verifyFamilySampleCode,jdbcType=VARCHAR}, #{verifySampleRelation,jdbcType=VARCHAR}, 
+      #{cnvAnalysisResultId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisVerify" >
+    insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="isFamilyTestAnalysis != null" >
+        IS_FAMILY_TEST_ANALYSIS,
+      </if>
+      <if test="familyTestMethod != null" >
+        FAMILY_TEST_METHOD,
+      </if>
+      <if test="verifyFamilySampleCode != null" >
+        VERIFY_FAMILY_SAMPLE_CODE,
+      </if>
+      <if test="verifySampleRelation != null" >
+        VERIFY_SAMPLE_RELATION,
+      </if>
+      <if test="cnvAnalysisResultId != null" >
+        CNV_ANALYSIS_RESULT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="isFamilyTestAnalysis != null" >
+        #{isFamilyTestAnalysis,jdbcType=INTEGER},
+      </if>
+      <if test="familyTestMethod != null" >
+        #{familyTestMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyFamilySampleCode != null" >
+        #{verifyFamilySampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="verifySampleRelation != null" >
+        #{verifySampleRelation,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisResultId != null" >
+        #{cnvAnalysisResultId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisVerify" >
+    update LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    <set >
+      <if test="isFamilyTestAnalysis != null" >
+        IS_FAMILY_TEST_ANALYSIS = #{isFamilyTestAnalysis,jdbcType=INTEGER},
+      </if>
+      <if test="familyTestMethod != null" >
+        FAMILY_TEST_METHOD = #{familyTestMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyFamilySampleCode != null" >
+        VERIFY_FAMILY_SAMPLE_CODE = #{verifyFamilySampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="verifySampleRelation != null" >
+        VERIFY_SAMPLE_RELATION = #{verifySampleRelation,jdbcType=VARCHAR},
+      </if>
+      <if test="cnvAnalysisResultId != null" >
+        CNV_ANALYSIS_RESULT_ID = #{cnvAnalysisResultId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisVerify" >
+    update LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    set IS_FAMILY_TEST_ANALYSIS = #{isFamilyTestAnalysis,jdbcType=INTEGER},
+      FAMILY_TEST_METHOD = #{familyTestMethod,jdbcType=VARCHAR},
+      VERIFY_FAMILY_SAMPLE_CODE = #{verifyFamilySampleCode,jdbcType=VARCHAR},
+      VERIFY_SAMPLE_RELATION = #{verifySampleRelation,jdbcType=VARCHAR},
+      CNV_ANALYSIS_RESULT_ID = #{cnvAnalysisResultId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectByCnvAnalysisResultId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_TECHNICAL_ANALY_CNV_VERIFY
+    where ID = #{cnvAnalysisResultId,jdbcType=VARCHAR}
+  </select>
+</mapper>

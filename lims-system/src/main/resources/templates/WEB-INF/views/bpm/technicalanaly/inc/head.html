@@ -1,0 +1,82 @@
+<#if doctorAccount?? && doctorAccount.activateStatus==1>
+<header class="header-wrap">
+      <div class="container container-fluid pos_r">
+        <div class="row">
+            <a href="javascript:;"><h1 class="sys-title mr_v0">遗传疾病分析平台</h1></a>
+            <ul class="sys-nav">
+                <li id="defaultmenu"  class="menu" href="${base}/project/pager.jsp" ><a  href="#" >我的项目</a></li>
+                <li class="menu " style="width:100px"><a href="#" >分析</a>
+                      <ul class="sys-child-nav">
+                          <li class="menu" href="${base}/familyAnalysis/list.jsp"><a href="#" >家系分析</a></li>
+                          <li class="menu" ><a href="#" >单例分析</a></li>
+                      </ul>
+                </li>
+                 <li class="menu " ><a href="#" >小工具</a>
+                      <ul class="sys-child-nav">
+                      <#if friendlyLinkLink??>
+                      	<#list  friendlyLinkLink as record>
+                           <li><a href="#"  onclick="openLink('${record.address!?html}')">${record.name!?html}</a></li>
+                        </#list>
+                        </#if>
+                      </ul>
+                </li>
+            </ul>
+            <div class="user-info-box">
+                <span class="user-photo">
+                    <img src="" alt="">
+                </span>
+                <div class="user-info-txt">
+                    <div class="user-name">
+                        ${account.name!?html}
+                    </div>
+                    <div class="user-op-items ">
+                        <span class="user-op-item editinfo">
+                            <a  href="${base}/modifyPersonalInfo.jsp">修改资料</a>
+                        </span>
+                         <span class="user-op-item">
+                             <a href="${base}/logout.jsp">退出</a>
+                         </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</header>
+<#else>
+ <header class="header-wrap">
+        <div class="container container-fluid pos_r">
+            <div class="row">
+                <a href="javascript:;"><h1 class="sys-title mr_v0">遗传疾病分析平台</h1></a>
+                <ul class="sys-nav">
+                    <li><a href="javascript:;">我的项目</a></li>
+                    <li><a href="javascript:;" style="width:100px">分析</a>
+                        <ul class="sys-child-nav">
+                            <li><a href="javascript:;">家系分析</a></li>
+                            <li><a href="javascript:;">单例分析</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:;">小工具</a></li>
+                </ul>
+                <div class="user-info-box">
+                <span class="user-photo">
+                    <img src="" alt="">
+                </span>
+                    <div class="user-info-txt">
+                        <div class="user-name">
+                            ${account.name!?html}
+                        </div>
+                        <div class="user-op-items">
+                        <span class="user-op-item">
+                            <a href="${base}/modifyPersonalInfo.jsp">修改资料</a>
+                        </span>
+                            <span class="user-op-item">
+                             <a href="${base}/logout.jsp">退出</a>
+                         </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+</#if>

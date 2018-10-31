@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.TechnicalAnalyVerifyMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="RECORD_ID" property="recordId" jdbcType="VARCHAR" />
+		<result column="INPUT_SAMPLE_ID" property="inputSampleId"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_FAMILY_RELATION" property="sampleFamilyRelation"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, RECORD_ID, INPUT_SAMPLE_ID, SAMPLE_FAMILY_RELATION
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_TECHNICAL_ANALY_VERIFY (ID, RECORD_ID,
+		INPUT_SAMPLE_ID,
+		SAMPLE_FAMILY_RELATION)
+		values (#{id,jdbcType=VARCHAR},
+		#{recordId,jdbcType=VARCHAR},
+		#{inputSampleId,jdbcType=VARCHAR},
+		#{sampleFamilyRelation,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="recordId != null">
+				RECORD_ID,
+			</if>
+			<if test="inputSampleId != null">
+				INPUT_SAMPLE_ID,
+			</if>
+			<if test="sampleFamilyRelation != null">
+				SAMPLE_FAMILY_RELATION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="recordId != null">
+				#{recordId,jdbcType=VARCHAR},
+			</if>
+			<if test="inputSampleId != null">
+				#{inputSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleFamilyRelation != null">
+				#{sampleFamilyRelation,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		update LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		<set>
+			<if test="recordId != null">
+				RECORD_ID = #{recordId,jdbcType=VARCHAR},
+			</if>
+			<if test="inputSampleId != null">
+				INPUT_SAMPLE_ID = #{inputSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleFamilyRelation != null">
+				SAMPLE_FAMILY_RELATION =
+				#{sampleFamilyRelation,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		update LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		set RECORD_ID
+		= #{recordId,jdbcType=VARCHAR},
+		INPUT_SAMPLE_ID =
+		#{inputSampleId,jdbcType=VARCHAR},
+		SAMPLE_FAMILY_RELATION =
+		#{sampleFamilyRelation,jdbcType=VARCHAR}
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByRecord" parameterType="string" resultMap="BaseResultMap">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_VERIFY where RECORD_ID=#{0}
+	</select>
+
+	<select id="selectBySearcher" resultMap="BaseResultMap"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyVerify">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_VERIFY where 1=1
+		<if test="recordId != null">
+			and RECORD_ID = #{recordId,jdbcType=VARCHAR}
+		</if>
+		<if test="inputSampleId != null">
+			and INPUT_SAMPLE_ID = #{inputSampleId,jdbcType=VARCHAR}
+		</if>
+		<if test="sampleFamilyRelation != null">
+			and SAMPLE_FAMILY_RELATION =
+			#{sampleFamilyRelation,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectIdsByRecordId" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select ID
+		from LIMS_TESTING_TECHNICAL_ANALY_VERIFY
+		where
+		RECORD_ID =#{0}
+	</select>
+
+</mapper>

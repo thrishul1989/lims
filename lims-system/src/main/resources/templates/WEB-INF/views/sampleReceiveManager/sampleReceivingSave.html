@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>转存操作</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+
+
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+ <script  src="${system_js}/LodopFuncs.js"></script> 
+
+
+
+
+<style>
+.nav>li.active {
+	background-color: white;
+	border-left: 0px
+}
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">样本转存</a></li>
+						</ol>
+						<div style="float: right; margin-top: -20px">
+							<a href="${base}/sampleReceiving/sampleTransferringPaging.do" target="_self"
+								style="padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox">
+				
+						
+					<div class="ibox-content">
+					
+						<div style="display: inline; float: left;">
+								<input type="text" class="form-control" name="orderCode" value="" id="saomiao"
+									style="width: 280px;position: relative;z-index: 9999 " placeholder="请扫描或输入样本条码,按回车确认">
+						</div>
+					
+					<!-- 	<div style="overflow: auto ;">
+							
+							<div style="float: right;">
+								<a href="#" class="btn btn-sm btn-primary" ">
+		                            <i class="fa fa-print"></i> 导出样本编号
+		                        </a>
+	                        </div>
+                        </div> -->
+
+						<form id="sampleForm" class="form-horizontal m-t" action="" method="post" style="clear:both;margin-top:50px"
+							enctype='application/json'>
+
+							<fieldset>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<a data-toggle="collapse" href="#collapseOne">
+											<div class="panel-heading"
+												style="background-color: #f5f5f5; height: auto; overflow: hidden;">
+												<h4 class="panel-title" style="float: left">样本基本信息</h4>
+
+												<img src="${system_images}/checked.png"
+													style="float: right; height: 26px; display: none" id="orderCheck" />
+											</div>
+										</a>
+										<div id="collapseOne" class="panel-collapse collapse in"></div>
+									</div>
+
+
+
+
+								</div>
+
+								<div class="form-group"  style="display: none" id="remarkForm">
+								<label class="col-sm-2 control-label ">转存备注：</label>
+											<div class="col-sm-8">
+												<textarea  class="form-control" name="remark" id="remark" value="" style="height: 90px;resize:none"></textarea>
+											</div>
+								</div>
+							
+							<div class="form-group" >
+									<div class="col-sm-12 " style="text-align: center">
+										<button type="button" class="btn btn-primary" id="create" disabled="disabled" onclick="javascript:$('#sampleForm').submit()"  >提交</button>
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+							</div>
+
+
+							</fieldset>
+						</form>
+						
+							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form> -->
+</body>
+
+<!-- clone用 -->
+<span style="display: none">
+	<div class="ibox-content clone">
+		<img src="${system_images}/checkedblue.png" name="sampleCheck"
+			style="height: 26px; position: absolute; margin-top: 34px; margin-left: 58px;" />
+		<div class="form-group">
+		<input type="hidden" class="form-control" name="sampleId" value="" readonly="readonly" />
+		<input type="hidden" class="form-control" name="sampleBtype" value="" readonly="readonly" />
+		<input type="hidden" class="form-control" name="purpose" value="" readonly="readonly" />
+
+		<div style="font-size: 16px;position: absolute;margin-top: 74px;margin-left: 62px;color: #4137CD"><span class="sampleBType"></span></div> 	
+			
+			
+			<label class="col-sm-2 control-label ">样本编号：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="sampleCode" value="" readonly="readonly" />
+			</div>
+
+			<label class="col-sm-2 control-label ">样本类型：</label>
+			<div class="col-sm-3">
+				<select class="form-control" name="sampleType" disabled="disabled">
+					<option value="">请选择样本类型</option> <#if sample?has_content> <#list sample as record>
+					<option value="${record.id}">${record.name!?html}</option> </#list></#if>
+				</select>
+			</div>
+			
+		<input type="hidden" class="form-control" name="sampleTypeSize" value="" readonly="readonly" />
+		</div>
+
+		<div class="form-group">
+
+			<label class="col-sm-2 control-label ">样本名称：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="sampleName" value="" readonly="readonly" />
+
+			</div>
+
+
+			<label class="col-sm-2 control-label ">样本量(<span class='unit'></span>)：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="sampleSize" value="" readonly="readonly" />
+
+			</div>
+
+
+
+
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label control-required">接收样本量(<span class='unit' style="color: gray"></span>)：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="receiveSize" value=""  onblur="changeSize(this)" />
+			</div>
+			
+			
+			<label class="col-sm-2 control-label">长期存储量(<span class='unit'></span>)：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="lsSize" value="" readOnly="readonly"  />
+
+			</div>
+
+
+		</div>
+
+		<div class="form-group">
+			<input type="hidden" class="form-control" name="unit" />
+			<label class="col-sm-2 control-label control-required">临时存储量(<span class='unit' style="color: gray"></span>)：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="tsSize" value="" readonly="readonly" />
+			</div>
+		
+			
+		<label class="col-sm-2 control-label " id="purposeLeb">样本用途：</label>
+		<div class="col-sm-3">
+			<input type="text" class="form-control" name="purposeName" value="" readonly="readonly" />
+		</div>
+		</div>
+	</div>
+</span>
+
+
+
+</html>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		
+		$(window).scroll(function() { 
+			var top = $(window).scrollTop(); 
+			var left= $(window).scrollLeft(); 
+			$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+		});
+		
+		$("#saomiao").focus();
+		
+		$("#sampleForm").validate({
+	        submitHandler:function(form){
+                $("#create").attr('disabled', 'disabled');//提交之后置灰以防重复提交
+                var sampleDate=[];
+	        	//组装数据
+	        	$.each($('.sampleContent'),function(index,sample){
+	        		var sampleId=$(sample).find('input[name="sampleId"]').val();
+	        		var sampleName=$(sample).find('input[name="sampleName"]').val();
+	        		var typeId=$(sample).find('select[name="sampleType"]').val();
+	        		var sampleBtype=$(sample).find('input[name="sampleBtype"]').val();
+	        		var purpose=$(sample).find('input[name="purpose"]').val();
+	        		var sampleCode=$(sample).find('input[name="sampleCode"]').val();
+	        		var receiveSize=$(sample).find('input[name="receiveSize"]').val();
+	        		var lsSize=$(sample).find('input[name="lsSize"]').val();
+	        		var tsSize=$(sample).find('input[name="tsSize"]').val();
+	        		var unit=$(sample).find('input[name="unit"]').val();
+	        		sampleDate.push({sampleId:sampleId,sampleBtype:sampleBtype,purpose:purpose,
+	        			sampleName:sampleName,typeId:typeId,sampleCode:sampleCode,sampleSize:receiveSize,
+	        			lsSize:lsSize,tsSize:tsSize,sizeUnit:unit,sort:index});
+	        		
+	        	})
+	        	
+	        $.ajax({
+            type: "POST",
+            url: "${base}/sampleReceiving/createTransfer.do",
+            data: {remark:$("#remark").val(),sampleTransferringString:JSON.stringify(sampleDate)},
+            dataType: "json",
+          
+            success: function(data){
+            
+            	if(data.result){
+            		window.location.href="${base}/sampleReceiving/sampleTransferringPaging.do"
+            		parent.layer.alert("转存成功，请后续操作!");
+            		
+            	}
+            }
+	        	})
+	             
+	        },
+	   		 rules: {
+	   			receiveSize:{
+	   				 required:true,
+	   				 maxlength:50,
+	   				number:true
+	   			 },
+	   			 
+	   			lsSize:{
+	  				number:true
+	  			 },
+	  			tsSize:{
+	  				 required:true,
+	  				 maxlength:20,
+	  				number:true
+	  			 },
+	  			unit:{
+	  				required:true
+	  			}
+	   		 },
+	   		 messages:{
+	   			
+	   		 }
+	   		
+	   	});
+		
+		
+		
+		
+
+		$("#saomiao").keydown(function(e) {
+			if (e.keyCode == 13) {
+				
+				if($("#saomiao").val()=='' || $("#saomiao").val()==undefined){
+					showTip("请输入转存样本编号","错误提示");
+					return false;
+				}
+				//请求数据
+				$.ajax({
+					type : "POST",
+					url : "${base}/sampleReceiving/getHasReceivedSample.do",
+					data : {
+						sampleCode : $("#saomiao").val()
+					},
+					dataType : "json",
+					success : function(result) {
+					if(result.success){
+	        	        var data = result.data; 
+	        	       // debugger;
+							if($('.sampleContent').length == 0){
+								$("#remarkForm").css('display','block')
+							}
+							//判断是否重复样本
+							var flag=true;
+							$.each($('.sampleContent'),function(index,oo){
+								if($(oo).find("input[name='sampleCode']").val() == data.sampleCode){
+									flag=false;
+									return;
+								}
+							})
+							if(!flag){
+								showTip("该样本已在转存列表中","提示");
+								return;
+							} 
+							var sampleClone=$(".clone").clone();
+							$(sampleClone).removeClass('clone');
+							$(sampleClone).addClass('sampleContent');
+							$(sampleClone).attr('id',data.sampleCode);
+							//塞入数据
+							$(sampleClone).find("input[name='sampleId']").val(data.sampleId);
+							$(sampleClone).find("input[name='sampleBtype']").val(data.businessType);
+							if(data.businessType == 1){
+	            				$(sampleClone).find('.sampleBType').text("主样本");
+	            				$(sampleClone).find("input[name='purposeName']").css("display","none");
+	            				$(sampleClone).find("#purposeLeb").css("display","none");
+		            		}
+		            		else if(data.businessType == 2){
+		            			$(sampleClone).find('.sampleBType').text("附属样本");
+		            		}
+		            		else if(data.businessType == 3){
+		            			$(sampleClone).find('.sampleBType').text("科研样本");
+		            			$(sampleClone).find("input[name='purposeName']").css("display","none");
+		            			$(sampleClone).find("#purposeLeb").css("display","none");
+		            		} 
+							
+							$(sampleClone).find("input[name='purpose']").val(data.purpose);
+							if(data.purpose == 1){
+								$(sampleClone).find("input[name='purposeName']").val("验证");
+							}else if(data.purpose == 2){
+								$(sampleClone).find("input[name='purposeName']").val("检测");
+							}else if(data.purpose == 3){
+								$(sampleClone).find("input[name='purposeName']").val("对照");
+							}else if(data.purpose == 4){
+								$(sampleClone).find("input[name='purposeName']").val("暂存");
+							}
+							$(sampleClone).find(".unit").text(data.unit);
+							$(sampleClone).find("input[name='unit']").val(data.unit);
+							$(sampleClone).find("input[name='sampleCode']").val(data.sampleCode);
+							$(sampleClone).find("input[name='sampleName']").val(data.sampleName);
+							$(sampleClone).find("select[name='sampleType']").val(data.typeId);
+							$(sampleClone).find("input[name='sampleSize']").val(data.sampleSize);  //订单接收样本
+							$(sampleClone).find("input[name='receiveSize']").val(data.sampleSize);  //订单接收样本
+							$(sampleClone).find("input[name='sampleTypeSize']").val(data.typeSize);  //样本默认配置
+							
+							/* if(data.typeSize != undefined ){
+								$(sampleClone).find("input[name='lsSize']").removeAttr("readOnly");
+							} */
+							
+							var del = parseInt(data.sampleSize-data.typeSize);
+							
+							if(del>0){
+								if(data.typeSize != undefined){
+									$(sampleClone).find("input[name='lsSize']").val(data.typeSize);	
+									$(sampleClone).find("input[name='tsSize']").val(del);
+								}else{
+									$(sampleClone).find("input[name='lsSize']").val(data.sampleSize);	
+									$(sampleClone).find("input[name='tsSize']").val(0);
+								}
+								
+							}else{
+								$(sampleClone).find("input[name='lsSize']").val(data.sampleSize);	
+								$(sampleClone).find("input[name='tsSize']").val(0);
+							}
+							
+							$("#collapseOne").append(sampleClone);
+							$("#create").removeAttr("disabled");
+							window.location.href='#'+data.sampleCode;
+						}else{
+							showTip(result.msg,"错误提示");
+		            		$("#saomiao").focus();
+						}
+					
+					    $("#saomiao").val('')
+						var top = $(window).scrollTop(); 
+						var left= $(window).scrollLeft(); 
+						$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+				        $("#saomiao").focus();
+					}
+				});
+
+				
+
+			}
+		});
+
+	})
+
+	$("#saomiao").blur(function() {
+
+	})
+	
+	
+	function changeSize(obj){
+		debugger;
+		var form=$(obj).parent().parent().parent();
+		if(parseInt($(form).find('input[name="lsSize"]').val()) >parseInt($(form).find('input[name="receiveSize"]').val())  ){
+			$(form).find('input[name="lsSize"]').val($(form).find('input[name="receiveSize"]').val());
+			$(form).find('input[name="tsSize"]').val(0);
+		} else{ 
+			var del=parseInt($(form).find('input[name="receiveSize"]').val()-$(form).find('input[name="lsSize"]').val());
+			
+			if(del>0){ //接收量大于长期
+				var defaultSize = $(form).find('input[name="sampleTypeSize"]').val();
+				if(defaultSize!= undefined && defaultSize!=''){  //有默认配置
+					$(form).find('input[name="lsSize"]').val($(form).find('input[name="sampleTypeSize"]').val());
+					$(form).find('input[name="tsSize"]').val($(form).find('input[name="receiveSize"]').val()-$(form).find('input[name="lsSize"]').val());
+				}else{
+					$(form).find('input[name="lsSize"]').val($(form).find('input[name="receiveSize"]').val());
+					$(form).find("input[name='tsSize']").val(0);
+				}
+			}
+			else{
+				$(form).find("input[name='lsSize']").val($(form).find('input[name="receiveSize"]').val());	
+				$(form).find("input[name='tsSize']").val(0);
+			}
+			
+		 
+		}
+	}
+	
+	
+	
+</script>

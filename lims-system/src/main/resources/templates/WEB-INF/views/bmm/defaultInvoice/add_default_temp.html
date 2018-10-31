@@ -1,0 +1,27 @@
+<table class="table table-striped table-bordered table-hover invoiceTable">
+	<tr>
+		<th class="col-sm-1">开票单位：</th>
+		<td class="col-sm-2"><input class="form-control institution" type="text" name="institution" value="<#if record.institution??> <#if record.institution == "0">北京检验所 <#elseif record.institution == "1">北京迈基诺 <#elseif record.institution == "2">重庆迈基诺 <#else>重庆检验所</#if></#if>" readonly/></td>
+		<th class="col-sm-1">开票金额：</th>
+		<td class="col-sm-2"><input class="form-control invoiceAmount" type="text" name="invoiceAmount" value="0"/></td>
+		<th>开票人：</th>
+		<td>
+			<select class="form-control drawerId" name="drawerId">
+				<option value="">---请选择---</option>
+				<#if userlist??><#list userlist as user>
+				<option value="${user.id}">${user.name!?html}</option>
+				</#list></#if>
+			</select>
+		</td>
+		<th></th>
+	</tr>
+	<tr>
+		<th>开票时间：</th>
+		<td><input class="form-control laydate-icon invoiceTime" type="text" value="${.now?string('yyyy-MM-dd')}" name="invoiceTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"/></td>
+		<th>开票单号：</th>
+		<td><input class="form-control invoicerNo" type="text" name="invoicerNo"/></td>
+		<th>领取人：</th>
+		<td><input class="form-control receiverName" type="text" name="receiverName"/></td>
+		<th><a class="btn btn-sm btn-success removeInvoice" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56); float: right;"><i class="fa fa-trash"></i> 删除此条开票信息</a></th>
+	</tr>
+</table>

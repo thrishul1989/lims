@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingScheduleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+		<result column="METHOD_ID" property="methodId" jdbcType="VARCHAR" />
+		<result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="ACTIVE_TASK" property="activeTask" jdbcType="VARCHAR" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="END_TYPE" property="endType" jdbcType="BIT" />
+		<result column="VERIFY_TARGET" property="verifyTarget"
+			jdbcType="VARCHAR" />
+		<result column="SCHEDULE_NODES" property="scheduleNodes"
+			jdbcType="VARCHAR" />
+		<result column="SCHEDULE_OUTPUTS" property="scheduleOutputs"
+			jdbcType="VARCHAR" />
+		<result column="VERIFY_KEY" property="verifyKey" jdbcType="VARCHAR" />
+		<result column="PROCCESS_STATE" property="proccessState"
+			jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, ORDER_ID, PRODUCT_ID, METHOD_ID, SAMPLE_ID, START_TIME,
+		ACTIVE_TASK,
+		END_TIME,
+		END_TYPE, VERIFY_TARGET, SCHEDULE_NODES,
+		SCHEDULE_OUTPUTS, VERIFY_KEY,
+		PROCCESS_STATE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_SCHEDULE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_SCHEDULE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SCHEDULE (ID, ORDER_ID,
+		PRODUCT_ID,
+		METHOD_ID, SAMPLE_ID, START_TIME,
+		ACTIVE_TASK, END_TIME,
+		END_TYPE,
+		VERIFY_TARGET, SCHEDULE_NODES, SCHEDULE_OUTPUTS,
+		VERIFY_KEY,
+		PROCCESS_STATE)
+		values (#{id,jdbcType=VARCHAR},
+		#{orderId,jdbcType=VARCHAR},
+		#{productId,jdbcType=VARCHAR},
+		#{methodId,jdbcType=VARCHAR}, #{sampleId,jdbcType=VARCHAR},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{activeTask,jdbcType=VARCHAR},
+		#{endTime,jdbcType=TIMESTAMP},
+		#{endType,jdbcType=BIT},
+		#{verifyTarget,jdbcType=VARCHAR}, #{scheduleNodes,jdbcType=VARCHAR},
+		#{scheduleOutputs,jdbcType=VARCHAR},
+		#{verifyKey,jdbcType=VARCHAR},
+		#{proccessState,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SCHEDULE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="orderId != null">
+				ORDER_ID,
+			</if>
+			<if test="productId != null">
+				PRODUCT_ID,
+			</if>
+			<if test="methodId != null">
+				METHOD_ID,
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID,
+			</if>
+			<if test="startTime != null">
+				START_TIME,
+			</if>
+			<if test="activeTask != null">
+				ACTIVE_TASK,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+			<if test="endType != null">
+				END_TYPE,
+			</if>
+			<if test="verifyTarget != null">
+				VERIFY_TARGET,
+			</if>
+			<if test="scheduleNodes != null">
+				SCHEDULE_NODES,
+			</if>
+			<if test="scheduleOutputs != null">
+				SCHEDULE_OUTPUTS,
+			</if>
+			<if test="verifyKey != null">
+				VERIFY_KEY,
+			</if>
+			<if test="proccessState != null">
+				PROCCESS_STATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="productId != null">
+				#{productId,jdbcType=VARCHAR},
+			</if>
+			<if test="methodId != null">
+				#{methodId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				#{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activeTask != null">
+				#{activeTask,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endType != null">
+				#{endType,jdbcType=BIT},
+			</if>
+			<if test="verifyTarget != null">
+				#{verifyTarget,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleNodes != null">
+				#{scheduleNodes,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleOutputs != null">
+				#{scheduleOutputs,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyKey != null">
+				#{verifyKey,jdbcType=VARCHAR},
+			</if>
+			<if test="proccessState != null">
+				#{proccessState,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule">
+		update LIMS_TESTING_SCHEDULE
+		<set>
+			<if test="orderId != null">
+				ORDER_ID = #{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="productId != null">
+				PRODUCT_ID = #{productId,jdbcType=VARCHAR},
+			</if>
+			<if test="methodId != null">
+				METHOD_ID = #{methodId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				START_TIME = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activeTask != null">
+				ACTIVE_TASK = #{activeTask,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endType != null">
+				END_TYPE = #{endType,jdbcType=BIT},
+			</if>
+			<if test="verifyTarget != null">
+				VERIFY_TARGET = #{verifyTarget,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleNodes != null">
+				SCHEDULE_NODES = #{scheduleNodes,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleOutputs != null">
+				SCHEDULE_OUTPUTS = #{scheduleOutputs,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyKey != null">
+				VERIFY_KEY = #{verifyKey,jdbcType=VARCHAR},
+			</if>
+			<if test="proccessState != null">
+				PROCCESS_STATE = #{proccessState,jdbcType=BIT},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule">
+		update LIMS_TESTING_SCHEDULE
+		set ORDER_ID =
+		#{orderId,jdbcType=VARCHAR},
+		PRODUCT_ID =
+		#{productId,jdbcType=VARCHAR},
+		METHOD_ID =
+		#{methodId,jdbcType=VARCHAR},
+		SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+		START_TIME = #{startTime,jdbcType=TIMESTAMP},
+		ACTIVE_TASK =
+		#{activeTask,jdbcType=VARCHAR},
+		END_TIME =
+		#{endTime,jdbcType=TIMESTAMP},
+		END_TYPE = #{endType,jdbcType=BIT},
+		VERIFY_TARGET = #{verifyTarget,jdbcType=VARCHAR},
+		SCHEDULE_NODES =
+		#{scheduleNodes,jdbcType=VARCHAR},
+		SCHEDULE_OUTPUTS =
+		#{scheduleOutputs,jdbcType=VARCHAR},
+		VERIFY_KEY =
+		#{verifyKey,jdbcType=VARCHAR},
+		PROCCESS_STATE =
+		#{proccessState,jdbcType=BIT}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectBySearcher"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSchedule"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_SCHEDULE where 1=1
+		<if test="orderId != null">
+			and ORDER_ID = #{orderId,jdbcType=VARCHAR}
+		</if>
+		<if test="productId != null">
+			and PRODUCT_ID = #{productId,jdbcType=VARCHAR}
+		</if>
+		<if test="methodId != null">
+			and METHOD_ID = #{methodId,jdbcType=VARCHAR}
+		</if>
+		<if test="sampleId != null">
+			and SAMPLE_ID = #{sampleId,jdbcType=VARCHAR}
+		</if>
+
+		<if test="verifyTarget != null">
+			and VERIFY_TARGET = #{verifyTarget,jdbcType=VARCHAR}
+		</if>
+
+
+		<if test="verifyKey != null">
+			and VERIFY_KEY = #{verifyKey,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+</mapper>

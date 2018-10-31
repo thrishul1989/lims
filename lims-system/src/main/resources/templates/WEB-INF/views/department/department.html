@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>探针管理</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap-treeview.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<style>
+#L_REAGENT_PROBE_anchor {
+	background-color: #e1e4e4
+}
+
+.ibox .ibox-title a.btn {
+	margin-right: 5px
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/probe/list.do">机构管理</a></li>
+							<li class="active"><strong>机构管理列表</strong></li>
+
+
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+
+						<h5>机构管理列表</h5>
+						<@smm_security_resource resource = "/department/create.do"><a class="btn btn-sm btn-success" href="javascript:open()"> <i class="fa fa-plus"></i> 新增
+						</a>
+						 <a href="javascript:edit()" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>修改
+						</a> </@smm_security_resource>
+						<@smm_security_resource resource = "/department/delete.do"><a class="btn btn-sm btn-success "  href="javascript:del()">
+							<i class="fa fa-trash"></i>删除
+						</a></@smm_security_resource>
+
+					</div>
+					<div class="ibox-content" style="overflow: hidden; zoom: 1">
+
+
+
+						<!-- <div class="col-sm-2">
+                            <div id="metadata_tree"></div>
+                        </div> -->
+
+
+
+
+
+						<div class="col-sm-12">
+							<label for="treeview"></label>
+							<div id="treeview" />
+						</div>
+
+
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" style="position: relative; top: 140px; width: 810px">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">新增机构</h4>
+				</div>
+				<form action="" method="post" name="uploadForm" enctype="multipart/form-data" id="uploadForm"
+					class="form-horizontal m-t">
+					<div class="modal-body">
+						<input type="hidden" id="id">
+
+						<fieldset>
+							<div class="form-group">
+
+
+								<label class="col-sm-2 control-label control-required">机构名称：</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" name="name" id="name" value="" />
+								</div>
+
+								<label class="col-sm-2 control-label ">机构负责人：</label>
+
+								<div class="col-sm-4">
+									<div class="form-control" id="principal" placeholder="请选择负责人"></div>
+								</div>
+
+							</div>
+
+							<div class="form-group">
+
+
+								<label class="col-sm-2 control-label ">上级机构：</label>
+								<div class="col-sm-4">
+									<div class="form-control" id="department" placeholder=""></div>
+								</div>
+
+
+
+
+
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label ">备注：</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" name="remark" id="remark" value="" />
+								</div>
+							</div>
+
+
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="savedep()">提交</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+
+	</div>
+	<!-- /.modal -->
+
+
+</body>
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap-treeview.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>	
+<script type="text/javascript">
+var p;
+var d;
+
+  		$(function() {
+  			
+  			
+  			p=	$('#principal').magicSuggest({
+  			    width: 190,
+  			    highlight: true,
+  		        data:'${base}/smm/user/list_json.do?',
+  			    method:'get',
+  			    maxSelection: 1,
+  			    queryParam:"key",
+  			    allowFreeEntries:false,
+  			    expandOnFocus:false,
+  			    renderer: function(v){
+  			    return '<div>' +
+  			        '<div >' +
+  			        
+  			            '<div  class="probe">' + v.name + '</div>' +
+  			            '</div></div>';
+  			    }
+  			});
+  			
+  			
+  			d=	$('#department').magicSuggest({
+  			    width: 190,
+  			    highlight: true,
+  		        data:'${base}/department/departmentSelect.do?',
+  			    method:'get',
+  			    queryParam:"text",
+  			    maxSelection: 1,
+  			    displayField:'text',
+  			    allowFreeEntries:false,
+  			    expandOnFocus:false,
+  			    renderer: function(v){
+  			    return '<div>' +
+  			        '<div >' +
+  			        
+  			            '<div  class="probe">' + v.text + '</div>' +
+  			            '</div></div>';
+  			    }
+  			});
+  			
+  			
+  			
+  			
+  	
+  			
+  			
+
+        var options = {
+          bootstrap2: false, 
+          showTags: true,
+          levels: 5,
+          data: ${data},
+          emptyIcon:'glyphicon glyphicon-asterisk'
+        };
+  	
+  		var ddd=${data};
+
+  			$('#treeview').treeview(options);
+  			
+  			$('#treeview').on('nodeSelected', function(event, data) {
+  			
+  		
+  			}); 
+  		});
+  		
+  		
+  		function edit(){
+  			$("#myModalLabel").html('编辑机构');
+  			var arr = $('#treeview').treeview('getSelected');
+  			if(arr.length == 0){
+  				parent.layer.alert('请选择一个机构',{title:"提示"});
+    			return false;
+  			}
+  			else{
+  				
+  				$('#id').val(arr[0].id);
+  	  			$('#name').val(arr[0].text);
+  	  			$('#remark').val(arr[0].remark);
+  	  			$('#myModal').modal('show');
+  	  			if(arr[0].pp){
+  	  			d.setSelection(arr[0].pp);	
+  	  			}
+  	  	
+  	  			p.setSelection(arr[0].userDetail.archive)
+  	  		
+  			}
+  		}
+  		
+  		function open(){
+  			$("#myModalLabel").html('新增机构')
+  			$('#id').val('');
+  			$('#name').val('');
+  			$('#remark').val('');
+  			$('#myModal').modal('show');
+  			d.clear();
+  			p.clear();
+  		}
+  		
+  		function savedep(){
+  			var principalList=$('#principal').magicSuggest().getSelection();
+  			var departmentList=$('#department').magicSuggest().getSelection();
+    		if($('#name').val() == null || "" == $('#name').val() ){
+    			parent.layer.alert('请输入机构名称！',{title:"提示"});
+    			return false;
+    		}
+    		//校验text
+    		var flag=true;
+    			$.ajax({
+	            type: "POST",
+	          
+	            url: "${base}/department/validate.do",
+	            data: {text:$('#name').val(),id:$("#id").val()},
+	            dataType: "json",
+	            async: false,
+	            success: function(data){
+	            if(!data){
+	            		parent.layer.alert('机构名称不能重复',{title:"提示"});
+	            		flag= false;	
+	            		
+	            	}
+	            	
+	            }
+	            })
+	            if(!flag){
+	            	return ;
+	            	
+	            }
+	            
+    		
+    		var data={};
+    		data.text=$('#name').val();
+    		if("" != $('#id').val() && null != $('#id').val()){
+    			data.id=$('#id').val()
+    		}
+    		if(departmentList.length != 0){
+    			data.parentId={id:departmentList[0].id};
+    		}
+    		if(principalList.length != 0){
+    			data.principalId=principalList[0].id
+    		}
+    		data.remark=$("#remark").val();
+    
+    		$.ajax({
+	            type: "POST",
+	            contentType : 'application/json',
+	            url: "${base}/department/create.do",
+	            data: JSON.stringify(data),
+	            dataType: "json",
+	            success: function(data){
+	            	if(data == 1){
+	            		window.location.reload()
+	            		
+	            	}
+	            	else if(data == 3){
+	            		parent.layer.alert('不能选择自身为上级机构',{title:"提示"});
+	            		
+	            	}
+	            	
+	            }
+	            })
+  			
+  		}
+  		
+  		function del(){
+  			
+  			 layer.confirm('确定删除该机构么？', { btn: ['确定','取消'] ,area: ['320px', '175px']}, function(){
+  		    	layer.closeAll('dialog');
+  		    	var arr = $('#treeview').treeview('getSelected');
+  	  			if(arr.length == 0){
+  	  				parent.layer.alert('请选择一个机构',{title:"提示"});
+  	    			return false;
+  	  			}
+  	  			
+  	  			$.ajax({
+  		            type: "POST",
+  		            contentType : 'application/json',
+  		            url: "${base}/department/delete.do",
+  		            data: JSON.stringify({id:arr[0].id}),
+  		            dataType: "json",
+  		            success: function(data){
+  		            	if(data == 1){
+  		            		window.location.reload()
+  		            		
+  		            	}
+  		            	
+  		            }
+  		            })
+  			 });
+  			
+	            
+	            
+  		}
+  	</script>
+
+</html>
+

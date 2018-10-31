@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>探针管理</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<style>
+#L_REAGENT_PROBE_anchor {
+    background-color: #e1e4e4
+}
+
+button.btn.btn-default.dropdown-toggle {
+    margin-top: 0px;
+    background-color: white;
+    color: #c5c5c5;
+    border-color: #e5e6e7;
+}
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li><a href="${base}/customer/list.do">客户管理</a></li>
+                            <li class="active"><strong>客户管理列表</strong></li>
+
+
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+
+                        <h5>客户管理列表</h5>
+                        <a href="#" id="btn_assign" class="btn btn-sm btn-success">
+                            <i class="fa fa-edit"></i> 批量改绑
+                        </a>
+                        <!--批量改绑的过程实现了批量解绑并批量绑定，该按钮可仅实现批量解绑功能-->
+                        <!--<a href="#" id="btn_remove" class="btn btn-sm btn-success">-->
+                            <!--<i class="fa fa-circle-o"></i> 批量解绑-->
+                        <!--</a>-->
+
+                    </div>
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+
+
+                        <div class="col-sm-12">
+
+                            <form id="search_from" action="${base}/customer/list.do" method="post" class="search-form">
+                                <div class="row m-b-xs">
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input type="text" name="realName" class="form-control" id="realName" placeholder="客户名称"
+                                                value="${(searcher.realName)!?html}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input type="text" name="phoneNum" class="form-control" id="phoneNum" placeholder="手机号"
+                                                value="${(searcher.phoneNum)!?html}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input type="text" name="createId.realName" class="form-control" id="businessName"
+                                                placeholder="初始业务员" value="${(searcher.createId.realName)!?html}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input type="text" name="currentId.realName" class="form-control" id="businessNames"
+                                                   placeholder="当前业务员" value="${(searcher.currentId.realName)!?html}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <!--                                     <select class="form-control" name="company.name" data-value="${(searcher.company.name)!?html}"><option value="">请选择单位</option> -->
+                                            <!--                                     <#if companyList?has_content> <#list companyList as company> -->
+                                            <!--                                     <option value="${company.name}">${company.name}</option> -->
+                                            <!--                                     </#list></#if> -->
+                                            <!--                                     </select> -->
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="company" name="company.name"<#if
+                                                searcher.company??> value="${searcher.company.name!? html}" </#if> placeholder="请选择单位">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <select class="form-control" name="activateStatus"
+                                                data-value="${(searcher.activateStatus)!?html}"><option value="">请选择状态</option>
+                                                <option value="1">已激活</option>
+                                                <option value="0">未激活</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <select class="form-control" name="analyseType" data-value="${(searcher.analyseType)!?html}" id="analyseType"><option value="">请选择是否参与分析</option>
+                                                <@dict_entries category="ANALYSIS_TYPE">
+                                                <#if entries??>
+                                                    <#list entries as entry>
+
+                                                        <option value="${entry.value!}" <#if customer.analyseType??><#if entry.value==customer.analyseType >selected</#if></#if> >${entry.text!?html}</option>
+                                                    </#list>
+                                                </#if>
+                                            </@dict_entries>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-2 pull-right">
+                                        <div class="form-group">
+
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="fa fa-search"></i> 查询
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')">
+                                                <i class="fa fa-remove"></i> 清空
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="check-controller" /></th>
+                                        <th class="index">序号</th>
+                                        <th>客户姓名</th>
+                                        <th>手机号</th>
+                                        <th>性别</th>
+                                        <th>所在单位</th>
+                                        <th>附属账号数</th>
+                                        <th>初始业务员</th>
+                                        <th>当前业务员</th>
+                                        <th>状态</th>
+
+                                        <th class="flexible-btns">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <#if pagination.records?has_content> <#list pagination.records as record>
+                                    <tr>
+                                        <td><input type="checkbox" class="check-instance" value="${record.id!}"/></td>
+                                        <td>${record_index + 1}</td>
+                                        <td>${record.realName!?html}</td>
+                                        <td>${record.phoneNum!?html}</td>
+
+                                        <td><@dict_entry_text category="SEX" value=record.sex /></td>
+                                        <td><#if record.company??>${record.company.name!?html}</#if></td>
+                                        <td>${record.countSubCustomer!?html}</td>
+                                        <td><#if record.createId??>${record.createId.realName!?html}<#else></#if></td>
+
+                                        <td><#if record.customerRelationList??><#list record.customerRelationList as currentName>${currentName.business.realName!?html}
+                                        </#list></#if>
+                                        </td>
+
+                                        <td><#if record.activateStatus??><#if record.activateStatus == 1>已激活<#else>未激活</#if></#if></td>
+                                        <td class="flexible-btns">
+                                            <#if record.activateStatus == 1> 
+                                            <@smm_security_resource resource = "/customer/enableCustomer.do">
+                                            <#if record.disableStatus == 0> <a
+                                            href="${base}/customer/enableCustomer.do?id=${record.id}&disableStatus=1"
+                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定禁用该客户?"> <i
+                                                class="fa fa-circle-o"></i> 禁用
+                                        </a><#else ><a href="${base}/customer/enableCustomer.do?id=${record.id}&disableStatus=0"
+                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定启用该客户?"
+                                            style="background-color: #eb4f38; border-color: #eb4f38"> <i class="fa fa-ban"></i> 启用
+                                        </a> 
+                                        </#if>
+                                        </@smm_security_resource> 
+                                                <@smm_security_resource resource = "/customer/modifyBusiness.do">
+                                                <a href="${base}/customer/modifyBusiness.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-edit"></i> 业务员设置</a>  </@smm_security_resource>
+                                                <#else>
+                                                    <@smm_security_resource resource = "/customer/modifyBusiness.do">
+                                        	<a href="${base}/customer/modifyBusiness.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-edit"></i> 业务员设置</a></@smm_security_resource>
+                                        </#if>
+                                        
+                                        <@smm_security_resource resource = "/customer/modify.do"> <a
+                                            href="${base}/customer/modify.do?id=${record.id}" class="btn btn-sm btn-success"> <i
+                                                class="fa fa-edit"></i> 修改
+                                        </a></@smm_security_resource> <a href="${base}/customer/show.do?id=${record.id}"
+                                            class="btn btn-sm btn-success"> <i class="fa fa-search"></i> 查看
+                                        </a> <@smm_security_resource resource = "/customer/delete.do"> <#if record.activateStatus == 0> <a
+                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该客户么？"
+                                            href="${base}/customer/delete.do?id=${record.id}"> <i class="fa fa-trash"></i> 删除
+                                        </a></#if> 
+                                        </@smm_security_resource>
+                                        </td>
+                                    </tr>
+                                    </#list> </#if>
+                                </tbody>
+                            </table>
+                            <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="assign_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="margin-top: 200px">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 style="float: left">业务员批量改绑</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="create_task_form" name="assign_frame" src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"  class="btn btn-primary" id="released">确定</button>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form action="/customer/businessEnchange.do" target="assign_frame" method="post" id="testForm">
+            <input type="hidden" id="keys" name="keys">
+        </form>
+    </div>
+
+
+    <div class="modal fade" id="assign_remove" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="margin-top: 200px">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 style="float: left">业务员批量解绑</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="remove_task_form" name="remove_assign_frame" src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"  class="btn btn-primary" id="remove">确定</button>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form action="/customer/businessRemove.do" target="remove_assign_frame" method="post" id="removeForm">
+            <input type="hidden" id="ids" name="ids">
+        </form>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/customer_list.js"></script>
+<script src="${system_js}/customer_business_enchange.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script type="text/javascript">
+ 	$("#company").bsSuggest('init', {
+		url : "${base}/company/getCompanys?name=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "name",
+		effectiveFields : [ "name"],
+		effectiveFieldsAlias : {
+			name : "单位名称",
+			
+		}
+	})
+
+    function gotohtml(loadindex) {
+        window.location.href="/customer/list.do";
+        parent.layer.close(loadindex);
+    }
+
+
+ 	</script>
+
+</html>
+

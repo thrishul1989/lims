@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>添加收样任务</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+
+<style>
+.nav>li.active {
+	background-color: white;
+	border-left: 0px
+}
+
+
+
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">样本接收</a></li>
+							<input type="hidden" class="form-control" id="orderId" value="" />
+						</ol>
+						<div style="float: right; margin-top: -20px">
+							<a href="${base}/sampleReceiving/sampleReceivingPaging.do" target="_self"
+								style="padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox">
+
+					<div class="ibox-content">
+
+						<ul class="nav nav-pills nav-justified step step-round">
+							<li id="orderNode"><a>订单确认</a></li>
+							<li id="sampleNode"><a>样本确认</a></li>
+							<li id="transNode"><a>运输质检确认</a></li>
+							<li id="submitNode"><a>提交收样</a></li>
+						</ul>
+
+
+						<input type="text" class="form-control" name="orderCode" value="" id="saomiao"
+							style="width: 280px;position: relative;z-index: 9999" placeholder="请扫描或输入订单条码,按回车确认">
+
+
+
+						<form id="orderForm" class="form-horizontal m-t" action="" method="post"
+							enctype='application/json'>
+
+
+							<fieldset>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<a data-toggle="collapse" href="#collapseOne">
+											<div class="panel-heading"
+												style="background-color: #f5f5f5; height: auto; overflow: hidden;">
+												<h4 class="panel-title" style="float: left">订单基本信息</h4>
+
+												<img src="${system_images}/checked.png"
+													style="float: right; height: 26px; display: none" id="orderCheck" />
+											</div>
+										</a>
+										<div id="collapseOne" class="panel-collapse collapse in">
+
+											<div class="ibox-content">
+												<div class="form-group">
+
+
+													<label class="col-sm-2 control-label control-required">订单编号：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="orderCode" id="orderCode" value=""
+															readonly="readonly" />
+													</div>
+
+													<label class="col-sm-2 control-label ">归属合同：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="contract" id="contract" value=""
+															readonly="readonly" />
+													</div>
+
+												</div>
+
+												<div class="form-group">
+
+
+
+
+													<label class="col-sm-2 control-label control-required">客户参与方式：</label>
+													<div class="col-sm-3" style="padding-top: 5px">
+														<input type="text" class="form-control" name="doctorAssist" id="doctorAssist" value=""
+															readonly="readonly" />
+
+													</div>
+													<div class="hiddengroup">
+														<label class="col-sm-2 control-label ">检测产品：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" name="product" id="product" value=""
+																readonly="readonly" />
+														</div>
+													</div>
+
+
+												</div>
+												<div class="form-group hiddengroup" >
+
+													<label class="col-sm-2 control-label control-required">受检人姓名：</label>
+													<div class="col-sm-3" style="padding-top: 5px">
+														<input type="text" class="form-control" name="examineeName" id="examineeName" value=""
+															readonly="readonly" />
+
+													</div>
+
+													<label class="col-sm-2 control-label ">性别：</label>
+													<div class="col-sm-3">
+														<input type="text" class="form-control" name="examineeSex" id="examineeSex" value=""
+															readonly="readonly" />
+													</div>
+												</div>
+												<div class="form-group hiddengroup" >
+													<label class="col-sm-2 control-label control-required">受检人联系方式：</label>
+													<div class="col-sm-3" style="padding-top: 5px">
+														<input type="text" class="form-control" name="contactPhone" id="contactPhone" value=""
+															readonly="readonly" />
+
+													</div>
+
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+
+									<div class="panel panel-default">
+										<a data-toggle="collapse" href="#sample">
+											<div class="panel-heading"
+												style="background-color: #f5f5f5; height: auto; overflow: hidden;">
+												<h4 class="panel-title" style="float: left">样本基本信息</h4>
+
+												<img src="${system_images}/checked.png"
+													style="float: right; height: 26px; display: none" id="sampleAllCheck" />
+											</div>
+										</a>
+										<div id="sample" class="panel-collapse collapse in">
+
+										<!-- 样本信息 -->
+
+
+
+
+										</div>
+									</div>
+
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">订单状态：</label> <label id="orderState" class="col-sm-2 control-label"
+										style="text-align: left; font-size: 38px; color: #eb4f38; position: relative; bottom: 20px">异常</label>
+
+								</div>
+
+								<div class="form-group" style="position: relative; bottom: 20px">
+									<label class="col-sm-2 control-label">收样备注：</label>
+									<div class="col-sm-8" style="padding-top: 5px">
+										<textarea class="form-control" name="orderRemark" id="orderRemark" value=""
+											style="height: 90px; resize: none"></textarea>
+
+									</div>
+								</div>
+
+
+								<div class="form-group" style="margin-top: 40px">
+									<div class="col-sm-12 " style="text-align: center">
+
+									<!-- <button type="button" class="btn btn-primary" id="create">创建新订单</button> -->
+									<input id="create" type="button" class="btn btn-primary ladda-button"  disabled="disabled" value="提交"  />
+
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+
+
+
+
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+
+
+
+
+</body>
+
+<!-- clone用 -->
+<span style="display: none">
+	<div class="ibox-content clone">
+		<img src="${system_images}/checkedblue.png" name="sampleCheck"
+			style="height: 26px; position: absolute; margin-top: 34px; margin-left: 58px; display: none" />
+		<div class="form-group">
+
+		 	<div style="font-size: 12px;position: absolute;left: 37px;color: #4137CD">
+		 	<span class="sampleBType" style="font-size: 17px;color: #337ab7;font-weight: bold;">
+		 	</span></div> 
+			<input type="hidden"  name="sampleBTypeId" value="" readonly="readonly" />
+			<input type="hidden"  name="sampleId" value="" readonly="readonly" />
+
+			<label class="col-sm-2 control-label ">样本编号：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="sampleCode" value="" readonly="readonly" />
+				
+			</div>
+
+			<label class="col-sm-2 control-label ">样本类型：</label>
+			<div class="col-sm-3">
+				<select class="form-control" name="sampleType" disabled="disabled">
+					<option value="">请选择样本类型</option> <#if sample?has_content> <#list sample as record>
+					<option value="${record.id}">${record.name!?html}</option> </#list></#if>
+				</select>
+			</div>
+
+		</div>
+
+		<div class="form-group">
+
+<label class="col-sm-2 control-label ">样本名称：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="sampleName" value="" readonly="readonly" />
+
+			</div>
+
+
+			<label class="col-sm-2 control-label ">样本量(<span class='unit'></span>)：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="sampleSize" value="" readonly="readonly" />
+
+			</div>
+			
+
+
+
+
+
+
+		</div>
+
+
+
+
+
+		<div class="form-group">
+			
+			
+			<span style="display: none" name="checkSpan"> <label
+				class="col-sm-2 control-label control-required">运输质检：</label>
+				<div class="col-sm-3" style="padding-top: 5px">
+					<input type="radio" name="transcheck" value="1" onclick="checkQuality()" checked="checked">合格&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="transcheck" value="0" onclick="checkfalse(this)">不合格&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				</div>
+			</span>
+			<label class="col-sm-2 control-label ">备注：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="remark" value="" />
+
+			</div>
+			
+		</div>
+
+
+
+
+
+
+
+
+	</div> <!-- 异常clone -->
+
+	<div class="ibox-content errorclone error">
+
+		<input type="hidden" class="form-control" name="errorFlag" />
+		<img
+			src="${system_images}/delete.png" name="sampleCheck" title="点击删除异常样本"
+			style=" position: absolute; margin-top: 2px; margin-left: 2px;cursor: pointer;z-index: 999" onclick="deleteError(this)"/>
+		 <img
+			src="${system_images}/erro.png" name="sampleCheck"
+			style="height: 26px; position: absolute; margin-top: 34px; margin-left: 58px" />
+		<div class="form-group">
+
+
+			<label class="col-sm-2 control-label ">异常样本编号：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="sampleCode" value="" readonly="readonly" />
+			</div>
+
+
+
+		</div>
+
+
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label ">备注：</label>
+			<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="remark" value="" />
+
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+	</div>
+
+
+</span>
+
+
+	
+	
+
+
+
+</html>
+
+<script>
+var code="order";
+$(document).ready(function(){
+	//Ladda.bind( '#create' );
+
+	$(window).scroll(function() { 
+	
+		var top = $(window).scrollTop(); 
+		var left= $(window).scrollLeft(); 
+		$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+		
+		
+	});
+	
+	
+	$("#saomiao").focus();
+	
+	$("#saomiao").keydown(function(e){
+		
+	if(e.keyCode==13){
+			
+	//请求
+	if("order" == code){//请求订单信息
+		if($("#saomiao").val()=='' || $("#saomiao").val()==undefined){
+			showTip("请输入订单编号","错误提示");
+			return false;
+		}
+		$.ajax({
+            type: "POST",
+            url: "${base}/order/list.do",
+            data: {code:$("#saomiao").val()},
+            dataType: "json",
+            async:false, 
+            success: function(result){
+            	if(result.success){
+        	            var data = result.data; 
+	            		code="sample";
+	            		$("#saomiao").attr('placeholder','请扫描或输入样本编号，按回车确认');
+	            		$("#create").html("提交异常订单");
+	            		
+	            		$("#orderCode").val(data.code);
+	            		if(data.contract != undefined && data.contract!="" && data.contract!=null  ){
+	            			 $("#contract").val(data.contract.name); 
+	            		}
+	            		
+	            		$("#orderId").val(data.id);
+	            		if(data.orderType != "4"){ //科技
+		            		$("#examineeName").val(data.orderExamineeList[0].name);
+		            		$("#examineeSex").val(data.orderExamineeList[0].sex ==0?"男":"女"); //0---男 1---女
+		            		$("#contactPhone").val(data.orderExamineeList[0].contactPhone); 
+		            		var products=[];
+		            		$.each(data.orderProductList,function(index,product){
+		            			products.push(product.product.name);
+		            		});
+		            		$("#product").val(products.join(","))
+	            		}else{
+	            			 $(".hiddengroup").css("display","none");
+	            		
+	            		}
+	            		if(data.doctorAssist == "0/0"){
+	            			$("#doctorAssist").val("不参与")
+	            			
+	            		}
+	            		else if(data.doctorAssist == "1/0"){
+	            			$("#doctorAssist").val("参与技术分析")
+	            		}
+	            		else if(data.doctorAssist == "0/1"){
+	            			$("#doctorAssist").val("参与报告审核")
+	            		}else{
+	            			$("#doctorAssist").val("参与技术分析与报告评审");
+	            		}
+	            		
+	            		//订单已经确认
+	            		$("#orderCheck").css('display','block');
+	            		$("#orderNode").addClass('active');
+	            		//清空样本信息重新填入
+	            		$("#sample").html('');
+	            		//填入样本信息
+	            		$.each(data.view,function(index,sample){
+	            			
+	            			var samoleClone=$(".clone").clone();
+	            			$(samoleClone).removeClass('clone');
+	            			$(samoleClone).addClass('sampleContent')
+	            			$(samoleClone).attr('sample-code',sample.sampleCode);
+	            			$(samoleClone).attr('id',sample.sampleCode);
+	            			if(sample.sampleBtype == 1){
+	            				$(samoleClone).find('.sampleBType').text("主样本");
+		            		}
+		            		else if(sample.sampleBtype == 2){
+		            			$(samoleClone).find('.sampleBType').text("附属样本");
+		            		}
+		            		else if(sample.sampleBtype == 3){
+		            			$(samoleClone).find('.sampleBType').text("科研样本");
+		            		} 
+	            			$(samoleClone).find('input[name="sampleBTypeId"]').val(sample.sampleBtype);
+	            			$(samoleClone).find('input[name="sampleId"]').val(sample.sampleId);
+	            			$(samoleClone).find('input[name="sampleCode"]').val(sample.sampleCode);
+	            			$(samoleClone).find('input[name="sampleName"]').val(sample.sampleName);
+	            			$(samoleClone).find('.unit').text(sample.unit);
+	            			$(samoleClone).find('input[name="sampleSize"]').val(sample.sampleSize);
+	            			$(samoleClone).find('select[name="sampleType"]').val(sample.sampleType);
+	            		
+	            			$(samoleClone).find('input[type="radio"]').attr('name',sample.sampleCode);
+	            			$(samoleClone).find('input[type="radio"]').addClass('qualityCheck')
+	            			
+	            			
+	            			
+	            			$("#sample").append(samoleClone);
+	            		});
+	            		$("#create").removeAttr("disabled"); //去掉禁用标签
+	            		$("#saomiao").val('')
+	            	
+            	}else{
+            		showTip(result.msg,"错误提示");
+            		$("#saomiao").focus();
+            		
+            	}
+            	
+            
+            },error:function(){
+            	showTip("error","错误提示");
+            }	 
+        });
+	}
+	else if("sample" == code){//扫描样本编号
+		if($("#saomiao").val()=='' || $("#saomiao").val()==undefined){
+			showTip("请输入样本编号","错误提示");
+			return false;
+		}
+		$.ajax({
+            type: "POST",
+            url: "${base}/sampleReceiving/seacherBasicSample.do",
+            data: {orderId:$("#orderId").val(),sampleCode:$("#saomiao").val()},
+            dataType: "json",
+            async:false, 
+            success: function(data){
+            	if(null != data && "" != data){
+            		data=data[0];
+            		$.each($('.sampleContent'),function(ii,sampleContent){
+            			if($(sampleContent).attr('sample-code')==data.sampleCode){
+            				//该样本收样正确
+            				if($(sampleContent).find('img').css('display') != 'block'){
+            					$(sampleContent).find('img').css('display','block');
+                				$(sampleContent).find('span[name="checkSpan"]').css('display','block');	
+            				}else{
+            					showTip("样本已在列表中","提示");
+            				}
+            				
+            			}
+            			
+            		})
+            		//判断样本是否都已经收到
+            		
+            		var sampleFlag=true;
+            		$.each($('.sampleContent'),function(ii,sampleContent){
+            			if($(sampleContent).find('img').css('display') != 'block'){
+            				sampleFlag=false;
+            			}
+            		})
+            		if(sampleFlag){ //样本全都扫描，默认---成功
+            			$("#sampleNode").addClass('active');
+            		}
+            		
+            		var sampleAllReceive=true;
+            		$.each($('.sampleContent'),function(ii,sampleContent){
+            			if($(sampleContent).find('img').css('display') == 'block' && $(sampleContent).find('input:radio:checked').val() == "1"){
+            				sampleAllReceive = true;
+            				
+            			}else{
+            				sampleAllReceive = false;
+            				return false;
+            			}
+            		})
+            		if(sampleAllReceive){ //样本全都扫描，默认---成功
+            			$("#sampleNode").addClass('active');
+            			$("#orderState").html('正常');
+            			$("#orderState").css('color',"#11cd6e");
+            		}
+            		//页面转到该样本
+            		$("#saomiao").val("");
+            		window.location.href='#'+data.sampleCode;
+            		
+            	
+            	}
+            },
+            error:function(data){
+            	var errorCode=$("#saomiao").val();
+				var error=$('.errorclone').clone();
+				$(error).removeClass('errorclone');
+    			$(error).addClass('sampleContent')
+    			$(error).attr('sample-code',errorCode);
+    			$(error).find('input[name="sampleCode"]').val(errorCode);
+    			$("#sample").append(error);
+    			
+    			$("#orderState").html('异常');
+    			$("#orderState").css('color',"#eb4f38");
+    			
+    			$("#saomiao").focus();
+            }
+		});
+		 $("#saomiao").val('')
+		var top = $(window).scrollTop(); 
+		var left= $(window).scrollLeft(); 
+		$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+        $("#saomiao").focus();
+		
+	}
+	
+		
+			
+			
+			}
+		
+	});
+	
+	
+})
+
+
+
+
+
+$("#create").click(function(){
+	
+	
+	//判断样本是否全部质检通过
+	var flag=true;
+	$.each($('.qualityCheck'),function(index,check){
+		var checkName=$(check).attr('name');
+		if($('input[name="'+checkName+'"]:checked').val() != "1" || $(check).closest('.sampleContent').find('img').css('display') != 'block' ){
+			flag=false;
+			return;
+		}
+		
+	});
+	
+	
+	//组装数据
+	var sampleList=[];
+	$.each($('.sampleContent'),function(ii,sampleContent){
+		var samCode=$(sampleContent).attr('sample-code');
+		var status=$('input[name="'+samCode+'"]:checked').val();
+		var remark=$(sampleContent).find('input[name="remark"]').val();
+		var btype = $(sampleContent).find('input[name="sampleBTypeId"]').val();
+		var sampleId = $(sampleContent).find('input[name="sampleId"]').val();
+		
+		if($(sampleContent).find('input[name="errorFlag"]').length >0 ){//如果是异常样本
+		
+			if($(sampleContent).find('img').css('display')== 'block'){
+				sampleList.push({sampleCode:samCode,mcStatus:0,qcStatus:status,qcRemark:remark,btype:btype,id:sampleId})
+			}
+			
+		}else{
+			if($(sampleContent).find('img').css('display')== 'block'){
+				sampleList.push({sampleCode:samCode,mcStatus:1,qcStatus:status,qcRemark:remark,btype:btype,id:sampleId})
+			}
+		}
+		
+	});
+	
+	if(sampleList.length<=0){
+		showTip("请继续扫描样本,未扫描到任何样本！","提示");
+		return false;
+	}
+	
+	$("#create").attr('disabled', 'disabled');
+	$("#create").val('样本收样中');
+
+	if(flag && $('.error.sampleContent').length == 0){
+		
+		var data={orderId:$("#orderId").val(),status:1,remark:$("#orderRemark").val(),
+				receiveSample:JSON.stringify(sampleList)};
+		
+		//该订单正常保存
+		   $.ajax({
+            type: "POST",
+            url: "${base}/sampleReceiving/create.do",
+            data: data,
+            dataType: "json",
+            async:false, 
+            success: function(data){
+            	if(data.result){
+            		window.location.href="${base}/sampleReceiving/sampleReceivingPaging.do"
+            	}
+            },
+            error:function(data){
+            	$("#create").removeAttr('disabled');
+            	$("#create").val('提交');
+            }
+		});   
+		
+	} else {//判断质检是否都选择了,没选择不让提交
+			parent.layer.confirm('该订单尚存在异常，确定提交?', {
+				  btn: ['提交','不提交'] 
+				}, function(index){
+					
+					var data={orderId:$("#orderId").val(),status:0,remark:$("#orderRemark").val(),
+							receiveSample:JSON.stringify(sampleList)};
+					
+				 	$.ajax({
+			            type: "POST",
+			            url: "${base}/sampleReceiving/create.do",
+			            data: data,
+			            dataType: "json",
+			            async:false, 
+			            success: function(data){
+			            	if(data.result){
+			            		window.location.href="${base}/sampleReceiving/sampleReceivingPaging.do"
+			            		
+			            	}
+			            },
+			            error:function(data){
+			            	$("#create").removeAttr('disabled');
+			            	$("#create").val('提交');
+			            }
+					}); 
+	  			parent.layer.close(index);
+				}, function(index){
+					$("#create").removeAttr('disabled');
+	            	$("#create").val('提交');
+					parent.layer.close(index);
+				});
+	}
+})
+
+
+function checkQuality(){
+	//判断样本是否全部质检通过
+	var flag=true;
+	$.each($('.qualityCheck'),function(index,check){
+		var checkName=$(check).attr('name');
+		if($('input[name="'+checkName+'"]:checked').val() != "1" || $(check).closest('.sampleContent').find('img').css('display') != 'block'){
+			flag=false;
+			return;
+		}
+	});
+	
+	if(flag){
+		$("#sampleAllCheck").css('display','block');
+		//节点下一步
+		$("#transNode").addClass('active');
+		
+		//判断是否有异常样本
+		if($('.error.sampleContent').length == 0){
+			$("#create").html("提交");
+			$("#orderState").html('正常');
+			$("#orderState").css('color',"#11cd6e")
+		}
+	}
+}
+
+function checkfalse(){
+	$("#transNode").removeClass('active');
+	$("#sampleAllCheck").css('display','none');
+	$("#create").html("提交异常订单");
+	$("#orderState").html('异常');
+	$("#orderState").css('color',"#eb4f38");
+}
+
+//删除错误样本
+function deleteError(obj){
+	$(obj).parent().remove();
+	checkQuality();
+}
+
+
+
+</script>

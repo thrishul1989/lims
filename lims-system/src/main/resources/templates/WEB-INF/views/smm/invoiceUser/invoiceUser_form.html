@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>开票人员管理-新增</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/chosen/chosen.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${plugins}/ztreeBase/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/user.form.js?v=0.0.1"></script>
+<script src="${system_js}/jquery.cxselect.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script src="${plugins}/ztreeBase/js/jquery.ztree.core-3.5.min.js"></script>
+<script src="${system_js}/smm/userGroup_form.js"></script>
+<script type="text/javascript">
+$(function()
+{
+	$(".user").each(function(){
+		var $tr = $(this).closest('tr');
+		
+          var invoiceUser = $(".user").magicSuggest({
+              width : 190,
+              highlight : true,
+              data : '${base}/smm/user/list_json.do?',
+              method : 'get',
+              queryParam : "key",
+              allowFreeEntries : false,
+              maxSelection : 1,
+              renderer : function(v)
+              {   
+                  return '<div>' + '<div >' + '<div  class="probe">' + v.name + '</div>' + '<div style="clear:both;"></div>';
+              },
+          });
+          
+          $(invoiceUser).on('selectionchange', function(e, cb, s)
+          {
+              var str = cb.getValue();
+              $.ajax({
+                  url : '/smm/user/getUser.do',
+                  traditional : true,
+                  type : "POST",
+                  data : {
+                      id : str,
+                  },
+                  async : false,
+                  success : function(data)
+                  {
+                	  $tr.find('.invoiceUserIds2').val(str);
+                	  $tr.find('td').eq(1).html(data.archive.phone);
+                      $tr.find('td').eq(2).html(data.archive.sex);
+                  },
+                  error : function()
+                  {
+                      parent.layer.alert('错误', {
+                          title : "提示"
+                      });
+                  }
+              })
+          });
+	});
+	<#if data??>
+	  	$('.toggle-title').empty().append('修改');
+	  	$('#invoiceUser_form').attr('action','${base}/smm/invoiceUser/modify.do');
+	    $(".invoiceUserIds").each(function(e){
+	         var key=$(this).val();
+	         var users=${map};
+	         $('#'+key).magicSuggest().setSelection(users[key]);//给新增的下拉框创建 id，根据id赋值。
+	    })
+	</#if>
+})
+$(document).on('click', '.deleteTr', function()
+{
+    $(this).parents('tr').remove();
+    setName();
+}).on('change','#testInstitution',function(){
+	var testInstitution = $('#testInstitution').val();
+	$.ajax({
+        type: "GET",
+        url: "/smm/invoiceUser/validateInstitution.do",
+        data: {testInstitution : testInstitution},
+        traditional : true,
+        dataType: "json",
+        async : false,
+        success: function(data){
+            if(!data){
+                parent.parent.layer.alert("该检测机构已配置开票人员，无需重复配置", {title : "提示"});
+                $('#testInstitution').val('');
+            }
+        },
+        error : function()
+        {
+            parent.layer.alert('错误', {
+                title : "提示"
+            });
+        }
+    })
+});
+
+function addTr()
+{
+    var tr = $("#addTr").html();
+    $('tbody').append(tr);
+    setName();
+    
+    $(".user").each(function(){
+        var $tr = $(this).closest('tr');
+        var invoiceUser = $(this).magicSuggest({
+            width : 190,
+            highlight : true,
+            data : '${base}/smm/user/list_json.do?',
+            method : 'get',
+            queryParam : "key",
+            allowFreeEntries : false,
+            maxSelection : 1,
+
+            renderer : function(v)
+            {
+                return '<div>' + '<div >' + '<div  class="probe">' + v.name + '</div>' + '<div style="clear:both;"></div>';
+            },
+          
+        });
+        $(invoiceUser).on('selectionchange', function(e, cb, s)
+                {
+                    var str = cb.getValue();
+                    $.ajax({
+                        url : '/smm/user/getUser.do',
+                        traditional : true,
+                        type : "POST",
+                        data : {
+                            id : str,
+                        },
+                        async : false,
+                        success : function(data)
+                        {
+                            $tr.find('input').val(str);
+                            $tr.find('td').eq(1).html(data.archive.phone);
+                            $tr.find('td').eq(2).html(data.archive.sex);
+                        },
+                        error : function()
+                        {
+                            parent.layer.alert('错误', {
+                                title : "提示"
+                            });
+                        }
+                    })
+                });
+        
+    })
+  
+}
+function subForm(){
+    var  ids=[];
+    var flag=true;
+    $("#testInstitution").removeAttr("disabled");
+    $(".invoiceUserIds").each(function(){
+        var id=$(this).val();
+        if(ids.length==0){
+        	ids.push(id);
+        }else{
+            if($.inArray(id, ids)==-1){
+                ids.push(id);
+            }else{
+                parent.parent.layer.alert('开票人员不可以重复', {
+                    title : "提示"
+                });
+                flag=false;
+            }
+        }
+    })
+    if(flag){
+    	var id = $('#id').val();
+        $.ajax({
+            type: "POST",
+            url: "/smm/invoiceUser/validateUser.do",
+            data: {id : id, invoiceUserIds : ids},
+            traditional : true,
+            dataType: "json",
+            async : false,
+            success: function(data){
+                if(!data){
+                    parent.parent.layer.alert("有用户已在其他机构的开票人员列表中，不能重复选择", {title : "提示"});
+                    flag=false;
+                }
+            },
+            error : function()
+            {
+              /*  parent.layer.alert('错误', {
+                    title : "提示"
+                });*/
+            }
+        })
+    }
+    var testInstitution = $('#testInstitution').val();
+    if('' == testInstitution){
+    	parent.parent.layer.alert("请选择开票机构", {title : "提示"});
+        flag=false;
+    }
+    $('#invoiceUserIds').val(ids);
+    if(flag){
+        $('#invoiceUser_form').submit(); 
+    }
+} 
+</script>
+<script type="text/html" id="addTr">
+<#include "./addTr.html"/>
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li><a href="">开票人员管理</a></li>
+                            <li class="active"><strong class="toggle-title">新增</strong></li>
+                        </ol>
+                    </div>
+                </div>
+                <form id="invoiceUser_form" class="form-horizontal m-t" action="${base}/smm/invoiceUser/create.do" method="post">
+                	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+	                <input id="invoiceUserIds" name="invoiceUserIds" value="" type="hidden">
+	                <input id="id" name="id" value="${(data.id)!?html}" type="hidden">
+                    <fieldset>
+                        <div class="ibox ibox-table">
+                            <div class="ibox-title">
+                                <h5>开票人员信息</h5>
+                            </div>
+							<div class="ibox-content">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">开票机构：</label>
+									<div class="col-sm-3">
+									<select class="form-control" id="testInstitution" name="testInstitution" data-value="${data.testInstitution!?html}"  disabled="disabled">
+										<option  value="">选择开票机构</option>
+										<option  value="1">北京迈基诺</option>
+										<option  value="0">北京检验所</option>
+										<option  value="2">重庆迈基诺</option>
+										<option  value="3">重庆检验所</option>
+									</select>
+									</div>
+								</div>
+								<div class="ibox-title">
+									<h5>开票人员</h5>
+									<a class="btn btn-sm btn-success" onclick="addTr()"> <i
+										class="fa fa-plus"></i> 新增
+									</a>
+								</div>
+								<table class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th class="col-sm-1">姓名：</th>
+											<th class="col-sm-1">手机号码：</th>
+											<th class="col-sm-1">性别：</th>
+											<th class="col-sm-1">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<#if data??>
+										<#list data.userList as record>
+										<tr>
+                                            <td class="col-sm-2">
+                                                <div class="form-control user" id="${(record.user.id)!?html}" placeholder=""></div>
+                                            </td>
+                                            <td class="col-sm-2">${(record.user.archive.phone)!?html}</td>
+                                            <td class="col-sm-2"><#if record.user.archive.gender??><#if record.user.archive.gender=="MALE">男<#elseif record.user.archive.gender=="FEMALE">女</#if></#if></td>
+                                            <td class="col-sm-2"><input type="hidden" class="invoiceUserIds" value="${(record.user.id)!?html}" ><a class="btn btn-sm btn-success deleteTr"><i class="fa fa-trash">删除</i></a></td>
+                                        </tr>
+                                        </#list>
+										<#else>
+										<tr>
+											<td class="col-sm-2">
+												<div class="form-control user" placeholder="请选择开票人员"></div>
+											</td>
+											<td class="col-sm-2"></td>
+											<td class="col-sm-2"></td>
+											<td class="col-sm-2"><input type="hidden" class="invoiceUserIds invoiceUserIds2"><a class="btn btn-sm btn-success deleteTr"><i class="fa fa-trash">删除</i></a></td>
+										</tr>
+										</#if>
+									</tbody>
+								</table>
+								<div class="form-group">
+									<div class="col-sm-7 col-sm-offset-2" style="float: right;">
+										<button class="btn btn-primary" type="button"
+											onclick='subForm()'>保存</button>
+										<button class="btn btn-primary goback" type="button">返回</button>
+									</div>
+								</div>
+							</div>
+						</div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

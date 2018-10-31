@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>DNA提取</title>
+<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="${system_js}/handlebars-v4.0.5.js"></script> -->
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script>
+	 $(function() {
+		//全选，取消
+		$("input[name='allChecked']").click(function() {
+			//判断当前点击的复选框处于什么状态$(this).is(":checked") 返回的是布尔类型
+			if ($(this).is(":checked")) {
+				$(".choose").prop("checked",true);
+			} else {
+				$(".choose").prop("checked",false);
+			} 
+		});
+	});
+	$("document").ready(
+			function() {
+				var flag=true;
+				$(".batchAssine").click(
+						function() {//输出选中的值  
+							var businessObject = [];
+						    var inputIds=[];
+						    var inputTypes=[];
+                            var count=0;//同时符合输入Id,样本类型的被选取的样本数量
+							$("input:checkbox:checked").each(function(e) {
+								if ($(this).val() != "") {
+									//判断输入是否一致
+									var inputType= $(this).next().next().val();
+									if(inputTypes.length==0){
+										inputTypes.push(inputType);
+										$("#inputType").val(inputType)
+									}
+									//存取流程实例id
+									//判断样本类型是否一致。
+									var inputId=$(this).next().val();
+									if(inputIds.length==0){
+										inputIds.push(inputId);
+										$("#inputId").val(inputId);
+										businessObject.push($(this).val());
+										count++;
+									}else{
+									if($.inArray(inputId,inputIds)!=-1&&$.inArray(inputType,inputTypes)!=-1){
+									count++;
+									//判断选取数量是否超出96
+									if(count>96){
+										alert("系统自动选取96个样本至下达任务"+count);
+									}
+									//超出96的不下达
+									if(count<97){
+									businessObject.push($(this).val());
+									}
+									flag=true;
+									}else{
+										alert("请保持样本类型一致");
+										flag=false;
+										return false;             
+									}
+								}
+								}
+							});
+							console.log(businessObject);
+							console.log("选中"+businessObject.length+"条任务");
+							if(flag){
+							if(businessObject.length < 1){
+								//alert("请至少选中一条任务");
+								parent.parent.layer.alert('请至少选中一条任务！',{title:"提示"});
+							}else{
+								var semantic=$("#semantic").val();
+								var ids = businessObject.join(",");
+								var sampleType=$("#SampeleType").val();
+								var inputId=$("#inputId").val();
+								var inputType=$("#inputType").val();
+								$("#create_task_form").attr(
+										"src",
+										"${base}/testingTask/list.do?testingTaskId="+ ids+"&semantic="+semantic+"&inputId="+inputId+"&inputType="+inputType);
+								$('#full').modal('show');
+							}
+							}
+						})
+			})
+</script>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox-title">
+        <ol class="breadcrumb">
+            <li>
+                <span>检测实验</span>
+                <li class="active"><strong><#if searcher.semantic=="DNA_EXTRACT">DNA提取</#if><#if searcher.semantic=="RNA_EXTRACT">RNA提取</#if></strong></li>
+            </li>
+        </ol>
+    </div>
+   <div class="ibox ibox-table ibox-title">
+    	<form id="search_from" action="${base}/process/DNA_list.do" method="post" 
+			class="search-form" style="float: right; margin-right:76px">
+			<div class="row m-b-xs">
+				<div class="col-sm-2">
+					<div class="form-group"></div>
+					 <input type="hidden" name="taskTypeName"  value="${(task.taskTypeName)!?html}" />
+				</div>
+				<a href="javascript:void(0)" id="btn5"
+					
+					class="btn btn-sm btn-success batchAssine"> <i class="fa fa-edit"></i>
+					下达任务单
+				</a>
+		</div>
+		<input type="hidden" id="pageTaskId" />
+	</form>
+	    <form action="${base}/process/DNA_list.do" method="post" class="search-form form-inline" >
+	    <input type="hidden" name="taskTypeName"  value="${(task.taskTypeName)!?html}" />
+	     <div class="form-group">
+				<label class="control-label">样本编号：</label>
+				<input type="text" name="sampleInstanceCode" class="form-control checknull inAmount ">
+			</div>
+	    
+	    <div class="form-group">
+				<label class="control-label">订单类型：</label>
+			<select class="form-control" name="receiveType"
+										id="receiveType">
+										<option selected value="">------请选择------</option> <@dict_entries
+										category="RECEIVING_TYPE"> <#if entries??> <#list entries as
+										entry>
+										<option value="${entry.value!}"<#if requestData??>
+											<#if (requestData.receiveType!?html) ==
+											(entry.value?html)>selected</#if> </#if> >${entry.text!?html}</option>
+										</#list> </#if> </@dict_entries>
+									</select>
+			</div> 
+			<div class="form-group">
+				<label class="control-label">样本类型：</label>
+				<select class="form-control sampleType" name="sampleType"> 
+					<option value="">------请选择------</option> 
+					<#if sampleList??><#list sampleList as sample>
+					<option value="${sample.name}" <#if (searcher.sampleType!?html)==sample.name>selected='selected'</#if>>${sample.name!?html}</option> 
+					</#list> </#if>
+				</select>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-sm btn-success" style="margin-top: 0;">
+					<i class="fa fa-search"></i> 查询
+				</button>
+			</div>
+		</form>
+		
+	</div>
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th><input type="checkbox" name="allChecked" id="allChecked"
+					value="" /></th>
+				<th class="index">序号</th>
+				<th>订单类型</th>
+				<th>样本编号</th>
+				<th>样本类型</th>
+				<th>产品</th>
+				<th>受检人</th>
+				<th>采样时间</th>
+				<th>是否正常</th>
+			</tr>
+		</thead>
+		<tbody>
+			<#if todoList??>
+			<#list todoList as record>
+			<tr>
+				<#if record_index==0>
+				<input id="semantic" type="hidden" name="taskId" value="${(record.semantic)!?html}">
+				</#if>
+				<td><input type="checkbox" name="choose${(task.id)!?html}" class="choose"
+					value="${(record.testingTaskId)!?html}" />
+					<input type="hidden" class="SampeleType"
+					value="${(record.inputId)!?html}" />
+					<input type="hidden" class="inputIds" 
+				  	value="${(record.inputType)!?html}" />
+					
+					<br>
+					</td>
+					<input id="inputId" type="hidden" name="inputId" />
+					<input id="inputType" type="hidden" name="inputType" />
+					<input id="SampeleType" type="hidden" name="SampeleType" />
+				<td>${record_index+1}</td>
+				<td><@dict_entry_text category="RECEIVING_TYPE" value=record.receiveType /></td>
+				<td>${(record.sampleInstanceCode)!?html}</td>
+				<td>${(record.sampleType)!?html}</td>
+				<td>${(record.products)!?html}</td>
+				<td>${(record.inspectMan)!?html}</td>
+				<td><#if record.sampleReceiveDate??>${(record.sampleReceiveDate)?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+				<td><#if record.taskState == 1><span style="color: green"><#else><span style="color: red"></#if><@dict_entry_text category="TASK_STATE" value=record.taskState /></span></td>
+			</tr>
+			</#list>
+			<#else>
+			<tr>
+				<td colspan="10">暂无相关记录</td>
+			</tr>
+			</#if>
+		</tbody>
+	</table>
+
+
+</div>	
+	<div class="modal fade" id="full" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true"></button>
+					</div>
+					<div class="modal-body">
+						<iframe id="create_task_form" src=""  target="self"
+							style="border: 0; width: 850px; height: 500px;"> </iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

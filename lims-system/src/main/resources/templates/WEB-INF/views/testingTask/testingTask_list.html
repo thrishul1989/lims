@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>DNA提取任务</title>
+
+
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]
+-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/layout.css" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${plugins}/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script>
+	$(function(){
+		//所用试剂盒
+		<#if pagination.kitStorageList??>
+		var reagentKit=[];
+		<#list pagination.kitStorageList as re> 
+		reagentKit.push({id:"${re.id}",reactionNum:"${re.reactionNum}"})
+		</#list> 
+		</#if>
+		//LODOP=getLodop(document.getElementById('LODOP_OB'),document.getElementById('LODOP_EM'));
+		$("#testingName").bsSuggest('init', {
+			url : "${base}/user/userSelect.do?key=",
+			getDataMethod : "url",
+			idField : "id",
+			keyField : "name",
+			//indexId: 1, //每组数据的第几个数据，作为input输入框的 data-id，设为 -1 且 idField 为空则不设
+			// indexKey: 1, //data.value 的第几个数据，作为input输入框的内容
+			effectiveFields : [ "name" ],
+			effectiveFieldsAlias : {
+				name : "姓名"
+			}
+		}).on('onDataRequestSuccess', function(e, result) {
+
+		}).on('onSetSelectValue', function(e, keyword, data) {
+			$('#executer').val(data.id);
+		}).on('onUnsetSelectValue', function() {
+		});
+		
+		//自动添加投入量
+		$("#reagentKit").change(function(){
+			var reagentKitId=$(this).val();
+			 $.ajax({
+	             type: "GET",
+	             url: "${base}/task/getTaskInputReagentKit.do?reagentKitId="+reagentKitId,
+	             dataType: "text",
+	             success: function(data){
+	            	 var obj = jQuery.parseJSON(data);
+	            	 $(".inputQuantity").val(obj.inputQuantity);
+	            	 $("#reagentKitName").val(obj.reagentName);
+	            	  $("#unit").val(obj.unit);
+	             }
+	         })
+		});
+    
+		
+		//质检责人下拉框
+		$("#testingName0").bsSuggest('init', {
+			url : "${base}/user/userSelect.do?key=",
+			getDataMethod : "url",
+			idField : "id",
+			keyField : "name",
+			effectiveFields : [ "name" ],
+			effectiveFieldsAlias : {name : "姓名"}
+		}).on('onDataRequestSuccess', function(e, result) {}).on('onSetSelectValue', function(e, keyword, data) {
+			$('#QTExecuter').val(data.id);
+		}).on('onUnsetSelectValue', function() {}) 
+		
+		
+        $("#testing_task_form").validate({
+        	submitHandler: function(form){
+        		$("#InputQuantity").val($(".inputQuantity").val());
+        		var values = new Array();
+        		console.info($("#testing_task_detail_table").serializeArray());
+        		$("#testing_task_detail_table tr").each(function(index,object){
+        			if(index > 0){
+        				var tr = $(this);
+        			    var data  = {};
+        			    data.testingCode=tr.find(".testCode").text();   //实验编号 
+        			    data.inputSamplecode = tr.find(".sourceSampleCode").text(); //样本主键
+        			    data.inputSampleLocation = tr.find(".sourceSampleLocation").text();//存储位置
+        			    data.outputSamplecode = tr.find(".targetSampleCode").text(); //目标样本编号
+        			    data.testingTaskId = tr.find(".testingTaskId").text();
+        			    data.products = tr.find(".products").text();
+        			    data.notes= tr.find(".getNotes").val();
+        			    data.InputQuantity=tr.find(".inputQuantity").val();
+        			    values.push(data);
+        			}
+        			tscr={};
+     			    tscr.sendName=$("#sendName").val();
+     			    tscr.sendDate=$("#sendDate").val();
+     			    tscr.testingName=$("#testingName").val();
+     			    var a="";
+     			    $(".method").each(function(){
+     			    	if ($(this).is(":checked")) {
+     			    	a+=$(this).val()+",";
+     			    	tscr.method= a;
+     					}
+     			    });
+     			    tscr.description=$("#description").val();
+     			    /* tscr.outputQuantity　= ${(outputQuantity)!?html};
+     			    tscr.InputQuantity=${(InputQuantity)!?html};  */
+        		});
+        		var content=JSON.stringify(tscr);
+        		var param=JSON.stringify(values);
+        		$("#param").val(param);
+        		$("#content").val(content);
+        		document.forms["testing_task_form"].submit();
+        	},
+            rules: {
+            	testingName: "required",
+            	QTExecuterName: "required",
+            	method:"required"
+            },
+            messages: {
+            	testingName: "请选择实验负责人",
+            	QTExecuterName: "请选择实验负责人",
+            	method:"请选择质检方法"
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent());  
+            }
+        }); 
+	})
+	function closeModal(){
+		parent.$('#full').modal('hide');
+	}
+	 $(document).ready(function(){
+		
+	/* 	if(1==1){
+    		//修改价格
+    		 $.ajax({
+             type: "GET",
+             url: "${base}/task/get.do",
+             data: {id:$(obj).attr("data-id"),price:$(obj).html()},
+             dataType: "json",
+             success: function(data){
+            	
+             }
+         })
+    		$(obj).attr("contenteditable",false);
+    		
+    	}
+    	else{
+    		layer.alert('请输入有效值',{title:"提示"});
+    	}
+    
+		
+		
+		var i=0;  */
+		var i=0;
+	$(".btn").click( function(){
+		if(i%2==0){
+		$(this).parents(".getTr").after("<textarea class='form-control notes'  style='width: 1252%;' name='description' id='description' ></textarea>");
+		$(this).parents(".getTr").next(".notes").val($(this).next().val());
+		
+		}else{
+			$(this).next().val($(this).parents(".getTr").next(".notes").val());
+			$(this).parents(".getTr").next(".notes").remove();
+		}
+		i++;
+	} );
+	});
+
+		
+	
+</script>
+</head>
+<body>
+	<object id="LODOP_OB"
+		classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+		<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+	</object>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="col-lg-12" style="margin-top: 30px">
+			<form id="testing_task_form" class="form-horizontal m-t"
+				action="${base}/testingTask/createTestTask" method="post"
+				target="iframe0">
+
+				<div id="form_div">
+					<input type="hidden" name="param" id="param"></input> <input
+						type="hidden" name="executer" id="executer"></input>
+						 <input	type="hidden" name="QTExecuter" id="QTExecuter"></input> 
+						 <input	type="hidden" name="content" id="content"></input> <input
+						type="hidden" name="outputQuantity" id="outputQuantity"
+						value="${(outputQuantity)!?html}"></input> <input type="hidden"
+						name="InputQuantity" id="InputQuantity"
+						value="${(InputQuantity)!?html}"></input>
+						<input type="hidden"	name="unit" id="unit"></input>
+						<input type="hidden"
+						name="reagentKitName" id="reagentKitName">
+						</input>
+					<div class="form-group">
+						<label id="code_label" class="col-sm-2 control-label">任务编号：</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="code" name="taskCode"
+								value="${pagination.taskCode!?html}" readonly="readonly">
+						</div>
+						<label id="" class="col-sm-2 control-label control-required"><font
+							id="testingName_label">提取负责人：</font></label>
+						<div class="col-sm-3">
+
+							<div class="input-group">
+								<input type="text" class="form-control" id="testingName"
+									name="testingName">
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle"
+										data-toggle="dropdown">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									</ul>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="semantic" id="semantic"
+							value="<#if searcher??>${searcher.semantic!?html}<#else>${request.semantic!?html}</#if>"></input>
+					</div>
+					<div class="form-group">
+						<label id="" class="col-sm-2 control-label ">任务下达人：</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="sendName"
+								name="sendName" value="${(user.archive.name)!?html}"
+								readonly="readonly">
+						</div>
+						<label id="" class="col-sm-2 control-label ">下达时间：</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="sendDate"
+								name="sendDate" value="${sendDate!?html}" readonly="readonly">
+						</div>
+					</div>
+					<div class="form-group">
+						<label id="" class="col-sm-2 control-label ">试剂盒：</label>
+						<div class="col-sm-3">
+							<select class="form-control " id="reagentKit"
+										name="reagentKitCode">
+										<option value="">===请选择===</option>
+										<#if rlist??> <#list rlist as reagent>
+										<option value="${reagent.id!?html}">${reagent.reagentName!?html}</option>
+										</#list> </#if> 
+									</select>
+						</div>
+						<label class="col-sm-2 control-label">批次号：</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="batchNum"
+								name="batchNum" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">投入次数：</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="batchNo"
+								name="batchNo"
+								value="${(pagination.testingTaskDetailList)?size}"
+								readonly="readonly">
+						</div>
+						<label id="" class="col-sm-2 control-label control-required"><font
+							id="testingName_label">质检负责人：</font></label>
+						<div class="col-sm-3">
+							<div class="input-group">
+								<input type="text" class="form-control" id="testingName0"
+									name="QTExecuterName">
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle"
+										data-toggle="dropdown">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									</ul>
+								</div>
+							</div>
+					    </div>
+					</div>
+					</div>
+					<div class="form-group">	
+				 <label class="col-sm-2 control-label control-required">质检方法：</label>
+					<div class="col-sm-10" id="testMethod">
+						  <#if searcher.semantic == "DNA_EXTRACT">
+									 <@dict_entries category="DNA_QC_METHOD">
+				                     <#if entries??>
+				                     <#list entries as entry>
+				                     	<input type="checkbox" name="method" class="method" value="${entry.value!}" />${entry.text!?html}
+				                     </#list>
+				                     </#if>
+				                    </@dict_entries>
+				                   <#else>
+								 	<@dict_entries category="RNA_QC_METHOD">
+				                     <#if entries??>
+				                     <#list entries as entry>
+				                     	<input type="checkbox" name="method" class="method" value="${entry.value!}"  />${entry.text!?html}
+				                     </#list>
+				                     </#if>
+				                    </@dict_entries>
+						  </#if>
+					</div>
+			 </div>		
+					<div class="form-group">
+						<label id="description_label" class="col-sm-2 control-label">任务描述：</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" name="description"
+								id="description" value=""></textarea>
+						</div>
+					</div>
+
+				<div class="col-md-10">
+
+					<div class="form-group" style="padding-left: 188px">
+
+
+						<div class="col-sm-3 ">
+							<input type="submit" class="btn btn-primary" value="下达任务"></input>
+						</div>
+
+
+					</div>
+
+
+					<table id="testing_task_detail_table"
+						class="table table-striped table-bordered table-hover dataTables-example"
+						style="margin-left: 15px;">
+						<thead>
+							<tr>
+								<th class="index">序号</th>
+								<th>样本编号</th>
+								<th>样本类型</th>
+								<th>产品</th>
+								<th>受检人</th>
+								<th>采样时间</th>
+								<th class="flexible-btns">投入量(<@dict_entry_text category='COMPANY' value=unit />)</th>
+								<th>是否正常</th>
+								<th style="display: none">工作流</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody id="tbody">
+							<#if pagination.testingTaskDetailList??> <#list
+							pagination.testingTaskDetailList as record>
+							<tr class="getTr">
+								<td>${record_index+1}</td>
+								<td class="sourceSampleCode">${record.sourceSampleCode!?html}</td>
+								<td class="sourceSampleType">${record.sourceSampleType!?html}</td>
+								<td class="products">${record.products!?html}</td>
+								<td class="testedName">${record.testedName!?html}</td>
+								
+								<td class="sampleReceiveDate"><#if record.sampleReceiveDate??>${(record.sampleReceiveDate)?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+								<td class="flexible-btns "><input type="text" 
+										id="" value="${(InputQuantity)!?html}" class="form-control checknull inAmount inputQuantity"
+										 style="width: 80px; display: initial" /></td>
+								<td class="taskState"><#if record.taskState == 1><span style="color: green"><#else><span style="color: red"></#if><@dict_entry_text category="TASK_STATE" value=record.taskState /></span></td>
+								<td class="testingTaskId" style="display: none">${record.testingTaskId!?html}</td>
+								<td class="notes"><input class="btn" type="button" value="备注" /></input>
+						        <input type="hidden"  name="notes" class="getNotes"	value="${record.notes!?html}"></td>
+								<td class="sourceSampleLocation" style="display: none">${record.sourceSampleLocation!?html}</td>
+								<td class="testCode" style="display: none">${record.testCode!?html}</td>
+								<td class="targetSampleCode" style="display: none">${record.targetSampleCode!?html}</td>
+							</tr>
+							</#list> </#if>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+<script>
+$("input[type='submit']").click(function (){
+	
+	$("#testing_task_form").submit();
+})
+</script>
+</html>

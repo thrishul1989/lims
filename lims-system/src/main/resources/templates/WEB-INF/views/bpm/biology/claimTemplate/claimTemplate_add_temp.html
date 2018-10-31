@@ -1,0 +1,33 @@
+<tr>
+    <td class="index"></td>
+    <td>
+    	<select class="form-control dataTemplateColumnId" required>
+	        <option value="">--请选择--</option>
+    	</select>
+    </td>
+    <td>
+    	<div style="display: table; width: 100%;" class="moveDiv">
+														<div style="display: table-cell;"><div class="form-control filterName"
+															placeholder="请选择"></div>
+															</div>
+														<div style="display: table-cell;vertical-align: middle;"><button class="btn btn-sm btn-success" type="button" onclick="add(this)">添加</button></div>
+													</div>
+		<input type="hidden" class="inputFilterName"/>	
+    </td>
+    <td>
+	    <div style="display: none;" class="defaultValueMoveDiv">
+	    	<div class="form-control defaultValue" placeholder="请选择"></div>
+	    </div>
+	    <input type="hidden" class="inputDefaultValue"/>
+	    <div style="display: none;" class="rangeDiv">
+			<input class="rangeValue1" type="text" style="width: 60px;"/>-<input class="rangeValue2" type="text" style="width: 60px;"/>
+		</div>
+		<div style="display: none;" class="radioDiv">
+			<select class="form-control radioValue">
+				<option value="">--请选择--</option>
+			</select>
+		</div>
+    </td>
+    <td><input class="form-control columnIndex" type="text" required onkeyup="checkInput(this)" maxlength = 9></td>
+    <td><a class="btn btn-sm btn-success remove" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56);"><i class="fa fa-trash"></i> 删除</a></td>
+</tr>

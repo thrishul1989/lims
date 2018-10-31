@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>数据模板</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<style>
+#column thead th, #column tbody td{
+	text-align: center;
+}
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/biAnalysis/dataTemplate/list.jsp">数据模板</a>
+                            </li>
+                            <li class="active">
+                                <strong>模板详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>模板详情</h5>
+                        <div style="float:right;margin-top:7px">
+							<button class="btn btn-sm btn-success goback " type="button">返回</button> 
+						</div>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-striped table-bordered table-hover table-details">
+                            <tr>
+                                <th class="col-sm-1">模板名称</th>
+                                <td class="col-sm-2">${(data.name)!?html}</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">列定义</th>
+                                <td class="col-sm-3">
+                                	<table class="table table-striped table-bordered table-hover" id="column">
+										<thead>
+		                                    <tr>
+		                                        <th>序号</th>
+		                                        <th class=" col-sm-3">描述</th>
+		                                        <th class=" col-sm-2">类型</th>
+		                                        <th class="col-sm-2">特殊语义标识</th>
+		                                        <th class="col-sm-2">分组名称</th>
+                                                <th>排序</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                <#if (data.columnList)?has_content>
+                                            <#list data.columnList as column>
+											<tr>
+		                                        <td>${column_index + 1}</td>
+		                                        <td>${column.columnName!?html}</td>
+		                                        <td>
+		                                        	<#if column.type="1">复选</#if>
+		                                        	<#if column.type="2">单选</#if>
+		                                        	<#if column.type="3">区间</#if>
+		                                        </td>
+		                                        <td><@dict_entry_text category="DATA_TEMPLATE" value=column.semantic /></td>
+		                                        <td>${column.groupName!?html}</td>
+                                                <td>${column.columnIndex!?html}</td>
+		                                    </tr>
+										</#list> </#if>
+										</tbody>
+									</table>
+								</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/system.js"></script>
+</body>
+</html>

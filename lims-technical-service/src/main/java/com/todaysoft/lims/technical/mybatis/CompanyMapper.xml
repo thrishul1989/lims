@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.Company" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PY" property="py" jdbcType="VARCHAR" />
+    <result column="PINYIN" property="pinyin" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="LEVEL" property="level" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+    <result column="AREA_ID" property="areaId" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="HOTLINE" property="hotline" jdbcType="VARCHAR" />
+    <result column="WEBSITE" property="website" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, PY, PINYIN, CODE, LEVEL, PROVINCE, CITY, COUNTY, AREA_ID, ADDRESS, HOTLINE, 
+    WEBSITE, REMARKS, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE, DEL_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from APP_COMPANY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from APP_COMPANY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.Company" >
+    insert into APP_COMPANY (ID, NAME, PY, 
+      PINYIN, CODE, LEVEL, 
+      PROVINCE, CITY, COUNTY, 
+      AREA_ID, ADDRESS, HOTLINE, 
+      WEBSITE, REMARKS, CREATE_BY, 
+      CREATE_DATE, UPDATE_BY, UPDATE_DATE, 
+      DEL_FLAG)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{py,jdbcType=VARCHAR}, 
+      #{pinyin,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, 
+      #{areaId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{hotline,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Company" >
+    insert into APP_COMPANY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="py != null" >
+        PY,
+      </if>
+      <if test="pinyin != null" >
+        PINYIN,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="level != null" >
+        LEVEL,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="county != null" >
+        COUNTY,
+      </if>
+      <if test="areaId != null" >
+        AREA_ID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="hotline != null" >
+        HOTLINE,
+      </if>
+      <if test="website != null" >
+        WEBSITE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="py != null" >
+        #{py,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hotline != null" >
+        #{hotline,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Company" >
+    update APP_COMPANY
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="py != null" >
+        PY = #{py,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        PINYIN = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        LEVEL = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        COUNTY = #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        AREA_ID = #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hotline != null" >
+        HOTLINE = #{hotline,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        WEBSITE = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.Company" >
+    update APP_COMPANY
+    set NAME = #{name,jdbcType=VARCHAR},
+      PY = #{py,jdbcType=VARCHAR},
+      PINYIN = #{pinyin,jdbcType=VARCHAR},
+      CODE = #{code,jdbcType=VARCHAR},
+      LEVEL = #{level,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      COUNTY = #{county,jdbcType=VARCHAR},
+      AREA_ID = #{areaId,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      HOTLINE = #{hotline,jdbcType=VARCHAR},
+      WEBSITE = #{website,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

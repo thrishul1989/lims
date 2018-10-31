@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报告生成模板</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<script type="text/html" id="bookmarkTemp">
+<#include "./bookmark_add_temp.html" />
+</script>
+<script type="text/html" id="tableColumnTemp">
+<#include "./tableColumn_add_temp.html" />
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/report/dataTemplate/list.do">报告生成模板</a>
+                            </li>
+                            <li class="active">
+                                <strong class="toggle-title">新增报告生成模板</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5 class="toggle-title">新增报告生成模板</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="reportTemplate_form" class="form-horizontal toggle-form" action="${base}/report/reportTemplate/create.do" method="post" onsubmit="return checkData()" enctype="multipart/form-data">
+                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                        	<input id="id" type="hidden" name="id" value="${(data.id)!?html}"/>
+                        	<input id="dataTemplateId" name="template.id" type="hidden" />
+                        	<input id="bookmarkContent" name="content" type="hidden" />
+                        	<div class="form-group">
+								<label class="col-sm-2 control-label control-required">模板名称：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="name" id="name" value="${(data.name)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">数据导入模板：</label>
+								<div class="col-sm-3">
+                                    <div class="form-control" id="dataTemplate" placeholder="请选择数据模板"></div>
+                                </div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">报告模板地址：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="url" id="url" value="${(data.url)!?html}" readonly/>
+								</div>
+								<a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" id="uploadModal">
+		                            <i class="fa fa-upload"></i> 上传报告模板
+		                        </a>
+							</div>
+							<div class="form-group bookmark">
+								<label class="col-sm-2 control-label control-required">书签：</label>
+								<div class="col-sm-3 form-group">
+									<a href="javascript:;" class="btn btn-sm btn-success addBookmark"><i class="fa fa-plus"></i> 添加书签</a>
+								</div>
+								<#if data??> <#if data.bookmarkList?has_content> <#list data.bookmarkList as bookmark>
+								<div class="form-group bookmarkTemp" style="height: 80; width: 90%; margin-left:100px; clear: both; border: 1px solid #cccccc; border-radius: 6px; padding: 10px 0;">
+									<div class="col-sm-12">
+										<a class="btn btn-sm btn-success removeBookmark" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56); float: right;"><i class="fa fa-trash"></i> 删除书签</a>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">书签名称：</label>
+											<div class="col-sm-3">
+												<input type="text" class="form-control bookmarkName" name="bookmarkName" value="${(bookmark.name)!?html}" required/>
+											</div>
+										</div>
+										<#if "2"==bookmark.contentType><a href="javascript:;" class="btn btn-sm btn-success addTableColumn" style="float: right;"><i class="fa fa-plus"></i> 添加列定义</a></#if>
+										<div class="form-group contentType">
+											<label class="col-sm-2 control-label">内容类型：</label>
+											<div class="col-sm-3">
+												<select name="contentType" class="contentTypeValue" data-value="${(bookmark.contentType)!}" style="width: 140px; height: 30px;">
+													<option value="">请选择</option>
+													<option value="1">内置变量</option>
+													<option value="2">列表变量</option>
+												</select>
+											</div>
+										</div>
+										<#if "1"==bookmark.contentType> <#if bookmark.builtinVariable??>
+										<div class="form-group" style="clear: both; width: 90%; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+											<label class="col-sm-2 control-label" style="width: 126px;">变量标识：</label>
+											<div class="col-sm-10">
+												<label class="col-sm-2 control-label" style="width: 70px; padding-left: 0; padding-right: 0">变量名称：</label>
+												<div class="col-sm-4">
+													<div class="form-control builtinVariable" id="${(bookmark.id)!?html}${(bookmark.builtinVariable.id)!?html}" placeholder="请选择内置变量"></div>
+												</div>
+												<input type="hidden" class="builtinVariableId" value="${(bookmark.id)!?html}${(bookmark.builtinVariable.id)!?html}"/>
+											</div>
+										</div>
+										</#if> <#elseif "2"==bookmark.contentType>
+										<div class="form-group tableVariable"  style="width: 90%; clear: both; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+											<#assign subIndex>${(bookmark.lineFilter)?index_of("-")}</#assign>
+											<label class="col-sm-2 control-label" style="width: 126px;">行筛选：</label>
+											<div class="col-sm-8">
+												<label class="col-sm-2 control-label" style="width: 70px; padding-left: 0; padding-right: 0">筛选列：</label>
+												<div class="col-sm-4">
+													<input type="text" class="form-control filterIndex" value="${(bookmark.lineFilter)?split('-')[0]}"/>
+												</div>
+												<label class="col-sm-2 control-label">筛选条件：</label>
+												<div class="col-sm-4">
+													<input type="text" class="form-control filterName" value="${(bookmark.lineFilter)?split('-')[1]}"/>
+												</div>
+											</div>
+											<#if bookmark.tableColumnList?has_content> <#list bookmark.tableColumnList as tableColumn>
+											<#if tableColumn_index == 0>
+											<div class="form-group tableColumnTemp" style="height: 80; width: 100%; margin-left:0px; margin-top:50px; clear: both; border: 1px solid #cccccc; border-radius: 6px; padding: 10px 0;">
+											<#else>
+											<div class="form-group tableColumnTemp" style="height: 80; width: 100%; margin-left:0px; clear: both; border: 1px solid #cccccc; border-radius: 6px; padding: 10px 0;">
+											</#if>
+												<a class="btn btn-sm btn-success removeTableColumn" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56); float: right; margin-right: 10px;"><i class="fa fa-trash"></i> 删除列定义</a>
+												<label class="col-sm-2 control-label" style="width: 126px;">列定义：</label>
+												<div class="col-sm-8" style="margin-bottom: 10px">
+													<label class="col-sm-2 control-label" style="width: 70px; padding-left: 0; padding-right: 0">列索引：</label>
+													<div class="col-sm-4">
+														<input type="text" class="form-control columnIndex" name="columnIndex" value="${(tableColumn.columnIndex)!?html}" required/>
+													</div>
+													<label class="col-sm-2 control-label">变量类型：</label>
+													<div class="col-sm-4">
+														<select name="variableType" class="variableTypeValue" data-value="${(tableColumn.variableType)!}" style="width: 140px; height: 30px;">
+															<option value="">请选择</option>
+															<option value="1">内置变量</option>
+															<option value="2">数据变量</option>
+														</select>
+													</div>
+												</div>
+												<#if "1"==tableColumn.variableType>
+												<div class="form-group builtin" style="width: 90%; clear: both; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+													<label class="col-sm-2 control-label" style="margin-left: 18px;">变量标识：</label>
+													<div class="col-sm-8" style="margin-left: 1px;">
+														<label class="col-sm-2 control-label">变量名称：</label>
+														<div class="col-sm-6">
+															<div class="form-control builtinVariable" id="${(bookmark.id)!?html}${(tableColumn.id)!?html}${(tableColumn.builtinVariable.id)!?html}" placeholder="请选择内置变量"></div>
+														</div>
+														<input type="hidden" class="tableColumnBuiltinVariableId" value="${(bookmark.id)!?html}${(tableColumn.id)!?html}${(tableColumn.builtinVariable.id)!?html}"/>
+													</div>
+												</div>
+												<#elseif "2"==tableColumn.variableType>
+												<div class="form-group dataVariable" style="width: 90%; clear: both; border-top: 1px solid #cccccc; margin: 0px auto 10px; padding-top: 10px;">
+													<label class="col-sm-2 control-label">数据类型：</label>
+													<div class="col-sm-10 dataVariableSelect">
+														<div class="col-sm-3">
+															<select name="dataType" class="dataTypeValue" data-value="${(tableColumn.dataType)!}" style="width: 140px; height: 30px;">
+																<option value="">请选择</option>
+																<option value="1">导入数据</option>
+																<option value="2">图片</option>
+															</select>
+														</div>
+														<#if "1"==tableColumn.dataType>
+														<div class="col-sm-7">
+															<label class="col-sm-3 control-label"  style="width: 116px;">数据模板列：</label>
+															<div class="col-sm-4">
+																<select name="dataTemplateColumn" class="dataTemplateColumn" data-value="${(tableColumn.dataTemplateColumn.id)!}" style="width: 140px; height: 30px;">
+																	<option value="">请选择</option>
+																	<#list dataTemplateColumnList as column>
+																	<option value="${(column.id)!}">${(column.columnName)!?html}</option>
+																	</#list>
+																</select>
+															</div>
+														</div>
+														<#elseif "2"==tableColumn.dataType>
+														<div class="col-sm-7 imageUpload" style="display:none; width: 550px;">
+															<label class="col-sm-2 control-label" style="width: 116px;">图片地址：</label>
+															<div class="col-sm-8">
+																<a href="#" class="btn btn-sm btn-primary" class="uploadImg" style="float: right;">
+										                            <i class="fa fa-upload"></i> 上传图片
+										                        </a>
+																<input type="text" class="form-control imgUrl" style="width: 226px;" name="imgUrl" value="${(tableColumn.imgUrl)!?html}" readonly/>
+															</div>
+														</div>
+														</#if>
+													</div>
+												</div>
+												</#if>
+											</div>
+											</#list> </#if>
+										</div>
+										</#if>
+									</div>
+								</div>	
+								</#list> </#if> </#if>
+							</div>
+							
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-5" style="margin-top: 10px;">
+									<button type="submit" class="btn btn-primary" id="btn">保存</button>
+									<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+								</div>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">上传报告模板</h4>
+                </div>
+                <form id="uploadForm" action="" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" class="file" name="uploadData" id="uploadData" accept=".doc,.docx" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="butt">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="ImgModalLabel">上传图片</h4>
+                </div>
+                <form id="uploadImgForm" action="" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" class="file" name="uploadImg" id="uploadImg" accept=".png,.jpg,.jpeg,.bpm,.gif" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="imgButt">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/fileinput.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script type="text/javascript" src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${system_js}/report/reportTemplate.js?v=1.0.0"></script>
+<script type="text/javascript">
+$(function(){
+	var dataTemplate = $('#dataTemplate').magicSuggest({
+        width : 190,
+        highlight : true,
+        data : '${base}/report/dataTemplate/selectDataTemplate.do?',
+        method : 'get',
+        queryParam : "key",
+        allowFreeEntries : false,
+        maxSelection : 1,
+     
+        renderer : function(v)
+        {   
+          return '<div>' + '<div >' + '<div>' + v.name + '</div>' + '<div style="clear:both;"></div>';
+        },
+    });
+	
+	<#if data??>
+	$('.toggle-title').empty().append('修改报告生成模板');
+	$('.toggle-form').attr('action','${base}/report/reportTemplate/modify.do');
+	$('#dataTemplate').magicSuggest().setSelection(${dataTemplate});
+	$('#dataTemplateId').val('${data.template.id}');
+	</#if>
+	
+	$(dataTemplate).on('selectionchange', function(e, cb, s)
+            {
+                var str = cb.getValue();
+                $.ajax({
+                    url : '/report/dataTemplate/getDataTemplate.do',
+                    traditional : true,
+                    type : "POST",
+                    data : {
+                        id : str,
+                    },
+                    async : false,
+                    success : function(data)
+                    {
+                        $('#dataTemplateId').val(data.id);
+                    },
+                    error : function()
+                    {
+                        parent.layer.alert('错误', {
+                            title : "提示"
+                        });
+                    }
+                })
+            });
+	
+	
+	var builtin = $('.builtinVariable').magicSuggest({
+        width : 190,
+        highlight : true,
+        data : '/report/builtinVariable/selectBuiltinVariable.do?',
+        method : 'get',
+        queryParam : "key",
+        allowFreeEntries : false,
+        maxSelection : 1,
+     
+        renderer : function(v)
+        {   
+          return '<div>' + '<div >' + '<div>' + v.name + '</div>' + '<div style="clear:both;"></div>';
+        },
+    });
+	<#if data??>
+	var builtinVariable=[]
+    $(".builtinVariableId").each(function(e){
+        var key=$(this).val();
+       	var builtinVariableMap = ${builtinVariableMap}
+       	builtinVariable = builtinVariableMap[key];
+        $('#'+key).magicSuggest().setSelection(builtinVariable);
+    });
+	var tableColumnBuiltinVariable=[]
+    $(".tableColumnBuiltinVariableId").each(function(e){
+        var key=$(this).val();
+       	var tableColumnBuiltinVariableMap = ${tableColumnBuiltinVariableMap}
+       	tableColumnBuiltinVariable = tableColumnBuiltinVariableMap[key];
+        $('#'+key).magicSuggest().setSelection(tableColumnBuiltinVariable);
+    });
+	</#if>
+	
+	$(builtin).on('selectionchange', function(e, cb, s)
+            {
+                var str = cb.getValue();
+                $.ajax({
+                    url : '/report/builtinVariable/getBuiltinVariable.do',
+                    traditional : true,
+                    type : "POST",
+                    data : {
+                        id : str,
+                    },
+                    async : false,
+                    success : function(data)
+                    {
+                    	
+                    },
+                    error : function()
+                    {
+                        parent.layer.alert('错误', {
+                            title : "提示"
+                        });
+                    }
+                })
+            });
+	
+	
+});
+</script>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>探针管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<style>
+#L_REAGENT_KIT_anchor {
+    background-color: #e1e4e4
+}
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/reagentKit/list.do">试剂盒管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>试剂盒列表</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>试剂盒列表</h5>
+                       <@smm_security_resource resource = "/reagentKit/createReagentKit.do"> <a href="${base}/reagentKit/createReagentKit.do" class="btn btn-sm btn-success" target="_self">
+                            <i class="fa fa-plus"></i> 新增
+                        </a></@smm_security_resource>
+                    </div>
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                        <div class="col-sm-12">
+                            <form id="search_from" action="${base}/reagentKit/list.do" method="post" class="search-form">
+                                <div class="row m-b-xs">
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="code" value="${(searcher.code)!?html}" placeholder="试剂盒编号"/>
+									</div>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="name" value="${(searcher.name)!?html}" placeholder="试剂盒名称"/>
+									</div>
+									<div class="col-sm-2">
+										<select class="form-control" id="type" name="type" data-value=${(searcher.type)!} >
+											<option selected="selected" value="">--------类型--------</option>
+											<@dict_entries category="REAGENT_KIT_TYPE">
+							                     <#if entries??>
+							                     <#list entries as entry>
+							                     	<option value="${entry.value}">${entry.text!?html}</option> 
+							                     </#list>
+							                     </#if>
+						                    </@dict_entries>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<select class="form-control" id="taskId" name="taskId" data-value=${(searcher.taskId)!} >
+											<option selected="selected" value="">------适用任务------</option>
+											<#if taskList??>
+												<#list taskList as t>
+													<option value="${t.id!}">${t.name!?html}</option>
+												</#list>
+											</#if>
+										</select>
+									</div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="fa fa-search"></i> 查询
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')">
+                                                <i class="fa fa-remove"></i> 清空
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="index">序号</th>
+                                        <th>试剂盒编号</th>
+                                        <th>试剂盒名称</th>
+                                        <!--                                     <th>反应数</th> -->
+                                        <th>类型</th>
+                                        <th>自配试剂</th>
+                                        <th>适用任务</th>
+                                        <th class="flexible-btns">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <#if pagination.records?has_content> <#list pagination.records as record>
+                                    <tr>
+                                        <td>${record_index + 1}</td>
+                                        <td>${record.code!?html}</td>
+                                        <td>${record.name!?html}</td>
+                                        <!--                                        <td>${record.reaction!?html}</td> -->
+                                        <td><@dict_entry_text category="REAGENT_KIT_TYPE" value=record.type /></td>
+                                        <td><#if record.reagentKitReagentList?has_content> <#list record.reagentKitReagentList as reagentrecord>
+                                            <#if reagentrecord_index ==
+                                            0>${reagentrecord.reagent.name!?html}<#else>,${reagentrecord.reagent.name!?html}</#if> </#list> </#if></td>
+                                        <td><#if record.kitTaskList?has_content> <#list record.kitTaskList as taskrecord> 
+                                        <#if taskrecord.task??>${taskrecord.task.name!?html}</#if></#list> </#if></td>
+                                        <td class="flexible-btns">
+                                           <@smm_security_resource resource = "/reagentKit/reagentKitModify.do"> <a href="${base}/reagentKit/reagentKitModify.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-edit"></i> 修改
+                                            </a></@smm_security_resource>
+                                            <@smm_security_resource resource = "/reagentKit/enable.do">  <#if record.deleted>
+                                          <a  href="${base}/reagentKit/enable.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-edit"></i> 启用
+                                            </a>
+                                            <#else>
+                                            <a href="javascript:validTask('${record.id}');" class="btn btn-sm btn-success layer-confirm" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56);" data-confirm-message="确定禁用改试剂盒吗？">
+                                                <i class="fa fa-close"></i> 禁用
+                                            </a>
+                                            </#if></@smm_security_resource>
+                                            <a href="${base}/reagentKit/view.do?id=${record.id}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-search-plus"></i> 查看
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </#list> </#if>
+                                </tbody>
+                            </table>
+                            <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+                    
+                </script>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        var opts = {};
+        opts.data_url = '${base}/metadata/types.do';
+        opts.metadata_url = '${base}/metadata/list.do';
+
+        $.init(opts);
+
+    });
+
+    function validTask(id){
+        $.ajax({
+            type: "GET",
+            url: "/reagentKit/validateTask.do",
+            data: {id:id},
+            dataType: "json",
+            success: function(data){
+                console.log(data);
+                if(data.flag=='true'){
+                   window.location.href="${base}/reagentKit/delete.do?id="+id;
+                }else{
+                    parent.layer.alert("该试剂盒关联了'"+data.name+"'任务不可删除,请先解除关联", {title : "提示"});
+                }
+            }
+        })
+    }
+//-->
+</script>
+</html>

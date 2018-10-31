@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.AccountCheckMistakeMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.AccountCheckMistake" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_CHECK_TASK_ID" property="accountCheckTaskId" jdbcType="VARCHAR" />
+    <result column="BILL_DATE" property="billDate" jdbcType="VARCHAR" />
+    <result column="BANK_TYPE" property="bankType" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="TRADE_TIME" property="tradeTime" jdbcType="VARCHAR" />
+    <result column="TRX_NO" property="trxNo" jdbcType="VARCHAR" />
+    <result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="FEE" property="fee" jdbcType="DECIMAL" />
+    <result column="BANK_TRADE_TIME" property="bankTradeTime" jdbcType="VARCHAR" />
+    <result column="BANK_ORDER_NO" property="bankOrderNo" jdbcType="VARCHAR" />
+    <result column="BANK_TRX_NO" property="bankTrxNo" jdbcType="VARCHAR" />
+    <result column="BANK_AMOUNT" property="bankAmount" jdbcType="DECIMAL" />
+    <result column="BANK_FEE" property="bankFee" jdbcType="DECIMAL" />
+    <result column="ERR_TYPE" property="errType" jdbcType="VARCHAR" />
+    <result column="HANDLE_STATUS" property="handleStatus" jdbcType="VARCHAR" />
+    <result column="HANDLE_VALUE" property="handleValue" jdbcType="VARCHAR" />
+    <result column="HANDLE_REMARK" property="handleRemark" jdbcType="VARCHAR" />
+    <result column="OPERATOR_NAME" property="operatorName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="PAYMENT_FULL_TIME" property="paymentFullTime" jdbcType="TIMESTAMP" />
+    <result column="BANK_PAYMENT_FULL_TIME" property="bankPaymentFullTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ACCOUNT_CHECK_TASK_ID, BILL_DATE, BANK_TYPE, ORDER_NO, TRADE_TIME, TRX_NO, ORDER_AMOUNT, 
+    FEE, BANK_TRADE_TIME, BANK_ORDER_NO, BANK_TRX_NO, BANK_AMOUNT, BANK_FEE, ERR_TYPE, 
+    HANDLE_STATUS, HANDLE_VALUE, HANDLE_REMARK, OPERATOR_NAME, CREATE_TIME, PAYMENT_FULL_TIME, 
+    BANK_PAYMENT_FULL_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart >= 0" >
+      limit #{limitStart}, #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeExample" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistake" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_MISTAKE (ID, ACCOUNT_CHECK_TASK_ID, BILL_DATE, 
+      BANK_TYPE, ORDER_NO, TRADE_TIME, 
+      TRX_NO, ORDER_AMOUNT, FEE, 
+      BANK_TRADE_TIME, BANK_ORDER_NO, BANK_TRX_NO, 
+      BANK_AMOUNT, BANK_FEE, ERR_TYPE, 
+      HANDLE_STATUS, HANDLE_VALUE, HANDLE_REMARK, 
+      OPERATOR_NAME, CREATE_TIME, PAYMENT_FULL_TIME, 
+      BANK_PAYMENT_FULL_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{accountCheckTaskId,jdbcType=VARCHAR}, #{billDate,jdbcType=VARCHAR}, 
+      #{bankType,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{tradeTime,jdbcType=VARCHAR}, 
+      #{trxNo,jdbcType=VARCHAR}, #{orderAmount,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
+      #{bankTradeTime,jdbcType=VARCHAR}, #{bankOrderNo,jdbcType=VARCHAR}, #{bankTrxNo,jdbcType=VARCHAR}, 
+      #{bankAmount,jdbcType=DECIMAL}, #{bankFee,jdbcType=DECIMAL}, #{errType,jdbcType=VARCHAR}, 
+      #{handleStatus,jdbcType=VARCHAR}, #{handleValue,jdbcType=VARCHAR}, #{handleRemark,jdbcType=VARCHAR}, 
+      #{operatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{paymentFullTime,jdbcType=TIMESTAMP}, 
+      #{bankPaymentFullTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistake" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="accountCheckTaskId != null" >
+        ACCOUNT_CHECK_TASK_ID,
+      </if>
+      <if test="billDate != null" >
+        BILL_DATE,
+      </if>
+      <if test="bankType != null" >
+        BANK_TYPE,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+      <if test="tradeTime != null" >
+        TRADE_TIME,
+      </if>
+      <if test="trxNo != null" >
+        TRX_NO,
+      </if>
+      <if test="orderAmount != null" >
+        ORDER_AMOUNT,
+      </if>
+      <if test="fee != null" >
+        FEE,
+      </if>
+      <if test="bankTradeTime != null" >
+        BANK_TRADE_TIME,
+      </if>
+      <if test="bankOrderNo != null" >
+        BANK_ORDER_NO,
+      </if>
+      <if test="bankTrxNo != null" >
+        BANK_TRX_NO,
+      </if>
+      <if test="bankAmount != null" >
+        BANK_AMOUNT,
+      </if>
+      <if test="bankFee != null" >
+        BANK_FEE,
+      </if>
+      <if test="errType != null" >
+        ERR_TYPE,
+      </if>
+      <if test="handleStatus != null" >
+        HANDLE_STATUS,
+      </if>
+      <if test="handleValue != null" >
+        HANDLE_VALUE,
+      </if>
+      <if test="handleRemark != null" >
+        HANDLE_REMARK,
+      </if>
+      <if test="operatorName != null" >
+        OPERATOR_NAME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="paymentFullTime != null" >
+        PAYMENT_FULL_TIME,
+      </if>
+      <if test="bankPaymentFullTime != null" >
+        BANK_PAYMENT_FULL_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCheckTaskId != null" >
+        #{accountCheckTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        #{billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankType != null" >
+        #{bankType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="trxNo != null" >
+        #{trxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null" >
+        #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTradeTime != null" >
+        #{bankTradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="bankOrderNo != null" >
+        #{bankOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankTrxNo != null" >
+        #{bankTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAmount != null" >
+        #{bankAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFee != null" >
+        #{bankFee,jdbcType=DECIMAL},
+      </if>
+      <if test="errType != null" >
+        #{errType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleStatus != null" >
+        #{handleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="handleValue != null" >
+        #{handleValue,jdbcType=VARCHAR},
+      </if>
+      <if test="handleRemark != null" >
+        #{handleRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorName != null" >
+        #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentFullTime != null" >
+        #{paymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankPaymentFullTime != null" >
+        #{bankPaymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeExample" resultType="java.lang.Integer" >
+    select count(*) from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountCheckTaskId != null" >
+        ACCOUNT_CHECK_TASK_ID = #{record.accountCheckTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billDate != null" >
+        BILL_DATE = #{record.billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankType != null" >
+        BANK_TYPE = #{record.bankType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null" >
+        ORDER_NO = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeTime != null" >
+        TRADE_TIME = #{record.tradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trxNo != null" >
+        TRX_NO = #{record.trxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderAmount != null" >
+        ORDER_AMOUNT = #{record.orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fee != null" >
+        FEE = #{record.fee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankTradeTime != null" >
+        BANK_TRADE_TIME = #{record.bankTradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankOrderNo != null" >
+        BANK_ORDER_NO = #{record.bankOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankTrxNo != null" >
+        BANK_TRX_NO = #{record.bankTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankAmount != null" >
+        BANK_AMOUNT = #{record.bankAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankFee != null" >
+        BANK_FEE = #{record.bankFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.errType != null" >
+        ERR_TYPE = #{record.errType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleStatus != null" >
+        HANDLE_STATUS = #{record.handleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleValue != null" >
+        HANDLE_VALUE = #{record.handleValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleRemark != null" >
+        HANDLE_REMARK = #{record.handleRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorName != null" >
+        OPERATOR_NAME = #{record.operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.paymentFullTime != null" >
+        PAYMENT_FULL_TIME = #{record.paymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bankPaymentFullTime != null" >
+        BANK_PAYMENT_FULL_TIME = #{record.bankPaymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      ACCOUNT_CHECK_TASK_ID = #{record.accountCheckTaskId,jdbcType=VARCHAR},
+      BILL_DATE = #{record.billDate,jdbcType=VARCHAR},
+      BANK_TYPE = #{record.bankType,jdbcType=VARCHAR},
+      ORDER_NO = #{record.orderNo,jdbcType=VARCHAR},
+      TRADE_TIME = #{record.tradeTime,jdbcType=VARCHAR},
+      TRX_NO = #{record.trxNo,jdbcType=VARCHAR},
+      ORDER_AMOUNT = #{record.orderAmount,jdbcType=DECIMAL},
+      FEE = #{record.fee,jdbcType=DECIMAL},
+      BANK_TRADE_TIME = #{record.bankTradeTime,jdbcType=VARCHAR},
+      BANK_ORDER_NO = #{record.bankOrderNo,jdbcType=VARCHAR},
+      BANK_TRX_NO = #{record.bankTrxNo,jdbcType=VARCHAR},
+      BANK_AMOUNT = #{record.bankAmount,jdbcType=DECIMAL},
+      BANK_FEE = #{record.bankFee,jdbcType=DECIMAL},
+      ERR_TYPE = #{record.errType,jdbcType=VARCHAR},
+      HANDLE_STATUS = #{record.handleStatus,jdbcType=VARCHAR},
+      HANDLE_VALUE = #{record.handleValue,jdbcType=VARCHAR},
+      HANDLE_REMARK = #{record.handleRemark,jdbcType=VARCHAR},
+      OPERATOR_NAME = #{record.operatorName,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      PAYMENT_FULL_TIME = #{record.paymentFullTime,jdbcType=TIMESTAMP},
+      BANK_PAYMENT_FULL_TIME = #{record.bankPaymentFullTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistake" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    <set >
+      <if test="accountCheckTaskId != null" >
+        ACCOUNT_CHECK_TASK_ID = #{accountCheckTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        BILL_DATE = #{billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankType != null" >
+        BANK_TYPE = #{bankType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        TRADE_TIME = #{tradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="trxNo != null" >
+        TRX_NO = #{trxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null" >
+        ORDER_AMOUNT = #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        FEE = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTradeTime != null" >
+        BANK_TRADE_TIME = #{bankTradeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="bankOrderNo != null" >
+        BANK_ORDER_NO = #{bankOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankTrxNo != null" >
+        BANK_TRX_NO = #{bankTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAmount != null" >
+        BANK_AMOUNT = #{bankAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFee != null" >
+        BANK_FEE = #{bankFee,jdbcType=DECIMAL},
+      </if>
+      <if test="errType != null" >
+        ERR_TYPE = #{errType,jdbcType=VARCHAR},
+      </if>
+      <if test="handleStatus != null" >
+        HANDLE_STATUS = #{handleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="handleValue != null" >
+        HANDLE_VALUE = #{handleValue,jdbcType=VARCHAR},
+      </if>
+      <if test="handleRemark != null" >
+        HANDLE_REMARK = #{handleRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorName != null" >
+        OPERATOR_NAME = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentFullTime != null" >
+        PAYMENT_FULL_TIME = #{paymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankPaymentFullTime != null" >
+        BANK_PAYMENT_FULL_TIME = #{bankPaymentFullTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistake" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE
+    set ACCOUNT_CHECK_TASK_ID = #{accountCheckTaskId,jdbcType=VARCHAR},
+      BILL_DATE = #{billDate,jdbcType=VARCHAR},
+      BANK_TYPE = #{bankType,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      TRADE_TIME = #{tradeTime,jdbcType=VARCHAR},
+      TRX_NO = #{trxNo,jdbcType=VARCHAR},
+      ORDER_AMOUNT = #{orderAmount,jdbcType=DECIMAL},
+      FEE = #{fee,jdbcType=DECIMAL},
+      BANK_TRADE_TIME = #{bankTradeTime,jdbcType=VARCHAR},
+      BANK_ORDER_NO = #{bankOrderNo,jdbcType=VARCHAR},
+      BANK_TRX_NO = #{bankTrxNo,jdbcType=VARCHAR},
+      BANK_AMOUNT = #{bankAmount,jdbcType=DECIMAL},
+      BANK_FEE = #{bankFee,jdbcType=DECIMAL},
+      ERR_TYPE = #{errType,jdbcType=VARCHAR},
+      HANDLE_STATUS = #{handleStatus,jdbcType=VARCHAR},
+      HANDLE_VALUE = #{handleValue,jdbcType=VARCHAR},
+      HANDLE_REMARK = #{handleRemark,jdbcType=VARCHAR},
+      OPERATOR_NAME = #{operatorName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      PAYMENT_FULL_TIME = #{paymentFullTime,jdbcType=TIMESTAMP},
+      BANK_PAYMENT_FULL_TIME = #{bankPaymentFullTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

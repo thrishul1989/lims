@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.ngs.mybatis.NgsSequecingMonitorMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.ngs.model.NgsSequecingMonitor">
+		<result column="NGS_SHEET_ID" property="ngsSheetId" jdbcType="VARCHAR" />
+		<result column="MONITOR_TASK_ID" property="monitorTaskId"
+			jdbcType="VARCHAR" />
+		<result column="SEQUECING_START_TIME" property="sequecingStartTime"
+			jdbcType="TIMESTAMP" />
+		<result column="SEQUECING_END_TIME" property="sequecingEndTime"
+			jdbcType="TIMESTAMP" />
+		<result column="SEQUECING_STATUS" property="sequecingStatus"
+			jdbcType="BIT" />
+		<result column="FILE_INTEGRITY" property="fileIntegrity"
+			jdbcType="BIT" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.todaysoft.lims.ngs.model.NgsSequecingMonitor" extends="BaseResultMap">
+		<result column="SEQUECING_LOG" property="sequecingLog"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Blob_Column_List">
+		SEQUECING_LOG
+	</sql>
+
+	<select id="selectByMonitorId" resultMap="BaseResultMap"
+		parameterType="string">
+		select
+		NGS_SHEET_ID,MONITOR_TASK_ID,SEQUECING_START_TIME,SEQUECING_END_TIME,SEQUECING_STATUS
+		from NGS_SEQUECING_MONITOR
+		where MONITOR_TASK_ID = #{0}
+		and SEQUECING_END_TIME is  NULL
+	</select>
+	<insert id="insert" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMonitor">
+		insert into
+		NGS_SEQUECING_MONITOR (NGS_SHEET_ID, MONITOR_TASK_ID,
+		SEQUECING_START_TIME,
+		SEQUECING_END_TIME, SEQUECING_STATUS,
+		FILE_INTEGRITY,
+		SEQUECING_LOG)
+		values (#{ngsSheetId,jdbcType=VARCHAR},
+		#{monitorTaskId,jdbcType=VARCHAR},
+		#{sequecingStartTime,jdbcType=TIMESTAMP},
+		#{sequecingEndTime,jdbcType=TIMESTAMP},
+		#{sequecingStatus,jdbcType=BIT}, #{fileIntegrity,jdbcType=BIT},
+		#{sequecingLog,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMonitor">
+		insert into NGS_SEQUECING_MONITOR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ngsSheetId != null">
+				NGS_SHEET_ID,
+			</if>
+			<if test="monitorTaskId != null">
+				MONITOR_TASK_ID,
+			</if>
+			<if test="sequecingStartTime != null">
+				SEQUECING_START_TIME,
+			</if>
+			<if test="sequecingEndTime != null">
+				SEQUECING_END_TIME,
+			</if>
+			<if test="sequecingStatus != null">
+				SEQUECING_STATUS,
+			</if>
+			<if test="fileIntegrity != null">
+				FILE_INTEGRITY,
+			</if>
+			<if test="sequecingLog != null">
+				SEQUECING_LOG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ngsSheetId != null">
+				#{ngsSheetId,jdbcType=VARCHAR},
+			</if>
+			<if test="monitorTaskId != null">
+				#{monitorTaskId,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingStartTime != null">
+				#{sequecingStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sequecingEndTime != null">
+				#{sequecingEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sequecingStatus != null">
+				#{sequecingStatus,jdbcType=BIT},
+			</if>
+			<if test="fileIntegrity != null">
+				#{fileIntegrity,jdbcType=BIT},
+			</if>
+			<if test="sequecingLog != null">
+				#{sequecingLog,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMonitor">
+		update NGS_SEQUECING_MONITOR
+		<set>
+			
+			<if test="sequecingStartTime != null">
+				SEQUECING_START_TIME =
+				#{sequecingStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sequecingEndTime != null">
+				SEQUECING_END_TIME =
+				#{sequecingEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sequecingStatus != null">
+				SEQUECING_STATUS = #{sequecingStatus,jdbcType=TINYINT},
+			</if>
+			<if test="fileIntegrity != null">
+				FILE_INTEGRITY = #{fileIntegrity,jdbcType=TINYINT},
+			</if>
+
+		</set>
+		
+		where NGS_SHEET_ID = #{ngsSheetId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="unFinishList" resultMap="BaseResultMap">
+	select * from NGS_SEQUECING_MONITOR where SEQUECING_END_TIME is null
+	</select>
+</mapper>

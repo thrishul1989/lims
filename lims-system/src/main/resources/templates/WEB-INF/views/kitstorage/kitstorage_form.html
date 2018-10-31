@@ -1,0 +1,234 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>新增探针</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>	
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+
+
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<style>
+	button.btn.btn-default.dropdown-toggle {
+	    padding: 14px;
+	    background-color: white;
+	    color: #c5c5c5;
+	    border-color: #e5e6e7;
+	    
+}
+ 
+</style>
+
+<script>
+
+$().ready(function () {
+
+    $("#kitStorageForm").validate({
+    	
+    	submitHandler: function(form) {      
+    		//教研匹配框
+    		if($("#reagentKit").attr("data-id")==""||$("#reagentKit").attr("data-id")==null){
+    			parent.layer.alert('请选择正确的试剂盒类型！',{title:"提示"});
+    			return false;
+    			
+    		}
+    		
+    	
+    	
+    		window.location.href = "${base}/kitStorage/create.do?reactionNum="+$("#reactionNum").val()+"&createNum="+$("#createNum").val()+
+    				"&reagentKit.id="+$("#reagentKit").attr("data-id");
+    	 
+    }
+    ,
+    
+        rules: {
+        	reactionNum:  {
+        		required:true,
+        		maxlength: 10
+        	},
+        	createNum: {
+        		required:true,
+        		maxlength: 20
+        	}
+           
+        },
+        messages: {
+        	reactionNum:  {
+                required: "请输入反应数",
+                maxlength: "反应数不能超过10个字符"
+            },
+            createNum:  {
+            	required: "请输入数量",
+            	maxlength: "数量不能超过20个字符"
+            }
+           
+        }
+    });
+    
+    $("#reagentKit").bsSuggest('init', {
+		url : "${base}/reagentKit/reagentKitSelect.do?name=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "name",
+		effectiveFields : [ "code", "name" ],
+		effectiveFieldsAlias : {
+			name : "名称",
+			code : "编号"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+});   
+
+
+
+</script>
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">试剂盒</a></li>
+							
+							<li class="active"><strong>${(flag)!?html}</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>试剂盒</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="kitStorageForm" class="form-horizontal m-t"
+							action="${base}/kitStorage/create.do" method="post"
+							enctype='application/json'>
+							
+						
+							<fieldset>
+							<div class="form-group">
+								
+									
+									<label class="col-sm-2 control-label control-required">可用反应数：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="reactionNum"
+											id="reactionNum" value=""  />
+									</div>
+									
+									<label class="col-sm-2 control-label control-required">入库数量：</label>
+									
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="createNum"
+											id="createNum" value="" />
+									</div>
+									
+						 </div>
+								
+								
+							
+								
+								<div class="form-group">
+								
+									
+									<label class="col-sm-2 control-label control-required">试剂盒类型：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" class="form-control" data-id=""
+												id="reagentKit" value="">
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+								
+									
+								</div>
+								
+									
+							  
+							  
+								
+								
+								
+								
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"  class="btn btn-primary" >保存</button>
+										<button class="btn btn-primary goback" type="button" >返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+								
+                          
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+
+<script>
+
+function changeMethod(){
+
+	if($("#detectionMethod").val()=="1"){
+		$("#DATASIZE").css("display","block")
+		
+	}
+	else{
+		$("#DATASIZE").css("display","none")
+		
+	}
+}
+</script>
+
+
+</html>

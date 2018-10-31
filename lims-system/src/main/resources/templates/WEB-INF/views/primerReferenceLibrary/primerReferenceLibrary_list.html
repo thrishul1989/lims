@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>基因组引物库管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<style>
+#L_REAGENT_PRIMERREFERENCELIBRARY_anchor{
+background-color: #e1e4e4
+}
+</style>
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" >
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/primerReferenceLibrary/list.do">基因组引物库管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>基因组引物库列表</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    
+                    
+				<div class="ibox-title">
+                        <h5>引物参考库列表</h5>
+                        <@smm_security_resource resource = "/primerReferenceLibrary/upload.do">
+						<a class="btn btn-sm btn-success" data-toggle="modal"  data-target="#myModal">
+							<i class="fa fa-folder-open-o"></i> 导入
+						</a>
+						</@smm_security_resource>
+                    </div>
+                    
+                    
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+
+                       
+                        <div class="col-sm-12">
+                        
+	                        <form id="searchPrimer_from" action="${base}/primerReferenceLibrary/list.do" method="post" class="search-form">
+	                            <div class="row m-b-xs">
+									<label class="col-sm-1 control-label" style="padding-top:8px">突变基因：</label>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" class="form-control" name="gene" value="${(searcher.gene)!?html}"
+												   placeholder="输入突变基因">
+										</div>
+									</div>
+									<label class="col-sm-1 control-label" style="padding-top:8px">染色体编号：</label>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" class="form-control" name="chromosomeNumber" value="${(searcher.chromosomeNumber)!?html}"
+												   placeholder="输入染色体编号">
+										</div>
+									</div>
+	                            	<label class="col-sm-1 control-label" style="padding-top:8px;width:10%;">染色体位置1：</label>
+	                                <div class="col-sm-2">
+	                                   <div class="form-group">
+                                        <input type="text" class="form-control" name="pcrPoint" value="${(searcher.pcrPoint)!?html}"
+                                            placeholder="输入染色体位置1">
+                                    </div>
+	                                </div>
+	                                
+	                                <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <button type="submit" id="match" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 匹配
+	                                        </button>
+
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('searchPrimer_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form>
+	                        <table class="table table-striped table-bordered table-hover">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+										<th>突变基因</th>
+										<th>外显子编号</th>
+										<th>染色体编号</th>
+	                                    <th style= 'display:none'>染色体位置</th>
+	                                    <th>PCR起始点</th>
+	                                    <th>PCR终止点</th>
+										<th >正向引物序列</th>
+										<th >反向引物序列</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if pagination??>
+	                              <#if pagination.records?has_content> 
+	                                <#list pagination.records as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+										<td>${record.gene!?html}</td>
+										<td>${record.codingExon!?html}</td>
+										<td>${record.chromosomeNumber!?html}</td>
+										<td style= 'display:none'>${record.codingExonArea!?html}</td>
+	                                    <td>${record.pcrStartPoint!?html}</td>
+	                                    <td>${record.pcrEndPoint!?html}</td>
+										<td >${record.forwardPrimerSequence!?html}</td>
+										<td >${record.reversePrimerSequence!?html}</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel">Excel导入</h4> 
+            </div> 
+           <form action="${base}/primerReferenceLibrary/upload.do" method="post"  onsubmit="return checkedForm()"
+           			name="uploadForm"	enctype="multipart/form-data">
+            <div class="modal-body">
+						<input type="file" class="file" name="uploadData"  accept=".xlsx,.xls"/>
+			</div> 
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+                <button type="submit" class="btn btn-primary" >提交</button> 
+            </div> 
+            </form>
+        </div><!-- /.modal-content --> 
+    </div><!-- /.modal --> 
+</div>     
+ <#include "../bpm/excelModelDialog/dna_qc_excel_model.html" />  
+</body>
+
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script type="text/javascript" src="${system_js}/primer/primerReferenceLibrary.js"></script>
+    <script type="text/javascript">
+    var checkSubmitFlg = true;
+    function checkedForm(){
+    	
+    	var excelFileName = document.uploadForm.uploadData.value;
+    	var formatStr = '';
+    	var index = excelFileName.lastIndexOf('.');
+    	if(excelFileName.length == 0){
+    		parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+    		return false;
+    	}else if(index > 0){
+    		
+    		formatStr = excelFileName.substring(index);
+    		if(!(".xlsx" == formatStr||".xls" == formatStr)){
+    			
+    			parent.layer.alert('请上传excel文件',{title:"提示"});
+    			
+    			return false;
+    		}
+    	}
+    	
+    	if(checkSubmitFlg == true){ 
+    		checkSubmitFlg = false;
+    	} else{
+    		parent.layer.alert('不能重复提交',{title:"提示"});
+    		return false;  
+    	}
+
+    }
+                </script>
+                
+                
+</html>
+

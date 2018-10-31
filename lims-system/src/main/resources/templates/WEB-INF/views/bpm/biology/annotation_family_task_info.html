@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>生信注释</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+<style>
+#L_REAGENT_PROBE_anchor {
+	background-color: #e1e4e4
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>待家系分析任务列表</h5>
+						<#if status??>
+							<#if 10==status>
+								<a href="#" id="submitFamily" class="btn btn-sm btn-success">
+									<i class="fa fa-edit"></i>提交家系分析</a>
+								<#else>
+									<a href="#" class="btn btn-sm btn-success" disabled="disabled">
+										<i class="fa fa-edit"></i>进行中...</a>
+							</#if>
+						</#if>
+					</div>
+							<table class="table table-striped table-bordered table-hover">
+								<input type="hidden" id="familyAnnotationId" value="${familyAnnotationId!}">
+								<thead>
+									<tr>
+										<th class="index"><input type="checkbox" id="checkall" class="checkall"></th>
+										<th class="index">序号</th>
+										<th>测序编号</th>
+										<th>待分析样本</th>
+										<th>数据编号</th>
+										<th>注释进度</th>
+										<th>质控状态</th>
+										<th>异常次数</th>
+										<th>创建时间</th>
+										<th>流程状态</th>
+										<th>错误说明</th>
+										<th class="flexible-btns">操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if taskList?has_content>
+										<#list taskList as record>
+											<tr>
+												<td>
+													<#if record.id?? && '已取消' != record.scheduleStatus && record.statisticsState?? && record.statisticsState==0 && 5==record.annotationState>
+														<input type="checkbox" class="checkone" value="${record.id!}">
+													</#if>
+												</td>
+												<td>
+													<input type="hidden" class="familyCount" value="${record.scheduleStatus!}">
+													${record_index + 1}</td>
+												<td>${record.sequencingCode!?html}</td>
+												<td>${record.sampleCode!?html}</td>
+												<td>${record.dataCode!?html}</td>
+												<td>
+													<#if record.annotationState??>
+														<#if record.annotationState==0>
+															进行中...
+														<#elseif record.annotationState==1>
+															过滤
+														<#elseif record.annotationState==2>
+															比对
+														<#elseif record.annotationState==3>
+															call突变
+														<#elseif record.annotationState==4>
+															注释
+														<#elseif record.annotationState==5>
+															结束
+														<#elseif record.annotationState==6>
+															<font color="red">出现错误</font>
+														<#elseif record.annotationState==7>
+															打分中
+														<#elseif record.annotationState==10>
+															解析文件中...
+														</#if>
+													</#if>
+												</td>
+												<td>
+													<#if record.statisticsState??>
+														<#if record.statisticsState==0>
+															合格
+															<#else>
+																<font color="red">不合格</font>
+														</#if>
+													</#if>
+												</td>
+												<td>${record.resubmitCount!?html}</td>
+												<td>
+													<#if record.startTime??>
+														${(record.startTime)?string("yyyy-MM-dd HH:mm:ss")}
+													</#if>
+												</td>
+												<td>
+													${record.scheduleStatus!?html}
+												</td>
+												<td>
+													${record.remark!?html}
+												</td>
+												<td>
+													<#if record.annotationState??>
+														<#if record.annotationState==6>
+															<a href="${base}/testing/reAnalysisAnnotaionFile.do?familyId=${familyAnnotationId}&taskId=${record.id}&type=2" data-confirm-message="确定要重新解析该单例注释文件吗?" class="btn btn-sm btn-success layer-confirm">
+																<i class="fa fa-edit"></i>重新解析</a>
+														<#else>
+															<#if record.statisticsState??>
+																<#if record.statisticsState==1&&record.status==0 && record.annotationState!= 10 >
+																	<a href="#" onclick="failOperate('${record.id}','${record.sampleCode}')" class="btn btn-sm btn-success">
+																		<i class="fa fa-edit"></i>处理</a>
+																</#if>
+															</#if>
+														</#if>
+													</#if>
+												</td>
+											</tr>
+										</#list>
+										<#else>
+											<tr>
+												<td colspan="11">暂无家系分析任务</td>
+											</tr>
+										</#if>
+								</tbody>
+							</table>
+							<#include "../../inc/pagination_mybaties.html" />
+						</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="operate_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated bounceInRight"
+				 style="width: 550px; margin-left: 160px; margin-top: 100px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">失败处理</h4>
+					</div>
+					<div class="modal-body">
+						<div>
+							<form action="#" method="post" class="search-form form-inline" id="remark_form">
+								<input type="hidden" id="taskId" name="taskId"/>
+
+								<div style="width: 450px;">
+									<div class="form-group">
+										<label class="control-label">样本编号：</label>
+										<input type="text" class="form-control" id="sampleCode" readonly/>
+									</div>
+									<div class="form-group">
+										<label class="control-label">处理策略：</label>
+										<input type="radio" class="form-control type" name="type" value="1"
+											   style="width: 15px;margin-bottom: 5px"/>改为合格
+										<input type="radio" class="form-control type" name="type" value="2"
+											   style="width: 15px;margin-bottom: 5px"/>上报
+										<input type="radio" class="form-control type" name="type" value="3"
+											   style="width: 15px;margin-bottom: 5px"/>重新生信注释
+									</div>
+									<div class="form-group">
+										<label class="control-label">备注原因：</label>
+										<textarea class="form-control" id="remark" name="remark" rows="3"
+												  cols="45"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="operate_button">确定</button>
+						<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript">
+
+	$(function(){
+		$('#operate_button').on('click', function()
+		{
+			var taskId = $('#taskId').val();
+			var type = $('input:radio[name=type]:checked').val();
+			var remark = $('#remark').val();
+
+			if('' == type){
+				parent.parent.layer.alert('请选择处理策略',{title:"提示"});
+				return false;
+			}else{
+				$.ajax({
+					type:"POST",
+					traditional: true,
+					url: '${base}/testing/solveBiologyAnnotation.do',
+					data:{
+						taskId : taskId,
+						type : type,
+						remark : remark
+					},
+					async: false,
+					success:function(data){
+						$('#operate_dialog').modal('hide');
+						window.location.reload();
+					},
+					error:function(){
+						alert("failed");
+					}
+				});
+			}
+		});
+
+		$('#submitFamily').on('click', function()
+		{
+			var checkIds = $('.checkone:checked');
+			var checkedArr = [];
+			$.each(checkIds,function(){
+				checkedArr.push($(this).val());
+			});
+			if(checkedArr.length<=0)
+			{
+				parent.parent.layer.alert('请至少选中一个注释任务',{title:"提示"});
+				return;
+			}
+			var familyCount = $('.familyCount');
+			var familyCountArr = [];
+			$.each(familyCount,function(){
+				if("已取消"!=$(this).val())
+				{
+					familyCountArr.push($(this).val());
+				}
+			});
+			if(checkedArr.length < familyCountArr.length)
+			{
+				parent.parent.layer.alert('请勾选全部家系样本样本',{title:"提示"});
+				return;
+			}
+
+			var ids = checkedArr.join(",");
+
+			parent.parent.layer.confirm('您确定要启动家系分析吗？', { btn: ['确定','取消'] ,area: ['320px', '175px']}, function(){
+				parent.parent.layer.closeAll('dialog');
+				$.ajax({
+					type: "GET",
+					traditional: true,
+					url: "${base}/testing/startFamilyAnnotation.do",
+					data: {ids:ids,familyAnnotationId:$('#familyAnnotationId').val()},
+					async: false,
+					success: function (data) {
+						window.location.href="${base}/testing/biologyAnnotationFamilyList.do";
+					},
+					error: function () {
+						alert("failed");
+					}
+				});
+
+			});
+		});
+		$('#checkall').on('click', function()
+		{
+			var isChecked = $('.checkall').is(":checked");
+			if(isChecked)
+			{
+				$(".checkone").prop("checked",true);
+			}else{
+				$(".checkone").prop("checked",false);
+			}
+		});
+	});
+
+
+	function failOperate(taskId,sampleCode){
+		$('#remark').val("");
+		$('input:radio[name=type]').attr('checked',false);
+		$('#sampleCode').val(sampleCode);
+		$('#taskId').val(taskId);
+		$('#operate_dialog').modal('show');
+	}
+
+
+</script>
+
+</html>
+

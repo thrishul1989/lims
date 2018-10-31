@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报告一审</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.1"></script>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <form id="review_form" class="form-horizontal m-t" target="_parent" action="${base}/bpm/report/firstReview/review.do" method="post">
+                <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                <input type="hidden" id="id" name="id" value="${data.id!?html}"/>
+                <input type="hidden" id="reviewResult" value="1"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">报告编号：</label>
+                    <div class="col-sm-10">
+                        <label class="col-sm-10 control-label" style="text-align: left">${data.reportCode!?html} </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">审核结果：</label>
+                    <div class="col-sm-10">
+                        <div>
+                            <label class="checkbox-inline i-checks"><input type="radio" class="reviewResult" name="reviewResult" value="1" /> 通过</label>
+							<label class="checkbox-inline i-checks"><input type="radio" class="reviewResult" name="reviewResult" value="2" /> 不通过</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">审核意见：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="reviewOpinion" name="reviewOpinion" rows="6"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        $('.i-checks input:first').iCheck('check');
+        $('body').on('ifChecked', '.reviewResult', function(){
+        	$('#reviewResult').val($(this).val());
+        });
+    });
+//-->
+</script>
+</html>

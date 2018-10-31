@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>数据导入模板</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/html" id="addTemp">
+<#include "./dataTemplate_add_temp.html" />
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/data/dataTemplate/list.do">数据导入模板</a>
+                            </li>
+                            <li class="active">
+                                <strong class="toggle-title">新增数据导入模板</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5 class="toggle-title">新增数据导入模板</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="dataTemplate_form" class="form-horizontal toggle-form" action="${base}/data/dataTemplate/create.do" method="post">
+                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                        	<input id="id" type="hidden" name="id" value="${(data.id)!?html}"/>
+                        	<div class="form-group">
+								<label class="col-sm-2 control-label control-required">模板名称：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="name" id="name" value="${(data.name)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+							<label class="col-sm-2 control-label control-required">检测方法：</label>
+							<div class="col-sm-3">
+								<select class="form-control testingMethod" name="testingMethod.id" id="testingMethod" data-value="${(data.testingMethod.id)!?html}" >
+									<option value="">--请选择检测方法--</option>
+									<#if testingMethodList??>
+										<#list testingMethodList as entry>
+											<option value="${entry.id!?html}">${entry.name!?html}</option>
+										</#list>
+									</#if>
+								</select>
+							</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">标题行：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="titleIndex" id="titleIndex" value="${(data.titleIndex)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">数据起始行：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control " name="startRowIndex" id="startRowIndex" value="${(data.startRowIndex)!?html}" required/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">列定义：</label>
+								<div class="col-sm-8">
+									<div id="requestChoose"></div>
+									<table class="table table-striped table-bordered table-hover">
+										<thead>
+		                                    <tr>
+		                                        <th class="col-sm-1">序号</th>
+		                                        <th class=" col-sm-6">描述</th>
+		                                        <th class="col-sm-3">特殊语义标识</th>
+		                                        <th class="col-sm-1">排序</th>
+		                                        <th class="flexible-btns">操作</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                	<#if data??>
+		                                		<#if (data.columnList)?has_content> <#list data.columnList as column>
+		                                			<#if column_index == 0>
+		                                			<tr>
+				                                        <td class="index">${column_index + 1}</td>
+				                                        <td><input name="columnList[${column_index}].columnName" class="form-control columnName" type="text" value="${column.columnName!?html}" required></td>
+				                                        
+				                                        <td><select name="columnList[${column_index}].semantic" class="form-control semantic">
+															<option value="">--请选择--</option>
+															<@dict_entries category="SPECIAL_SEMANTIC">
+															<#if entries??>
+																<#list entries as entry>
+															<option value="${entry.value!}"<#if column??><#if entry.value==column.semantic!?html >selected</#if></#if> >${entry.text!?html}</option> </#list>
+															</#if>
+															</@dict_entries>
+															</select>
+														</td>
+				                                        
+				                                        <td><input name="columnList[${column_index}].columnIndex" class="form-control columnIndex" type="text" value="${column.columnIndex!?html}" required>
+				                                        	<input name="columnList[${column_index}].id" type="hidden" class="id" value="${column.id!?html}"/></td>
+				                                        <td>
+															<a href="javascript:;" class="btn btn-sm btn-success add"><i class="fa fa-plus"></i> 新增列</a>
+														</td>
+				                                    </tr>
+		                                			<#else>
+		                                			<tr>
+				                                        <td class="index">${column_index + 1}</td>
+				                                        <td><input name="columnList[${column_index}].columnName" class="form-control columnName" type="text" value="${column.columnName!?html}" required></td>
+				                                        <td>
+															<select name="columnList[${column_index}].semantic" class="form-control semantic">
+																<option value="">--请选择--</option>
+																<@dict_entries category="SPECIAL_SEMANTIC"> <#if entries??> <#list
+																		entries as entry>
+																	<option value="${entry.value!}"<#if column??><#if
+																		entry.value==column.semantic!?html
+																>selected</#if></#if> >${entry.text!?html}</option> </#list>
+																</#if> </@dict_entries></select>
+														</td>
+														<td><input name="columnList[${column_index}].columnIndex" class="form-control columnIndex" type="text" value="${column.columnIndex!?html}" required>
+															<input name="columnList[${column_index}].id" type="hidden" class="id" value="${column.id!?html}"/></td>
+														<td>
+															<a class="btn btn-sm btn-success remove" href="javascript:;"><i class="fa fa-trash"></i> 删除</a>
+														</td>
+				                                    </tr>
+		                                			</#if>
+		                                		</#list> </#if>
+		                                	<#else>
+		                                    <tr>
+		                                        <td class="index">1</td>
+		                                        <td><input name="columnList[${0}].columnName" class="form-control columnName" type="text" required/></td>
+		                                        <td><select name="columnList[${0}].semantic" class="form-control semantic">
+		                                        <option value="">请选择</option>
+		                                        <@dict_entries
+															category="SPECIAL_SEMANTIC"> <#if entries??> <#list
+															entries as entry>
+															<option value="${entry.value!}"<#if column??><#if
+																entry.value==column.semantic!?html
+																>selected</#if></#if> >${entry.text!?html}</option> </#list>
+															</#if> </@dict_entries></select></td>
+		                                        <td><input name="columnList[${0}].columnIndex" class="form-control columnIndex" type="text" required/></td>
+		                                        <td>
+													<a href="javascript:;" class="btn btn-sm btn-success add"><i class="fa fa-plus"></i> 新增列</a>
+												</td>
+		                                    </tr>
+		                                    </#if>
+		                                </tbody>
+									</table>
+								</div>
+							</div>
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-5" style="margin-top: 10px;">
+									<button type="button" class="btn btn-primary" id="btn" onclick="subForm(this)">保存</button>
+									<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+								</div>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/report/dataTemplate.js?v=1.0.0"></script>
+<script type="text/javascript">
+var flag = false;
+$(function(){
+	<#if data??>
+	$('.toggle-title').empty().append('修改数据导入模板');
+	$('.toggle-form').attr('action','${base}/data/dataTemplate/modify.do');
+	var name = $('#testingMethod').children('option:selected').html();
+	var div = $("#requestChoose");
+	if('Sanger检测' == name){
+		div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+	}else if('QPCR验证' == name){
+		div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+	}else if('Sanger验证' == name){
+		div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+	}else if('PCR-NGS验证' == name){
+		div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+	}else if('动态突变' == name){
+		div.html('<label class="error">请选择：样本编号，合并编号</label>');
+	}else if('MLPA检测' == name){
+		div.html('<label class="error">请选择：样本编号</label>');
+	}else if('荧光检测' == name){
+		div.html('<label class="error">请选择：样本编号</label>');
+	}else if('MLPA验证' == name){
+		div.html('<label class="error">请选择：样本编号</label>');
+	}else{
+		div.html('<label class="error">请选择：下一步，位点类型，验证方法，样本编号，突变基因，染色体位置，转录本号，外显子，核苷酸变化，氨基酸变化，纯合/杂合，染色体，位置1，位置2，上游基因，下游基因，参考样本，数据编号</label>');
+	}
+	</#if>
+});
+function subForm(obj){
+	var arr = [];
+	var tr_ = $(obj).parents('form').find('tbody tr');
+	tr_.each(function(i,v){
+		arr.push($(v).find('td').eq(3).find('input').val());
+	});
+	if(isRepeat(arr)){
+		alert("排序列有重复值！")
+		return false;
+	}
+	if(!flag){
+		$('#dataTemplate_form').submit();
+	}
+}
+
+function isRepeat(arr){ 
+
+	var hash = {}; 
+
+	for(var i in arr) { 
+
+	if(hash[arr[i]]) 
+
+	return true; 
+
+	hash[arr[i]] = true; 
+
+	} 
+
+	return false; 
+
+	} 
+	
+	$('#testingMethod').on('change',function(){
+		var name = $(this).children('option:selected').html();
+		var div = $("#requestChoose");
+		if('Sanger检测' == name){
+			div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+		}else if('QPCR验证' == name){
+			div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+		}else if('Sanger验证' == name){
+			div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+		}else if('PCR-NGS验证' == name){
+			div.html('<label class="error">请选择：合并编号，结果，处理意见</label>');
+		}else if('动态突变' == name){
+			div.html('<label class="error">请选择：样本编号，合并编号</label>');
+		}else if('MLPA检测' == name){
+			div.html('<label class="error">请选择：样本编号</label>');
+		}else if('荧光检测' == name){
+			div.html('<label class="error">请选择：样本编号</label>');
+		}else if('MLPA验证' == name){
+			div.html('<label class="error">请选择：样本编号</label>');
+		}else{
+			div.html('<label class="error">请选择：下一步，位点类型，验证方法，样本编号，突变基因，染色体位置，转录本号，外显子，核苷酸变化，氨基酸变化，纯合/杂合，染色体，位置1，位置2，上游基因，下游基因，参考样本，数据编号</label>');
+		}
+		
+		$.get("/data/dataTemplate/validateTestingMethod",{testingMethodId:$(this).val()}, function(result){
+			if(result){
+				alert('检测方法的数据模板已存在!');
+			}
+			flag = result;
+		  }); 
+	});
+
+</script>
+</html>

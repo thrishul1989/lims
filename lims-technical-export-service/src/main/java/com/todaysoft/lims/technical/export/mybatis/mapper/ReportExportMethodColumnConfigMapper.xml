@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.ReportExportMethodColumnConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMethodColumnConfig" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="METHOD" property="method" jdbcType="VARCHAR" />
+    <result column="SHOW_NAME" property="showName" jdbcType="VARCHAR" />
+    <result column="SORT_INDEX" property="sortIndex" jdbcType="INTEGER" />
+    <result column="COLUMN_NAME" property="columnName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, METHOD, SHOW_NAME, SORT_INDEX, COLUMN_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMethodColumnConfig" >
+    insert into REPORT_EXPORT_METHOD_COLUMN_CONFIG (ID, METHOD, SHOW_NAME, 
+      SORT_INDEX, COLUMN_NAME)
+    values (#{id,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{showName,jdbcType=VARCHAR}, 
+      #{sortIndex,jdbcType=INTEGER}, #{columnName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMethodColumnConfig" >
+    insert into REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="method != null" >
+        METHOD,
+      </if>
+      <if test="showName != null" >
+        SHOW_NAME,
+      </if>
+      <if test="sortIndex != null" >
+        SORT_INDEX,
+      </if>
+      <if test="columnName != null" >
+        COLUMN_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null" >
+        #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortIndex != null" >
+        #{sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="columnName != null" >
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMethodColumnConfig" >
+    update REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    <set >
+      <if test="method != null" >
+        METHOD = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null" >
+        SHOW_NAME = #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortIndex != null" >
+        SORT_INDEX = #{sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="columnName != null" >
+        COLUMN_NAME = #{columnName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportMethodColumnConfig" >
+    update REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    set METHOD = #{method,jdbcType=VARCHAR},
+      SHOW_NAME = #{showName,jdbcType=VARCHAR},
+      SORT_INDEX = #{sortIndex,jdbcType=INTEGER},
+      COLUMN_NAME = #{columnName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectByMethod" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_METHOD_COLUMN_CONFIG
+    where 1=1 
+    <if test="method != null">
+    	and METHOD = #{method,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

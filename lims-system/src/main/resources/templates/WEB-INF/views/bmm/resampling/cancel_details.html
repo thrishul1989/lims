@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>送样取消-详情</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/bmm/resampling/cancel_list.do">送样取消</a>
+                            </li>
+                            <li class="active">
+                                <strong>记录详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>记录详情</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox">
+                                    <div class="ibox-title">
+                                        <h5>样本信息</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-striped table-bordered table-hover table-details">
+                                            <tr>
+                                                <th class="col-sm-1">订单编号</th>
+                                                <td class="col-sm-2">${(data.orderCode)!?html}</td>
+                                                <th class="col-sm-1">营销中心</th>
+                                                <td class="col-sm-2">${(data.orderMarketingCenter)!?html}</td>
+                                                <th class="col-sm-1">客户姓名</th>
+                                                <td class="col-sm-2">${(data.orderCustomerName)!?html}</td>
+                                                <th class="col-sm-1">业务员</th>
+                                                <td class="col-sm-2">${(data.orderAgentName)!?html}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>样本编号</th>
+                                                <td>${(data.sampleCode)!?html}</td>
+                                                <th>样本名称</th>
+                                                <td>${(data.sampleName)!?html}</td>
+                                                <th>样本类型</th>
+                                                <td>${(data.sampleTypeName)!?html}</td>
+                                                <th>样本用途</th> <#if (data.samplePurpose)??>
+                                                <td><@dict_entry_text category = "SAMPLE_BUSINESS_TYPE" value = data.sampleBusinessType!
+                                                    />-<@dict_entry_text category = "SAMPLE_PURPOSE" value = data.samplePurpose! /></td>
+                                                <#else>
+                                                <td><@dict_entry_text category = "SAMPLE_BUSINESS_TYPE" value = data.sampleBusinessType! /></td>
+                                                </#if>
+                                            </tr>
+                                            <tr>
+                                                <th>备注</th>
+                                                <td colspan="7">${(data.errorDealRemark)!?html}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox">
+                                    <div class="ibox-title">
+                                        <h5>影响流程</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="index">序号</th>
+                                                    <th>实验类型</th>
+                                                    <th>实验方法</th>
+                                                    <th>检测产品/验证位点</th>
+                                                    <th>异常节点</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <#if (data.schedules)??> <#list data.schedules as s>
+                                                <tr>
+                                                    <td>${s_index + 1}</td>
+                                                    <td>${s.testingSchedule?string('检测','验证')}</td>
+                                                    <td>${s.testingMethodName!?html}</td>
+                                                    <#if s.testingSchedule>
+                                                    <td>${s.testingProductName!?html}</td>
+                                                    <#else>
+                                                    <td>${s.verifyGeneSymbol!?html}-${s.verifyLocation!?html}</td>
+                                                    </#if>
+                                                    <td>${s.errorNode!?html}</td>
+                                                </tr>
+                                                </#list> </#if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <#if (data.solveRecord)??>
+                                    	<#else>
+                                    	<div class="ibox-content">
+	                                        <div class="col-sm-4 col-sm-offset-5">
+	                                            <button class="btn btn-primary goback" type="button">返回</button>
+	                                        </div>
+                                    	</div>
+                                    </#if>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <#if (data.solveRecord)??>
+	                        <div class="row">
+	                            <div class="col-lg-12">
+	                                <div class="ibox">
+	                                    <div class="ibox-title">
+	                                        <h5>处理信息</h5>
+	                                        <div class="ibox-tools">
+	                                            <a class="collapse-link">
+	                                                <i class="fa fa-chevron-down"></i>
+	                                            </a>
+	                                        </div>
+	                                    </div>
+	                                    <div class="ibox-content">
+	                                        <table class="table table-striped table-bordered table-hover table-details">
+	                                            <tr>
+	                                                <th class="col-sm-1">处理策略</th>
+	                                                <td class="col-sm-2">
+		                                                <#if (data.solveRecord.strategy) == '1'>取消实验</#if>
+		                                                <#if (data.solveRecord.strategy) == '2'>风险实验（<#if data.riskTestingNodes??>
+                                                                <#list data.riskTestingNodes as node>
+                                                                ${(node.name)!?html}
+                                                                </#list>
+                                                                </#if>）
+                                                         </#if>
+	                                                </td>
+	                                                <th class="col-sm-1">处理备注</th>
+	                                                <td class="col-sm-2">${(data.solveRecord.remark)!?html}</td>
+	                                                <th class="col-sm-1">处理人</th>
+	                                                <td class="col-sm-2">${(data.solveRecord.solverName)!?html}</td>
+	                                                <th class="col-sm-1">处理时间</th>
+	                                                <td class="col-sm-2">${(data.solveRecord.solveTime)!?string('yyyy-MM-dd HH:mm:ss')}</td>
+	                                            </tr>
+	                                        </table>
+	                                    </div>
+	                                    <div class="ibox-content">
+	                                        <div class="col-sm-4 col-sm-offset-5">
+	                                            <button class="btn btn-primary goback" type="button">返回</button>
+	                                        </div>
+                                    	</div>
+	                                </div>
+	                            </div>
+	                        </div>
+                        </#if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script src="${plugins}/hplus/content.min.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+</body>
+</html>

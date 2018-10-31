@@ -1,0 +1,411 @@
+
+<style>
+.ft_sm {
+    font-size: 0.75em;
+    margin-left: 10px;
+}
+</style>
+<div class="modal fade" id="refilterModal" tabindex="-2" role="dialog"
+	aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog" role="document" style="min-width: 80%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="refilterModalLabel">筛选</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body txt_l">
+				<div class="form-row item-list">
+					<div class="form-group ub mr_b0">
+						<label for="" class="col-auto col-form-label"
+							style="padding-left: 0;"><span class="ft_sm">最近筛选：</span></label>
+						<div class="col">
+							<div class="ub-f1">
+								<#if recentFilterList?has_content><#list recentFilterList as
+								rfl>
+								<button attr-data="${rfl!?html}" type="button"
+									class="alert alert-secondary alert-dismissible fade show sys-badge-alert mr_r10"
+									onclick="recentFilter(this,${rfl_index})">
+									筛选记录${rfl_index+1}</button>
+								</#list> </#if>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<form id="refilterForm" action="">
+					<div class="sys-column-plane">
+						<div class="sys-column-plane-head">
+							<h2 class="sys-column-name">设置关键词</h2>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto">
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">疾病类：</span></label>
+								<div class="col">
+									<div class="form-control " id="disease" placeholder="请选择疾病"></div>
+								</div>
+							</div>
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm">基因类：</span></label>
+								<div class="col">
+									<div class="form-control" id="gene" placeholder="请选择基因"></div>
+								</div>
+							</div>
+							<div class="form-row item-list">
+								<label for="" class="col-form-label col-2"><span
+									class="ft_sm">表型类：</span></label>
+								<div class="col">
+									<div class="form-control" id="phenotype" placeholder="请选择表型"></div>
+								</div>
+							</div>
+							<input type="hidden" name="diseases"> <input
+								type="hidden" name="genes"> <input type="hidden"
+								name="phenotypes">
+						</div>
+					</div>
+
+
+					<div class="sys-column-plane" id="maijinuoDiv" style="border-style: ridge">
+						<div class="sys-column-plane-head" style="background-color: #c8c9ca;height: 45px">
+							<h2 class="sys-column-name">迈基诺标签</h2>
+							<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+								onclick="clearMaijinuo()">重置</a>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto;">
+							<#if filterData?has_content><#list filterData as entiy> 
+							<#if entiy.semantic =="Pathogenic_Analysis" || entiy.semantic =="标签" >
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">${entiy.columnName!?html}：</span></label>
+								<#if entiy.type=='1'>
+								<div class="col">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="sys-btn-check"> <input type="checkbox"
+										name="${filterItem.semantic!?html}"
+										value="${filterItem.name!?html}"<#if
+										entiy.chooseDefaultValueList?has_content><#list
+										entiy.chooseDefaultValueList as defaultValue><#if
+										defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+										<span class="check-btn">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+								</div>
+								</#if>
+
+							</div>
+							</#if> </#list> </#if>
+						</div>
+					</div>
+
+
+
+					<div class="sys-column-plane" id="baseDiv" style="border-style: ridge">
+						<div class="sys-column-plane-head" style="background-color: #c8c9ca;height: 45px">
+							<h2 class="sys-column-name">基本参数</h2>
+							<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+								onclick="clearBase()">重置</a>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto;">
+							<#if filterData?has_content><#list filterData as entiy> <#if
+							entiy.semantic !="Inhouse" && entiy.semantic !="1000g2015aug_all"
+							&& entiy.semantic !="ExAC_ALL" && entiy.semantic !="ExAC_EAS" &&
+							entiy.semantic !="ESP6500si" && entiy.semantic
+							!="gnomAD_exome_ALL" && entiy.semantic !="gnomAD_exome_EAS" &&
+							entiy.semantic !="gnomAD_genome_ALL" && entiy.semantic
+							!="gnomAD_genome_EAS" && entiy.semantic
+							!="highest-MAF" && entiy.semantic !="SIFT_Predict" &&
+							entiy.semantic !="PolyPhen_2_Predict" && entiy.semantic
+							!="MutationTaster_Predict" && entiy.semantic !="MCAP_pred" &&
+							entiy.semantic !="GERP++_Predict" && entiy.semantic !="SPIDEX" &&
+							entiy.semantic !="Tag" && entiy.semantic !="MutInDatabase" &&
+							entiy.semantic !="Pathogenic_Analysis" && entiy.semantic !="标签" >
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">${entiy.columnName!?html}：</span></label>
+								<#if entiy.type=='1'>
+								<div class="col">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="sys-btn-check"> <input type="checkbox"
+										name="${filterItem.semantic!?html}"
+										value="${filterItem.name!?html}"<#if
+										entiy.chooseDefaultValueList?has_content><#list
+										entiy.chooseDefaultValueList as defaultValue><#if
+										defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+										<span class="check-btn">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+								</div>
+								</#if> <#if entiy.type=='2'>
+								<div class="col" style="padding-top: .375rem;">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="custom-control custom-radio"> <input
+										name="${filterItem.semantic!?html}" type="radio"
+										class="custom-control-input" value="${filterItem.name!?html}"<#if
+										entiy.radioValue??><#if
+										filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+										class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+
+								</div>
+								</#if> <#if entiy.type=='3'>
+								<div class="col row range">
+									<div class="col-2 pr-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}Min"
+											value="${entiy.rangeValue1!?html}" onblur="check(this)"
+											onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+									</div>
+									<label class="col-auto col-form-label">—</label>
+									<div class="col-2 pl-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}Max"
+											value="${entiy.rangeValue2!?html}" onblur="check(this)"
+											onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+									</div>
+								</div>
+								</#if>
+							</div>
+							</#if> </#list> </#if>
+						</div>
+					
+
+					<div class="sys-column-plane" id="crowdDiv">
+						<div class="sys-column-plane-head">
+							<h2 class="sys-column-name">人群频率</h2>
+							<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+								onclick="clearCrowd()">重置</a>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto;">
+							<div class="clearfix">
+								<#if filterData?has_content><#list filterData as entiy> <#if
+								entiy.semantic =="Inhouse" || entiy.semantic
+								=="1000g2015aug_all" || entiy.semantic =="ExAC_ALL" ||
+								entiy.semantic =="ExAC_EAS" || entiy.semantic =="ESP6500si" ||
+								entiy.semantic =="gnomAD_exome_ALL" || entiy.semantic
+								=="gnomAD_exome_EAS" || entiy.semantic =="gnomAD_genome_ALL" ||
+								entiy.semantic =="gnomAD_genome_EAS" ||
+								entiy.semantic =="highest-MAF">
+								<div class="form-row item-list" style="width: 50%; float: left;">
+									<#if entiy.type=='3'>
+									<div class="col row popular-rate range">
+										<label for="" class="col-form-label col-4 pd_r0"><span
+											class="ft_sm">${entiy.columnName!?html}：</span></label>
+										<div class="col-3">
+											<input type="text" class="form-control"
+												name="${entiy.semantic!?html}Min"
+												value="${entiy.rangeValue1!?html}" onblur="check(this)"
+												onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+										</div>
+										<span class="col-form-label col-auto pd_h0">—</span>
+										<div class="col-3">
+											<input type="text" class="form-control"
+												name="${entiy.semantic!?html}Max"
+												value="${entiy.rangeValue2!?html}" onblur="check(this)"
+												onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+										</div>
+									</div>
+									</#if>
+								</div>
+								</#if></#list></#if>
+							</div>
+						</div>
+					</div>
+
+					<div class="sys-column-plane" id="proteinDiv">
+						<div class="sys-column-plane-head">
+							<h2 class="sys-column-name">蛋白功能预测</h2>
+							<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+								onclick="clearProtein()">重置</a>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto;">
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm "></span></label>
+								<div class="col" style="padding-top: .375rem;">
+									<label class="custom-control custom-radio"> <input
+										name="proteinFunction" type="radio"
+										class="custom-control-input" value="满足全部"> <span
+										class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default">交集</span>
+									</label> <label class="custom-control custom-radio"> <input
+										name="proteinFunction" type="radio"
+										class="custom-control-input" value="满足一种" checked="checked">
+										<span class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default">并集</span>
+									</label>
+								</div>
+							</div>
+							<#if filterData?has_content><#list filterData as entiy> <#if
+							entiy.semantic =="SIFT_Predict" || entiy.semantic
+							=="PolyPhen_2_Predict" || entiy.semantic
+							=="MutationTaster_Predict" || entiy.semantic =="MCAP_pred" ||
+							entiy.semantic =="GERP++_Predict" || entiy.semantic =="SPIDEX" >
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">${entiy.columnName!?html}：</span></label>
+								<#if entiy.type=='1'>
+								<div class="col">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="sys-btn-check"> <input type="checkbox"
+										name="${filterItem.semantic!?html}"
+										value="${filterItem.name!?html}"<#if
+										entiy.chooseDefaultValueList?has_content><#list
+										entiy.chooseDefaultValueList as defaultValue><#if
+										defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+										<span class="check-btn">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+								</div>
+								</#if> <#if entiy.type=='2'>
+								<div class="col" style="padding-top: .375rem;">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="custom-control custom-radio"> <input
+										name="${filterItem.semantic!?html}" type="radio"
+										class="custom-control-input" value="${filterItem.name!?html}"<#if
+										entiy.radioValue??><#if
+										filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+										class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+
+								</div>
+								</#if> <#if entiy.type=='3'>
+								<div class="col row range">
+									<div class="col-2 pr-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}Min"
+											value="${entiy.rangeValue1!?html}" onblur=""
+											onkeyup="">
+									</div>
+									<label class="col-auto col-form-label">—</label>
+									<div class="col-2 pl-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}Max"
+											value="${entiy.rangeValue2!?html}" onblur=""
+											onkeyup="">
+									</div>
+								</div>
+								</#if>
+							</div>
+							</#if> </#list> </#if>
+						</div>
+					</div>
+					
+					</div>
+
+					<div class="sys-column-plane" id="evidenceDiv" style="border-style: ridge">
+						<div class="sys-column-plane-head" style="background-color: #c8c9ca;height: 45px">
+							<h2 class="sys-column-name">Evidence</h2>
+							<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+								onclick="clearEvidence()">重置</a>
+						</div>
+						<div class="sys-column-plane-body" style="min-height: auto;">
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm "></span></label>
+								<div class="col" style="padding-top: .375rem;">
+									<label class="custom-control custom-radio"> <input
+										name="evidence" type="radio" class="custom-control-input"
+										value="交集"> <span class="custom-control-indicator"></span>
+										<span class="custom-control-description txt-default">交集</span>
+									</label> <label class="custom-control custom-radio"> <input
+										name="evidence" type="radio" class="custom-control-input"
+										value="并集" checked="checked"> <span
+										class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default">并集</span>
+									</label>
+								</div>
+							</div>
+							<#if filterData?has_content><#list filterData as entiy> <#if
+							entiy.semantic =="Tag" >
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">${entiy.columnName!?html}：</span></label>
+								<#if entiy.type=='1'>
+								<div class="col">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="sys-btn-check"> <input type="checkbox"
+										name="${filterItem.semantic!?html}"
+										value="${filterItem.name!?html}"<#if
+										entiy.chooseDefaultValueList?has_content><#list
+										entiy.chooseDefaultValueList as defaultValue><#if
+										defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+										<span class="check-btn">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+								</div>
+								</#if>
+							</div>
+							</#if> </#list> 
+							
+							<#list filterData as entiy> <#if
+							entiy.semantic =="MutInDatabase" || entiy.semantic =="highest-MAF">
+							<div class="form-row item-list">
+								<label class="col-2 col-form-label"><span class="ft_sm ">${entiy.columnName!?html}：</span></label>
+								<#if entiy.type=='1'>
+								<div class="col">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="sys-btn-check"> <input type="checkbox"
+										name="${filterItem.semantic!?html}"
+										value="${filterItem.name!?html}"<#if
+										entiy.chooseDefaultValueList?has_content><#list
+										entiy.chooseDefaultValueList as defaultValue><#if
+										defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+										<span class="check-btn">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+								</div>
+								</#if> <#if entiy.type=='2'>
+								<div class="col" style="padding-top: .375rem;">
+									<#if entiy.chooseFilterItemsList?has_content><#list
+									entiy.chooseFilterItemsList as filterItem> <label
+										class="custom-control custom-radio"> <input
+										name="${filterItem.semantic!?html}" type="radio"
+										class="custom-control-input" value="${filterItem.name!?html}"<#if
+										entiy.radioValue??><#if
+										filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+										class="custom-control-indicator"></span> <span
+										class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+									</label> </#list> </#if>
+
+								</div>
+								</#if> <#if entiy.type=='3'>
+								<div class="col row range">
+									<div class="col-2 pr-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}2Min"
+											value="${entiy.rangeValue1!?html}" onblur="check(this)"
+											onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+									</div>
+									<label class="col-auto col-form-label">—</label>
+									<div class="col-2 pl-0">
+										<input type="text" class="form-control"
+											name="${entiy.semantic!?html}2Max"
+											value="0.05" onblur="check(this)"
+											onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+									</div>
+								</div>
+								</#if>
+							</div>
+							</#if> </#list>
+							
+							
+							</#if>
+						</div>
+					</div>
+
+
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="txt_c ub-f1">
+					<button type="button" class="btn btn-primary"
+						style="width: 150px; margin-right: 50px;" onclick="packData()">筛选</button>
+					<button type="button" class="btn btn-outline-primary"
+						style="width: 150px;" onclick="clearAll()">重置筛选</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

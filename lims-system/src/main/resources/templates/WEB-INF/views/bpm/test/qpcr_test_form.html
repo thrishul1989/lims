@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>QPCR任务单</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>QPCR实验</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>QPCR实验</h5>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="myPreview()">
+                            <i class="fa fa-print"></i> 打印任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="downloadData()">
+                            <i class="fa fa-print"></i> 导出任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#upload_result_dialog" onclick="clearClass()">
+                            <i class="fa fa-print"></i> 导入数据
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="submit_form" class="form-horizontal m-t" action="${base}/testing/qpcr_test_submit.do" method="post">
+                        	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                            <input type="hidden" id="id" name="id" value="${(sheet.id)!?html}" />
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.code)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达人：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignerName)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达时间：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignTime)?string('yyyy-MM-dd HH:mm:ss')}"
+                                        readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">实验员：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.tester)!?html}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务描述：</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="3" readonly="readonly">${(sheet.description)!?html}</textarea>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>序号</th>
+			                            <th>合并编号</th>
+			                            <th>样本编号</th>
+			                            <th>突变基因</th>
+			                            <th>染色体位置</th>
+			                            <th>染色体编号</th>
+			                            <th>位置1</th>
+			                            <th>位置2</th>
+			                            <th>外显子编号</th>
+			                            <th>上游内参基因</th>
+			                            <th>下游内参基因</th>
+			                            <th>对照样本</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <#list sheet.tasks as record>
+                                    <tr>
+                                    	<td class='flag' data-templateId="${record.dataTemplateId!}">${(record_index+1)!?html}</td>
+		                                <td>${(record.combineCode)!?html}</td>
+		                                <td>${(record.sampleCode)!?html}</td>
+		                                <td>${(record.geneSymbol)!?html}</td>
+		                                <td>${(record.chrLocation)!?html}</td>
+		                                <td>${(record.chromosome)!?html}</td>
+		                                <td>${(record.beginLocus)!?html}</td>
+		                                <td>${(record.endLocus)!?html}</td>
+		                                <td>${(record.exon)!?html}</td>
+		                                <td>${(record.upRefGene)!?html}</td>
+		                                <td>${(record.downRefGene)!?html}</td>
+		                                <td>${(record.refSample)!?html}</td>
+	                                </tr>
+                                    </#list>
+                                </tbody>
+                            </table>
+
+                            <iframe id="resultFrame" name="resultFrame" class="technical-analy-result-frame" scrolling="no"></iframe>
+
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <button type="button" class="btn btn-primary" id="button_submit">完成任务</button>
+                                    <button type="button" class="btn btn-primary" onclick="history.go(-1)">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="upload_result_dialog" tabindex="-1" role="dialog" aria-labelledby="dialog_title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="dialog_title" class="modal-title">上传分析结果(.zip)</h4>
+                </div>
+                <form id="uploadForm" method="post" action="${base}/testing/data/uploadQpcr" enctype="multipart/form-data" target="resultFrame">
+                    <input type="hidden" name="sampleCodes" id="sampleCodes"/>
+                    <input type="hidden" id="sheetId" name="sheetId" value="${(sheet.id)!?html}" />
+                    <div class="modal-body">
+                        <input type="file" class="file" name="uploadData" id="uploadData" accept=".zip" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="butt">上传</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form>
+    <#include "../print/qpcr_print_sheet.html" />
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/test/qpcr_test.js?v=1.0.1"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#resultFrame").load(function () {
+            $(this).height($(this).contents().find("#content").height() + 20);
+        });
+    });
+</script>
+</html>

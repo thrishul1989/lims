@@ -1,0 +1,386 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>入库操作</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+
+
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+
+
+<style>
+.nav>li.active {
+	background-color: white;
+	border-left: 0px
+}
+
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">样本入库</a></li>
+						</ol>
+						<div style="float: right; margin-top: -20px">
+							<a href="#" class="goback" target="_self"
+								style="padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox">
+
+					<div class="ibox-content">
+						
+
+
+						<input type="text" class="form-control" name="orderCode" value="" id="saomiao"
+							style="width: 280px;position: relative;z-index: 9999" placeholder="请扫描或输入样本条码,按回车确认">
+
+						<form id="sampleForm" class="form-horizontal m-t" action="" method="post"
+							enctype='application/json'>
+				 		<input type="hidden" name="parentId" id="parentId"  <#if parentId.storagingId??> value="${parentId.storagingId}" </#if> /> 
+						<input type="hidden" name="storagingType" id="storagingType"  <#if parentId.storagingType??> value="${parentId.storagingType}" </#if> /> 
+							<fieldset>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<a data-toggle="collapse" href="#collapseOne">
+											<div class="panel-heading"
+												style="background-color: #f5f5f5; height: auto; overflow: hidden;">
+												<h4 class="panel-title" style="float: left">样本基本信息（<span id="storageType">长期存储</span>）</h4>
+
+												<img src="${system_images}/checked.png"
+													style="float: right; height: 26px; display: none" id="orderCheck" />
+											</div>
+										</a>
+										<div id="collapseOne" class="panel-collapse collapse in">
+										
+<!-- 										样本 -->
+										
+										</div>
+									</div>
+
+
+								</div>
+								
+								<div class="form-group"  style="display: none" id="remarkForm">
+								<label class="col-sm-2 control-label">入库备注：</label>
+											<div class="col-sm-8">
+												<textarea type="text" class="form-control" name="remark" id="remark" value="" style="height: 90px;resize:none"></textarea>
+											</div>
+								</div>
+
+
+								<div class="form-group" style="margin-top: 40px">
+									<div class="col-sm-12 " style="text-align: center">
+										<button type="button" class="btn btn-primary" id="create" >已入库,提交!</button>
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+
+
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<!-- clone用 -->
+<span style="display: none">
+	<div class="clone" style="margin-top: 20px">
+		<img src="${system_images}/checkedblue.png" name="sampleCheck"
+			style="height: 26px; position: absolute; margin-top: 34px; margin-left: 58px;" />
+		<div class="form-group">
+
+
+			<label class="col-sm-2 control-label ">样本编号：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="sampleCode" value="" readonly="readonly" />
+			</div>
+
+			<label class="col-sm-2 control-label  ">样本类型：</label>
+			<div class="col-sm-3">
+				<select class="form-control" name="sampleType" disabled="disabled">
+					<option value="">请选择样本类型</option> <#if sample?has_content> <#list sample as record>
+					<option value="${record.id}">${record.name!?html}</option> </#list></#if>
+				</select>
+			</div>
+
+		</div>
+
+		<div class="form-group">
+
+				<label class="col-sm-2 control-label ">样本名称：</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" name="sampleName" value="" readonly="readonly"/>
+					</div>
+				
+				<label class="col-sm-2 control-label ">存储位置：</label>
+					<div class="col-sm-3" style="padding-top: 5px">
+				<input type="text" class="form-control" name="location" value="" readonly="readonly"/>
+
+			</div>
+
+
+
+		</div>
+		
+		<div class="form-group">
+
+			<span id="ls">
+				<label class="col-sm-2 control-label ">长期存储量(<span class='unit'></span>)：</label>
+				<div class="col-sm-3" style="padding-top: 5px">
+					<input type="text" class="form-control" name="lsSize" value="" readonly="readonly"/>
+				</div>
+			</span>
+			<span id="ts">
+				<label class="col-sm-2 control-label ">临时存储量(<span class='unit'></span>)：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="tsSize" value="" readonly="readonly"/>
+				</div>
+			</span>
+
+
+		</div>
+
+
+	<DIV style="BORDER-TOP: #adadad 1px solid; OVERFLOW: hidden; HEIGHT: 1px;"></DIV>
+
+
+	</div>
+</span>
+
+
+
+</html>
+
+<script>
+
+	var storageType=2;
+	$(document).ready(function() {
+		
+		$(window).scroll(function() { 
+			var top = $(window).scrollTop(); 
+			var left= $(window).scrollLeft(); 
+			$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+		});
+		
+		
+		$("#saomiao").focus();	
+		//首先选择存储类型
+		if($("#storagingType").val() != null && $("#storagingType").val()!='' ){
+			storageType =$("#storagingType").val();
+			 if(storageType==1){
+				$("#storageType").html('临时存储');
+			} 
+		}else{
+			  var layerObject = parent.parent.layer;
+			  layerObject.confirm('请选择存储类型', {
+				  btn: ['长期存储','临时存储'] 
+				}, function(index){
+					storageType=2;
+					$("#storageType").html('长期存储');
+					$('#ts').css('display','none')
+					layerObject.close(index);
+					$("#saomiao").focus();
+				}, function(index){
+					
+					storageType=1;
+					$("#storageType").html('临时存储');
+					$('#ls').css('display','none')
+					layerObject.close(index);
+					$("#saomiao").focus();
+				}
+				);
+		
+		}
+		
+		//遍历已存在的
+	var records ;
+	<#if records??>
+	records = ${records};
+	$.each(records,function(index,obj){
+		var sampleClone=$(".clone").clone();
+		$(sampleClone).addClass("newclone");
+		$(sampleClone).removeClass("clone");
+		
+		$(sampleClone).find('input[name="sampleCode"]').val(obj.sampleCode);
+		if(storageType==1){ //临时
+			$(sampleClone).find('input[name="location"]').val(obj.tsLocation);
+		}
+		else{
+			$(sampleClone).find('input[name="location"]').val(obj.lsLocation);
+		}
+		
+		
+		$(sampleClone).find('select[name="sampleType"]').val(obj.typeId);
+		$(sampleClone).find('input[name="sampleName"]').val(obj.sampleName);
+		$(sampleClone).find('.unit').text(obj.unit);
+		
+		$(sampleClone).find('input[name="lsSize"]').val(obj.lsSize);
+		$(sampleClone).find('input[name="tsSize"]').val(obj.tsSize);
+		
+		$('#collapseOne').append($(sampleClone));
+		
+	});
+</#if>
+
+		$("#saomiao").keydown(function(e) {
+			if (e.keyCode == 13) {
+				
+				if($("#saomiao").val()=='' || $("#saomiao").val()==undefined){
+					showTip("请输入入库样本编号","错误提示");
+					return false;
+				}
+				
+				//请求数据
+				$.ajax({
+					type : "POST",
+					url : "${base}/sampleReceiving/getTransferSample.do",
+					data : {
+						sampleCode : $("#saomiao").val(),
+						storeType:storageType,
+						storagingId:$("#parentId").val(),
+						flag:"true"
+					},
+					dataType : "json",
+					success : function(result) {
+						if(result.success){
+							var data = result.data;
+							if($('.sampleContent').length == 0){
+								$("#remarkForm").css('display','block')
+							}
+							
+							var sampleClone=$(".clone").clone();
+							$(sampleClone).removeClass('clone');
+							$(sampleClone).addClass('sampleContent');
+							$(sampleClone).attr('id',data.sampleCode);
+							//塞入数据
+							$(sampleClone).find("input[name='sampleCode']").val(data.sampleCode);
+							$(sampleClone).find("input[name='sampleName']").val(data.sampleName);
+							$(sampleClone).find("input[name='sampleType']").val(data.sampleType);
+							$(sampleClone).find(".unit").text(data.unit);
+							$(sampleClone).find("select[name='sampleType']").val(data.typeId);
+							$(sampleClone).find("input[name='receiveSize']").val(data.sampleSize);
+							$(sampleClone).find("input[name='lsSize']").val(data.lsSize);
+							$(sampleClone).find("input[name='tsSize']").val(data.tsSize);
+							 if(storageType == 2){
+								$(sampleClone).find("input[name='location']").val(data.lsLocation);
+							}
+							else if(storageType == 1){
+								$(sampleClone).find("input[name='location']").val(data.tsLocation);
+							} 
+							if(data.parentId!=''){
+								$("#parentId").val(data.parentId);
+							}
+							$("#collapseOne").append(sampleClone);
+							/* $("#create").css("display","block"); */
+							//遮罩结束
+							window.location.href='#'+data.sampleCode;
+						}
+						else{
+							//遮罩结束
+							showTip(result.msg,"错误提示");
+		            		$("#saomiao").focus();
+						}
+						
+						   $("#saomiao").val('')
+							var top = $(window).scrollTop(); 
+							var left= $(window).scrollLeft(); 
+							$("#saomiao").css({ left:left + "px", top: top + "px" }); 
+					        $("#saomiao").focus();
+					},
+					error:function(data){
+						//遮罩结束
+						parent.layer.alert("请求错误");
+					}
+				});
+
+				$("#saomiao").val("");
+
+			}
+		});
+
+	})
+
+	$("#saomiao").blur(function() {
+		
+	})
+	
+	
+	$("#create").click(function(){
+		parent.layer.confirm('样本是否全部正确入库？', {
+			  btn: ['我确定','不，我再检查下'] //按钮
+			}, function(index){
+            $("#create").attr('disabled', 'disabled');//提交之后置灰以防重复提交
+            var sampleDate=[];
+				//组装数据
+				$.each($('.sampleContent'),function(index,sample){
+	        		var sampleCode=$(sample).find('input[name="sampleCode"]').val();
+	        		var location=$(sample).find('input[name="location"]').val();
+	        		/* var sampleType=$(sample).find('select[name="sampleType"]').val();
+	        		var sampleName=$(sample).find('input[name="sampleName"]').val(); */
+	        		sampleDate.push({sampleCode:sampleCode,location:location/* ,sampleType:sampleType,sampleName:sampleName */});
+	        		
+	        	})
+				
+				$.ajax({
+		            type: "POST",
+		            url: "${base}/sampleReceiving/createStoraging.do",
+		            data: {storagingId:$("#parentId").val(),type:storageType,remark:$("#remark").val(),sampleStoragingString:JSON.stringify(sampleDate)},
+		            dataType: "json",
+		          
+		            success: function(data){
+		            	window.location.href="${base}/sampleReceiving/sampleStoragePaging.do"
+		            	parent.layer.alert("入库成功，请后续操作!");
+		            }
+				})
+  			parent.layer.close(index);
+			}, function(index){
+				parent.layer.close(index);
+			});
+	})
+	
+</script>

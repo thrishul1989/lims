@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://192.168.12.15/svn/code/lims/branches" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-config-server" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-eureka-server" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-gateway-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-invoice-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-kbm-es-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-maintain-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-order-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-product-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-reagent-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-redis-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-report-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-system-del" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-testing-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-user-service" />
+                  <option value="https://192.168.12.15/svn/code/lims/lims-utils-del" />
+                  <option value="https://192.168.12.15/svn/code/lims/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://192.168.12.15/svn/code/lims/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>

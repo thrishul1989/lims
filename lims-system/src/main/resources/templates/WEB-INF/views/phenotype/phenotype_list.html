@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>表型管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+ <link href="${system_js}/bootstrap-fileinput-master/css/fileinput.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+            
+            <div class="ibox">
+                    <div class="ibox-title" style="border-color: white">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/phenotype/list.do">表型管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>表型列表</strong>
+                            </li>
+                            
+                           
+                        </ol>
+                    </div>
+                </div>
+            
+            
+                <div class="ibox ibox-table">
+				<div class="ibox-title">
+                        
+                        <h5>表型列表</h5>
+                        
+                      		<!-- <a href="${base}/phenotype/download.do"  class="btn btn-sm btn-success">
+								<i class="fa fa-download"></i> 导出模板
+							</a> -->
+							
+							<a href="#" class="btn btn-sm btn-success" target="_self" data-toggle="modal" data-target="#myModal">
+							<i class="fa fa-folder-open-o"></i>导入表型
+							</a> 
+                       		<@smm_security_resource resource = "/phenotype/create.do">
+                       			<a data-toggle="modal" data-target="#formModal" class="btn btn-sm btn-success" onclick="clearData()">
+								<i class="fa fa-plus"></i> 新增
+							</a></@smm_security_resource >
+                    </div>
+                    
+                    
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                    
+                        <div class="col-sm-12">
+                        
+	                        <form id="searchPrimer_from" action="${base}/phenotype/list.do" method="post" class="search-form">
+	                            <div class="row m-b-xs">
+	                            	<label class="col-sm-1 control-label" style="padding-top:8px">表型编号：</label>
+	                                <div class="col-sm-2">
+	                                     <div class="form-group">
+                                       	 <input type="text" class="form-control" name="code" value="${(searcher.code)!?html}"
+                                            placeholder="表型编号">
+                                    	</div>
+	                                </div>
+	                                <label class="col-sm-1 control-label" style="padding-top:8px">表型名称：</label>
+	                                <div class="col-sm-2">
+	                                     <div class="form-group">
+                                       	 <input type="text" class="form-control" name="name" value="${(searcher.name)!?html}"
+                                            placeholder="表型名称">
+                                    	</div>
+	                                </div>
+	                                
+	                                <div class="col-sm-3">
+	                                    <div class="form-group">
+	                                        <button type="submit" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 查询
+	                                        </button>
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('searchPrimer_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form>
+	                        <div class="table-responsive">
+	                        <table class="table table-bordered">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+	                                    <th>CHPO表型ID</th>
+	                                    <th>表型名称</th>
+	                                    <th>英文名称</th>
+	                                    <th class="flexible-btns">操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if pagination??>
+	                              <#if pagination.records?has_content> 
+	                                <#list pagination.records as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.code!?html}</td>
+	                                    <td>${record.name!?html}</td>
+	                                    <td>${record.enName!?html}</td>
+	                                   	<td class="flexible-btns">
+	                                   	<a href="${base}/phenotype/view.do?id=${record.id}"
+											class="btn btn-sm btn-success"> 
+											<i class="fa fa-search-plus"></i> 查看
+										</a>
+	                                   <@smm_security_resource resource = "/phenotype/modify.do">	<a data-toggle="modal" data-target="#formModal" 
+	                                   	onclick="getPhonetype(this)" ModVal="${record.id}"	class="btn btn-sm btn-success"> 
+										<i class="fa fa-edit"></i>修改
+									    </a> </@smm_security_resource>
+									    <@smm_security_resource resource = "/phenotype/delete.do"><a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该引表型?"
+									    href="${base}/phenotype/delete.do?id=${record.id}"> 
+										<i class="fa fa-trash" ></i>删除
+									    </a></@smm_security_resource>
+										</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                        </div>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+ <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:700px;height:400px">
+		<div class="modal-content">
+			<div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel" >表型管理</h4> 
+            </div> 
+            <form class="form-horizontal m-t toggle-form" id="choseForm" action="${base}/phenotype/create.do" method="post">
+					<input type="hidden" id="id" name="id" value="${(phenotype.id)!?html}" />
+					<div class="search-form">
+					<div class="col-sm-12">
+								<div class="form-group">
+									<label class="col-sm-4 control-label ">CHPO表型ID：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="code" id="code"
+											value="${(phenotype.code)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">中文名称：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(phenotype.name)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">英文名称：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="enName" id="enName"
+											value="${(phenotype.enName)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">说明【中文】：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="description" id="description"
+											value="${(phenotype.description)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">说明【英文】：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="descriptionEn" id="descriptionEn"
+											value="${(phenotype.descriptionEn)!?html}" />
+									</div>
+								</div>
+							</div>
+							</div>
+
+                           <div class="form-group" id="view">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class="btn btn-primary " type="submit">保存</button>
+									
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</div> 
+							
+			</form>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> 
+                <h4 class="modal-title" id="myModalLabel">Excel导入</h4> 
+            </div> 
+           <form action="${base}/phenotype/upload.do" method="post"  onsubmit="return checkedForm()"
+           			name="uploadForm"	enctype="multipart/form-data">
+            <div class="modal-body">
+						<input type="file" class="file" name="uploadData"  accept=".xlsx,.xls"/>
+			</div> 
+           <!--  <div class="modal-footer"> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+                <button type="submit" class="btn btn-primary">提交</button> 
+            </div>  -->
+            </form>
+        </div><!-- /.modal-content --> 
+    </div><!-- /.modal --> 
+</div>
+
+</body>
+
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${plugins}/layer/layer.min.js"></script>
+    
+     <!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+    <script type="text/javascript">
+    
+    function getPhonetype(obj){
+    	var id = $(obj).attr('ModVal');
+    	 $.ajax({
+    		type:"GET",
+    		url:"${base}/phenotype/getPhenotype?id="+id,
+    		success:function(data){
+    			$('#id').val(data.id);
+    			$('#name').val(data.name);
+    			$('#code').val(data.code);
+    			$('#enName').val(data.enName);
+    			$('#description').val(data.description);
+    			$('#descriptionEn').val(data.descriptionEn);	
+    			clearClass();
+    			changeFormAttr();
+    		},
+    		error:function(data){
+    			alert("failed");
+    		}
+    	}); 
+    }
+    
+    function clearClass(){
+    	$('.error').text('');
+    	$('.error').removeClass('error');
+    }
+    function clearData(){
+    	 if($('#id').val()!=''||$('#id').val()!=null){
+    		$('#id').val('');
+    		$('#code').val('');
+    		$("#name").val('');
+    		$("#enName").val('');
+    		$('#description').val('');
+			$('#descriptionEn').val('');	
+    		clearClass();
+    		$('#choseForm').attr('action', '${base}/phenotype/create.do'); 
+    	} 
+    	
+    }    
+    $(document).ready(function(){
+    	
+    	$("#choseForm").validate({
+     		 rules: {
+     			 code:{
+     				 required:true,
+     				 remote:{
+    						url: "${base}/phenotype/validate.do",
+    						type: "post",               
+    		        		data: {
+    		        		        name: function() {
+    		        		            return $("#code").val();
+    		        		        },
+    		        		        id:function() {
+    		        		            return $("#id").val();
+    		        		        }
+    		        		    }
+    		        		}
+     					 },
+     			 name:{
+     				 required:true,
+     				 remote:{
+    						url: "${base}/phenotype/validate.do",
+    						type: "post",               
+    		        		data: {
+    		        		        name: function() {
+    		        		            return $("#name").val();
+    		        		        },
+    		        		        id:function() {
+    		        		            return $("#id").val();
+    		        		        }
+    		        		    }
+    		        		}
+     					 },
+     		 		},
+     		 messages:{
+     			code:{
+     				 required:"不能为空！" ,
+     				 remote:"该编号已存在，请重新输入！"
+     			 },
+     			name:{
+     				 required:"不能为空！" ,
+     				 remote:"该名称已存在，请重新输入！"
+     			 },
+     			
+     		 }
+     	});
+    });
+   
+    function clearClass(){
+    	$('.error').text('');
+    	$('.error').removeClass('error');
+    }    
+    function changeFormAttr(){
+     	updateID = $('#id').val();
+    	if(updateID.length > 0){
+         	$('#choseForm').attr('action', '${base}/phenotype/modify.do');
+    	}
+    }  
+    
+    
+    function checkedForm(){
+    	
+    	
+    	var excelFileName = document.uploadForm.uploadData.value;
+    	var formatStr = '';
+    	var index = excelFileName.lastIndexOf('.');
+    	if(excelFileName.length == 0){
+    		parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+    		return false;
+    	}else if(index > 0){
+    		
+    		formatStr = excelFileName.substring(index);
+    		if(!(".xlsx" == formatStr||".xls" == formatStr)){
+    			
+    			parent.layer.alert('请上传excel文件',{title:"提示"});
+    			
+    			return false;
+    		}
+    	}
+    	
+    }    
+               
+     </script>
+                
+                
+</html>
+

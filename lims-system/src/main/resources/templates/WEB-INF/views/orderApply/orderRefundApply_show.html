@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript">
+	
+</script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="">退款管理</a></li>
+							<li class="active"><strong>退款申请详情</strong></li>
+							<div style="float: right;">
+								<a href="javascript:history.go(-1)" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right"> <img
+									src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+
+					<#if refunds??> <#list refunds as refund>
+					<div class="ibox-title">
+						<h5>申请信息</h5>
+					</div>
+					<div class="ibox-content">
+
+						<table class="table table-striped table-bordered table-hover table-details">
+							<#if refund_index == 0>
+							<tr>
+								<th class="col-sm-1">营销中心</th>
+								<td class="col-sm-2"><@testing_type testingType=refund.orderId.orderType /></td>
+								<th class="col-sm-1">申请人</th>
+								<td class="col-sm-2">${refund.creatorName!?html}</td>
+								<th class="col-sm-1">订单编号</th>
+								<td class="col-sm-2">${(refund.orderId.code)!?html}</td>
+
+
+							</tr>
+							<tr>
+								<th class="col-sm-1">下单日期</th>
+								<td class="col-sm-2"><#if
+									refund.orderId.submitTime??>${refund.orderId.submitTime!?string('yyyy-MM-dd
+									HH:mm:ss')}</#if></td>
+								<th class="col-sm-1">送检单位</th>
+								<td class="col-sm-2"><#if refund.orderId.owner?? &&
+									refund.orderId.owner.company??>${(refund.orderId.owner.company.name)!?html}</#if></td>
+								<th class="col-sm-1">客户姓名</th>
+								<td class="col-sm-2">${(refund.orderId.owner.realName)!?html}</td>
+
+
+							</tr>
+							<tr>
+								<th class="col-sm-1">受检人姓名</th>
+								<td class="col-sm-2">${(refund.orderId.orderExamineeList[0].name)!?html}</td>
+								<th class="col-sm-1">实付款</th>
+								<td class="col-sm-2">${refund.orderId.incomingAmount!?html}</td>
+								<th class="col-sm-1">申请日期</th>
+								<td class="col-sm-2"><#if refund.applyTime??>${refund.applyTime!?string('yyyy-MM-dd
+									HH:mm:ss')}</#if></td>
+
+
+
+							</tr>
+							</#if>
+
+							<tr>
+								<th class="col-sm-1">申请退款额</th>
+								<td class="col-sm-1"><#if refund.orderId.orderProductList?has_content> <#assign price=0
+									/> <#list refund.orderId.orderProductList as orderProduct> <#list
+									refund.orderProductId?split(",") as refundProduct> <#if refundProduct == orderProduct.id>
+									<#assign price=price+orderProduct.productPrice /> </#if> </#list> </#list> <@amount_toyuan
+									amount=price /> </#if></td>
+								<th class="col-sm-1">退款原因</th>
+								<td class="col-sm-1">${refund.applyReason!?html}</td>
+
+							</tr>
+
+
+						</table>
+
+
+
+						<div class="ibox-title">
+							<h5>退款账户信息</h5>
+						</div>
+
+
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>银行名称</th>
+									<th>卡号</th>
+									<th>持有人姓名</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<tr>
+									<td><@dict_entry_text category="BANK_TYPE" value=refund.bankType /></td>
+									<td>${(refund.bankNo)!?html}</td>
+									<td>${(refund.bankOwnerName)!?html}</td>
+								
+							</tbody>
+						</table>
+
+
+
+
+						<div class="ibox-title">
+							<h5>产品信息</h5>
+						</div>
+
+
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>产品编号</th>
+									<th>产品名称</th>
+
+									<th class="">产品价格</th>
+									<th class="">退款状态</th>
+
+
+
+								</tr>
+							</thead>
+							<tbody>
+								<#if refund.orderId.orderProductList?has_content> <#list refund.orderId.orderProductList as
+								orderProduct>
+								<tr>
+									<td>${(orderProduct.product.code)!?html}</td>
+									<td>${(orderProduct.product.name)!?html}</td>
+									<td><@amount_toyuan amount=orderProduct.productPrice /></td>
+									<td><#if orderProduct.refundStatus!?html == "0"><#elseif
+										orderProduct.refundStatus!?html == "1">退款审核中 <#elseif orderProduct.refundStatus!?html ==
+										"2">退款中<#elseif orderProduct.refundStatus!?html == "3">已退款</#if></td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+
+						<#if refund_index == 0>
+						<div class="ibox-title">
+							<h5>样本信息</h5>
+						</div>
+
+
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>样本名称</th>
+									<th>样本类型</th>
+
+									<th class="">采样日期</th>
+
+
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+								<#if refund.orderId.view?has_content> <#list refund.orderId.view as sample>
+
+								<tr>
+									<td>${sample.sampleName !? html}</td>
+									<td><#if sample.sampleType??><@bcm_samples_text id=sample.sampleType /></#if></td>
+
+									<td><#if sample.samplingDate??>${sample.samplingDate!?string('yyyy-MM-dd')}</#if></td>
+
+
+
+
+								</tr>
+
+								</#list> </#if>
+
+							</tbody>
+						</table>
+						</#if> <#if refund.orderRefundCheckList?has_content>
+						<div class="ibox-title">
+							<h5>审批信息</h5>
+						</div>
+
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>审批节点</th>
+									<th>批准金额</th>
+
+									<th class="">审批状态</th>
+									<th>审批时间</th>
+									<th>审批意见</th>
+
+
+
+								</tr>
+							</thead>
+							<tbody>
+
+								<#if refund.orderRefundCheckList?has_content> <#list refund.orderRefundCheckList as check>
+
+								<tr>
+									<td>${check.roleType!?html}</td>
+									<td><#if check.status!?html != "2"><@amount_toyuan amount=check.replyAmount /></#if></td>
+									<td><#if check.status!?html == '0'><span style="color: #1a7bb9">审核中</span><#elseif
+										check.status!?html == '1'><span style="color: rgb(26, 167, 96)">审批通过</span> <#elseif
+										check.status!?html == '2'><span style="color: rgb(235, 79, 56)">审批不通过</span> </#if>
+									</td>
+									<td><#if check.checkerTime??>${check.checkerTime!?string('yyyy-MM-dd')}</#if></td>
+									<td>${check.remark!?html}</td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						</#if>
+
+					</div>
+
+					</#list> </#if>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script>
+	
+</script>
+
+
+</html>

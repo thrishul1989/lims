@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>生信注释</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+<style>
+#L_REAGENT_PROBE_anchor {
+	background-color: #e1e4e4
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>家系分析任务列表</h5>
+					</div>
+							<form id="search_from" action="${base}/testing/biologyAnnotationFamilyList.do" method="post" class="form-horizontal m-t">
+							<div class="form-group">
+
+									<div class="col-sm-2">
+										<input type="text" class="form-control" placeholder="订单编号" name="orderCode" value="${(searcher.orderCode)!?html}">
+									</div>
+									<div class="col-sm-2">
+										<select class="form-control" name="urgent" data-value="${(searcher.urgent)!?html}">
+											<option value="">--是否加急--</option>
+											<option value="0">不加急</option>
+											<option value="1">加急</option>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<button type="submit" class="btn btn-sm btn-success">
+											<i class="fa fa-search"></i> 查询
+										</button>
+										<button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')">
+											<i class="fa fa-remove"></i> 清空
+										</button>
+									</div>
+								</div>
+							</form>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th class="index">序号</th>
+										<th>订单编号</th>
+										<th>产品名称</th>
+										<th>实验方法</th>
+										<th>是否加急</th>
+										<th>家系结果</th>
+										<th>异常次数</th>
+										<th>创建时间</th>
+										<th>描述</th>
+										<th class="flexible-btns">操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if pagination.list?has_content>
+										<#list pagination.list as record>
+											<tr>
+												<td>${record_index + 1}</td>
+												<td>${record.orderCode!?html}</td>
+												<td>${record.productName!?html}</td>
+												<td>${record.methodId!?html}</td>
+												<td>
+													<#if record.ifUrgent??>
+														<#if record.ifUrgent == 1><font color="red">是</font></#if>
+													</#if>
+												</td>
+												<td>
+													<#if record.status??>
+														<#if 0==record.status>
+															接口进行中...
+														<#elseif 1==record.status>
+															接口回调成功
+														<#elseif 2==record.status>
+															接口错误
+														<#elseif 3==record.status>
+															解析文件中
+														<#elseif 4==record.status>
+															解析文件出错
+														<#elseif 5==record.status>
+															解析文件成功
+														<#elseif 10==record.status>
+															待分析
+														</#if>
+													</#if>
+												</td>
+												<td>${record.resubmitCount!?html}</td>
+												<td>
+													<#if record.startTime??>
+														${(record.startTime)?string("yyyy-MM-dd HH:mm:ss")}
+													</#if>
+												</td>
+												<td>${record.descrption!?html}</td>
+												<td>
+													<a href="${base}/testing/biologyFamilyAnnotationInfo.do?id=${record.id!}&status=${record.status!}"
+													   class="btn btn-sm btn-success">
+														<i class="fa fa-edit"></i>查看详情</a>
+													<#if record.status??>
+														<#if 4==record.status>
+															<a href="${base}/testing/reFamilyAnalysisAnnotaionFile.do?taskId=${record.id}" data-confirm-message="确定要重新解析该家系注释文件吗?" class="btn btn-sm btn-success layer-confirm">
+																<i class="fa fa-edit"></i>重新解析</a>
+														</#if>
+													</#if>
+												</td>
+											</tr>
+										</#list>
+										<#else>
+											<tr>
+												<td colspan="9">暂无家系分析任务</td>
+											</tr>
+										</#if>
+								</tbody>
+							</table>
+							<#include "../../inc/pagination_mybaties.html" />
+						</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript">
+
+
+
+</script>
+
+</html>
+

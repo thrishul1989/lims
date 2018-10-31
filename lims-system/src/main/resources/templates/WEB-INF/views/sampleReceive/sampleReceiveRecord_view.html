@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>业务管理-样品接收</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
+</head>
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<ol class="breadcrumb">
+								<li><a href="${base}/sampleReceive/list.do">样品接收</a></li>
+								<li class="active"><strong>样本接收详情</strong></li>
+							</ol>
+						</div>
+					</div>
+					<div class="ibox">
+						<div class="ibox-title">
+							<strong>样本接收详情</strong>
+					    </div>
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                   
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>样本接受</strong></td>
+                        	</tr>
+                        	<#if data??>
+                            <tr>
+                                <th class="col-sm-1">接收单号</th>
+                                <td class="col-sm-2">${data.id!?html}</td>
+                                <th class="col-sm-1">接收编号</th>
+                                <td class="col-sm-2">
+                                 	${data.receiveCode!?html}
+                                </td> 
+                                <th class="col-sm-1">关联项目</th>
+                                <td class="col-sm-2"><#if project??>${project.name!?html}<#else></#if></td>
+                                 
+                                <th class="col-sm-1">样本接收类型</th>
+                                <td class="col-sm-2">
+								<@dict_entry_text category="RECEIVING_TYPE" value=data.receiveType />
+								</td>
+                            </tr>
+                       		<tr>
+                                <th class="col-sm-1">接受日期</th>
+                                <td><#if data.acceptDate??>${(data.acceptDate)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(data.acceptDate)!?html} </#if></td>
+                       			<th class="col-sm-1">描述</th>
+                                <td><#if data.description??>${data.description!?html}<#else></#if></td>
+                                <th class="col-sm-1">关联订单</th>
+                                <td class="col-sm-2"><#if order??>${order.orderName!?html}<#else></#if></td>
+                       		</tr>
+                       		<#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关记录</td>
+                                    </tr>
+                            </#if>
+                       		
+                       		
+                       		<tr>
+                        		<td colspan="8" ><strong>订单详情</strong></td>
+                        	</tr>
+                        	<#if order??>
+                        	<tr>
+                        		<th>订单名称</th>
+                      		 	<td><#if order.orderName??>${order.orderName!?html}<#else></#if></td>
+                        		<th>受检人</th>
+                      		 	<td><#if order.subjectPname??>${order.subjectPname!?html}<#else></#if></td>
+                        		<th>检测产品</th>
+                      		 	<td><#if order.productName??>${order.productName!?html}<#else></#if></td>
+                        		<th>重点关注基因</th>
+                      		 	<td><#if order.focusGenes??>${order.focusGenes!?html}<#else></#if></td>
+                      		 </tr>	
+                      		 
+                      		 <tr>
+                        		<th>临床诊断</th>
+                      		 	<td><#if order.clinicalDiagnosis??>${order.clinicalDiagnosis!?html}<#else></#if></td>
+                        		<th>病例摘要</th>
+                      		 	<td><#if order.caseSummary??>${order.caseSummary!?html}<#else></#if></td>
+                        		<th>备注</th>
+                      		 	<td><#if order.remarks??>${order.remarks!?html}<#else></#if></td>
+                      		 </tr>
+                      		 <#else>
+                                    <tr>
+                                        <td colspan="8">暂无关联订单</td>
+                                    </tr>
+                            </#if>
+                      		 
+                      		 <tr>
+                        		<td colspan="8"><strong>样本接受明细</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>样本实例编码</td>
+                      			<td>样本名称</td>
+                      			<td>样本数量</td> 
+                      			<td>样本用途</td> 
+                      			<td>临检存储位置</td> 
+                      			<td>长期存储位置</td> 
+                      			<td>状态</td>
+                      		</tr>
+                      			<#if details?has_content>
+                      			<#list details as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			 <td>${d.sampleInstanceCode!?html}</td>
+								<td><#if (d.name)??>${d.name!?html}<#else></#if></td>
+                      			<td><#if (d.sampleCount)??>${d.sampleCount!?html}&nbsp;&nbsp;
+                      			(<@dict_entry_text category="COMPANY" value=d.company />)
+                      			</#if></td>
+                      			<td><#if (d.samplePurpose)??><@dict_entry_text category="SAMPLE_PURPOSE" value=d.samplePurpose /><#else></#if></td>
+                      		
+                      			<td><#if (d.temporaryStorageLocation)??>${d.temporaryStorageLocation!?html}<#else></#if></td>
+                      			<td><#if (d.longtermStorageLocation)??>${d.longtermStorageLocation!?html}<#else></#if></td>
+								<td><@dict_entry_text category="SAMPLE_RECEIVE_DETAIL_STATE" value=d.state /></td> 
+                      			
+
+                      		</tr>
+                      		</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                                    </#if>
+                       			 <tr>
+                               		 <th colspan="8"><div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-primary goback" type="button" onclick="history.go(-1)">返回</button></div>
+                                     </th>
+                           		 </tr>
+                       		</table>
+                       		
+                       		
+                    </div>
+                </div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+</html>

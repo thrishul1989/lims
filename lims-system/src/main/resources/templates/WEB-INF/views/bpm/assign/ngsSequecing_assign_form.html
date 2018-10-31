@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>上机任务</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${plugins}/validation/jquery.validate.min.js"></script>
+<script src="${plugins}/validation/additional-methods.min.js"></script>
+<script src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.1"></script>
+<script src="${system_js}/testing/assign/ngs_sequecing_assign.js?v=1.0.133"></script>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <form id="assign_form" class="form-horizontal m-t" action="${base}/testing/ngsSequecing_assign_submit.do" method="post" target="_parent">
+            	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                <input type="hidden" name="id" value="${(data.id)!?html}" />
+                <input type="hidden" name="firstDiluteConcn" value="${((data.firstDiluteConcn)!0)?string('0.##')}" />
+                <input type="hidden" name="firstDiluteSampleInputVolume" value="${((data.firstDiluteSampleInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="firstDiluteHTInputVolume" value="${((data.firstDiluteHTInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="secondDiluteConcn" value="${((data.secondDiluteConcn)!0)?string('0.##')}" />
+                <input type="hidden" name="secondDiluteSampleInputVolume" value="${((data.secondDiluteSampleInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="secondDiluteReagentInputVolume" value="${((data.secondDiluteReagentInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="secondDiluteHTInputVolume" value="${((data.secondDiluteHTInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="finalSampleInputVolume" value="${((data.finalSampleInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="finalHTInputVolume" value="${((data.finalHTInputVolume)!0)?string('0.##')}" />
+                <input type="hidden" name="finalInputVolume" value="${((data.finalInputVolume)!0)?string('0.##')}" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="reagentKitId" required data-msg="试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "NGS-SEQ" pre_node = "QT"> <#list kits as kit>
+                            <option value="${kit.id!?html}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">实验员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="testerId" name="testerId" required data-msg="实验员不能为空">
+                            <option value="">===请选择===</option>
+                            <@bcm_members semantic = "NGS-SEQ"> <#list members as s>
+	                        <option value="${s.id!?html}">${s.name!?html}</option>
+	                        </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务描述：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="4" name="description"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">上机方式</label>
+                    <div class="col-sm-3">
+                        <input type="radio"  id="self" name="sequecingType" checked="checked" value="1">自测&nbsp;&nbsp;&nbsp;
+                         <input type="radio" id="send" name="sequecingType" value="2">外送
+                    </div>
+                </div>
+                
+                
+                <div class="form-group" id="selfForm">
+                    <label class="col-sm-2 control-label control-required">最终浓度（pM）</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="finalConcn" name="finalConcn" value="${((data.finalConcn)!0)?string('0.##')}" data-history-value="${((data.finalConcn)!0)?string('0.##')}" required data-msg="最终稀释浓度不能为空">
+                    </div>
+                </div>
+                
+                <div class="form-group" id="sendForm" style="display: none">
+                    <label class="col-sm-2 control-label control-required">测序机型</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="sequecingMachineCode">
+                        <#list data.sequecingMachineList as machine>
+                        <option value="${machine.sequecingMachineCode}">${machine.sequecingMachineCode}</option>
+                        </#list>
+                        </select>
+                    </div>
+                    
+                     <label class="col-sm-2 control-label control-required">测序策略</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="sequecingStrategy" name="sequecingStrategy"  required data-msg="测序策略不能为空">
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                <div class="col-md-10">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>测序编号</th>
+                                <th>上机浓度</th>
+                                <th><label><font color="red">${((data.firstDiluteConcn)!0)?string('0.##')}nM</font>稀释 </label></th>
+                                <th>RT 5min</th>
+                                <th><label><font color="red">${((data.secondDiluteConcn)!0)?string('0.##')}pM</font>稀释 </label></th>
+                                <th id="flagForm1"><label><font color="red"><span id="final_concn_wrapper">${((data.finalConcn)!0)?string('0.##')}</span>pM</font>稀释 </label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${(data.sampleCode)!?html}</td>
+                                <td>${((data.concn)!0)?string('0.##')}</td>
+                                <td>${((data.firstDiluteSampleInputVolume)!0)?string('0.##')}ul样本   ${((data.firstDiluteHTInputVolume)!0)?string('0.##')}ulHT1</td>
+                                <td>${((data.secondDiluteSampleInputVolume)!0)?string('0.##')}ul样本   ${((data.secondDiluteReagentInputVolume)!0)?string('0.##')}ul0.2N NaOH</td>
+                                <td>${((data.secondDiluteHTInputVolume)!0)?string('0.##')}ulHT1</td>
+                                <td id="flagForm2"><span id="final_sample_volume_wrapper">${((data.finalSampleInputVolume)!0)?string('0.##')}</span>ul样本    <span id="final_ht_volume_wrapper">${((data.finalHTInputVolume)!0)?string('0.##')}</span>ulHT1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

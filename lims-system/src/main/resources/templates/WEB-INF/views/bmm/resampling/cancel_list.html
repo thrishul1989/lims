@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>送样取消</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/bmm/resampling/cancel_list_wating.do">送样取消</a>
+                            </li>
+                            <li class="active">
+                                <strong>取消记录</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>取消记录</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="search_from" action="${base}/bmm/resampling/cancel_list_wating.do" method="post" class="search-form">
+                            <div class="row m-b-xs">
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="orderCode" value="${(searcher.orderCode)!?html}"
+                                            placeholder="订单编号">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="sampleCode" value="${(searcher.sampleCode)!?html}"
+                                            placeholder="样本编号">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+
+                                    <div class="input-group">
+                                        <input type="hidden" value="${searcher.projectManager!?html}" name="projectManager" id="projectManager" />
+                                        <input type="text" class="form-control" id="prjManager" name="prjManagerName" value="${searcher.prjManagerName!?html}" placeholder="请输入项目管理人" >
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search"></i> 查询
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="clearHiddenCondition('search_from')">
+                                            <i class="fa fa-remove"></i> 清空
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>订单编号</th>
+                                    <th>样本编号</th>
+                                    <th>样本类型</th>
+                                    <th>样本名称</th>
+                                    <th>样本用途</th>
+                                    <th>项目管理人</th>
+                                    <th class="flexible-btns">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if (pagination.records)?? && pagination.records?has_content> <#list pagination.records as record>
+                                <tr>
+                                    <td>${record_index + 1}</td>
+                                    <td>${record.orderCode!?html}</td>
+                                    <td>${record.sampleCode!?html}</td>
+                                    <td>${record.sampleTypeName!?html}</td>
+                                    <td>${record.sampleName!?html}</td>
+                                    <#if (record.samplePurpose)??>
+                                    <td><@dict_entry_text category = "SAMPLE_BUSINESS_TYPE" value = record.sampleBusinessType! />-<@dict_entry_text category = "SAMPLE_PURPOSE" value = record.samplePurpose! /></td>
+                                    <#else>
+                                    <td><@dict_entry_text category = "SAMPLE_BUSINESS_TYPE" value = record.sampleBusinessType! /></td>
+                                    </#if>
+                                    <td>${record.prjManagerName!?html}</td>
+                                    <td class="flexible-btns">
+                                        <@smm_security_resource resource = "/bmm/resampling/cancel_handle.do">
+                                        <a href="${base}/bmm/resampling/cancel_handle.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-edit"></i> 处理
+                                        </a>
+                                        </@smm_security_resource>
+                                        <a href="${base}/bmm/resampling/cancel_display.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search-plus"></i> 查看
+                                        </a>
+                                    </td>
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="7">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                        <#include "../../inc/pagination.html" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/system.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${system_js}/bootstrap-suggest.js"></script>
+    <script type="text/javascript">
+
+        $(function(){
+
+            $("#prjManager").bsSuggest('init', {
+                url : "${base}/smm/role/getSelectList.do?disableStatus="+0+"&name=",
+                getDataMethod : "url",
+                idField : "id",
+                keyField : "name",
+                indexKey: 0,
+                effectiveFields : [ "name" ],
+                effectiveFieldsAlias : {
+                    name : "项目管理人名称"
+                }
+            }).on('onDataRequestSuccess', function (e, result) {
+            }).on('onSetSelectValue', function (e, keyword, data) {
+                $('#projectManager').val(data.id);
+            }).on('onUnsetSelectValue', function () {
+                $('#projectManager').val('');
+            });
+        })
+
+    </script>
+</body>
+</html>

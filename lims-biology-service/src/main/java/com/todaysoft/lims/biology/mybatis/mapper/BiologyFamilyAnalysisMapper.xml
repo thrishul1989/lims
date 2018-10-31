@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyFamilyAnalysisMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyFamilyAnalysis" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATOR_NAME" property="updatorName" jdbcType="VARCHAR" />
+    <result column="DELETED" property="deleted" jdbcType="INTEGER" />
+    <result column="DELETE_TIME" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="DELETOR_NAME" property="deletorName" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CODE, CREATE_ID, CREATE_TIME, CREATOR_NAME, UPDATE_TIME, UPDATOR_NAME, DELETED,
+    DELETE_TIME, DELETOR_NAME,TASK_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_FAMILY_ANALYSIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from BIOLOGY_FAMILY_ANALYSIS
+    where TASK_ID = #{taskId,jdbcType=VARCHAR} ORDER BY CREATE_TIME DESC limit 1;
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_FAMILY_ANALYSIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnalysis" >
+    insert into BIOLOGY_FAMILY_ANALYSIS (ID, CODE, CREATE_ID, 
+      CREATE_TIME, CREATOR_NAME, UPDATE_TIME, 
+      UPDATOR_NAME, DELETED, DELETE_TIME,
+    DELETOR_NAME,TASK_ID)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{createId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{creatorName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updatorName,jdbcType=VARCHAR}, #{deleted,jdbcType=INTEGER}, #{deleteTime,jdbcType=TIMESTAMP},
+    #{deletorName,jdbcType=VARCHAR},#{taskId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnalysis" >
+    insert into BIOLOGY_FAMILY_ANALYSIS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="creatorName != null" >
+        CREATOR_NAME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updatorName != null" >
+        UPDATOR_NAME,
+      </if>
+      <if test="deleted != null" >
+        DELETED,
+      </if>
+      <if test="deleteTime != null" >
+        DELETE_TIME,
+      </if>
+      <if test="deletorName != null" >
+        DELETOR_NAME,
+      </if>
+      <if test="taskId != null">
+        TASK_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatorName != null" >
+        #{updatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletorName != null" >
+        #{deletorName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnalysis" >
+    update BIOLOGY_FAMILY_ANALYSIS
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorName != null" >
+        CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatorName != null" >
+        UPDATOR_NAME = #{updatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        DELETED = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleteTime != null" >
+        DELETE_TIME = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletorName != null" >
+        DELETOR_NAME = #{deletorName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyFamilyAnalysis" >
+    update BIOLOGY_FAMILY_ANALYSIS
+    set CODE = #{code,jdbcType=VARCHAR},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATOR_NAME = #{updatorName,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=INTEGER},
+      DELETE_TIME = #{deleteTime,jdbcType=TIMESTAMP},
+    DELETOR_NAME = #{deletorName,jdbcType=VARCHAR},
+    TASK_ID = #{taskId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

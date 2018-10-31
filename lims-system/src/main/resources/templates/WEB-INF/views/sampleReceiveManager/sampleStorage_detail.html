@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>入库---明细</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+</head>
+<body class="gray-bg" >
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" >
+                        <ol class="breadcrumb">
+                            <li>
+
+                                <a href="${base}/sampleReceiving/sampleStoragePaging.do">样本入库管理</a>
+
+                            </li>
+                            <li class="active">
+                                <strong>入库明细列表</strong>
+                            </li>
+                            <div style="float: right">
+							<a href="#" class="goback" target="_self"
+								style="padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+							</div>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                   
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                       
+
+                        <div class="col-sm-12">
+                        
+                        <form id="search_from" action="${base}/sampleReceiving/storageDetail.do" method="post" class="search-form">
+                        <input type="hidden" name="id" value="${searcher.id!?html}" />
+                        <input type="hidden" name="storagingType" value="${searcher.storagingType!?html}" />
+                            <div class="row m-b-xs">
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input type="text" name="code" class="form-control" id="code" 
+                                        placeholder="请输入样本编号" value="${searcher.code!?html}" >
+                                    </div>
+                                </div>
+                              
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search"></i> 查询
+                                        </button>
+                                      <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')" >
+											<i class="fa fa-remove"></i> 清空
+									  </button> 
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>样本编号</th>
+                                    <th>样本类型</th>
+                                    <th>样本名称</th>
+                                    <th>入库位置</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             <#if pagination??>
+                              <#if pagination.records?has_content> 
+                              		<#list pagination.records as record>
+                                   
+                                	<tr>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.sampleCode!?html}</td>
+	                                    <td>${record.typeName!?html}</td>
+	                                    <td>${record.sampleName!?html}</td>
+	                                    <td>
+	                                     <#if searcher.storagingType = "1">
+	                                       ${record.tsLocation!?html}
+										     <#else>
+										   ${record.lsLocation!?html}
+	                                     </#if>
+	                                    
+	                                    
+	                                    </td>
+                                    </tr>
+                                    </#list>
+                                    
+                                    
+                                     
+                                </#if>
+                                </#if>
+                            </tbody>
+                        </table>
+                        <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+ 
+</body>
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+   <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+   <script type="text/javascript" src="${system_js}/system.js"></script>
+   <script src="${plugins}/pagination/jquery.pagination.js"></script>
+       
+    
+</html>
+

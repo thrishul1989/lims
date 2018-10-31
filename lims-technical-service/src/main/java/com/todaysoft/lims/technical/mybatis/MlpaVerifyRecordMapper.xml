@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.MlpaVerifyRecordMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.MlpaVerifyRecord">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="VERIFY_RECORD" property="verifyRecord"
+			jdbcType="VARCHAR" />
+		<result column="DNA_SAMPLE_ID" property="dnaSampleId" jdbcType="VARCHAR" />
+		<result column="COMBINE_CODE" property="combineCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, VERIFY_RECORD, DNA_SAMPLE_ID, COMBINE_CODE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_MLPA_VERIFY
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from LIMS_TESTING_MLPA_VERIFY
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.MlpaVerifyRecord">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_MLPA_VERIFY (ID, VERIFY_RECORD,
+		DNA_SAMPLE_ID,
+		COMBINE_CODE)
+		values (#{id,jdbcType=VARCHAR}, #{verifyRecord,jdbcType=VARCHAR},
+		#{dnaSampleId,jdbcType=VARCHAR},
+		#{combineCode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.MlpaVerifyRecord">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_MLPA_VERIFY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="verifyRecord != null">
+				VERIFY_RECORD,
+			</if>
+			<if test="dnaSampleId != null">
+				DNA_SAMPLE_ID,
+			</if>
+			<if test="combineCode != null">
+				COMBINE_CODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyRecord != null">
+				#{verifyRecord,jdbcType=VARCHAR},
+			</if>
+			<if test="dnaSampleId != null">
+				#{dnaSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="combineCode != null">
+				#{combineCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.MlpaVerifyRecord">
+		update LIMS_TESTING_MLPA_VERIFY
+		<set>
+			<if test="verifyRecord != null">
+				VERIFY_RECORD = #{verifyRecord,jdbcType=VARCHAR},
+			</if>
+			<if test="dnaSampleId != null">
+				DNA_SAMPLE_ID = #{dnaSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="combineCode != null">
+				COMBINE_CODE = #{combineCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.MlpaVerifyRecord">
+		update LIMS_TESTING_MLPA_VERIFY
+		set VERIFY_RECORD = #{verifyRecord,jdbcType=VARCHAR},
+		DNA_SAMPLE_ID = #{dnaSampleId,jdbcType=VARCHAR},
+		COMBINE_CODE = #{combineCode,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

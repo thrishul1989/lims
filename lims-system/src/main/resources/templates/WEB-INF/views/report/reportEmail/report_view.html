@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+
+
+<script>
+	var system_images = "${system_images}";
+	var base = "${base}";
+</script>
+
+
+
+
+
+<style>
+.file-drop-zone {
+	height: auto
+}
+
+.t .ms-sel-ctn {
+	background-position: 98%
+}
+</style>
+</head>
+
+
+
+<body class="gray-bg">
+<form id="invoiceSendForm" class="form-horizontal m-t" action="${base}/repors/reportEmail/report" method="post" onsubmit="return checkForm()">
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<#if flag??><#else>
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报告发票邮寄/寄送</a></li>
+							<li class="active"><strong>寄送</strong></li>
+						</ol>
+						<div style="float: right">
+							<a href="javascript:history.go(-1)" target="_self"
+								style="margin-top: -18px; padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</div>
+					</#if>
+				</div>
+				<div class="ibox">
+					
+				
+					
+					<div class="ibox ibox-table">
+						<div class="ibox-content">
+
+							<table class="table table-striped table-bordered table-hover table-details">
+								<tr>
+									<td colspan="8"><strong>寄送报告信息</strong></td>
+								</tr>
+								<#if record ??>
+								<tr>
+								   <td>状态</td>
+									<td>订单编号</td>
+									<td>产品编号</td>
+									<td>报告编号</td>
+									<td>报告状态</td>
+									<td>出报告时间</td>
+
+								</tr>
+								<#if record?has_content> <#list record as model>
+								<tr>
+								<td><#if model.productStatus!?html == '5'><input type="checkbox" class='reportEmail' value="${model.id}" checked="checked" name='reportEmailIds'>
+								<#else><input type="checkbox" class='reportEmail' value="${model.id}" disabled="disabled">
+								</#if></td>
+								<input type="hidden" class="sampleCodes" name="sampleCodes" value="${(model.sampleCodes)!?html}" />
+								<input type="hidden" class="orderExaminee" name="orderExaminee" value="${(model.orderExaminee)!?html}" />
+								<td class="orderCode">${model.orderCode!?html}</td>
+								<td class="productCode">${model.productCode!?html}</td>
+								<td class="reportNo">${model.reportNo!?html}</td>
+								<td><#if model.productStatus!?html == '4'>待审核报告<#elseif model.productStatus!?html == '5'>待寄送<#elseif model.productStatus!?html == '6'>
+									已寄送<#else>未出报告</#if>
+
+									</td>
+									<td><#if model.reportTime??>${(model.reportTime)!?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+								</tr>
+								
+								</#list></#if>
+
+								</#if>
+
+
+							</table>
+							
+							<table class="table table-striped table-bordered table-hover table-details">
+
+								<tr>
+									<td colspan="8"><strong>寄送发票信息</strong></td>
+								</tr>
+
+								<tr>
+								<td>状态</td>
+									<td>订单编号</td>
+									<td>发票类型</td>
+									<td>发票状态</td>
+									<td>发票号</td>
+
+								</tr>
+								<#if record?has_content> <#list record as model>
+								<#if model_index != 0 && model.orderCode != record[model_index-1].orderCode>
+								<tr>
+								<td><#if model.issueInvoice!?html == '3'>
+								<input type="checkbox" class='invoice' value="${model.orderId}" checked="checked" name='reportInvoiceOrderIds'>
+								<#else>
+								<input type="checkbox" class='invoice' value="${model.orderId}" disabled="disabled" name='reportInvoiceOrderIds'>
+								</#if>
+								</td>
+									<td>${model.orderCode!?html}</td>
+									<td><#if model.invoiceApplyType!?html == '1'>默认开票<#elseif model.invoiceApplyType!?html == '2'>提前开票</#if></td>
+									<td><#if model.issueInvoice!?html == '1'>待开票<#elseif model.issueInvoice!?html == '2'>可开票
+									<#elseif model.issueInvoice!?html == '3'>已开票<#elseif model.issueInvoice!?html == '4'>已寄送
+									</#if></td>
+									<td class="invoiceNo"><#if model.invoiceModel?? && model.invoiceModel.infoList?has_content>
+									<#list model.invoiceModel.infoList as invoice>
+										<#if invoice_index == 0>
+											${invoice.invoicerNo!?html}
+											<#else>
+											、${invoice.invoicerNo!?html}
+										</#if>
+									</#list>
+									</#if></td>
+								</tr>
+								<#elseif model_index == 0>
+								<tr>
+									<td><#if model.issueInvoice!?html == '3'>
+								<input type="checkbox" class='invoice' value="${model.orderId}" checked="checked" name='reportInvoiceOrderIds'>
+								<#else>
+								<input type="checkbox" class='invoice' value="${model.orderId}" disabled="disabled" name='reportInvoiceOrderIds'>
+								</#if>
+								</td>
+									<td>${model.orderCode!?html}</td>
+									<td><#if model.invoiceApplyType!?html == '1'>默认开票<#elseif model.invoiceApplyType!?html == '2'>提前开票</#if></td>
+									<td><#if model.issueInvoice!?html == '1'>待开票<#elseif model.issueInvoice!?html == '2'>可开票
+									<#elseif model.issueInvoice!?html == '3'>已开票<#elseif model.issueInvoice!?html == '4'>已寄送
+									</#if></td>
+									<td class="invoiceNo"><#if model.invoiceModel?? && model.invoiceModel.infoList?has_content>
+									<#list model.invoiceModel.infoList as invoice>
+										<#if invoice_index == 0>
+											${invoice.invoicerNo!?html}
+											<#else>
+											、${invoice.invoicerNo!?html}
+										</#if>
+									</#list>
+									</#if></td>
+								</tr>
+								</#if>
+								
+								</#list><#else>
+								<tr>
+									<td colspan="8">暂无相关明细</td>
+								</tr>
+								</#if>
+							</table>
+
+							
+
+
+							<table class="table table-striped table-bordered table-hover table-details" id="acceptTable">
+
+
+								<tr>
+									<td colspan="8"><strong>收件信息</strong></td>
+								</tr>
+                     <#if record?has_content>
+								<tr>
+									<td class="col-sm-1">收件人姓名</td>
+									<td class="col-sm-2">${(record[0].receivedName)!?html}</td>
+									<td class="col-sm-1">收件人电话</td>
+									<td class="col-sm-2">${(record[0].receivedPhone)!?html}</td>
+									<td class="col-sm-1">收件人地址</td>
+									<td class="col-sm-2">${(record[0].address)!?html}</td>
+
+								</tr>
+                         </#if>
+
+							</table>
+
+<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox">
+									<div class="ibox-title">
+										<h5>寄送信息</h5>
+									</div>
+								
+										<table class="table table-striped table-bordered table-hover invoiceTable" id="sengMsgTable">
+										<tr>
+											<th class="col-sm-1">寄件日期：</th>
+											<td class="col-sm-2"><input class="form-control laydate-icon sendTime" type="text" value="${.now?string('yyyy-MM-dd')}" name="emailTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"/></td>
+											<th class="col-sm-1">运输方式：</th>
+											<td class="col-sm-2">
+												<select class="form-control transportType" name="emailType" id="emailType" onchange="showOption(this)">
+													  <option value="">请选择</option> <@dict_entries
+						                            category="TRANSPORT_TYPE"> <#if entries??> <#list entries as entry>
+						                            <option value="${entry.value!}">${entry.text!?html}</option>
+						                            </#list> </#if> </@dict_entries>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th class="col-sm-1">快递单号：</th>
+											<td class="col-sm-2"><input class="form-control trackNumber" type="text" name="emailNo" id="emailNo"/></td>
+											<th class="col-sm-1"></th>
+											
+										</tr>
+										<tr>
+											<th class="col-sm-1">寄件内容：</th>
+											<td colspan="3" class="col-sm-2">
+												<textarea class="form-control sendDetail" type="text" rows="2" name="emailContent" readonly="readonly"></textarea>
+											</td>
+
+										</tr>
+									</table>
+									<div class="form-group">
+				                         <div class="col-sm-4 col-sm-offset-5">
+				                         	<button type="button" class="btn btn-primary" id="button_print" onclick="downloadData()">导出快递单</button>
+				                            <button type="button" class="btn btn-primary" id="submitbtn">提交</button>
+				                            <button class="btn btn-primary goback" type="button">返回</button>
+				                         </div>
+				                    </div>
+				                    
+								</div>
+							</div>
+						</div>
+
+					
+
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	
+				
+					<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form>	
+</body>
+<script>
+$(function()
+{
+    //订单编号
+    var orderCodes = "";
+    //产品编号
+    var productCodes = "";
+    //样本编号
+    var sampleCodes = "";
+    //姓名
+    var orderExaminees = "";
+
+	$('.reportEmail').each(function(){
+        if($(this).is(":checked"))
+         {
+        	var $tr = $(this).closest('tr');
+             //订单编号
+             var orderCode = $tr.find('.orderCode').text();
+             //产品编号
+        	var productCode = $tr.find('.productCode').text();
+        	//样本编号
+             var sampleCode = $tr.find('.sampleCodes').val();
+             //姓名
+             var orderExaminee = $tr.find('.orderExaminee').val();
+
+             if("" == orderCodes || null == orderCodes)
+             {
+                 orderCodes = "报告：" + orderCode;
+             }
+             else
+             {
+                 orderCodes = orderCodes + "、" + orderCode;
+             }
+
+        	if("" == productCodes || null == productCodes)
+        	{
+                productCodes =  productCode;
+        	}
+        	else
+        	{
+                productCodes = productCodes + "、" + productCode;
+        	}
+             if("" == sampleCodes || null == sampleCodes)
+             {
+                 sampleCodes =  sampleCode;
+             }
+             else
+             {
+                 sampleCodes = sampleCodes + "、" + sampleCode;
+             }
+             if("" == orderExaminees || null == orderExaminees)
+             {
+                 orderExaminees =  orderExaminee;
+             }
+             else
+             {
+                 orderExaminees = orderExaminees + "、" + sampleCode;
+             }
+         }
+    });
+    //发票
+	var invoiceNos = "";
+	$('.invoice').each(function(){
+        if($(this).is(":checked"))
+         {
+        	var $tr = $(this).closest('tr');
+        	var invoiceNo = $.trim($tr.find('.invoiceNo').text());
+        	if("" == invoiceNos || null == invoiceNos)
+        	{
+        		invoiceNos = "发票号：" + invoiceNo;
+        	}
+        	else
+        	{
+        		invoiceNos = invoiceNos +"、"+invoiceNo;
+        	}
+         }
+    }); 
+	$('textarea[name="emailContent"]').val(orderCodes + "_" + productCodes + "_" + sampleCodes + "_" + orderExaminees + "\n" + invoiceNos);
+
+
+    $('body').on('click', '.reportEmail', function()
+    {
+        //订单编号
+        var orderCodes = "";
+        //产品编号
+        var productCodes = "";
+        //样本编号
+        var sampleCodes = "";
+        //姓名
+        var orderExaminees = "";
+
+        $('.reportEmail').each(function(){
+            if($(this).is(":checked"))
+            {
+                var $tr = $(this).closest('tr');
+                //订单编号
+                var orderCode = $tr.find('.orderCode').text();
+                //产品编号
+                var productCode = $tr.find('.productCode').text();
+                //样本编号
+                var sampleCode = $tr.find('.sampleCodes').val();
+                //姓名
+                var orderExaminee = $tr.find('.orderExaminee').val();
+
+                if("" == orderCodes || null == orderCodes)
+                {
+                    orderCodes =  "报告：" + orderCode;
+                }
+                else
+                {
+                    orderCodes = orderCodes + "、" + orderCode;
+                }
+
+                if("" == productCodes || null == productCodes)
+                {
+                    productCodes =  productCode;
+                }
+                else
+                {
+                    productCodes = productCodes + "、" + productCode;
+                }
+                if("" == sampleCodes || null == sampleCodes)
+                {
+                    sampleCodes =  sampleCode;
+                }
+                else
+                {
+                    sampleCodes = sampleCodes + "、" + sampleCode;
+                }
+                if("" == orderExaminees || null == orderExaminees)
+                {
+                    orderExaminees =  orderExaminee;
+                }
+                else
+                {
+                    orderExaminees = orderExaminees + "、" + sampleCode;
+                }
+            }
+        });
+        //发票
+        var invoiceNos = "";
+        $('.invoice').each(function(){
+            if($(this).is(":checked"))
+            {
+                var $tr = $(this).closest('tr');
+                var invoiceNo = $.trim($tr.find('.invoiceNo').text());
+                if("" == invoiceNos || null == invoiceNos)
+                {
+                    invoiceNos = "发票号：" + invoiceNo;
+                }
+                else
+                {
+                    invoiceNos = invoiceNos +"、"+invoiceNo;
+                }
+            }
+        });
+        if("" == orderCodes || null == orderCodes) {
+            $('textarea[name="emailContent"]').val(invoiceNos);
+        }else {
+            $('textarea[name="emailContent"]').val(orderCodes + "_" + productCodes + "_" + sampleCodes + "_" + orderExaminees + "\n" + invoiceNos);
+        }
+
+    })
+
+    $('body').on('click', '.invoice', function()
+    {
+        //订单编号
+        var orderCodes = "";
+        //产品编号
+        var productCodes = "";
+        //样本编号
+        var sampleCodes = "";
+        //姓名
+        var orderExaminees = "";
+
+        $('.reportEmail').each(function(){
+            if($(this).is(":checked"))
+            {
+                var $tr = $(this).closest('tr');
+                //订单编号
+                var orderCode = $tr.find('.orderCode').text();
+                //产品编号
+                var productCode = $tr.find('.productCode').text();
+                //样本编号
+                var sampleCode = $tr.find('.sampleCodes').val();
+                //姓名
+                var orderExaminee = $tr.find('.orderExaminee').val();
+
+                if("" == orderCodes || null == orderCodes)
+                {
+                    orderCodes = "报告：" + orderCode;
+                }
+                else
+                {
+                    orderCodes = orderCodes + "、" + orderCode;
+                }
+
+                if("" == productCodes || null == productCodes)
+                {
+                    productCodes =  productCode;
+                }
+                else
+                {
+                    productCodes = productCodes + "、" + productCode;
+                }
+                if("" == sampleCodes || null == sampleCodes)
+                {
+                    sampleCodes =  sampleCode;
+                }
+                else
+                {
+                    sampleCodes = sampleCodes + "、" + sampleCode;
+                }
+                if("" == orderExaminees || null == orderExaminees)
+                {
+                    orderExaminees =  orderExaminee;
+                }
+                else
+                {
+                    orderExaminees = orderExaminees + "、" + sampleCode;
+                }
+            }
+        });
+        //发票
+        var invoiceNos = "";
+        $('.invoice').each(function(){
+            if($(this).is(":checked"))
+            {
+                var $tr = $(this).closest('tr');
+                var invoiceNo = $.trim($tr.find('.invoiceNo').text());
+                if("" == invoiceNos || null == invoiceNos)
+                {
+                    invoiceNos = "发票号：" + invoiceNo;
+                }
+                else
+                {
+                    invoiceNos = invoiceNos +"、"+invoiceNo;
+                }
+            }
+        });
+        if("" == invoiceNos || null == invoiceNos) {
+            $('textarea[name="emailContent"]').val(orderCodes + "_" + productCodes + "_" + sampleCodes + "_" + orderExaminees);
+        }else {
+            $('textarea[name="emailContent"]').val(orderCodes + "_" + productCodes + "_" + sampleCodes + "_" + orderExaminees + "\n" + invoiceNos);
+        }
+
+    })
+
+})
+
+function showOption(th)
+{
+	var p1=$(th).children('option:selected').html();//这就是selected的值
+	var tr = "";
+	if(p1 == "人工物流")
+	{
+		tr = "<th class=\"col-sm-1\">运输人姓名：</th>"
+		+"<td class=\"col-sm-2\"><input class=\"form-control transportName\" type=\"text\" name=\"emailName\" id=\"emailName\"/></td>"
+		+"<th class=\"col-sm-1\">运输人电话：</th>"
+		+"<td class=\"col-sm-2\"><input  onblur=\"checkTransportPhone(this)\"  class=\"form-control transportPhone\" type=\"text\" name=\"emailPhone\"/ id='emailPhone'></td>";
+	}
+	else
+	{
+		tr = "<th class=\"col-sm-1\">快递单号：</th>"
+			+"<td class=\"col-sm-2\"><input class=\"form-control trackNumber\" type=\"text\" name=\"emailNo\" id=\"emailNo\"/></td>"
+			+"<th class=\"col-sm-1\"></th>"
+			;
+	}
+	$("#sengMsgTable tr:eq(1)").html(tr);
+}
+function getOnfouse()
+{
+	$("input[name=trackNumber]").focus();
+}
+function print()
+{
+	var text = $('select option:selected').text();
+	if("人工物流" == text)
+	{
+		parent.parent.layer.alert('人工物流不支持打印！！', {title : "提示"});
+		return false; 
+	}
+	if("请选择" == text)
+	{
+		parent.parent.layer.alert('请先选择运输方式！！', {title : "提示"});
+		return false; 
+	}
+	myPreview();
+}
+function downloadData()
+{
+	
+	var table = document.getElementById("acceptTable");
+    var recipientName = table.rows[1].cells[1].innerHTML;
+    var recipientPhone = table.rows[1].cells[3].innerHTML;
+    var recipientAddress = table.rows[1].cells[5].innerHTML;
+    $.ajax({
+        type : "POST",
+        traditional : true,
+        url : "/invoiceSend/download.do",
+        data : {
+        	recipientName : recipientName,
+        	recipientPhone : recipientPhone,
+        	recipientAddress : recipientAddress
+        },
+        async : false,
+        success : function(data)
+        {
+        	
+            $("#formValue").val(data);
+            $("#hiddForm").submit();
+        },
+        error : function()
+        {
+            alert("failed");
+        }
+    });
+}
+
+function checkForm(){
+	var reportEmails=$('.reportEmail:checked');
+	if(reportEmails.length == 0){
+		alert("至少选择一条记录!");
+		return false;
+	}
+	else{
+		if(null == $('#emailType').val() || "" == $('#emailType').val())
+		{
+			alert("请选择运输方式！");
+			return false;
+		}
+		if($('#emailType').val() == '0'){
+			
+			var shu = /[^\d]$/;//非数
+			var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;//固话
+			var myreg = /^1[34578]\d{9}$/; //手机
+			
+			if(shu.test($('#emailPhone').val())|| !myreg.test($('#emailPhone').val())){
+				alert("电话格式不正确！");
+				return false;
+			}
+			
+			if(null == $('#emailName').val() || ""== $('#emailName').val())
+			{
+				alert("请填写运输人姓名！");
+				return false;
+			}
+		}
+		else
+		{
+			if(null == $('#emailNo').val() || ""== $('#emailNo').val())
+			{
+				alert("请填写快递单号！");
+				return false;
+			}
+		}
+		
+	}
+}
+
+function checkTransportPhone(obj){
+	var shu = /[^\d]$/;//非数
+	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;//固话
+	var myreg = /^1[34578]\d{9}$/; //手机
+	
+	if(shu.test($('#emailPhone').val())|| !myreg.test($('#emailPhone').val())){
+		$('#emailPhone').val("")
+	}
+}
+
+$('#submitbtn').click(function(){
+	$('#invoiceSendForm').submit();
+})
+</script>
+
+
+
+</html>

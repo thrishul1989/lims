@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>项目监控-订单列表页签</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+						<ul id="myTab" class="nav nav-tabs">
+							<li class="active"><a href="#priority" data-toggle="tab" id="tab_priority">未结束</a></li>
+							<li ><a href="#unPriority" data-toggle="tab" id="tab_unPriority">已结束</a></li>
+						</ul>
+					</div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox ibox-table">
+						<div id="myTabContent" class="tab-content">
+							<div  class="tab-pane fade in active" id="priority">
+								<iframe src="${base}/bmm/schedule/priorityOrders.do"
+									style="background: white; width: 100%; height: 700px;"
+									frameborder="no" border="0" id="iframe_priority"></iframe>
+							</div>
+							
+							<div  class="tab-pane fade" id="unPriority">
+								<iframe src=""
+									style="background: white; width: 100%; height: 700px; "
+									frameborder="no" border="0" id="iframe_unPriority"></iframe>
+	
+							</div>
+	
+						</div>
+					</div>
+               
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <script type="text/javascript">
+	    $('body').on('click', '#tab_priority', function(){
+			$('#iframe_priority').attr('src', '${base}/bmm/schedule/priorityOrders.do');
+			$('#iframe_unPriority').attr('src', '');
+		}).on('click', '#tab_unPriority', function(){
+			$('#iframe_unPriority').attr('src', '${base}/bmm/schedule/unPriorityOrders.do');
+			$('#iframe_priority').attr('src', '');
+		});
+    </script>
+</body>
+</html>

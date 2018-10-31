@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyAnnotationFamilyTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyAnnotationFamilyTask" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="METHOD_ID" property="methodId" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="RESUBMIT" property="resubmit" jdbcType="BIT" />
+    <result column="RESUBMIT_COUNT" property="resubmitCount" jdbcType="INTEGER" />
+    <result column="IF_URGENT" property="ifUrgent" jdbcType="INTEGER" />
+    <result column="DESCRPTION" property="descrption" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_CODE, PRODUCT_CODE, PRODUCT_NAME, METHOD_ID, START_TIME, END_TIME, STATUS, 
+    RESUBMIT, RESUBMIT_COUNT,DESCRPTION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_ANNOTATION_FAMILY_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+<!--
+/* 如果直接通过产品编号查询产品，更改产品编号会查询不到，就先关联OrderProduct冗余存储的产品名称*/
+  /* 家系任务，主样本取消，列表直接不展示这个家系任务*/
+  /* 通过订单、产品、主样本、检测方法关联查询流程状态*/
+  /* 如果主样本重新送样，还是通过送样之前的样本来查询流程状态，过滤重新送样之后的样本*/
+  -->
+  <select id="getFamilyTaskSearchList" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.biology.model.request.BiologyFamilyAnnotatioListRequest">
+    SELECT
+      t.*,IFNULL(o.IF_URGENT,0) AS IF_URGENT
+    FROM
+      BIOLOGY_ANNOTATION_FAMILY_TASK t
+    LEFT JOIN LIMS_ORDER o on o.CODE = t.ORDER_CODE
+    LEFT JOIN LIMS_ORDER_PRODUCT op ON op.PRODUCT_NAME = t.PRODUCT_NAME and op.ORDER_ID = o.ID
+    LEFT JOIN LIMS_PRODUCT p ON p.ID = op.PRODUCT_ID
+    LEFT JOIN LIMS_TESTING_METHOD m ON m.SEMANTIC = t.METHOD_ID
+    LEFT JOIN LIMS_ORDER_PRIMARY_SAMPLE ps ON ps.ORDER_ID = o.ID
+    LEFT JOIN LIMS_TESTING_SAMPLE tsa on tsa.SAMPLE_CODE = ps.SAMPLE_CODE  and tsa.PARENT_SAMPLE_ID is null
+    LEFT JOIN LIMS_TESTING_SCHEDULE ts ON ts.ORDER_ID = o.ID AND ts.PRODUCT_ID =op.PRODUCT_ID  AND ts.METHOD_ID = m.ID AND ts.SAMPLE_ID = tsa.ID
+    WHERE
+    o.DEL_FLAG=0 AND t.STATUS != 5  AND (ts.PROCCESS_STATE !=2 or ts.PROCCESS_STATE is null)
+    and  NOT EXISTS(SELECT p.ID from LIMS_ORDER_PRIMARY_SAMPLE p WHERE  ps.SAMPLE_CODE =  p.SAMPLE_ERROR_NEW_NO)
+      <if test="_parameter.orderCode != null and _parameter.orderCode != ''" >
+        <bind name="orderCodePattern" value="'%' + _parameter.orderCode + '%'" />
+        AND t.ORDER_CODE LIKE #{orderCodePattern}
+      </if>
+      <if test="_parameter.urgent != null" >
+        <choose>
+          <when test="_parameter.urgent != 0 ">AND o.IF_URGENT = #{_parameter.urgent}</when>
+          <when test="_parameter.urgent == 0">AND (o.IF_URGENT = #{_parameter.urgent} or o.IF_URGENT is null)</when>
+        </choose>
+      </if>
+      ORDER BY o.IF_URGENT desc,t.RESUBMIT_COUNT DESC ,t.START_TIME ASC
+  </select>
+
+  <select id="getByOrderProductMethod" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      t.*
+    from
+      BIOLOGY_ANNOTATION_FAMILY_TASK t
+    where
+      t.ORDER_CODE=#{0} AND t.PRODUCT_CODE=#{1} AND t.METHOD_ID=#{2}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_ANNOTATION_FAMILY_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationFamilyTask" >
+    insert into BIOLOGY_ANNOTATION_FAMILY_TASK (ID, ORDER_CODE, PRODUCT_CODE, 
+      PRODUCT_NAME, METHOD_ID, START_TIME, 
+      END_TIME, STATUS, RESUBMIT, 
+      RESUBMIT_COUNT,DESCRPTION)
+    values (#{id,jdbcType=VARCHAR}, #{orderCode,jdbcType=VARCHAR}, #{productCode,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{methodId,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{resubmit,jdbcType=BIT},
+      #{resubmitCount,jdbcType=INTEGER}, #{descrption,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationFamilyTask" >
+    insert into BIOLOGY_ANNOTATION_FAMILY_TASK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE,
+      </if>
+      <if test="productCode != null" >
+        PRODUCT_CODE,
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME,
+      </if>
+      <if test="methodId != null" >
+        METHOD_ID,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="resubmit != null" >
+        RESUBMIT,
+      </if>
+      <if test="resubmitCount != null" >
+        RESUBMIT_COUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodId != null" >
+        #{methodId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="resubmit != null" >
+        #{resubmit,jdbcType=BIT},
+      </if>
+      <if test="resubmitCount != null" >
+        #{resubmitCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationFamilyTask" >
+    update BIOLOGY_ANNOTATION_FAMILY_TASK
+    <set >
+      <if test="orderCode != null" >
+        ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodId != null" >
+        METHOD_ID = #{methodId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="resubmit != null" >
+        RESUBMIT = #{resubmit,jdbcType=BIT},
+      </if>
+      <if test="resubmitCount != null" >
+        RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationFamilyTask" >
+    update BIOLOGY_ANNOTATION_FAMILY_TASK
+    set ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+      PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      METHOD_ID = #{methodId,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=INTEGER},
+      RESUBMIT = #{resubmit,jdbcType=BIT},
+      RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+      DESCRPTION =  #{descrption,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

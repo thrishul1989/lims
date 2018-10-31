@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>对账列表</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<style>
+.select {
+	display: inline-block;
+	width: 40%;
+	height: 34px;
+	border-color: #e6e6e6;
+}
+
+#L_REAGENT_PROBE_anchor {
+	background-color: #e1e4e4
+}
+</style>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/document/paging.do">对账列表</a></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>对账列表</h5>
+						<!-- <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal">
+							<i class="fa fa-folder-open-o"></i> 文件导出
+						</a> --> 
+					</div>
+					<div class="ibox-content" style="overflow: hidden; zoom: 1">
+						<div class="col-sm-12">
+
+							<form id="search_from" action="${base}/reconciliation/task_list.do" method="post" class="form-horizontal m-t">
+								
+								<div class="form-group" >
+									<label class="col-sm-1 control-label" style="padding-top:8px">交易日期：</label>
+									<div class="col-sm-2">
+										
+										<input type="text" id="reconciliationDate" class="form-control laydate-icon" name="reconciliationDate" placeholder="交易日期"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYYMMDD'})"
+											value="${(searcher.reconciliationDate)!?html}"/>
+									
+									</div>
+									<label class="col-sm-1 control-label" style="padding-top:8px">对账结果：</label>
+									<div class="col-sm-2">
+											<select class="form-control" id="reconciliationResult" name="reconciliationResult" data-value="${searcher.reconciliationResult!?html}">
+											<option value="">---所有---</option>
+											<option value="1">正确</option>
+											<option value="0">错误</option>
+											</select>
+										
+									</div>
+							</div>
+							<div class="form-group" >		
+									
+									<label class="col-sm-1 control-label" style="padding-top:8px">是否结账：</label>
+									<div class="col-sm-2">
+										
+											<select class="form-control" id="settleStatus" name="settleStatus" data-value="${searcher.settleStatus!?html}">
+											<option value="">---所有---</option>
+											<option value="1">已结账</option>
+											<option value="0">未结账</option>
+											</select>
+									
+									</div> 
+									<label class="col-sm-1 control-label" style="padding-top:8px">是否对账：</label>
+										
+										<div class="col-sm-2">
+											<select class="form-control" id="reconciliationStatus" name="reconciliationStatus" data-value="${searcher.reconciliationStatus!?html}">
+											<option value="">---所有---</option>
+											<option value="1">已对账</option>
+											<option value="0">未对账</option>
+											</select>
+										</div>
+									
+									
+									<div class="col-sm-2">
+										
+											<button type="submit" class="btn btn-sm btn-success">
+												<i class="fa fa-search"></i> 查询
+											</button>
+											<button type="button" class="btn btn-sm btn-success"
+												onclick="clearCondition('search_from')">
+												<i class="fa fa-remove"></i> 清空
+											</button>
+									</div>
+									
+									</div>
+
+								
+									
+							</form>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>序号</th>
+										<th>交易日期</th>
+										<th>对账日期</th>
+										<th>对账结果</th>
+										<th>是否结账</th>
+										<th>是否对账</th>
+										<th>处理结果</th>
+										<th >操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if pagination.records?has_content> 
+									<#list pagination.records as record>
+									<tr>
+										<td>${record_index + 1}</td>
+										<td>${record.tradingDate!?html}</td>
+										<td>${record.reconciliationDate!?html}</td>
+										<td>
+										<#if record.reconciliationResult == 1>
+										<font class="label label-success">正确</font>
+										<#else>
+										<font class="label label-warning">错误</font>
+										</#if>
+										</td>
+										<td>
+										<#if record.settleStatus == 1>
+										Y
+										<#else>
+										N
+										</#if>
+										</td>
+										<td>
+										
+										<#if record.reconciliationStatus == 1>
+										Y
+										<#else>
+										N
+										</#if>
+										</td>
+										<td>
+										<#if record.reconciliationResult == 0>
+											<#if record.solveResult == 1>
+											<font class="label label-success">已处理</font>
+											<#else>
+											<font class="label label-warning">未处理</font>
+											</#if>
+										</#if>
+										</td>
+										<td class="flexible-btns">
+											<a	href="${base}/reconciliation/tab.do?tranDate=${record.tradingDate!?html}"	class="btn btn-sm btn-success">
+											 <i	class="fa fa-search-plus"></i> 查看
+											</a>
+											<#if record.reconciliationResult == 0 && record.solveResult == 0>
+											<a  href="${base}/reconciliation/handle.do?id=${record.id}" class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定已人工处理吗"> 
+											 <i	class="fa fa-edit"></i>处理
+											</a>
+											</#if>
+										</td>
+									</tr>
+									</#list> </#if>
+
+								</tbody>
+							</table>
+							<#include "../inc/pagination.html" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+	
+</body>
+
+
+</html>
+

@@ -1,0 +1,202 @@
+<style>
+th{
+width: 10%
+}
+
+td{
+width:  10%
+}
+
+
+</style>
+<div class="ibox">
+	<div class="ibox-content">
+		<table class="table table-striped table-bordered table-hover ">
+			<tr>
+				<th>申请部门：</th>
+				<td>${(record.deptName)!?html}</td>
+				<th>申请人：</th>
+				<td>${(record.creatorId)!?html}</td>
+			</tr>
+			<tr>
+				<th>申请日期：</th>
+				<td><#if record.applyTime ?? >${record.applyTime!?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+			
+			
+				<th>状态：</th>
+				<td><#if record.status ??>
+				 		  <#if record.status == 1>待审核</#if>
+                          <#if record.status == 4>已寄送</#if>
+                          <#if record.status == 2>未通过</#if>
+                          <#if record.status == 3>已开票</#if>
+	           		</#if>
+	           </td>
+			</tr>
+			
+		</table>
+	</div>
+</div>
+
+
+<div class="ibox">
+	<div class="ibox-title">
+		<h5>发票信息</h5>
+	</div>
+	<div class="ibox-content">
+		<table class="table table-striped table-bordered table-hover">
+			<tr>
+				<th>开票甲方：</th>
+				<td><#if contract.contractPartyA ??> ${contract.contractPartyA.companyName!?html} </#if></td>
+				<th>开票金额：</th>
+				<td>${((record.invoiceAmount/100)!0)?string('0.##')}</td>
+			</tr>
+			
+			<!-- <tr>
+				<th>开票订单：</th>
+				<td colspan="3">${(record.orderIds)!?html}</td>
+			</tr> -->
+			<tr>
+				<th>合同编号：</th>
+				<td>${(contract.code)!?html}</td>
+				<th>合同名称：</th>
+				<td>${(contract.name)!?html}</td>
+			</tr>
+			
+			<tr>
+				<th>开票内容：</th>
+				<td>${record.invoiceContent!?html}</td>
+				<th>发票抬头：</th>
+				<td>${record.invoiceTitle!?html}</td>
+			</tr>
+			
+			<tr>
+				<th>开票单位：</th>
+				<td >
+					<#if contract.contractPartyB??>${contract.contractPartyB.companyName!?html}</#if>
+				</td>
+				<th>票别：</th>
+				<td >
+					<#if record.invoiceType == "1">纸质普通发票</#if>
+					<#if record.invoiceType == "2">纸质专用发票</#if>
+					<#if record.invoiceType == "3">电子普通发票</#if>
+				</td>
+			</tr>
+					<#if record.headerType??>
+					<#if record.invoiceType??>
+					<#if record.invoiceType != "2">
+					<tr>
+						<th>发票抬头类型：</th>
+						<td>
+							<@dict_entry_text category="HEADER_TYPE" value=record.headerType />
+						</td>
+
+						<#if record.headerType == 1>
+						<th>企业税号：</th>
+						<td>${(record.dutyParagraph)!?html}</td>
+						</#if>
+					</tr>
+					</#if>
+					</#if>
+					</#if>
+
+				<#if record.invoiceType == "2">
+					<tr>
+						<th>单位名称：</th>
+						<td>${(record.companyName)!?html}</td>
+						<th>税号：</th>
+						<td>${(record.taxNo)!?html}</td>
+					</tr>
+					<tr>
+						<th>开户银行：</th>
+						<td>${(record.openingBank)!?html}</td>
+						<th>账号：</th>
+						<td>${(record.accountNumber)!?html}</td>
+					</tr>
+					<tr>
+						<th>联系人：</th>
+						<td>${(record.contactName)!?html}</td>
+						<th>电话：</th>
+						<td>${(record.contactPhone)!?html}</td>
+					</tr>
+					<tr>
+						<th>单位地址：</th>
+						<td colspan="3">${(record.companyAddressDetail)!?html}</td>
+					</tr>
+				</#if>
+			<#if record.invoiceType != "3">
+			<tr>
+				<th>收件人：</th>
+				<td>${record.recipientName!?html} </td>
+				<th>收件电话：</th>
+				<td>${record.recipientPhone!?html} </td>
+			</tr>
+			<tr>
+				<th>收件地址：</th>
+				<td colspan="3">${record.recipientAddressDetail!?html} </td>
+			</#if>
+			</tr>
+			<tr>
+				<th>备注：</th>
+				<td colspan="3">${record.remark!?html} </td>
+			</tr>
+
+			<#if record.invoiceType??>
+			<#if record.invoiceType=="3">
+			<tr>
+				<th>邮箱：</th>
+				<td colspan="3">${(record.mailbox)!?html}</td>
+			</tr>
+			</#if>
+			</#if>
+			
+		</table>
+	</div>
+</div>
+                     
+                     
+                     
+<div class="ibox">
+	<div class="ibox-title">
+		<h5>合同信息</h5>
+	</div>
+	<div class="ibox-content">
+		<table class="table table-striped table-bordered table-hover ">
+			<tr>
+				<th>合同总金额：</th>
+				<td> ${((contract.amount/100)!0)?string('0.##')}</td>
+				<th>已产生费用：</th>
+				<td>${((contract.orderAmount)!0)?string('0.##')}</td>
+			</tr>
+			
+			<tr>
+				<th>已回款：</th>
+				<td>
+					${((contract.incomingAmount/100)!0)?string('0.##')}
+				</td>
+				<th>已开票：</th>
+				<td>${((contract.countInvoiceAmount/100)!0)?string('0.##')}</td>
+				
+			</tr>
+		</table>
+	</div>
+</div>
+ 
+<#if record.status == 2>                   
+<div class="ibox">
+	<div class="ibox-title">
+		<h5>审核信息 </h5>
+	</div>
+	<div class="ibox-content">
+		<table class="table table-striped table-bordered table-hover ">
+			<tr>
+				<th>审核意见：</th>
+				<td colspan="7">${(record.authIdea)!?html}</td>
+				
+			</tr>
+			
+		</table>
+	</div>
+</div>
+</#if>
+               
+   

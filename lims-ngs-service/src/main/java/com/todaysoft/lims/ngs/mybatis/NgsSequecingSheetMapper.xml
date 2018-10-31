@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.ngs.mybatis.NgsSequecingSheetMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.ngs.model.NgsSequecingSheet">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NGS_TASK_ID" property="ngsTaskId" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="TESTER_ID" property="testerId" jdbcType="VARCHAR" />
+		<result column="TESTER_NAME" property="testerName" jdbcType="VARCHAR" />
+		<result column="ASSIGNER_ID" property="assignerId" jdbcType="VARCHAR" />
+		<result column="ASSIGNER_NAME" property="assignerName"
+			jdbcType="VARCHAR" />
+		<result column="ASSIGN_TIME" property="assignTime" jdbcType="TIMESTAMP" />
+		<result column="SUBMITER_ID" property="submiterId" jdbcType="VARCHAR" />
+		<result column="SUBMITER_NAME" property="submiterName"
+			jdbcType="VARCHAR" />
+		<result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="REAGENT_KIT_ID" property="reagentKitId"
+			jdbcType="VARCHAR" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, NGS_TASK_ID, CODE, DESCRIPTION, TESTER_ID, TESTER_NAME,
+		ASSIGNER_ID,
+		ASSIGNER_NAME,
+		ASSIGN_TIME, SUBMITER_ID, SUBMITER_NAME,
+		SUBMIT_TIME, CREATE_TIME, REAGENT_KIT_ID
+	</sql>
+
+	<select id="testList" resultMap="BaseResultMap" parameterType="string">
+		select s.ID , s.CODE , s.DESCRIPTION ,s.ASSIGNER_NAME , s.ASSIGN_TIME
+		from NGS_SEQUECING_SHEET s left join NGS_SEQUECING_TASK t
+		on
+		s.NGS_TASK_ID = t.id where s.TESTER_ID=#{0} and t.STATUS = 2
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from NGS_SEQUECING_SHEET
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		NGS_SEQUECING_SHEET
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingSheet">
+		insert into
+		NGS_SEQUECING_SHEET (ID, NGS_TASK_ID, CODE,
+		DESCRIPTION, TESTER_ID,
+		TESTER_NAME,
+		ASSIGNER_ID, ASSIGNER_NAME, ASSIGN_TIME,
+		SUBMITER_ID,
+		SUBMITER_NAME, SUBMIT_TIME,
+		CREATE_TIME, REAGENT_KIT_ID
+		)
+		values
+		(#{id,jdbcType=VARCHAR}, #{ngsTaskId,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{testerId,jdbcType=VARCHAR}, #{testerName,jdbcType=VARCHAR},
+		#{assignerId,jdbcType=VARCHAR}, #{assignerName,jdbcType=VARCHAR},
+		#{assignTime,jdbcType=TIMESTAMP},
+		#{submiterId,jdbcType=VARCHAR},
+		#{submiterName,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}, #{reagentKitId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingSheet">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into NGS_SEQUECING_SHEET
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="ngsTaskId != null">
+				NGS_TASK_ID,
+			</if>
+			<if test="code != null">
+				CODE,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="testerId != null">
+				TESTER_ID,
+			</if>
+			<if test="testerName != null">
+				TESTER_NAME,
+			</if>
+			<if test="assignerId != null">
+				ASSIGNER_ID,
+			</if>
+			<if test="assignerName != null">
+				ASSIGNER_NAME,
+			</if>
+			<if test="assignTime != null">
+				ASSIGN_TIME,
+			</if>
+			<if test="submiterId != null">
+				SUBMITER_ID,
+			</if>
+			<if test="submiterName != null">
+				SUBMITER_NAME,
+			</if>
+			<if test="submitTime != null">
+				SUBMIT_TIME,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="reagentKitId != null">
+				REAGENT_KIT_ID,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="ngsTaskId != null">
+				#{ngsTaskId,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="testerId != null">
+				#{testerId,jdbcType=VARCHAR},
+			</if>
+			<if test="testerName != null">
+				#{testerName,jdbcType=VARCHAR},
+			</if>
+			<if test="assignerId != null">
+				#{assignerId,jdbcType=VARCHAR},
+			</if>
+			<if test="assignerName != null">
+				#{assignerName,jdbcType=VARCHAR},
+			</if>
+			<if test="assignTime != null">
+				#{assignTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submiterId != null">
+				#{submiterId,jdbcType=VARCHAR},
+			</if>
+			<if test="submiterName != null">
+				#{submiterName,jdbcType=VARCHAR},
+			</if>
+			<if test="submitTime != null">
+				#{submitTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reagentKitId != null">
+				#{reagentKitId,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingSheet">
+		update NGS_SEQUECING_SHEET
+		<set>
+			<if test="ngsTaskId != null">
+				NGS_TASK_ID = #{ngsTaskId,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				CODE = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="testerId != null">
+				TESTER_ID = #{testerId,jdbcType=VARCHAR},
+			</if>
+			<if test="testerName != null">
+				TESTER_NAME = #{testerName,jdbcType=VARCHAR},
+			</if>
+			<if test="assignerId != null">
+				ASSIGNER_ID = #{assignerId,jdbcType=VARCHAR},
+			</if>
+			<if test="assignerName != null">
+				ASSIGNER_NAME = #{assignerName,jdbcType=VARCHAR},
+			</if>
+			<if test="assignTime != null">
+				ASSIGN_TIME = #{assignTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submiterId != null">
+				SUBMITER_ID = #{submiterId,jdbcType=VARCHAR},
+			</if>
+			<if test="submiterName != null">
+				SUBMITER_NAME = #{submiterName,jdbcType=VARCHAR},
+			</if>
+			<if test="submitTime != null">
+				SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reagentKitId != null">
+				REAGENT_KIT_ID = #{reagentKitId,jdbcType=VARCHAR},
+			</if>
+
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingSheet">
+		update
+		NGS_SEQUECING_SHEET
+		set NGS_TASK_ID = #{ngsTaskId,jdbcType=VARCHAR},
+		CODE = #{code,jdbcType=VARCHAR},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR},
+		TESTER_ID =
+		#{testerId,jdbcType=VARCHAR},
+		TESTER_NAME =
+		#{testerName,jdbcType=VARCHAR},
+		ASSIGNER_ID =
+		#{assignerId,jdbcType=VARCHAR},
+		ASSIGNER_NAME =
+		#{assignerName,jdbcType=VARCHAR},
+		ASSIGN_TIME =
+		#{assignTime,jdbcType=TIMESTAMP},
+		SUBMITER_ID =
+		#{submiterId,jdbcType=VARCHAR},
+		SUBMITER_NAME =
+		#{submiterName,jdbcType=VARCHAR},
+		SUBMIT_TIME =
+		#{submitTime,jdbcType=TIMESTAMP},
+		CREATE_TIME =
+		#{createTime,jdbcType=TIMESTAMP},
+		REAGENT_KIT_ID =
+		#{reagentKitId,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByTaskId" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from NGS_SEQUECING_SHEET
+		where NGS_TASK_ID = #{0}
+	</select>
+
+	<select id="completeSheetPaging" resultMap="BaseResultMap"
+		parameterType="com.todaysoft.lims.ngs.model.TestingSheetRequest">
+		select s.ID , s.CODE , s.DESCRIPTION ,s.ASSIGNER_NAME ,
+		s.ASSIGN_TIME,s.SUBMITER_NAME,s.SUBMIT_TIME,s.TESTER_NAME
+		from
+		NGS_SEQUECING_SHEET s
+		left join NGS_SEQUECING_TASK t
+		on
+		s.NGS_TASK_ID =
+		t.id where 1=1
+		<if test="code != null and code != ''">
+			and s.CODE = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="assignerName != null and assignerName != ''">
+			and s.ASSIGNER_NAME = #{assignerName,jdbcType=VARCHAR}
+		</if>
+		<if test="testerName != null and testerName != ''">
+			and s.SUBMITER_NAME = #{testerName,jdbcType=VARCHAR}
+		</if>
+		<if test="assignTimeStart != null and assignTimeStart != ''">
+			and s.ASSIGN_TIME &gt;
+			#{assignTimeStart,jdbcType=TIMESTAMP}
+		</if>
+		<if test="assignTimeEnd != null and assignTimeEnd != ''">
+			and s.ASSIGN_TIME &lt;
+			#{assignTimeEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="childSampleCodes != null ">
+			and t.SEQUECING_CODE in
+			<foreach item="item" index="index" collection="childSampleCodes"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="completed != null and completed != ''">
+			<if test="completed == 'false'">
+				and s.SUBMIT_TIME is null
+			</if>
+			<if test="completed == 'true'">
+				and s.SUBMIT_TIME is not null
+			</if>
+
+
+		</if>
+		order by s.SUBMIT_TIME desc
+	</select>
+</mapper>

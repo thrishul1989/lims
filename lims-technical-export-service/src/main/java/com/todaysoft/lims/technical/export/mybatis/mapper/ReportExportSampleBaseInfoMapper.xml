@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.ReportExportSampleBaseInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.ReportExportSampleBaseInfo" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="EXAMINEE_NAME" property="examineeName" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+    <result column="AGE" property="age" jdbcType="VARCHAR" />
+    <result column="SAMPLE_TYPE" property="sampleType" jdbcType="VARCHAR" />
+    <result column="SAMPLING_INFO_DATE" property="samplingInfoDate" jdbcType="VARCHAR" />
+    <result column="INSPECTION_UNIT" property="inspectionUnit" jdbcType="VARCHAR" />
+    <result column="MEDICAL_RECORD_NUMBER" property="medicalRecordNumber" jdbcType="VARCHAR" />
+    <result column="ANALYSIS_PROJECT" property="analysisProject" jdbcType="VARCHAR" />
+    <result column="CLINICAL_DIAGNOSIS" property="clinicalDiagnosis" jdbcType="VARCHAR" />
+    <result column="CLINICAL_PHENOTYPE" property="clinicalPhenotype" jdbcType="VARCHAR" />
+    <result column="FOCUS_ON_GENES" property="focusOnGenes" jdbcType="VARCHAR" />
+    <result column="MEDICAL_HISTORY_DESCRIPTION" property="medicalHistoryDescription" jdbcType="VARCHAR" />
+    <result column="FAMILY_HISTORY_DESCRIPTION" property="familyHistoryDescription" jdbcType="VARCHAR" />
+    <result column="ANALYSIS_RESULT" property="analysisResult" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TASK_ID, SAMPLE_CODE, EXAMINEE_NAME, SEX, AGE, SAMPLE_TYPE, SAMPLING_INFO_DATE, 
+    INSPECTION_UNIT, MEDICAL_RECORD_NUMBER, ANALYSIS_PROJECT, CLINICAL_DIAGNOSIS, CLINICAL_PHENOTYPE, 
+    FOCUS_ON_GENES, MEDICAL_HISTORY_DESCRIPTION, FAMILY_HISTORY_DESCRIPTION,ANALYSIS_RESULT,ORDER_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_SAMPLE_BASE_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from REPORT_EXPORT_SAMPLE_BASE_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportSampleBaseInfo" >
+    insert into REPORT_EXPORT_SAMPLE_BASE_INFO (ID, TASK_ID, SAMPLE_CODE, 
+      EXAMINEE_NAME, SEX, AGE, 
+      SAMPLE_TYPE, SAMPLING_INFO_DATE, INSPECTION_UNIT, 
+      MEDICAL_RECORD_NUMBER, ANALYSIS_PROJECT, CLINICAL_DIAGNOSIS, 
+      CLINICAL_PHENOTYPE, FOCUS_ON_GENES, MEDICAL_HISTORY_DESCRIPTION, 
+      FAMILY_HISTORY_DESCRIPTION,ANALYSIS_RESULT,ORDER_CODE)
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{sampleCode,jdbcType=VARCHAR}, 
+      #{examineeName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=VARCHAR}, 
+      #{sampleType,jdbcType=VARCHAR}, #{samplingInfoDate,jdbcType=VARCHAR}, #{inspectionUnit,jdbcType=VARCHAR}, 
+      #{medicalRecordNumber,jdbcType=VARCHAR}, #{analysisProject,jdbcType=VARCHAR}, #{clinicalDiagnosis,jdbcType=VARCHAR}, 
+      #{clinicalPhenotype,jdbcType=VARCHAR}, #{focusOnGenes,jdbcType=VARCHAR}, #{medicalHistoryDescription,jdbcType=VARCHAR}, 
+      #{familyHistoryDescription,jdbcType=VARCHAR},#{analysisResult,jdbcType=VARCHAR},#{orderCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportSampleBaseInfo" >
+    insert into REPORT_EXPORT_SAMPLE_BASE_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE,
+      </if>
+      <if test="examineeName != null" >
+        EXAMINEE_NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="sampleType != null" >
+        SAMPLE_TYPE,
+      </if>
+      <if test="samplingInfoDate != null" >
+        SAMPLING_INFO_DATE,
+      </if>
+      <if test="inspectionUnit != null" >
+        INSPECTION_UNIT,
+      </if>
+      <if test="medicalRecordNumber != null" >
+        MEDICAL_RECORD_NUMBER,
+      </if>
+      <if test="analysisProject != null" >
+        ANALYSIS_PROJECT,
+      </if>
+      <if test="clinicalDiagnosis != null" >
+        CLINICAL_DIAGNOSIS,
+      </if>
+      <if test="clinicalPhenotype != null" >
+        CLINICAL_PHENOTYPE,
+      </if>
+      <if test="focusOnGenes != null" >
+        FOCUS_ON_GENES,
+      </if>
+      <if test="medicalHistoryDescription != null" >
+        MEDICAL_HISTORY_DESCRIPTION,
+      </if>
+      <if test="familyHistoryDescription != null" >
+        FAMILY_HISTORY_DESCRIPTION,
+      </if>
+      <if test="analysisResult != null" >
+        ANALYSIS_RESULT,
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="examineeName != null" >
+        #{examineeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleType != null" >
+        #{sampleType,jdbcType=VARCHAR},
+      </if>
+      <if test="samplingInfoDate != null" >
+        #{samplingInfoDate,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionUnit != null" >
+        #{inspectionUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalRecordNumber != null" >
+        #{medicalRecordNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisProject != null" >
+        #{analysisProject,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalDiagnosis != null" >
+        #{clinicalDiagnosis,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalPhenotype != null" >
+        #{clinicalPhenotype,jdbcType=VARCHAR},
+      </if>
+      <if test="focusOnGenes != null" >
+        #{focusOnGenes,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalHistoryDescription != null" >
+        #{medicalHistoryDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="familyHistoryDescription != null" >
+        #{familyHistoryDescription,jdbcType=VARCHAR},
+      </if>
+       <if test="analysisResult != null" >
+        #{analysisResult,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportSampleBaseInfo" >
+    update REPORT_EXPORT_SAMPLE_BASE_INFO
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="examineeName != null" >
+        EXAMINEE_NAME = #{examineeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleType != null" >
+        SAMPLE_TYPE = #{sampleType,jdbcType=VARCHAR},
+      </if>
+      <if test="samplingInfoDate != null" >
+        SAMPLING_INFO_DATE = #{samplingInfoDate,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionUnit != null" >
+        INSPECTION_UNIT = #{inspectionUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalRecordNumber != null" >
+        MEDICAL_RECORD_NUMBER = #{medicalRecordNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisProject != null" >
+        ANALYSIS_PROJECT = #{analysisProject,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalDiagnosis != null" >
+        CLINICAL_DIAGNOSIS = #{clinicalDiagnosis,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalPhenotype != null" >
+        CLINICAL_PHENOTYPE = #{clinicalPhenotype,jdbcType=VARCHAR},
+      </if>
+      <if test="focusOnGenes != null" >
+        FOCUS_ON_GENES = #{focusOnGenes,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalHistoryDescription != null" >
+        MEDICAL_HISTORY_DESCRIPTION = #{medicalHistoryDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="familyHistoryDescription != null" >
+        FAMILY_HISTORY_DESCRIPTION = #{familyHistoryDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisResult != null" >
+        ANALYSIS_RESULT = #{analysisResult,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportSampleBaseInfo" >
+    update REPORT_EXPORT_SAMPLE_BASE_INFO
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      EXAMINEE_NAME = #{examineeName,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      AGE = #{age,jdbcType=VARCHAR},
+      SAMPLE_TYPE = #{sampleType,jdbcType=VARCHAR},
+      SAMPLING_INFO_DATE = #{samplingInfoDate,jdbcType=VARCHAR},
+      INSPECTION_UNIT = #{inspectionUnit,jdbcType=VARCHAR},
+      MEDICAL_RECORD_NUMBER = #{medicalRecordNumber,jdbcType=VARCHAR},
+      ANALYSIS_PROJECT = #{analysisProject,jdbcType=VARCHAR},
+      CLINICAL_DIAGNOSIS = #{clinicalDiagnosis,jdbcType=VARCHAR},
+      CLINICAL_PHENOTYPE = #{clinicalPhenotype,jdbcType=VARCHAR},
+      FOCUS_ON_GENES = #{focusOnGenes,jdbcType=VARCHAR},
+      MEDICAL_HISTORY_DESCRIPTION = #{medicalHistoryDescription,jdbcType=VARCHAR},
+      FAMILY_HISTORY_DESCRIPTION = #{familyHistoryDescription,jdbcType=VARCHAR},
+      ANALYSIS_RESULT = #{analysisResult,jdbcType=VARCHAR},
+      ORDER_CODE = #{orderCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByTaskId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from REPORT_EXPORT_SAMPLE_BASE_INFO
+		where task_Id = #{taskID,jdbcType=VARCHAR}
+	</select>
+</mapper>

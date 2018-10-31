@@ -1,0 +1,301 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>主数据管理-仪器设备管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<!-- 时间控件 -->
+<script src="${plugins}/laydate/laydate.js"></script>
+
+
+<!-- 表单验证 -->
+<script type="text/javascript"src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script><!-- 引入自定义包 -->
+
+<script>
+	$(function() {
+				$("#equipment_form").validate({
+					rules : {
+						equipmentNo : {
+							required : true,
+							remote : {
+		            		    url: "${base}/equipment/checkEquipmentNo.do",
+		            		    type: "post",               
+		            		    dataType: "json",
+		            		    data: {
+		            		    	equipmentNo: function() {
+		            		            return $("#equipmentNo").val();
+		            		        },
+		            		        id:function() {
+		            		            return $("#id").val();
+		            		        }
+		            		    }
+		            		}
+						},
+						name : {
+							required : true,
+							remote : {
+		            		    url: "${base}/equipment/checkEquipmentName.do",
+		            		    type: "post",               
+		            		    dataType: "json",          
+		            		    data: {
+		            		        name: function() {
+		            		            return $("#name").val();
+		            		        },
+		            		        id:function() {
+		            		            return $("#id").val();
+		            		        }
+		            		    }
+		            		}
+						},
+						specificationNo : {
+							maxlength : 32
+						},
+						serialNo : {
+							maxlength : 32
+						},
+						vendor : {
+							maxlength : 64
+						},
+						purpose : {
+							maxlength : 64
+						},
+						principal : {
+							maxlength : 32
+						},
+						serviceMan : {
+							maxlength : 32
+						},
+						price : {
+						    min:0
+						}
+					},
+					messages : {
+						equipmentNo :{
+							required : "请输入设备编号",
+							remote : "设备编号已存在"
+						}, 
+						name : {
+							required : "请输入设备名称",
+							remote : "设备名称已存在"
+						},
+						price : {
+							number : "输入值不能小于0"
+						}
+					}
+				});
+		changeFormAttr();
+
+
+		
+	    // 必填项星号
+	    $('.control-label.control-required').each(function(){ //与choose冲突，抽出来
+	        $(this).prepend('<span>*</span>')
+	    });
+		
+		  var acceptDate = {  
+			        elem: '#acceptDate', //选择ID为START的input  
+			        format: 'YYYY-MM-DD', //自动生成的时间格式  
+			        istime: true, //必须填入时间  
+			        choose: function(datas){  
+			        	usedDate.min = datas; //开始日选好后，重置结束日的最小日期  
+			        	//usedDate.start = datas //将结束日的初始值设定为开始日  
+			        }  
+			    };  
+		 var usedDate = {
+			        elem: '#usedDate',  
+			        format: 'YYYY-MM-DD',  
+			        istime: true,  
+			        choose: function(datas){  
+			        	acceptDate.max = datas; //结束日选好后，重置开始日的最大日期  
+			        }  
+			    };  
+		    laydate(acceptDate);  
+		    laydate(usedDate);  
+			  
+		
+		
+	});
+
+	function changeFormAttr() {
+		var updateID = '';
+		updateID = $("#id").val();
+		if (updateID.length > 0) {
+			$("#ExperEquipmentTitle").text('修改');
+			$('#equipment_form').attr('action', '${base}/equipment/modify.do');
+		}
+	}
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/equipment/experEquipment_list.do">实验设备</a></li>
+							<li><span id="ExperEquipmentTitle">新增</span></li>
+						</ol>
+					</div>
+					<div class="ibox-title">
+						<h5>实验设备</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="equipment_form" class="form-horizontal m-t" action="${base}/equipment/saveExperEquipment.do" method="post"
+							enctype='application/json'>
+							<input type="hidden" id="id" name="id" value="${(experEquipment.id)!?html}" />
+							<fieldset>
+								<!-- 第一列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">设备编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="equipmentNo"
+											id="equipmentNo"
+											value="${(experEquipment.equipmentNo)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label control-required">设备名称：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(experEquipment.name)!?html}" />
+									</div>
+
+								</div>
+								<!-- 第二列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">机身编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="serialNo"
+											id="serialNo" value="${(experEquipment.serialNo)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">规格型号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="specificationNo"
+											id="specificationNo"
+											value="${(experEquipment.specificationNo)!?html}" />
+									</div>
+								</div>
+								<!-- 第三列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">生产厂商：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="vendor"
+											id="vendor" value="${(experEquipment.vendor)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">接收日期：</label>
+									<div class="col-sm-3">
+
+										<input type="text" class="form-control laydate-icon"
+											name="acceptDate" id="acceptDate"
+											value="<#if experEquipment.acceptDate??> ${(experEquipment.acceptDate)!?string('yyyy-MM-dd')} <#else>  ${(experEquipment.acceptDate)!?html} </#if>"
+											readOnly="readOnly" style="padding: 16px"
+											 />
+
+									</div>
+
+
+								</div>
+								<!-- 第四列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">使用日期：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control  laydate-icon"
+											name="useDate"
+											
+											readOnly="readOnly" style="padding: 16px" id="usedDate"
+											value="<#if experEquipment.useDate??> ${(experEquipment.useDate)!?string('yyyy-MM-dd')} <#else> ${(experEquipment.useDate)!?html} </#if>" />
+									</div>
+									<label class="col-sm-2 control-label">摆放位置：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="position"
+											id="position" value="${(experEquipment.position)!?html}" />
+									</div>
+								</div>
+								<!-- 第五列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">价格：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="price"
+											id="price" value="${(experEquipment.price)!?html}" placeholder="RMB" />
+									</div>
+									<label class="col-sm-2 control-label">设备责任人：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="principal"
+											id="principal" value="${(experEquipment.principal)!?html}" />
+									</div>
+								</div>
+								<!-- 第六列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">设备状态：</label>
+									<div class="col-sm-3">
+										<select class="form-control  chosen" name="status" id="status"
+											data-placeholder="选择状态">
+											<option selected value="">--请选择--</option> 
+											<@dict_entries category="EQUIPMENT_STATUS"> 
+		                                        <#if entries??> 
+		                                        <#list entries as entry>
+													<option value="${entry.value!}"
+												<#if entry.value==(experEquipment.status!?html)>selected='selected'</#if>>
+												${entry.text!?html}</option> </#list> </#if> 
+											</@dict_entries>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label">备注：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="remark"
+											id="remark" value="${(experEquipment.remark)!?html}" />
+									</div>
+								</div>
+								<!-- 第七列 -->
+								<div class="form-group">
+									<label class="col-sm-2 control-label">维修联系人：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="serviceMan"
+											id="serviceMan" value="${(experEquipment.serviceMan)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">维修联系电话：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="servicePhone"
+											id="servicePhone"
+											value="${(experEquipment.servicePhone)!?html}" />
+									</div>
+								</div>
+								<!-- 第八列 -->
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+										<button class="btn btn-primary" type="submit">保存</button>
+										<button class="btn btn-primary" type="button"
+											onclick="history.go(-1)">返回</button>
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

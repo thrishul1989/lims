@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户详情-用户管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/user.form.js?v=0.0.1"></script>
+<script src="${system_js}/jquery.cxselect.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script src="${plugins}/ztreeBase/js/jquery.ztree.core-3.5.min.js"></script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li><a href="">用户组管理</a></li>
+                            <li class="active"><strong>查看用户组</strong></li>
+                            <div style="float: right;">
+                                <a href="javascript:history.go(-1)" target="_self"
+                                    style="padding: 0px; position: relative; right: 16px; float: right"> <img
+                                    src="${system_images}/backbtn.png" style="height: 24px;" />
+                                </a>
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+                <form id="user_form" class="form-horizontal m-t" action="${base}/userGroup/create.do" method="post">
+                <input id="groupLeader" name="groupLeader.id" value="" type="hidden">
+                <input id="groupLeaderName" name="groupLeaderName" value="" type="hidden">
+                <input id="userGroupMemberIds" name="userGroupMemberIds" value="" type="hidden">
+                    <fieldset>
+                        <div class="ibox ibox-table">
+                            <div class="ibox-title">
+                                <h5>用户组信息</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <table class="table table-striped table-bordered table-hover table-details">
+                                    <tr>
+                                        <th class="col-sm-1">组名：</th>
+                                        <td class="col-sm-2">${(userGroup.groupName)!?html}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-sm-1">创建时间：</th>
+                                        <td class="col-sm-2"><#if (userGroup.createTime)??>${(userGroup.createTime)?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-sm-1">备注：</th>
+                                        <td class="col-sm-2">${(userGroup.remark)!?html}</td>
+                                    </tr>
+                                </table>
+                                <tr>
+                                    <div class="ibox-title">组长信息</div>
+                                    <table class="table table-striped table-bordered table-hover table-details">
+                                        <tr>
+                                            <th class="col-sm-1">姓名：</th>
+                                            <td class="col-sm-1">${(userGroup.groupLeader.archive.name)!?html}</td>
+                                            <th class="col-sm-1">手机号码 ：</th>
+                                            <td class="col-sm-1">${(userGroup.groupLeader.archive.phone)!?html}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-sm-1">性别：</th>
+                                            <td class="col-sm-1" id="sex">${(userGroup.groupLeader.archive.sex)!?html}</td>
+                                            <th class="col-sm-1">机构：</th>
+                                            <td class="col-sm-" id="company">${(userGroup.groupLeader.archive.deptName)!?html}</td>
+                                        </tr>
+                                    </table>
+                                </tr>
+                                <div class="ibox-title">
+                                    <h5>组员信息</h5>
+                                    </a>
+                                </div>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-1">姓名</th>
+                                            <th class="col-sm-1">手机号码</th>
+                                            <th class="col-sm-1">性别</th>
+                                            <th class="col-sm-1">机构</th>
+                                            <th class="col-sm-1">添加日期</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <#if (userGroup.userGroupMembers?has_content)>
+                                    <#list userGroup.userGroupMembers as record>
+                                        <tr>
+                                            <td class="col-sm-2">${(record.user.archive.name)!?html}</td>
+                                            <td class="col-sm-2">${(record.user.archive.phone)!?html}</td>
+                                            <td class="col-sm-2">${(record.user.archive.sex)!?html}</td>
+                                            <td class="col-sm-2">${(record.user.archive.deptName)!?html}</td>
+                                            <td class="col-sm-2"><#if (record.createDate)??>${(record.createDate)?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+                                        </tr>
+                                        </#list>
+                                        </#if>
+                                    </tbody>
+                                </table>
+                                <div class="form-group">
+                                    <div class="col-sm-7 col-sm-offset-2" style="float: right;">
+                                        <button class="btn btn-primary goback" type="button">返回</button>
+                                    </div>
+                                </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+</html>

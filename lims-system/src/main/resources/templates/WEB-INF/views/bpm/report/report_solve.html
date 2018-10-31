@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>报告处理</title>
+<!--[if lt IE 9]>
+<meta http-equiv="refresh" content="0;ie.html" />
+<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link rel="stylesheet" href="${plugins}/ladda-bootstrap-master/dist/ladda-themeless.min.css">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet">
+<style>
+    .file-drop-zone {
+        height: auto
+    }
+    .t .ms-sel-ctn {
+        background-position: 98%
+    }
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated kv-main">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li>
+                                <span>报告整合</span>
+                            </li>
+                            <li class="active">
+                                <strong>报告处理</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+	                <div class="ibox-title">
+	                    <h5>报告处理</h5>
+	                </div>
+	                <div class="ibox-content">
+	                    <form id="report_handle_form" action="${base}/bpm/report/report_handle.do" method="post" class="search-form form-inline">
+	                    	<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+	                    	<input type="hidden" id="id" name="id" value="${(data.id)!?html}"/>
+	                    	<input type="hidden" id="reportId" name="reportId" value="${(data.id)!?html}"/>
+	                    	<input type="hidden" name="status" value="${(data.reportStatus)!?html}"/>
+	                    	<input type="hidden" id="orderCode" value="${(data.orderCode)!?html}"/>
+	                    	<input type="hidden" id="productCode" value="${(data.productCode)!?html}"/>
+	                    	<input type="hidden" id="iframe_sample" value="false"/>
+	                    	<input type="hidden" id="iframe_result" value="false"/>
+	                    	<input type="hidden" id="report_file_upload" value="false"/>
+	                    	<input type="hidden" id="currentSemantic" <#if data.testingMethods??><#list data.testingMethods as curmethod><#if curmethod_index == 0>value="${(curmethod.semantic)!?html}" type-value="${(curmethod.type)!?html}"</#if></#list></#if>/>
+	                        <!-- 测试 -->
+	                        <input type="hidden" name="sampleCode" value="S17102410"/>
+	                       	
+	                       <div class="row">
+		                       <div class="col-sm-10">
+			                       <div class="form-group" style="float: left">
+			                        	<a href="#" id="report_edit" class="btn btn-sm btn-primary">
+			                                <i class="fa fa-edit"></i> 编辑
+			                            </a>
+			                            <a href="#" id="report_uoload" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal">
+			                                <i class="fa fa-upload"></i> 上传
+			                            </a>
+			                            <a href="${base}/bpm/report/firstReview/download.do?fileName=${(data.combineUrl)!?html}" id="report_download" class="btn btn-sm btn-success" <#if data.combineUrl??><#else>style="display: none;"</#if>>
+		                                    <i class="fa fa-download"></i> 下载
+		                                </a>
+			                            <button type="button" class="btn btn-sm btn-success" id="but_handle">
+			                                <i class="fa fa-search"></i> 确认提交
+			                            </button>
+			                            <a href="${base}/order/viewOrder.do?id=${data.orderId}" class="btn btn-sm btn-primary">
+			                                <i class="fa fa-search-plus"></i> 订单详情
+			                            </a>
+			                            <a href="${base}/order/viewOrderByStatus.do?id=${data.orderId}&redirectStatus=${(data.id)!?html}&viewStatus=${redirectStatus!?html}" class="btn btn-sm btn-primary">
+			                                <i class="fa fa-search-plus"></i> 检测详情
+			                            </a>
+			                            <a onclick="sendData()"  class="btn btn-sm btn-success">
+			                                <i class="fa fa-upload"></i>生成报告
+			                            </a>
+			                           	<a onclick="reportExportPreview()"  class="btn btn-sm btn-success">
+			                                <i class="fa fa-upload"></i>报告预览
+			                            </a>
+			                        </div>
+		                        </div>
+	                        </div>
+	                        <div class="row">
+	                        <div class="col-sm-2">
+	                            <div class="form-group">
+	                            	<label class="control-label">报告分类：</label>
+	                                <select class="form-control" name="reportType" id="reportType" data-value="${data.reportType!?html}" required>
+	                                    <option value="">请选择</option>
+	                                    <option value="1">明确阳性</option>
+	                                    <option value="2">疑似阳性</option>
+	                                    <option value="3">可疑</option>
+	                                    <option value="4">阴性</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="col-sm-4">
+	                            <div class="form-group">
+	                                <label class="control-label">分析结果：</label>
+	                                <select class="form-control" name="analyResult" id="analyResult" data-value="${data.analyType!?html}" required>
+	                                    <option value="">请选择</option>
+	                                    <option value="1">发现与疾病表型相关的致病性突变</option>
+	                                    <option value="2">发现与疾病表型相关的疑似致病性突变</option>
+	                                    <option value="3">发现与疾病表型相关的可疑变异</option>
+	                                    <option value="4">未发现与疾病表型相关的明确致病性突变</option>
+	                                </select>
+	                            </div>
+	                        </div>
+
+	                        <div class="col-sm-3">
+	                            <div class="form-group">
+	                                <label class="control-label">报告模板：</label>
+	                                <select class="form-control" name="reportTemplateType" id="reportTemplateType" data-value="${data.reportTemplateType!?html}" required>
+	                                    <option value="">请选择</option>
+	                                    <@dict_entries category="REPORT_TYPE">
+	                                        <#list entries as entry>
+	                                        <option value="${entry.value!}">${entry.text!?html}</option>
+	                                        </#list>
+	                                        </@dict_entries>
+	                                </select>
+	                            </div>
+
+	                        </div>
+	                        </div>
+                        </form>
+                        <div class="ibox-content">
+                        	<div class="ibox">
+								<ul id="myTab" class="nav nav-tabs">
+									<#if data.testingMethods??> <#list data.testingMethods as method>
+									<li <#if method.semantic == semantic>class="active"<#else></#if>><a href="#${(method.semantic)!?html}" data-toggle="tab" id="tab_${(method.semantic)!?html}" data-id="${(data.id)!?html}" data-semantic="${(method.semantic)!?html}" data-type="${(method.type)!?html}">${(method.name)!?html}</a></li>
+									</#list> </#if>
+								</ul>
+							</div>
+                        	<div class="ibox ibox-table">
+								<div id="myTabContent" class="tab-content">
+								<#if data.testingMethods??> <#list data.testingMethods as method>
+									<div <#if method.semantic == semantic> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="${(method.semantic)!?html}">
+										<iframe <#if method_index ==0>src="${base}/bpm/report/getProcess.do?id=${(data.id)!?html}&&semantic=${(method.semantic)!?html}"<#else>src=""</#if>
+											style="background: white; width: 100%; height: 700px;"
+											frameborder="no" border="0" name="${(method.semantic)!?html}" id="iframe_${(method.semantic)!?html}"></iframe>
+									</div>
+								</#list> </#if>
+								</div>
+							</div>
+                        </div>
+	                </div>
+	            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+            	<div class="ibox">
+            		<div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-5">
+                        	<a href="${base}/bpm/report/report_goBack.do?status=${(data.reportStatus)!?html}" class="btn btn-primary"> 返回</a>
+                        </div>
+                    </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="instruction_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content" style="height: 350px">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">报告编辑</h4>
+                    </div>
+                    <div class="modal-body" style="height: 240px;">
+       					<div class="col-lg-12">
+	                        <form action="#" method="post" class="form-horizontal m-t" id="instruction_form">
+	                        	<div class="form-group">
+				                    <label class="col-sm-2 control-label">结果说明：</label>
+				                    <div class="col-sm-9">
+				                        <textarea class="form-control" id="instruction" rows="6"></textarea>
+				                    </div>
+				                </div>
+	                         </form>
+                          </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="instruction_but">提交</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">上传报告模板</h4>
+                </div>
+                <form id="uploadForm" action="" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" class="file" name="uploadData" id="uploadData" accept=".docx,.doc,.pdf" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="butt">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form>
+  
+     <form action="${base}/reportExportPreview/reportExportPreview.do" id="previewSubmitForm" method="post" target="_self">
+	  	<input hidden="hidden" type="text" name="taskId" value="${taskId!?html}"/>
+ 	 </form>
+    
+    <input id="combineUrl" hidden="hidden" value="${data.combineUrl!?html}" />
+    
+	<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+	<script src="${system_js}/bootstrap-suggest.js"></script>
+	<script src="${system_js}/jquery.form.js"></script>
+	<script src="${system_js}/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+	<script src="${plugins}/ladda-bootstrap-master/dist/spin.min.js"></script>
+	<script src="${plugins}/ladda-bootstrap-master/dist/ladda.min.js"></script>
+	<script src="${system_js}/jquery.lSelect.js"></script>
+	<script type="text/javascript" src="${system_js}/system.js"></script>
+	<script src="${plugins}/laydate/laydate.js"></script>
+	<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+	<script src="${system_js}/fileinput.min.js"></script>
+	<script src="${system_js}/report/report_solve.js?v=1.0.0"></script>
+<script type="text/javascript">
+var ArrOldValue=new Array();
+var clinicalJudgmentArr=new Array();
+var mutationSourceArr=new Array();
+
+<!--
+<#if data.combineUrl??>
+	$('#report_file_upload').val('true');
+</#if>
+
+var testingMethods = ${testingMethods};
+
+$('#myTab a').on('click',function(){
+	var $me = $(this);
+	var semantic = $me.data('semantic');
+	var id = $me.data('id');
+	var type = $me.data('type');
+	
+	JudgesubmitForm(semantic,type);
+	
+	var iframe_sample = $('#iframe_sample').val();
+	var iframe_result = $('#iframe_result').val();
+	
+	if(iframe_sample == 'true' && iframe_result == 'true'){
+		$('#iframe_' + semantic).attr('src', '${base}/bpm/report/getProcess.do?id='+id+'&&semantic='+semantic);
+		for(var i = 0; i < testingMethods.length; i++){
+			if(semantic != testingMethods[i].semantic){
+				$('#iframe_' + testingMethods[i].semantic).attr('src', '');
+			}
+		}
+		//$('#iframe_sample').val('false');
+		//$('#iframe_result').val('false');
+		
+	}else{
+		if(iframe_sample == 'false'){
+			parent.layer.alert('当前页面样本结果未保存，请保存后再切换页面',{title:"提示"});
+		}else if(iframe_result == 'false'){
+			parent.layer.alert('当前页面实验结果未保存，请保存后再切换页面',{title:"提示"});
+		}
+		return false;
+	}
+});
+// -->
+
+
+
+function JudgesubmitForm(semantic,typeSemantic) {
+    var cursemantic = $('#currentSemantic').val();
+    var curtype = $('#currentSemantic').attr("type-value");
+    if('1' == curtype)
+    {
+    	    var form = window.frames[cursemantic].document.getElementById('testing_sample_form');
+    	    var flag=true;
+    	    if(null != form){
+	    	    for (var i = 0; i < form.length; i++) {
+	    	        var element = form.elements[i];
+	    	        var type = element.type;
+	    	        if (type == "checkbox" || type == "radio") {
+	    	        if (element.checked != element.defaultChecked) {
+	    	            	flag = false;
+	    	                console.log("选择单选或多选框");
+	    	            }
+	    	        }
+	    	    }
+    	    }
+    	    $(window.frames[cursemantic].document).find("select[class='form-control clinicalJudgment']").each(function(i){
+    	    	
+    	    	if($(this).val() != clinicalJudgmentArr[i])
+    	    	{
+    	    		flag = false;
+    	    	}
+    	    });
+    	    
+			$(window.frames[cursemantic].document).find("select[class='form-control mutationSource']").each(function(i){
+    	    	
+    	    	if($(this).val() != mutationSourceArr[i])
+    	    	{
+    	    		flag = false;
+    	    	}
+    	    });
+    	    if(flag == true)
+    	    {
+    	    	$('#iframe_sample').val('true');
+    	    	$('#currentSemantic').val(semantic);
+    	    	$('#currentSemantic').attr("type-value",typeSemantic);
+    			$('#iframe_result').val('true');
+    	    }
+    }
+    else if('2' == curtype)
+    {
+    	//console.info(JSON.stringify(ArrOldValue));
+    	var form = window.frames[cursemantic].document.getElementById('verify_sample_form');
+	    var flag=true;
+	    if(null != form){
+		    for (var i = 0; i < form.length; i++) {
+		        var element = form.elements[i];
+		        var type = element.type;
+		        if (type == "checkbox" || type == "radio") 
+		        {
+			        if (element.checked != element.defaultChecked) 
+			        {
+			            	flag = false;
+			                console.log("选择单选或多选框");
+			        }
+		        }
+		        if (type == "select-one" || type == "select-multiple") {
+		           
+		        }
+		    }
+	    }
+	    $(window.frames[cursemantic].document).find("select[class='form-control combineTypeText']").each(function(i){
+	    	
+	    	if($(this).val() != ArrOldValue[i])
+	    	{
+	    		flag = false;
+	    	}
+	    });
+	    
+	    if(flag == true)
+	    {
+	    	$('#iframe_sample').val('true');
+	    	$('#iframe_result').val('true');
+	    	$('#currentSemantic').val(semantic);
+	    	$('#currentSemantic').attr("type-value",typeSemantic);
+	    }
+    }else{
+    	if('PICTURE' == cursemantic)
+    	{
+    		$('#iframe_sample').val('true');
+	    	$('#iframe_result').val('true');
+	    	$('#currentSemantic').val(semantic);
+	    	$('#currentSemantic').attr("type-value",typeSemantic);
+    	}
+    }
+    
+}
+
+
+function handsubmitForm() {
+    var cursemantic = $('#currentSemantic').val();
+    var curtype = $('#currentSemantic').attr("type-value");
+    if('1' == curtype)
+    {
+    	   var form = window.frames[cursemantic].document.getElementById('testing_sample_form');
+    	    var flag=true;
+    	    for (var i = 0; i < form.length; i++) {
+    	        var element = form.elements[i];
+    	        var type = element.type;
+    	        if (type == "checkbox" || type == "radio") {
+    	        if (element.checked != element.defaultChecked) {
+    	            	flag = false;
+    	                console.log("选择单选或多选框");
+    	            }
+    	        }
+    	    }
+    	    $(window.frames[cursemantic].document).find("select[class='form-control clinicalJudgment']").each(function(i){
+    	    	
+    	    	if($(this).val() != clinicalJudgmentArr[i])
+    	    	{
+    	    		flag = false;
+    	    	}
+    	    });
+    	    
+			$(window.frames[cursemantic].document).find("select[class='form-control mutationSource']").each(function(i){
+    	    	
+    	    	if($(this).val() != mutationSourceArr[i])
+    	    	{
+    	    		flag = false;
+    	    	}
+    	    });
+    	    if(flag == true)
+    	    {
+    	    	$('#iframe_sample').val('true');
+    			$('#iframe_result').val('true');
+    	    }
+    	    else
+    	    {
+    	    	$('#iframe_sample').val('false');
+    			$('#iframe_result').val('false');
+    	    }
+    }
+    if('2' == curtype)
+    {
+    	//console.info(JSON.stringify(ArrOldValue));
+    	var form = window.frames[cursemantic].document.getElementById('verify_sample_form');
+	    var flag=true;
+	    if(null != form){
+		    for (var i = 0; i < form.length; i++) {
+		        var element = form.elements[i];
+		        var type = element.type;
+		        if (type == "checkbox" || type == "radio") 
+		        {
+			        if (element.checked != element.defaultChecked) 
+			        {
+			            	flag = false;
+			                console.log("选择单选或多选框");
+			        }
+		        }
+		        if (type == "select-one" || type == "select-multiple") {
+		           
+		        }
+		    }
+	    }
+	    $(window.frames[cursemantic].document).find("select[class='form-control combineTypeText']").each(function(i){
+	    	
+	    	if($(this).val() != ArrOldValue[i])
+	    	{
+	    		flag = false;
+	    	}
+	    });
+	    
+	    if(flag == true)
+	    {
+	    	$('#iframe_sample').val('true');
+	    	$('#iframe_result').val('true');
+	    }
+	    else
+	    {
+	    	$('#iframe_sample').val('false');
+	    	$('#iframe_result').val('false');
+	    }
+    }
+}
+
+//发送
+function sendData()
+{
+	//var reportTemplateType = $("#reportTemplateType").val();
+	//window.location.href = "${base}/bpm/report/send.do?reportId=${data.id}&status=${data.reportStatus}&reportTemplateType="+reportTemplateType;
+	$('#report_handle_form').attr('action','${base}/bpm/report/send.do');
+	$('#report_handle_form').submit();
+}
+
+
+var previewParams={};
+previewParams.taskId="${taskId!?html}";
+previewParams.recordIds=new Array();
+previewParams.cnvAnalysisPicIds=new Array();
+previewParams.cnvAnalysisResultIds=new Array();
+previewParams.dtDetectionResultIds=new Array();
+previewParams.dtDetectionResultClinicals=new Array();
+previewParams.mlpaDetectionResultIds=new Array();
+previewParams.mlpaDetectionResultClinicals=new Array();
+
+
+function reportExportPreview(){
+	
+	var analysisResult=$("#analyResult option:selected").text();
+	if(analysisResult=='请选择'){
+		alert("分析结果不能为空");
+		return;
+	}
+	var dtClinicalJudgment=true;
+	$.each(previewParams.dtDetectionResultClinicals,function(index,element){
+		if(typeof(element.clinicalJudgment) == "undefined"||element.clinicalJudgment==null||element.clinicalJudgment==''){
+			dtClinicalJudgment=false;
+		}	
+	});
+	if(!dtClinicalJudgment){
+		alert("动态突变的临床相关性判断不能为空");
+	}
+	var mlpaClinicalJudgment=true;
+	var mlpaMutationSource=true;
+	$.each(previewParams.mlpaDetectionResultClinicals,function(index,element){
+		if(typeof(element.clinicalJudgment) == "undefined"||element.clinicalJudgment==null||element.clinicalJudgment==''){
+			mlpaClinicalJudgment=false;
+		}	
+		if(typeof(element.mutationSource) == "undefined"||element.mutationSource==null||element.mutationSource==''){
+			mlpaMutationSource=false;
+		}	
+	});
+	
+	if(!mlpaClinicalJudgment){
+		alert("mlpa的临床相关性判断不能为空");
+	}
+	
+	if(!mlpaMutationSource){
+		alert("mlpa的突变来源不能为空");
+	}
+	
+	if((!dtClinicalJudgment)||(!mlpaClinicalJudgment)||(!mlpaMutationSource)){
+		return;
+	}
+	
+	previewParams.analysisResult=analysisResult;
+	
+	$("#previewSubmitForm").append("<input hidden='hidden' type='text' name='analysisResult' value='"+analysisResult+"'/>");
+	var recordIds_index=0;
+	$.each(previewParams.recordIds,function(index,element){
+		$("#previewSubmitForm").append("<input hidden='hidden' type='text' name='recordIds["+recordIds_index+"]' value='"+element+"'/>");
+		recordIds_index++;
+	});
+	
+	var cnvAnalysisResultIds_index=0;
+	$.each(previewParams.cnvAnalysisResultIds,function(index,element){
+		$("#previewSubmitForm").append("<input  hidden='hidden' type='text' name='cnvAnalysisResultIds["+cnvAnalysisResultIds_index+"]' value='"+element+"'/>");
+		cnvAnalysisResultIds_index++;
+	});
+	
+	var cnvAnalysisPicIds_index=0;
+	$.each(previewParams.cnvAnalysisPicIds,function(index,element){
+		$("#previewSubmitForm").append("<input  hidden='hidden' type='text' name='cnvAnalysisPicIds["+cnvAnalysisPicIds_index+"]' value='"+element+"'/>");
+		cnvAnalysisPicIds_index++;
+	});
+	
+	var dtDetectionResultIds_index=0;
+	$.each(previewParams.dtDetectionResultIds,function(index,element){
+		$("#previewSubmitForm").append("<input  hidden='hidden' type='text' name='dtDetectionResultIds["+dtDetectionResultIds_index+"]' value='"+element+"'/>");
+		dtDetectionResultIds_index++;
+	});
+	
+	var mlpaDetectionResultIds_index=0;
+	$.each(previewParams.mlpaDetectionResultIds,function(index,element){
+		$("#previewSubmitForm").append("<input  hidden='hidden' type='text' name='mlpaDetectionResultIds["+mlpaDetectionResultIds_index+"]' value='"+element+"'/>");
+		mlpaDetectionResultIds_index++;
+	});
+	var loadindex=parent.layer.load();
+	$("#previewSubmitForm").submit();
+}
+
+</script>
+</body>
+</html>

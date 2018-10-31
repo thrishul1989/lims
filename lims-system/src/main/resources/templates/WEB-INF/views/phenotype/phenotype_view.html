@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>表型</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script
+	src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+	<script type="text/javascript" src="${system_js}/system.js"></script>
+	
+
+</head>
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<ol class="breadcrumb">
+							<li>
+                                <a href="${base}/company/list.do">表型管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>表型详情</strong>
+                            </li>
+							</ol>
+						</div>
+						<div class="ibox-title">
+						<h5>表型详情</h5>
+						<div style="float:right;margin-top:-7px">
+							<button class="btn btn-sm btn-success goback " type="button">返回</button> 
+						</div>
+						</div>
+					  <div class="ibox-content">
+							
+						 <table class="table table-striped table-bordered table-hover table-details">
+	                               <tr >
+	                                    <th class="col-sm-1">CHPO表型ID</th>
+	                                    <td class="col-sm-2">${phenotype.code!?html}</td>
+	                              
+	                                    <th class="col-sm-1">中文名称</th>
+	                                   	<td class="col-sm-2">${(phenotype.name)!?html}</td> 
+	                               
+	                               		<th class="col-sm-1">英文名称</th>
+	                                   	<td class="col-sm-2">${(phenotype.enName)!?html}</td>
+	                                    
+	                                </tr>
+	                                <tr >
+	                                	<th class="col-sm-1">关联疾病</th>
+	                                   	<td class="col-sm-2">
+	                                   <#if phenotype.list?has_content> 
+                                     <#list phenotype.list as alias>
+                                    	 <#if alias_index == 0>
+                                    	 ${alias.name!?html}
+                                    	 <#else>
+                                    	 , ${alias.name!?html}
+                                    	 </#if>
+                                     </#list>
+                                	</#if>
+	                                   	</td>
+	                                </tr>
+	                               
+	                                <tr>
+	                                 	<th class="col-sm-1">说明【中文】</th>
+	                                    <td class="col-sm-8" colspan="5">${phenotype.description!?html}</td>
+	                                    
+	                                </tr> 
+	                                <tr>
+	                                	<th class="col-sm-1">说明【英文】</th>
+	                                    <td class="col-sm-8" colspan="5">${phenotype.descriptionEn!?html}</td>
+	                                </tr>
+	                                
+	                        </table>
+						</div>
+ 					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

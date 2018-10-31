@@ -1,0 +1,270 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>申请信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover ">
+					<tr>
+						<th class="col-sm-2">申请部门：</th>
+						<td class="col-sm-2">${(record.deptName)!?html}</td>
+						<th class="col-sm-2">申请人：</th>
+						<td class="col-sm-2">${(record.creatorId)!?html}</td>
+					</tr>
+					<tr>
+						<th>申请日期：</th>
+						<td><#if record.applyTime??>${(record.applyTime)!?string('yyyy-MM-dd ')}</#if></td>
+						<th></th>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>发票信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover ">
+					<tr>
+						<th class="col-sm-2">开票客户：</th>
+						<td class="col-sm-2">${(record.customerId)!?html}</td>
+						<th class="col-sm-2">开票金额：</th>
+						<td class="col-sm-2">${((record.invoiceAmount/100)!0)?string('0.##')}</td>
+					</tr>
+					<tr>
+						<th>开票订单：</th>
+						<td >${(record.orderIds)!?html}</td>
+						<th>开票内容：</th>
+						<td >${(record.invoiceContent)!?html}</td>
+					</tr>
+					
+					<tr>
+						<th>发票抬头：</th>
+						<td >${(record.invoiceTitle)!?html}</td>
+						<th>发票类型：</th>
+						<td>
+							<#if record.invoiceType??>
+							<#if record.invoiceType == "3">
+							电子普通发票
+							<#elseif record.invoiceType == "1">
+							纸质普通发票
+							<#elseif record.invoiceType == "2">
+							纸质专用发票
+							</#if>
+							</#if>
+						</td>
+					</tr>
+						<#if record.headerType??>
+						<#if record.invoiceType??>
+						<#if record.invoiceType != "2">
+					    <tr>
+							<th>发票抬头类型：</th>
+							<td>
+								<@dict_entry_text category="HEADER_TYPE" value=record.headerType />
+							</td>
+
+							<#if record.headerType == 1>
+							<th>企业税号：</th>
+							<td>${(record.dutyParagraph)!?html}</td>
+							</#if>
+				     </tr>
+					</#if>
+					</#if>
+				    </#if>
+
+			        <#if record.invoiceType == "2">
+					<tr>
+						<th>单位名称：</th>
+						<td>${(record.companyName)!?html}</td>
+						<th>税号：</th>
+						<td>${(record.taxNo)!?html}</td>
+					</tr>
+					<tr>
+						<th>开户银行：</th>
+						<td>${(record.openingBank)!?html}</td>
+						<th>账号：</th>
+						<td>${(record.accountNumber)!?html}</td>
+					</tr>
+					<tr>
+						<th>联系人：</th>
+						<td>${(record.contactName)!?html}</td>
+						<th>电话：</th>
+						<td>${(record.contactPhone)!?html}</td>
+					</tr>
+					<tr>
+						<th>单位地址：</th>
+						<td  colspan="3">${(record.companyAddressDetail)!?html}</td>
+					</tr>
+					</#if>
+					<#if record.invoiceType??>
+					<#if record.invoiceType!="3">
+					<tr>
+						<th>收件人：</th>
+						<td>${(record.recipientName)!?html}</td>
+						<th>收件电话：</th>
+						<td>${(record.recipientPhone)!?html}</td>
+					</tr>
+					<tr>
+						<th>收件地址：</th>
+						<td colspan="3">${(record.recipientAddressDetail)!?html}</td>
+					</tr>
+					</#if>
+					</#if>
+					<tr>
+						<th>备注：</th>
+						<td colspan="3">${(record.remark)!?html}</td>
+					</tr>
+					<#if record.invoiceType??>
+					<#if record.invoiceType=="3">
+					<tr>
+						<th>邮箱：</th>
+						<td colspan="3">${(record.mailbox)!?html}</td>
+					</tr>
+					</#if>
+					</#if>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>费用信息</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover" id="cost">
+					<thead>
+						<tr>
+							<th>订单编号</th>
+							<th>产品总价</th>
+							<th>附属样本</th>
+							<th>抵用券</th>
+							<th>应付款</th>
+							<th>减免申请</th>
+							<th>审批状态</th>
+							<th>申请减免</th>
+							<th>审批减免</th>
+							<th>已退款</th>
+							<th>应收款</th>
+							<th>实付款</th>
+							<#if record.solveStatus == 1>
+							<th>需补款</th>
+							<th>操作</th>
+							</#if>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<#if record.orderCostList?has_content> <#list record.orderCostList as order>
+						<tr>
+							<td>${(order.code)!?html}
+								<input type="hidden" class="orderId" value="${order.id!?html}"/>
+							</td>
+							<td>${((order.amount/100)!0)?string('0.##')}</td>
+							<td>${((order.subsidiarySampleAmount/100)!0)?string('0.##')}</td>
+							<td>${((order.discountAmount/100)!0)?string('0.##')}</td>
+							<td>${((order.payable)!0)?string('0.##')}</td>
+							<td><#if order.orderReduce?? && order.orderReduce?has_content>是<#else>否</#if></td>
+							<td><@dict_entry_text category='COUPON_APPLY_STATE' value=order.reduceStatus />
+								<input class="reduceStatus" type="hidden" value="${(record.reduceStatus)!?html}"/>
+							</td>
+							<td>${((order.applyAmount)!0)?string('0.##')}</td>
+							<td>${((order.checkAmount)!0)?string('0.##')}</td>
+							<td>${((order.refundAmount)!0)?string('0.##')}</td>
+							<td class="receivable">${((order.receivable)!0)?string('0.##')}</td>
+							<td class="actualPayment">${((order.actualPayment)!0)?string('0.##')}</td>
+							<#if record.solveStatus == 1>
+							<td class="fillingAmount">
+								<#if order.fillingAmount lt 0>
+								  0
+								<#else>
+								${((order.fillingAmount)!0)?string('0.##')}
+								</#if>
+							</td>
+							<td class="editActualMoney">
+								<a href="javascript:$('#updateReceiveModal').modal('show');" class="btn btn-sm btn-success">
+								<i class="fa fa-edit"></i>处理</a>
+							</td>
+							</#if>
+							
+						</tr>
+						</#list> </#if>
+						<tr>
+							<th>合计</th>
+							<td colspan="9"></td>
+							<td class="summationReceivable"></td>
+							<td class="summationActualPayment"></td>
+							<#if record.solveStatus == 1>
+							<td class="summationFillingAmount"></td>
+							<td></td>
+							</#if>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-striped table-bordered table-hover" id="statistics">
+                    <thead>
+                    <tr>
+                        <th>订单编号</th>
+                        <th>北京公司应收款</th>
+                        <th>北京公司实收款</th>
+                        <th>北京检验所应收款</th>
+                        <th>北京检验所实收款</th>
+                        <th>重庆公司应收款</th>
+                        <th>重庆公司实收款</th>
+                        <th>重庆检验所应收款</th>
+                        <th>重庆检验所实收款</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <#if record.orderCostList?has_content> <#list record.orderCostList as order>
+                    <tr>
+                        <td>${(order.code)!?html}</td>
+                        <td class="companyReceivable">${(((order.receivable) * (order.companyRatio))!0)?string('0.##')}</td>
+                        <td class="companyActualPayment">${(((order.actualPayment) * (order.companyRatio))!0)?string('0.##')}</td>
+                        <td class="inspectionReceivable">${(((order.receivable) * (order.inspectionRatio))!0)?string('0.##')}</td>
+                        <td class="inspectionActualPayment">${(((order.actualPayment) * (order.inspectionRatio))!0)?string('0.##')}</td>
+                        <td class="cqCompanyReceivable">${(((order.receivable) * (order.cqCompanyRatio))!0)?string('0.##')}</td>
+                        <td class="cqCompanyActualPayment">${(((order.actualPayment) * (order.cqCompanyRatio))!0)?string('0.##')}</td>
+                        <td class="cqInspectionReceivable">${(((order.receivable) * (1 - order.companyRatio - order.inspectionRatio - order.cqCompanyRatio))!0)?string('0.##')}</td>
+                        <td class="cqInspectionActualPayment">${(((order.actualPayment) * (1 -order.companyRatio - order.inspectionRatio - order.cqCompanyRatio))!0)?string('0.##')}</td>
+                    </tr>
+                    </#list> </#if>
+                <tr>
+                    <th>合计</th>
+                    <td class="summationCompanyReceivable"></td>
+                    <td class="summationCompanyActualPayment"></td>
+                    <td class="summationInspectionReceivable"></td>
+                    <td class="summationInspectionActualPayment"></td>
+                    <td class="summationCqCompanyReceivable"></td>
+                    <td class="summationCqCompanyActualPayment"></td>
+                    <td class="summationCqInspectionReceivable"></td>
+                    <td class="summationCqInspectionActualPayment"></td>
+                </tr>
+                </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

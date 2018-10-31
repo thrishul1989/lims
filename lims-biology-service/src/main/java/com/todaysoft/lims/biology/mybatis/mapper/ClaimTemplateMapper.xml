@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.ClaimTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.entity.ClaimTemplate" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SYMBOL" property="symbol" jdbcType="VARCHAR" />
+    <result column="EXPLANATION" property="explanation" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="BIT" />
+    <result column="PRI_FLAG" property="priFlag" jdbcType="BIT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_NAME" property="createName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME,SYMBOL, EXPLANATION, TEMPLATE_ID, DEL_FLAG,PRI_FLAG, CREATE_TIME, CREATE_ID, CREATE_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_CLAIM_TEMPLATE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_CLAIM_TEMPLATE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.entity.ClaimTemplate" >
+    insert into LIMS_CLAIM_TEMPLATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="symbol != null" >
+        SYMBOL,
+      </if>
+      <if test="explanation != null" >
+        EXPLANATION,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="priFlag != null" >
+        PRI_FLAG,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createName != null" >
+        CREATE_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="symbol != null" >
+        #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="explanation != null" >
+        #{explanation,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="priFlag != null" >
+        #{priFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.todaysoft.lims.biology.model.entity.ClaimTemplate" >
+    update LIMS_CLAIM_TEMPLATE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="symbol != null" >
+        SYMBOL = #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="explanation != null" >
+        EXPLANATION = #{explanation,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="priFlag != null" >
+        PRI_FLAG = #{priFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        CREATE_NAME = #{createName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_CLAIM_TEMPLATE
+    where DEL_FLAG = 0 AND NAME = #{name,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="count" resultType="int" parameterType="com.todaysoft.lims.biology.model.request.ClaimTemplateRequest">
+        SELECT COUNT(t.ID) FROM LIMS_CLAIM_TEMPLATE t 
+        <include refid="SearchFilters"></include>
+    </select>
+    
+  <select id="search" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.biology.model.request.ClaimTemplateRequest">
+        SELECT t.* FROM LIMS_CLAIM_TEMPLATE t 
+        <include refid="SearchFilters"></include>
+        ORDER BY t.CREATE_TIME DESC
+        <include refid="SearchLimit"></include>
+    </select>
+    
+     <sql id="SearchFilters">
+        WHERE t.DEL_FLAG = 0
+		<if test="_parameter.name != null and _parameter.name != ''">
+            <bind name="namePattern" value="'%'+ _parameter.name + '%'" />
+             AND t.NAME LIKE #{namePattern}
+        </if>
+    </sql>
+    
+  <sql id="SearchLimit">
+        <if test="_parameter.offset != null and _parameter.pageSize != null">
+            LIMIT #{_parameter.offset}, #{_parameter.pageSize}
+        </if>
+    </sql>
+    
+    <update id="updatePriFlagFalse" >
+    	update LIMS_CLAIM_TEMPLATE set PRI_FLAG = 0 where PRI_FLAG=1
+    </update>
+    
+    <select id="selectForPriFlag" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_CLAIM_TEMPLATE
+    where DEL_FLAG = 0 AND PRI_FLAG = 1
+  </select>
+<!--分析要求列表-->
+  <select id="claimTemplateList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LIMS_CLAIM_TEMPLATE
+    where DEL_FLAG = 0
+  </select>
+</mapper>

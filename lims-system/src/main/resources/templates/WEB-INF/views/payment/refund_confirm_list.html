@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>退款申请列表</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="javascript">
+	$(document).ready(function () {
+	    
+		
+    })
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated ">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">缴费业务</a></li>
+							<li class="active"><strong>退款列表</strong></li>
+							<div style="float: right;">
+								<a href="javascript:history.go(-1)" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right">
+									<img src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>申请列表</h5>
+					</div>
+					<div class="ibox-content">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>申请人</th>
+                                    <th>申请时间</th>
+                                    <th>审批退款</th>
+                                    <th>审批时间</th>
+                                    <th>状态</th>
+                                    <th class="flexible-btns">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                              <#if order.orderRefund?has_content> 
+                             
+                                   <#list order.orderRefund as detail>
+                                	<tr>
+	                                    <td>${detail_index + 1}</td>
+	                                    <td>${detail.creatorName!?html}</td>
+	                                    <td>${(detail.applyTime)!?string('yyyy-MM-dd HH:mm:ss')} </td>
+	                                    <td><@amount_toyuan amount=detail.replyAmount /></td>
+	                                    <td>${(detail.updateTime)!?string('yyyy-MM-dd HH:mm:ss')} </td>
+										<td>
+										    <#if detail.handler =="true" > 已处理 <#else> 未处理 </#if>
+										
+										</td>
+										<input name="detail[${detail_index}].id" type="hidden" value="${detail.id!}" />
+										<td>
+											
+											<#if detail.handler =="true">
+												<a  href="${base}/payment/confirmRefundDetail.do?id=${order.id}&refundApplyId=${detail.id}" 
+													class="btn btn-sm btn-success"> <i class="fa fa-search-plus"></i>查看
+												</a>
+											<#else>
+
+												<a  href="${base}/payment/confirmRefundForm.do?id=${order.id}&refundApplyId=${detail.id}" 
+													class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>退款
+												</a>
+											</#if>
+											
+											
+											<a	href="${base}/orderApply/refundShow.do?id=${detail.id}"
+												class="btn btn-sm btn-success"> <i class="fa fa-search-plus"></i>申请详情
+											</a>
+
+											<a href="#" class="btn btn-sm btn-primary" onclick="myPreview('${detail.productName!?html}','${detail.applyReason!?html}','<@amount_toyuan amount=detail.replyAmount />','${detail.bankNo!?html}','${detail.bankOwnerName!?html}')">
+												<i class="fa fa-print"></i>打印退款单
+											</a>
+
+										</td>
+                                    </tr>
+                                    </#list>
+                               </#if> 
+                                
+                            </tbody>
+                        </table>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+
+</body>
+<#include "./refund_bill_print.html" />
+</html>

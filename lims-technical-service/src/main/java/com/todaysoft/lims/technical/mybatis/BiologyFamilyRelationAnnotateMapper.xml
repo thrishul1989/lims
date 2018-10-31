@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.BiologyFamilyRelationAnnotateMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyRelationAnnotate" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="GANALYSIS_FAMILY_ID" property="ganalysisFamilyId" jdbcType="VARCHAR" />
+    <result column="CNV" property="cnv" jdbcType="VARCHAR" />
+    <result column="MAKE_CPTY_NUMBER_VARIATION" property="makeCptyNumberVariation" jdbcType="VARCHAR" />
+    <result column="SNV_JSON" property="snvJson" jdbcType="VARCHAR" />
+    <result column="SV" property="sv" jdbcType="VARCHAR" />
+    <result column="SV_JSON" property="svJson" jdbcType="VARCHAR" />
+    <result column="REGIONCOUNT_DMDEXON" property="regioncountDmdexon" jdbcType="VARCHAR" />
+    <result column="STATISTICS_DMDEXON" property="statisticsDmdexon" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyRelationAnnotate" >
+    insert into BIOLOGY_FAMILY_RELATION_ANNOTATE (ID, GANALYSIS_FAMILY_ID, CNV, 
+      MAKE_CPTY_NUMBER_VARIATION, SNV_JSON, SV, 
+      SV_JSON, REGIONCOUNT_DMDEXON, STATISTICS_DMDEXON, 
+      STATUS)
+    values (#{id,jdbcType=VARCHAR}, #{ganalysisFamilyId,jdbcType=VARCHAR}, #{cnv,jdbcType=VARCHAR}, 
+      #{makeCptyNumberVariation,jdbcType=VARCHAR}, #{snvJson,jdbcType=VARCHAR}, #{sv,jdbcType=VARCHAR}, 
+      #{svJson,jdbcType=VARCHAR}, #{regioncountDmdexon,jdbcType=VARCHAR}, #{statisticsDmdexon,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyRelationAnnotate" >
+    insert into BIOLOGY_FAMILY_RELATION_ANNOTATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="ganalysisFamilyId != null" >
+        GANALYSIS_FAMILY_ID,
+      </if>
+      <if test="cnv != null" >
+        CNV,
+      </if>
+      <if test="makeCptyNumberVariation != null" >
+        MAKE_CPTY_NUMBER_VARIATION,
+      </if>
+      <if test="snvJson != null" >
+        SNV_JSON,
+      </if>
+      <if test="sv != null" >
+        SV,
+      </if>
+      <if test="svJson != null" >
+        SV_JSON,
+      </if>
+      <if test="regioncountDmdexon != null" >
+        REGIONCOUNT_DMDEXON,
+      </if>
+      <if test="statisticsDmdexon != null" >
+        STATISTICS_DMDEXON,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="ganalysisFamilyId != null" >
+        #{ganalysisFamilyId,jdbcType=VARCHAR},
+      </if>
+      <if test="cnv != null" >
+        #{cnv,jdbcType=VARCHAR},
+      </if>
+      <if test="makeCptyNumberVariation != null" >
+        #{makeCptyNumberVariation,jdbcType=VARCHAR},
+      </if>
+      <if test="snvJson != null" >
+        #{snvJson,jdbcType=VARCHAR},
+      </if>
+      <if test="sv != null" >
+        #{sv,jdbcType=VARCHAR},
+      </if>
+      <if test="svJson != null" >
+        #{svJson,jdbcType=VARCHAR},
+      </if>
+      <if test="regioncountDmdexon != null" >
+        #{regioncountDmdexon,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsDmdexon != null" >
+        #{statisticsDmdexon,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <select id="selectByFamilyId" parameterType="string" resultMap="BaseResultMap">
+		select * from BIOLOGY_FAMILY_RELATION_ANNOTATE where
+		GANALYSIS_FAMILY_ID=#{0}
+	</select>
+	
+	<update id="updateBySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BiologyFamilyRelationAnnotate">
+		update BIOLOGY_FAMILY_RELATION_ANNOTATE
+		<set>
+			<if test="ganalysisFamilyId != null">
+				GANALYSIS_FAMILY_ID=#{ganalysisFamilyId,jdbcType=VARCHAR},
+			</if>
+			<if test="cnv != null">
+				CNV=#{cnv,jdbcType=VARCHAR},
+			</if>
+			<if test="makeCptyNumberVariation != null">
+				MAKE_CPTY_NUMBER_VARIATION=#{makeCptyNumberVariation,jdbcType=VARCHAR},
+			</if>
+			<if test="snvJson != null">
+				SNV_JSON=#{snvJson,jdbcType=VARCHAR},
+			</if>
+			<if test="sv != null">
+				SV=#{sv,jdbcType=VARCHAR},
+			</if>
+			<if test="svJson != null">
+				SV_JSON=#{svJson,jdbcType=VARCHAR},
+			</if>
+			<if test="regioncountDmdexon != null">
+				REGIONCOUNT_DMDEXON=#{regioncountDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="statisticsDmdexon != null">
+				STATISTICS_DMDEXON=#{statisticsDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS=#{status,jdbcType=BIT},
+			</if>
+
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

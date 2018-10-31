@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户列表-用户管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/smm/user/list.do">用户管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>用户列表</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>用户列表</h5>
+                        <@smm_security_resource resource = "/smm/user/create.do">
+                        <a href="${base}/smm/user/create.do" class="btn btn-sm btn-success">
+                            <i class="fa fa-plus"></i> 新增
+                        </a>
+                        </@smm_security_resource>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="search_from" action="${base}/smm/user/list.do" method="post" class="search-form">
+                            <div class="row m-b-xs">
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control userSearch" name="username" id="username" value="${(searcher.username)!?html}"
+                                         placeholder="系统账号" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control userSearch" name="name" id="name" value="${(searcher.name)!?html}"
+                                         placeholder="用户姓名"  >
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control userSearch" name="phone" id="phone" value="${(searcher.phone)!?html}" 
+                                        placeholder="用户手机" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                    	<select class='form-control' name="status"  data-value="${(searcher.status)!?html}">
+                                    		<option value=''>用户状态</option>
+                                    		<option value='ENABLED'>启用</option>
+                                    		<option value='DISABLED'>禁用</option>
+                                    		<!-- <option value='LOCKED'>锁定</option> -->
+                                    	</select>
+                                      <!--   <input type="text" class="form-control userSearch" name="state" id="state" value="${(searcher.state)!?html}" 
+                                        placeholder="用户状态" > -->
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control userSearch" id="department" 
+                                        placeholder="用户机构" >
+                                        <input type="hidden" class="form-control userSearch" name="archive.deptId" id="hideDept" value="${(searcher.archive.deptId)!?html}"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control userSearch" id="role" 
+                                        placeholder="用户角色" >
+                                        <input type="hidden" class="form-control userSearch" name="roleId" id="hideRole" value="${(searcher.roleId)!?html}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-sm btn-success" onclick='subForm()'>
+                                            <i class="fa fa-search"></i> 查询
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="clearHtml('search_from')" >
+											<i class="fa fa-remove"></i> 清空
+										</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>系统账号</th>
+                                    <th>姓名</th>
+                                    <th>工号</th>
+                                    <th>性别</th>
+                                    <th>手机</th>
+                                    <th>座机</th>
+                                    <th>邮箱</th>
+                                    <th>状态</th>
+                                    <th class="flexible-btns">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if pagination.records?has_content> <#list pagination.records as record>
+                                <tr>
+                                    <td>${record_index + 1}</td>
+                                    <td>${record.username!?html}</td>
+                                    <td>${record.name!?html}</td>
+                                    <td>${record.employeeNo!?html}</td>
+                                    <td><#if (record.sex)??> <#if (record.sex)=="MALE">男 <#elseif
+                                        (record.sex)=="FEMALE">女 <#else> </#if> </#if></td>
+                                    <td>${record.phone!?html}</td>
+                                    <td>${record.officePhone!?html}</td>
+                                    <td>${record.email!?html}</td>
+                                    <td><#if record.state == "ENABLED">启用 <#elseif record.state == "DISABLED">禁用 <#else>锁定 </#if></td>
+                                    <td class="flexible-btns">
+                                        <@smm_security_resource resource = "/smm/user/modify.do"><a href="${base}/smm/user/modify.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-edit"></i> 修改
+                                        </a></@smm_security_resource>
+                                        <#if "ENABLED"== record.state>
+                                        <a class="btn btn-sm btn-success" onclick="canStop(this)" attId="${record.id}">
+                                            <i class="fa fa-ban"></i>
+                                            <span class="hidden-phone">禁用</span>
+                                        </a>
+                                        <#else>
+                                        <a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定启用该用户账号？"
+                                            href="${base}/smm/user/enable.do?id=${record.id}">
+                                            <i class="fa fa-circle-o"></i>
+                                            <span class="hidden-phone">启用</span>
+                                        </a>
+                                        </#if>
+                                       <@smm_security_resource resource = "/smm/user/password/reset.do">  <a href="${base}/smm/user/password/reset.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-key"></i> 重置密码
+                                        </a></@smm_security_resource>
+                                       <@smm_security_resource resource = "/smm/user/delete.do"> <a class="btn btn-sm btn-success" onclick="canDelete(this)"
+                                        		attId="${record.id}" >
+                                            <i class="fa fa-trash"></i> 删除
+                                        </a></@smm_security_resource>
+                                        <a href="${base}/smm/user/display.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search-plus"></i> 查看
+                                        </a>
+                                    </td>
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="10">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                        <#include "../../inc/pagination.html" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/system.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${system_js}/magicsuggest-min.js"></script>
+    <script src="${plugins}/layer/layer.min.js"></script>
+</body>
+<script type="text/javascript">
+
+$(function(){
+	$(document).keyup(function(event){
+		  if(event.keyCode ==13){
+		    $('#search_from').submit();
+		  }
+		});
+	
+var role =	$('#role').magicSuggest({
+    width: 190,
+    highlight: true,
+    data:'${base}/smm/role/roleSelect.do?',
+    method:'get',
+    queryParam:"name",
+  maxSelection: 1,
+displayField:'name',
+    allowFreeEntries:false,
+    renderer: function(v){
+    return '<div>' +
+        '<div >' +
+        
+            '<div  class="probe">' + v.name + '</div>' +
+            '</div></div>';
+    }
+});
+
+var dept =	$('#department').magicSuggest({
+    width: 190,
+    highlight: true,
+    data:'${base}/department/departmentSelect.do?',
+    method:'get',
+    queryParam:"text",
+  maxSelection: 1,
+displayField:'text',
+    allowFreeEntries:false,
+    renderer: function(v){
+    return '<div>' +
+        '<div >' +
+        
+            '<div  class="probe">' + v.text + '</div>' +
+            '</div></div>';
+    }
+});
+
+
+ <#if departmenet??>
+	$('#department').magicSuggest().setSelection(${departmenet}); 
+</#if>
+<#if roleDetailsModel??>
+	$('#role').magicSuggest().setSelection(${roleDetailsModel}); 
+</#if> 
+
+});
+
+function subForm(){
+	if($('#hideDept').val() !=null){
+		$('#hideDept').val('')
+	}
+	if($('#hideRole').val() !=null){
+		$('#hideRole').val('')
+	}
+	var dept_ = $('#department').magicSuggest().getSelection()[0];
+	var role_ = $('#role').magicSuggest().getSelection()[0];
+	if(null !=dept_){
+		$('#hideDept').val(dept_.id);
+	}else if(null != role_){
+		$('#hideRole').val(role_.id);
+	}
+	$('#department').magicSuggest().setSelection('');
+	$('#search_from').submit();	
+}
+
+function canDelete(obj){
+	 
+    layer.confirm('确定删除该用户么？', { btn: ['确定','取消'] ,area: ['320px', '175px']}, function(){
+    	layer.closeAll('dialog');
+    	var data = $(obj).attr('attId');
+	 	   $.ajax({
+	 		   type:"GET",
+	 		   url:'${base}/smm/user/delete.do?id='+data,
+	 			success:function(flag){
+	 				if(flag==2){
+	 					var username = $('#username').val();
+                    	var name = $('#name').val();
+                    	var phone = $('#phone').val();
+                    	var status = $('select[name="status"]').val();
+                    	var hideDept = $('#hideDept').val();//archive.deptId
+                    	var hideRole = $('#hideRole').val();//hideRole
+                    	var pageNo = $('.pagination').attr('data-page-no');
+	 					window.location.href='${base}/smm/user/list.do?username='+username+'&name='+name+'&phone='+phone
+	 							+'&status='+status+'&archive.deptId='+hideDept+'&roleId='+hideRole+'&pageNo='+pageNo;
+	 					 $(obj).parents('tr').remove();
+	 				}else if(flag==1){
+	 					parent.layer.alert('该用户已被用户组关联，请先去用户组删除该用户!',{title:"提示"});
+	 				}else {
+	 				   parent.layer.alert('该用户已被关联，不能删除!',{title:"提示"});
+	 				}
+	 			}
+	 	   });
+  	  	});
+}
+
+function canStop(obj){
+    
+    layer.confirm('确定禁用该用户么？', { btn: ['确定','取消'] ,area: ['320px', '175px']}, function(){
+        layer.closeAll('dialog');
+        var data = $(obj).attr('attId');
+           $.ajax({
+               type:"GET",
+               url:'${base}/smm/user/validata.do?id='+data,
+                success:function(flag){
+                    if(flag){
+                        layer.confirm('该用户关联了用户组，请禁用后及时进行相关处理，确定继续禁用该用户么？', { btn: ['确定','取消'] ,area: ['320px', '175px']}, function(){
+                         window.location.href="${base}/smm/user/stop.do?id="+data;
+                        });
+                    }else{
+                            $.ajax({
+                                type:"GET",
+                                url:"${base}/smm/user/stop.do?id="+data,
+                                success:function(flag){
+                                    $(obj).parents('tr').remove();
+                                }        
+                            })
+                    }
+                }
+           });
+        });
+}
+ function clearHtml(formId){
+	   $.each($("#"+formId).find('input,select').not(":hidden"),function(){
+		   $(this).val("");  
+	   });
+	   $('#department').magicSuggest().clear();
+	   $('#role').magicSuggest().clear();
+}
+</script>
+</html>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyDivisionMonitorMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyDivisionMonitor" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SHEET_ID" property="sheetId" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="FAIL_LOG" property="failLog" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SHEET_ID, TASK_ID, START_TIME, END_TIME, STATUS, FAIL_LOG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_DIVISION_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      b.*
+    from
+      BIOLOGY_DIVISION_MONITOR b
+    where
+      b.TASK_ID = #{id,jdbcType=VARCHAR} AND b.END_TIME IS NULL 
+      limit 1;
+  </select>
+
+  <select id="searchUncompleteTasks" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      b.*
+    from
+      BIOLOGY_DIVISION_MONITOR b
+    where
+      b.END_TIME IS NULL
+  </select>
+
+  <select id="getMonitorListByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+	  monitor.*
+    FROM
+	  BIOLOGY_DIVISION_TASK t
+    LEFT JOIN BIOLOGY_DIVISION_SHEET sheet ON t.ID = sheet.TASK_ID
+    LEFT JOIN BIOLOGY_DIVISION_MONITOR monitor on monitor.SHEET_ID=sheet.ID
+    WHERE
+      t.id = #{_parameter.taskId} AND monitor.status=6
+    ORDER BY monitor.START_TIME DESC
+  </select>
+
+  <select id="getBySheetId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+      t.*
+    FROM
+      BIOLOGY_DIVISION_MONITOR t
+    WHERE
+      t.SHEET_ID = #{sheetId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_DIVISION_MONITOR
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionMonitor" >
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into BIOLOGY_DIVISION_MONITOR (ID, SHEET_ID, TASK_ID, 
+      START_TIME, END_TIME, STATUS, 
+      FAIL_LOG)
+    values (#{id,jdbcType=VARCHAR}, #{sheetId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
+      #{failLog,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionMonitor" >
+    insert into BIOLOGY_DIVISION_MONITOR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sheetId != null" >
+        SHEET_ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="failLog != null" >
+        FAIL_LOG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetId != null" >
+        #{sheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="failLog != null" >
+        #{failLog,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionMonitor" >
+    update
+      BIOLOGY_DIVISION_MONITOR
+    <set >
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="failLog != null" >
+        FAIL_LOG = #{failLog,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where
+      ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionMonitor" >
+    update BIOLOGY_DIVISION_MONITOR
+    set SHEET_ID = #{sheetId,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=INTEGER},
+      FAIL_LOG = #{failLog,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

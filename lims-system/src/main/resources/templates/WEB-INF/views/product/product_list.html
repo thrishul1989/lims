@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>产品列表-产品管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/product/list.do">业务配置</a></li>
+							<li class="active"><a href="#">产品管理</a></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>产品列表</h5>
+						<@smm_security_resource resource = "/product/create.do"><a href="${base}/product/create.do" class="btn btn-sm btn-success">
+							<i class="fa fa-plus"></i> 新增
+						</a></@smm_security_resource>
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/product/list.do" method="post" id="search_from"
+							class="search-form">
+							<div class="row m-b-xs">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="code" class="form-control"
+											placeholder="产品编号" value="${searcher.code!?html}" />
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="name" class="form-control"
+											placeholder="产品名称" value="${searcher.name!?html}" />
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="productDutyName" class="form-control"
+											placeholder="产品负责人" value="${searcher.productDutyName!?html}" />
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select  name="enabled" class="form-control"
+											 data-value="${searcher.enabled!?html}" >
+											 <option value=''>请选择状态</option>
+											 <option value='0'>禁用</option>
+											 <option value='1'>启用</option>
+											 </select>
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select  name="testingType.id" class="form-control"
+											  data-value="${searcher.testingType.id!?html}" onchange="changeType(this)">
+											 <option value=''>请选择营销中心</option>
+											<#if testingTypeList?has_content>
+									<#list testingTypeList as testingType>
+									<option value="${testingType.id!?html}">${testingType.name!?html}</option>
+									
+								</#list></#if>
+											 </select>
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select class="form-control " id="testingSubtype" name="testingSubtype" data-value="${searcher.testingSubtype!?html}">
+										<option value="">请选择二级分类</option>
+										<#if subTestingTypeList?has_content><#list subTestingTypeList as subTestingType>
+											<option value="${subTestingType.id!?html}">${subTestingType.name!?html}</option>
+										</#list>
+										</#if>
+										</select>
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="principalName" class="form-control"
+											placeholder="技术负责人" value="${searcher.principalName!?html}" />
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select class="form-control " id="testInstitution" name="testInstitution"
+										 data-value="${searcher.testInstitution!?html}">
+										<option value="">===请选择机构===</option> 
+										<@dict_entries category="TEST_INSTITUTION">
+										                     <#if entries??>
+										                     <#list entries as entry>
+										                     	<option value="${entry.value}">${entry.text!?html}</option> 
+										                     </#list>
+										                     </#if>
+										                    </@dict_entries>
+										
+									</select>
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+									<div class="form-group">
+									 	<select class="form-control"  name="productProbe" data-value="${searcher.productProbe!?html}">
+										<option selected value="">--请选择探针--</option>
+											<#if probeList??> 
+												<#list probeList as entry>
+												<option  value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+											</#if>
+										</select>
+										
+									</div>
+								</div>
+								
+								
+								
+								
+								<div class="col-sm-3">
+									<div class="form-group">
+										<button type="submit" class="btn btn-sm btn-success">
+											<i class="fa fa-search"></i> 查询
+										</button>
+										<button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						<table class="table table-striped table-bordered table-hover " style="table-layout:fixed">
+							<thead>
+								<tr>
+									<th class="index">序号</th>
+									<th >产品编号</th>
+									<th>产品名称</th>
+									<th>产品定价(元)</th>
+									<th>营销中心</th>
+									<th>二级分类</th>
+									<th>检测机构</th>
+									<th>检测方法</th>
+									<th>产品周期</th>
+									<th>适用样本</th>
+								    <th class="col-md-1">技术负责人</th>
+								    <th class="col-md-1">产品负责人</th>
+									<th>更新时间</th>
+									<th  class="flexible-btns">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+							<#if pagination??>
+								<#if pagination.records?has_content>
+									<#list pagination.records as record>
+								<tr>
+									<td>${record_index + 1}</td>
+									<td>${record.code!?html}</td>
+									<td>${record.name!?html}</td>
+									<td><#if record.realPrice ??> ${record.realPrice}<#else> 0 </#if> </td>
+							<td>${record.testingType.name!?html}</td>
+							<td><#if record.testingSubtype??>${record.testingSubtype.name!?html}</#if></td>
+							<td>
+							<#list record.testInstitution?split(",") as testinstitution>
+									<@dict_entry_text category="TEST_INSTITUTION" value=testinstitution />&nbsp;
+								</#list>
+							</td>		
+									
+									
+									<td>
+									 <#if record.productTestingMethodList ??>
+		                                <#list record.productTestingMethodList as method>
+		                                <#if method_index == 0>
+		                                ${method.testingMethod.name!?html}
+		                                <#else>
+		                                ,${method.testingMethod.name!?html}
+		                                </#if>
+		                                	
+		                                </#list>
+	                                </#if>
+									</td>
+									
+									
+									<td>${record.testingDuration} (天)</td>
+										<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">	 <#if record.productSampleList ??>
+		                                <#list record.productSampleList as sample>
+		                                <#if sample_index == 0>
+		                                ${sample.sample.name!?html}
+		                                <#else>
+		                                ,${sample.sample.name!?html}
+		                                </#if>
+		                                	
+		                                </#list>
+	                                </#if></td>
+	                          
+	                                <td >
+									 <#if record.productPrincipalList ??>
+		                                <#list record.productPrincipalList as principal>
+		                                <#if principal_index == 0>
+		                                ${principal.principal.archive.name!?html}
+		                                <#else>
+		                                ,${principal.principal.archive.name!?html}
+		                                </#if>
+		                                	
+		                                </#list>
+	                                </#if>
+									</td>
+									<td><#if record.productDuty??>${record.productDuty.archive.name!?html}</#if></td>	
+									<td><#if record.updateTime??>${record.updateTime?datetime('yyyy-MM-dd hh:mm:ss')}<#else>${record.createTime?datetime('yyyy-MM-dd hh:mm:ss')}</#if></td>
+												
+									<td class="flexible-btns">
+									
+                                        
+                                        
+									<a href="${base}/product/show.do?id=${record.id}"
+										class="btn btn-sm btn-success"> 
+										<i class="fa fa-search-plus"></i>查看
+									    </a> 
+									<@smm_security_resource resource = "/product/modify.do"><a href="${base}/product/modify.do?id=${record.id}"
+										class="btn btn-sm btn-success"> 
+										<i class="fa fa-edit"></i>修改
+									    </a> </@smm_security_resource>
+									    
+									     <#if record.enabled !?html == '1'> <a style="background-color: #eb4f38;border-color: #eb4f38" href="${base}/product/enable.do?id=${record.id}&enabled=0" class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定禁用该产品?">
+                                            <i class="fa fa-ban"></i> 禁用
+                                        </a><#else ><a href="${base}/product/enable.do?id=${record.id}&enabled=1" class="btn btn-sm btn-success layer-confirm" 
+                                        data-confirm-message="确定启用该产品?" >
+                                            <i class="fa fa-circle-o"></i> 启用
+                                        </a> </#if>
+                                        
+                                        
+									   <@smm_security_resource resource = "/product/delete.do"> <a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该产品?"
+									    href="${base}/product/delete.do?id=${record.id}"> 
+										<i class="fa fa-trash" ></i>删除
+									    </a></@smm_security_resource>
+									</td>
+								</tr>
+								</#list> <#else>
+								<tr>
+									<td colspan="13">暂无相关记录</td>
+								</tr>
+								</#if>
+								</#if>
+							</tbody>
+						</table>
+						<#include "../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+
+
+$(function(){
+	
+	
+	
+	
+});
+
+
+function changeType(sel){
+	showSubTypeList($(sel).val());
+}
+
+function showSubTypeList(id)
+{
+	//查询该大类子类
+	if(null != id && "" != id)
+	{
+		$.ajax({
+	        type: "GET",
+	        url: "${base}/testingType/testingSubtypeList",
+	        data: {parentId:id},
+	        dataType: "json",
+	        success: function(data){
+	     
+	       if("" != data && null != data){
+	    	   $('#testingSubtype').empty();
+	    	   $('#testingSubtype').append('<option value="">请选择二级分类</option>')
+	    	   $.each(data,function(index,obj){
+	            	$('#testingSubtype').append('<option value="'+obj.id+'">'+obj.name+'</option>')
+	            })
+	       }
+	       else{
+	       }
+	       },
+	       error:function(data){
+	    	   $('#testingSubtype').empty();
+	        	$('#testingSubtype').append('<option value="">请选择二级分类</option>')
+	       }
+	    });
+	}
+
+}
+</script>
+</html>

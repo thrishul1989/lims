@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>客户报表</title>
+    <link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+          rel="stylesheet">
+    <link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+          rel="stylesheet">
+    <link href="${system_css}/animate.min.css" rel="stylesheet">
+    <link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li><a href="#">报表统计</a>
+                            <li><a href="#">系统报表</a>
+                            <li><a href="#">客户报表</a>
+                        </ol>
+                    </div>
+                    <div class="ibox ibox-table">
+                        <form action="/systemReportForm/customerDownload.do" method="post" class="form-horizontal m-t" id="search_from">
+                            <div class="form-group">
+                                <input type="hidden" name="ownerId" id="ownerId" />
+
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="customer"
+                                               name="customerName"
+                                               placeholder="客户">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                            </ul>
+                                        </div>
+                                        <!-- /btn-group -->
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" id="currentName" name="currentName"
+                                           class="form-control" placeholder="当前业务员">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="company" name="companyName" placeholder="请选择单位">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="activateStatus"
+                                            name="status">
+                                        <option value="">--请选择激活状态--</option>
+                                        <option value="0">待激活</option>
+                                        <option value="1">已激活</option>
+                                    </select>
+                                </div>
+
+                                <input type="hidden" id="colNames" name="colNames">
+                                <div class="col-sm-2">
+                                    <a href="#" class="btn btn-sm btn-primary"  onclick="exportOrder()" >
+                                        <i class="fa fa-print"></i> 导出
+                                    </a>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <fieldset>
+                            <legend>
+                                <div>客户信息&nbsp; &nbsp; <input type="checkbox" id="customerInfoSelect" name="customerInfoSelect">全选</div>
+                            </legend>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="姓名" checked="checked">姓名
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="性别">性别
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="状态">状态
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="所属单位">所属单位
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="科室">科室
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="邮箱">邮箱
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="手机号">手机号
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="办公楼/房间号">办公楼/房间号
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="座机">座机
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="出生年月">出生年月
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="职位/职称">职位/职称
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="合作方向">合作方向
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="是否参与分析">是否参与分析
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="单位地址">单位地址
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="就诊特点">就诊特点
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="擅长领域">擅长领域
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="简介">简介
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="附属账号数">附属账号数
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="附属账号信息">附属账号信息
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="初始业务员">初始业务员
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="customerInfo"  value="当前业务员">当前业务员
+                            </div>
+                        </fieldset>
+                        <form action="${base}/testSheet/downloadFile" method="post"
+                              name="hiddForm" id="hiddForm">
+                            <input type="hidden" name="formValue" id="formValue" value="">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        //客户信息全选
+        $("#customerInfoSelect").click(function() {
+            if ($('#customerInfoSelect').is(':checked')) {
+                $("input:checkbox[name='customerInfo']:checkbox").prop('checked', true);
+            } else {
+                $("input:checkbox[name='customerInfo']:checkbox").prop('checked', false);
+            }
+        });
+
+        $("#customer").bsSuggest('init', {
+            url : "${base}/customer/getSelectList.do?disableStatus="+0+"&realName=",
+            getDataMethod : "url",
+            idField : "id",
+            keyField : "realName",
+            indexKey: 0,
+            effectiveFields : [ "realName" ],
+            effectiveFieldsAlias : {
+                name : "客户名称"
+            }
+        }).on('onDataRequestSuccess', function (e, result) {
+        }).on('onSetSelectValue', function (e, keyword, data) {
+            $('#ownerId').val(data.id);
+        }).on('onUnsetSelectValue', function () {
+            $('#ownerId').val('');
+        });
+
+        $("#company").bsSuggest('init', {
+            url : "${base}/company/getCompanys?name=",
+            getDataMethod : "url",
+            idField : "id",
+            keyField : "name",
+            effectiveFields : [ "name"],
+            effectiveFieldsAlias : {
+                name : "单位名称",
+
+            }
+        });
+
+    })
+    function exportOrder() {
+        var colNameMap={};
+        var customerInfo = [];
+        $("input:checkbox[name='customerInfo']:checked").each(function () {
+            customerInfo.push($(this).val());
+        });
+        if (customerInfo.length==0)
+        {
+            alert("请至少选择一列!");
+            return false;
+        }
+        var flag = false;
+        if(customerInfo.length>0)
+        {
+            for(var i = 0;i<customerInfo.length;i++)
+            {
+                if("姓名" == customerInfo[i])
+                {
+                    flag =true;
+                }
+            }
+            colNameMap.customerInfo = customerInfo;
+        }
+        if(!flag)
+        {
+            alert("请选择客户姓名!");
+            return false;
+        }
+        $('#colNames').val(JSON.stringify(colNameMap));
+
+        var layerObject = parent.parent.layer;
+        var loadindex = layerObject.load();
+
+        $.ajax({
+            type : "POST",
+            url : "/systemReportForm/customerDownload.do",
+            data : $('#search_from').serialize(),
+            success : function(sessionId) {
+                //定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+                var timer=window.setInterval(function(){
+                    $.ajax({
+                        type : "GET",
+                        url : "/testing/searchExportResult.do?sessionId="+sessionId,
+                        success : function(result) {
+                            if('' != result)
+                            {
+                                window.clearInterval(timer);
+                                layerObject.close(loadindex);
+                                $("#formValue").val(result);
+                                $("#hiddForm").submit();
+                            }
+                        },
+                        error : function() {
+                            alert("failed");
+                            layerObject.close(loadindex);
+                        }
+                    });
+                },5000);
+            },
+            error : function() {
+                alert("failed");
+                layerObject.close(loadindex);
+            }
+        });
+    }
+</script>
+</html>

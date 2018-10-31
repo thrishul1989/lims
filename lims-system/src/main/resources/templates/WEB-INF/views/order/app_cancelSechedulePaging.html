@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>项目管理-确认检测取消</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript">
+function detail(recordId){
+	 $.ajax({
+         type : "GET",
+         url : "${base}/order/getProductCancelRecordById.do",
+         data : {
+             id : recordId
+         },
+         dataType : "json",
+         success : function(data)
+         {
+        	 if(data!=undefined){
+        		$("#updatorName").text(data.updatorName);
+             	$("#updateTime").text(data.updateTimes);
+             	$('#operateReviewModal').modal('show');
+        	 }
+        	
+         }
+
+     })
+	
+}
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">项目管理</a>
+							<li class="active"><strong>确认检测取消</strong></li>
+						</ol>
+					</div>
+					<div class="ibox ibox-table">
+						<div class="ibox-title">
+							<h5>检测取消任务</h5>
+						</div>
+
+						<form action="${base}/order/app/cancelSechedulePaging.do" method="post"	class="form-horizontal m-t" id="search_from">
+							
+							<div class="form-group" >
+							
+								<div class="col-sm-2">
+										<input type="text"  name="orderCode" class="form-control"
+											placeholder="订单编号" value="${searcher.orderCode!?html}">
+								</div>
+								
+								<div class="col-sm-2">
+									<select class="form-control" id="orderType" name="orderType" data-value="${searcher.orderType!?html}">
+										<option selected value="">--请选择营销中心--</option>
+											<#if testingTypeList??> 
+												<#list testingTypeList as entry>
+												<option  value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+											</#if>
+										</select>
+								</div>
+								<div class="col-sm-2">
+										<input type="text" name="customerName" class="form-control"
+											placeholder="客户" value="${searcher.customerName!?html}">
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" id="salesmanName" name="salesmanName" class="form-control"
+											placeholder="业务员" value="${searcher.salesmanName!?html}">
+								</div>
+								
+							</div>
+								
+							<div class="form-group" >
+								
+								
+								<div class="col-sm-2">
+										<input type="text" name="examineeName" class="form-control"
+											placeholder="受检人" value="${searcher.examineeName!?html}">
+								</div>
+								
+								<div class="col-sm-2">
+									<select class="form-control" id="status" name="status" data-value="${searcher.status!?html}">
+										<option selected value="">--请选择处理状态--</option>
+										<option  value="0">未处理</option>
+										<option  value="1">已处理</option>
+									</select>
+								</div>
+								
+
+								<div class="col-sm-2">
+									<button type="submit" class="btn btn-sm btn-success">
+										<i class="fa fa-search"></i> 查询
+									</button>
+									<button type="button" class="btn btn-sm btn-success"
+											onclick="clearHiddenCondition('search_from')">
+										<i class="fa fa-remove"></i> 清空
+									</button>
+								</div>
+
+							</div>
+								
+							
+						</form>
+						<table	class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+								<tr>
+									<td>序号</td>
+									<td>订单编号</td>
+									<td>产品名称</td>
+									<td>营销中心</td>
+									<td>受检人</td>
+									<td class="col-md-1">客户</td>
+									<td>业务员</td>
+									<td>产品状态</td>
+									<td>状态</td>
+									<td>创建时间</td>
+									<th class="flexible-btns flexible-btns-3">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pagination.records?has_content> <#list pagination.records	as record>
+								<tr>
+									<td>${record_index + 1}</td>
+									<td>${(record.orderCode)!?html}</td>
+									<td>${(record.productCode)!?html}</td>
+									<td>
+										<#if record.orderType == 1>临床遗传
+										<#elseif record.orderType == 2>临床肿瘤
+										<#elseif record.orderType == 3>健康筛查
+										<#else>科技服务</#if>
+									</td>
+									<td>${(record.examineeName)!?html}</td>
+									<td>${(record.customerName)!?html}</td>
+									<td>${(record.salesmanName)!?html}</td>
+									<td> 
+									<#if record.productStatus == 0>
+										待送测
+									<#elseif record.productStatus==1 >
+										待数据分析
+									<#elseif record.productStatus==2 >
+										待验证
+									<#elseif record.productStatus==3 >
+										待出报告
+									<#elseif record.productStatus==4 >
+										待审核报告
+									<#elseif record.productStatus==5 >
+										待寄送报告
+									<#elseif record.productStatus==6 >
+										已完成
+									<#else>
+										已取消
+									</#if>
+									</td>
+									<td>
+										<#if record.status == 0>未处理<#else>已处理</#if>
+									</td>
+									<td><#if record.createTime??> ${(record.createTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(record.createTime)!?html} </#if></td>
+									
+									<td class="flexible-btns flexible-btns-3">
+										<a	href="${base}/orderApply/refundShow.do?id=${record.orderRefundId!?html}"
+											class="btn btn-sm btn-success"> <i class="fa fa-search-plus"></i>退款申请
+										</a>
+										<#if record.status == 0>
+										 <@smm_security_resource resource = "/order/cancelSheduleByOrderProduct.do">
+											<a  href="${base}/order/getOrderProductScheduleList.do?id=${record.id!?html}&orderId=${record.orderId!?html}&productId=${record.productId!?html}&orderType=${record.orderType!?html}" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>确认取消
+											</a>
+										</@smm_security_resource>
+										<#else>
+											<a  href="#"  class="btn btn-sm btn-success" onclick="detail('${record.id!?html}')"> <i class="fa fa-search"></i>查看详情</a>
+										</#if>
+									
+									</td>
+								</tr>
+								</#list> <#else>
+								<tr>
+									<td colspan="16">暂无相关记录</td>
+								</tr>
+								</#if>
+							</tbody>
+						</table>
+						<#include "../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="modal fade" id="operateReviewModal" tabindex="-1" role="dialog"	aria-labelledby="operateReviewModal" aria-hidden="true">
+		<div class="modal-dialog" style="width: 800px; height: 600px">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" >处理详情</h4>
+				</div>
+				<div class="modal-body">
+					 <table class="table table-striped table-bordered table-hover table-details">
+                        	
+                            <tr>
+                                <th class="col-sm-1">处理时间</th>
+                                <td class="col-sm-2" id="updateTime"></td> 
+                             
+                               
+                            </tr>
+                       		<tr>
+                       		   <th class="col-sm-1">处理人</th>
+                               <td class="col-sm-2" id="updatorName"></td>
+							</tr>
+                      </table>  
+			 </div>
+			</div>
+		</div>
+	</div>
+    
+
+</body>
+
+
+</html>

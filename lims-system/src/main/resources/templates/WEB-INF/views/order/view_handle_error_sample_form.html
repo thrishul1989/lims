@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>查看处理异常样本</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript"	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+
+
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+<script>
+
+
+
+var base = "${base}";
+var familyConfig=[], picInit =[];
+<#if appSampleTransportJson??>
+var transport = ${appSampleTransportJson};
+
+var familyFiguresInit = transport.expressPictureShow;
+
+if(familyFiguresInit!=undefined){
+	if(familyFiguresInit.indexOf(",")!=0){
+		var initConsentPath = familyFiguresInit.split(",");
+		var trueConsentPath=transport.expressPicture.split(",")
+		
+		for(var i=0;i<initConsentPath.length;i++){
+			if("" != initConsentPath[i]){
+				picInit.push("<img  src='"+initConsentPath[i]+"' class='file-preview-image' style='max-width:700px;height:200px;'/><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+trueConsentPath[i]+"'>下载</a>")
+				familyConfig.push({size:"100", caption:trueConsentPath[i],width:'120px',key:trueConsentPath[i]});
+			}
+			
+		}
+		
+		picInit.join(",")
+	}
+}
+
+
+</#if>
+
+	
+
+$(document).ready(function(){
+	
+	$("#pic").fileinput({
+		language: 'zh', // 设置语言
+        uploadUrl: base+'/order/upload.do', 
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        maxFileSize: 5000,
+        showUpload: false, // 是否显示上传按钮
+        showCaption: false,// 是否显示标题
+        showRemove:false,
+        initialPreview:picInit,
+        initialPreviewConfig:familyConfig,
+	});
+
+
+$('.btn.btn-primary.btn-file').css('display','none')
+	
+	
+})
+
+var companyMap ={
+		"1":"shunfeng",
+		"2":"tiantian",
+		"3":"youzhengguonei"
+	};
+
+
+  function showProcess(expressNo,type){
+	$('#express_table').html(""); 
+	var param = {};
+	param.com = companyMap[type];;
+	param.num = expressNo;
+	$.get(base+"/order/showTransport.do?param="+JSON.stringify(param) , function(data){
+		  
+		     var tt = data.msg;
+		     var dataObj=eval("("+tt+")");
+		     console.info(dataObj);
+		     console.info(dataObj.result);
+		     if(dataObj.message=="ok"){
+		    	 $('.express_query_code').find('font').text(dataObj.nu);
+			     if(dataObj.state == "3"){
+			    	 $('.express_query_status').find('font').text("已签收");
+			     }
+			    
+			     $.each(dataObj.data,function(index,obj){
+			    	  var context =obj.context;
+			    	 $('#express_table').append("<tr><td>"+obj.time+"</td> <td>"+context+"</td> </tr>");
+			     });
+		     }else{
+		    	 $('.express_query_code').find('font').text(expressNo);
+		     
+		    	 $('.express_query_status').find('font').text("查询无结果");
+		     
+		    	 $('#express_table').append(""+dataObj.message+""); 
+		     }
+		    
+			
+		     $('#myModal').modal('show');
+		    
+		     
+	});
+	
+}  
+
+</script>
+
+</head>
+
+
+
+<body class="gray-bg">
+		<div class="wrapper wrapper-content animated">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+					
+						<div class="ibox-title">
+							<strong>订单基本信息</strong>
+							<div style="float:right">
+								<a href="javascript:history.go(-1)"  target="_self" style="padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+							</div>
+					    </div>
+					    
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                          
+                          
+                          <table class="table table-striped table-bordered table-hover table-details">
+                        	
+                        		<strong>样本信息</strong>
+                        	
+                        
+                        
+                        	<#if sampleInfo ??>
+                            <tr>
+                                <th class="col-sm-1">样本编号</th>
+                                <td class="col-sm-2">${(sampleInfo.sampleCode)!?html} </td> 
+                                
+                                <th class="col-sm-1">样本状态</th>
+                                <td class="col-sm-2">
+                              		<#if sampleInfo.transportStatus == 0>待送样</#if>
+                     				<#if sampleInfo.transportStatus == 1>送样中</#if>
+									<#if sampleInfo.transportStatus == 2>已接收样本</#if>
+									<#if sampleInfo.transportStatus == 3>异常样本</#if>
+									<#if sampleInfo.transportStatus == 4>已返样样本</#if>	
+									<#if sampleInfo.transportStatus == 5>已取消</#if>	
+                               </td>
+                               
+                            </tr>
+                       		<tr>
+								
+                               <th class="col-sm-1">样本名称</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleName)!?html}</td>
+                       		   <th class="col-sm-1">样本类型</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleTypeName)!?html}</td>
+                               
+                       		</tr>
+                       		<tr>
+                               <th class="col-sm-1">采样时间</th>
+                               <td class="col-sm-2"><#if sampleInfo.samplingDate??> ${(sampleInfo.samplingDate)!?string('yyyy-MM-dd')} </#if></td>
+                       		   <th class="col-sm-1">样本量</th>
+                               <td class="col-sm-2">${(sampleInfo.sampleSize)!?html} ${(sampleInfo.unit)!?html} </td>
+                       		</tr>
+                       		
+                       		
+                       		<tr>
+                       		 <th class="col-sm-1">样本接收时间</th>
+                                <td class="col-sm-2">  
+                                		<#if sampleInfo.acceptSampleTime??> ${(sampleInfo.acceptSampleTime)!?string('yyyy-MM-dd')} </#if>
+								</td>
+								  <th class="col-sm-1">异常详情</th>
+                               <td class="col-sm-2">${(sampleInfo.errorReason)!?html}</td>
+                       		</tr>
+                       		
+                            </#if>
+                            
+                            
+                       </table> 
+                   
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<strong>订单信息</strong>
+                        	
+                        
+                        
+                        	<#if order ??>
+                            <tr>
+                                <th class="col-sm-1">订单编号</th>
+                                <td class="col-sm-2">${(order.code)!?html} </td> 
+                                
+                                <th class="col-sm-1">订单状态</th>
+                                <td class="col-sm-2">
+                              			<@dict_entry_text category="ORDER_STATE" value=order.status />
+                               </td>
+                               
+                            </tr>
+                       		<tr>
+								
+                               <th class="col-sm-1">下单时间</th>
+                               <td class="col-sm-2"><#if order.submitTime??> ${(order.submitTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(order.submitTime)!?html} </#if></td>
+                       		   <th class="col-sm-1">下单人</th>
+                               <td class="col-sm-2">${(order.creatorName)!?html}</td>
+                               
+                       		</tr>
+                       		<tr>
+                               <th class="col-sm-1">业务员</th>
+                               <td class="col-sm-2">${(order.creatorName)!?html}</td>
+                       		   <th class="col-sm-1">客户</th>
+                               <td class="col-sm-2"><#if order.owner??>${(order.owner.name)!?html}</#if></td>
+                       		</tr>
+                       		
+                       		
+                       		<tr>
+                       		 <th class="col-sm-1">营销中心</th>
+                                <td class="col-sm-2">  
+                                		<#if order.orderType == "1">临床遗传</#if>
+										<#if order.orderType == "2">临床肿瘤</#if>
+										<#if order.orderType == "3">健康筛查</#if>
+										<#if order.orderType == "4">科技服务</#if>
+								</td>
+                       		</tr>
+                       		
+                            </#if>
+                            
+                            
+                       </table>  
+                       
+                       <#if reSampleNoSample??>
+                       		<#if reSampleNoSample.solves?has_content>
+                       			<table class="table table-striped table-bordered table-hover ">
+		                        	<strong>历史异常详情</strong>
+		                        	<tr>
+		                        		<th>异常详情</th>
+		                        		<th>操作人</th>
+		                        		<th>操作时间</th>
+		                        	</tr>
+		                        	<#list reSampleNoSample.solves as solve>
+		                        		<tr>
+		                        			<td>${solve.remark!?html}</td>
+		                        			<td>${solve.solverName!?html}</td>
+		                        			<td><#if solve.solveTime ??>${(solve.solveTime)!?string('yyyy-MM-dd')}</#if></td>
+		                        		</tr>
+		                        	</#list>
+		                        	
+		                        </table>
+                       		</#if>
+                       		<#if reSampleNoSample.records?has_content>
+                       			<table class="table table-striped table-bordered table-hover ">
+		                        	<strong>历史处理信息</strong>
+		                        	<tr>
+		                        		<th>处理结果</th>
+		                        		<th>备注原因</th>
+		                        		<th>处理人</th>
+		                        		<th>处理时间</th>
+		                        	</tr>
+		                        	<#list reSampleNoSample.records as record>
+		                        		<tr>
+		                        			<td>
+		                        				<#if record.sampleErrorStatus==1>新增样本处理</#if>
+		                        				<#if record.sampleErrorStatus==2>无送样处理</#if>
+		                        			</td>
+		                        			<td>${record.errorDealRemark!?html}</td>
+		                        			<td>${record.errorOperatorName!?html}</td>
+		                        			<td><#if record.errorOperatorTime ??>${(record.errorOperatorTime)!?string('yyyy-MM-dd')}</#if></td>
+		                        		</tr>
+		                        	</#list>
+		                        </table>
+                       		</#if>
+                       </#if>
+                       
+                        <table class="table table-striped table-bordered table-hover ">
+                        	<strong>处理信息</strong>
+                        	
+                        
+                        
+                        	<#if order ??>
+                            <tr>
+                                <th class="col-sm-1">处理结果</th>
+                                <td class="col-sm-2">	
+                                	<#if sampleInfo.sampleErrorStatus == 0>未处理</#if>
+                     				<#if sampleInfo.sampleErrorStatus == 1>新增样本处理</#if>
+									<#if sampleInfo.sampleErrorStatus == 2>无送样处理</#if>
+									 </td> 
+                                
+                               
+                            </tr>
+                            <#if sampleInfo.sampleErrorStatus == 1>
+	                            <tr>
+	                       		
+	                       		   <th class="col-sm-1">样本编号</th>
+	                               <td class="col-sm-2">${(sampleInfo.sampleErrorNewNo)!?html}</td>
+	                             </tr>
+	                             <tr>  
+	                               <th class="col-sm-1">样本类型</th>
+	                               <td class="col-sm-2">${(sampleInfo.sampleErrorNewTypeName)!?html}</td>
+	                           </tr>    
+	                              
+	                       	  <tr>
+	                       		 <th class="col-sm-1">采样时间</th>
+	                               <td class="col-sm-2"><#if sampleInfo.sampleErrorNewsamplingDate??>${(sampleInfo.sampleErrorNewsamplingDate)!?string('yyyy-MM-dd')}</#if></td>
+	                             </tr>
+	                           <tr>  
+	                               <th class="col-sm-1">样本量</th>
+	                               <td class="col-sm-2">${(sampleInfo.sampleErrorNewSize)!?html}(${(sampleInfo.sampleErrorUnit)!?html})</td>
+	                               
+	                       		</tr>
+                            </#if>
+                       		
+                       		<#if sampleInfo.sampleErrorStatus == 2>
+                       		
+                       			<tr>
+	                       		
+	                       		   <th class="col-sm-1">备注原因</th>
+	                               <td class="col-sm-2">${(sampleInfo.errorDealRemark)!?html}</td>
+	                               
+	                       		</tr>
+                       		
+                       		</#if>
+                       		<tr>
+                               <th class="col-sm-1">处理时间</th>
+                               <td class="col-sm-2"><#if sampleInfo.errorOperatorTime ??>${(sampleInfo.errorOperatorTime)!?string('yyyy-MM-dd')}</#if></td>
+                       		  
+                       		</tr>
+                       		
+                       		<tr>
+                       		 <th class="col-sm-1">处理人</th>
+                                <td class="col-sm-2">  
+                                		${(sampleInfo.errorOperatorName)!?html}
+								</td>
+                       		</tr>
+                       		
+                            </#if>
+                            
+                            
+                       </table>  
+                       
+                       <#include "../sampleReceiveManager/package_info.html" />
+					
+						
+           </div>
+         </div>
+                     
+                    
+                    
+                    
+                    
+             	 
+               </div>
+            </div>
+		</div>
+				
+				
+	</div>
+		
+	
+	
+</body>
+
+
+
+
+</html>

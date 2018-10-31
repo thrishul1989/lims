@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated ">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">订单缴费列表</a></li>
+							<li class="active"><strong>申请记录</strong></li>
+						</ol>
+						<div style="float:right">
+								<a href="#" class="goback" target="_self" style="margin-top:-18px;padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>申请记录列表</h5>
+					</div>
+					<div class="ibox-content" style="overflow: hidden; zoom: 1">
+
+
+						<div class="col-sm-12">
+
+							<form id="search_from" action="#" method="post" class="search-form">
+							
+							</form>
+							<table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="9"><strong>延迟付款信息</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>订单编号</td>
+								<td>申请类型</td>
+								<td>申请人</td>
+								<td>申请时间</td>
+								<td>审批节点</td>
+								<td>申请状态</td>
+								<td>更新时间</td>
+								<td>操作</td>
+								
+                      		</tr>
+                      		<#if record.orderDelay?has_content>
+                      			<#list record.orderDelay as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${record.code!?html}</td>
+                      			<td>延迟付款</td>
+                      			<td>${d.creatorName!?html}</td>
+                      			<td>${d.applyTime!?string('yyyy-MM-dd HH:mm:ss')}</td>
+                      			<td><#if d.orderDelayCheckList?has_content>
+                      				<#list d.orderDelayCheckList as o>
+                      				 	<#if o_index == 0>
+                      					${(o.checkerName)!?html} 
+                      					 <#else>
+                                    	 , ${o.checkerName!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+	                      		</td>
+                      			<td><#if d.status!?html == '0'><span style="color: #1a7bb9">待审核</span><#elseif d.status!?html == '1'><span style="color: rgb(26, 167, 96)">审批通过</span>
+										<#elseif d.status!?html == '2'><span style="color: rgb(235, 79, 56)">审批不通过</span>
+									</#if>
+								</td>
+                      			<td><#if (d.updateTime)??>${d.updateTime!?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+                      			<td><a
+										href="${base}/orderApply/delayShow.do?id=${d.id}"
+										class="btn btn-sm btn-success"> <i
+											class="fa fa-search-plus"></i>查看
+									</a>
+								</td>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="9">暂无延迟付款信息</td>
+                                    </tr>
+                             </#if>
+                          
+                          </table>
+                          
+                          
+                          <table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="9"><strong>减免申请信息</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>订单编号</td>
+								<td>申请类型</td>
+								<td>申请人</td>
+								<td>申请时间</td>
+								<td>审批节点</td>
+								<td>申请状态</td>
+								<td>更新时间</td>
+								<td>操作</td>
+								
+                      		</tr>
+                      		<#if record.orderReduce?has_content>
+                      			<#list record.orderReduce as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${record.code!?html}</td>
+                      			<td>减免申请</td>
+                      			<td>${d.creatorName!?html}</td>
+                      			<td>${d.applyTime!?string('yyyy-MM-dd HH:mm:ss')}</td>
+                      			<td><#if d.orderReduceCheckList?has_content>
+                      				<#list d.orderReduceCheckList as o>
+                      				 	<#if o_index == 0>
+                      					${(o.checkerName)!?html} 
+                      					 <#else>
+                                    	 , ${o.checkerName!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+	                      		</td>
+                      			<td><#if d.status!?html == '0'><span style="color: #1a7bb9">待审核</span><#elseif d.status!?html == '1'><span style="color: rgb(26, 167, 96)">审批通过</span>
+										<#elseif d.status!?html == '2'><span style="color: rgb(235, 79, 56)">审批不通过</span>
+									</#if>
+								</td>
+                      			<td><#if (d.updateTime)??>${d.updateTime!?string('yyyy-MM-dd HH:mm:ss')}</#if>
+                      			</td>
+                      			<td><a
+										href="${base}/orderApply/reduceShow.do?id=${d.id}"
+										class="btn btn-sm btn-success"> <i
+											class="fa fa-search-plus"></i>查看
+									</a>
+								</td>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="9">暂无减免申请信息</td>
+                                    </tr>
+                             </#if>
+                          
+                          </table>
+                          
+                             
+                          <table class="table table-striped table-bordered table-hover table-details"  >     
+                            <tr>
+                        		<td colspan="9"><strong>退款申请信息</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>订单编号</td>
+								<td>申请类型</td>
+								<td>申请人</td>
+								<td>申请时间</td>
+								<td>审批节点</td>
+								<td>申请状态</td>
+								<td>更新时间</td>
+								<td>操作</td>
+								
+                      		</tr>
+                      		<#if record.orderRefund?has_content>
+                      			<#list record.orderRefund as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${record.code!?html}</td>
+                      			<td>退款申请</td>
+                      			<td>${d.creatorName!?html}</td>
+                      			<td>${d.applyTime!?string('yyyy-MM-dd HH:mm:ss')}</td>
+                      			<td>
+									<#if d.orderRefundCheckList?has_content>
+                      				<#list d.orderRefundCheckList as o>
+                      				 	<#if o_index == 0>
+                      					${(o.checkerName)!?html} 
+                      					 <#else>
+                                    	 , ${o.checkerName!?html}
+                      					</#if>
+	                      			</#list> 
+	                      			</#if>
+                      			</td>
+                      			<td><#if d.status!?html == '0'><span style="color: #1a7bb9">待审核</span>
+                      				<#elseif d.status!?html == '1'><span style="color: rgb(26, 167, 96)">审批通过</span>
+									<#elseif d.status!?html == '2'><span style="color: rgb(235, 79, 56)">审批不通过</span>
+									</#if>
+								</td>
+                      			<td><#if (d.updateTime)??>${d.updateTime!?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+                      			<td><a
+										href="${base}/orderApply/refundShow.do?id=${d.id}"
+										class="btn btn-sm btn-success"> <i
+											class="fa fa-search-plus"></i>查看
+									</a>
+								</td>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="9">暂无退款申请信息</td>
+                                    </tr>
+                             </#if>
+                          
+                          </table>
+                          
+					<#include "../inc/pagination.html" />
+						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+
+	
+</body>
+
+
+
+
+</html>
+

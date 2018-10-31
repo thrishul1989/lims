@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todaysoft.lims.technical.mybatis.BioInfoAnnotateMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotate">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="DATA_CODE" jdbcType="VARCHAR" property="dataCode" />
+		<result column="TASK_ID" jdbcType="VARCHAR" property="taskId" />
+		<result column="ANNOTATE_STATUS" jdbcType="BIT" property="annotateStatus" />
+		<result column="QUALIFY" jdbcType="BIT" property="qualify" />
+		<result column="CNV" jdbcType="VARCHAR" property="cnv" />
+		<result column="SV" jdbcType="VARCHAR" property="sv" />
+		<result column="SV_JSON" jdbcType="VARCHAR" property="svJson" />
+		<result column="MAKE_CPTY_NUMBER_VARIATION" jdbcType="VARCHAR"
+			property="makeCptyNumberVariation" />
+		<result column="SNV_JSON" jdbcType="VARCHAR" property="snvJson" />
+		<result column="REGIONCOUNT_DMDEXON" jdbcType="VARCHAR"
+			property="regioncountDmdexon" />
+		<result column="REGIONCOUNT_DMDV2" jdbcType="VARCHAR" property="regioncountDmdv2" />
+		<result column="STATISTICS_DMDEXON" jdbcType="VARCHAR"
+			property="statisticsDmdexon" />
+		<result column="STATISTICS_DMDV2" jdbcType="VARCHAR" property="statisticsDmdv2" />
+		<result column="VCF_DMDEXON" jdbcType="VARCHAR" property="vcfDmdexon" />
+		<result column="VCF_DMDV2" jdbcType="VARCHAR" property="vcfDmdv2" />
+		<result column="BAM_BAM" jdbcType="VARCHAR" property="bamBam" />
+		<result column="BAM_BAI" jdbcType="VARCHAR" property="bamBai" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATOR_NAME" jdbcType="VARCHAR" property="creatorName" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="UPDATOR_NAME" jdbcType="VARCHAR" property="updatorName" />
+		<result column="UPLOAD_DESC" jdbcType="VARCHAR" property="uploadDesc" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, DATA_CODE, TASK_ID, ANNOTATE_STATUS, QUALIFY, CNV,
+		SV,SV_JSON,
+		MAKE_CPTY_NUMBER_VARIATION, SNV_JSON,
+		REGIONCOUNT_DMDEXON,
+		REGIONCOUNT_DMDV2, STATISTICS_DMDEXON, STATISTICS_DMDV2, VCF_DMDEXON,
+		VCF_DMDV2, BAM_BAM, BAM_BAI, CREATE_TIME, CREATOR_NAME, UPDATE_TIME,
+		UPDATOR_NAME,UPLOAD_DESC
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from BIOLOGY_INFO_ANNOTATE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		BIOLOGY_INFO_ANNOTATE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotate">
+
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into BIOLOGY_INFO_ANNOTATE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="dataCode != null">
+				DATA_CODE,
+			</if>
+			<if test="taskId != null">
+				TASK_ID,
+			</if>
+			<if test="annotateStatus != null">
+				ANNOTATE_STATUS,
+			</if>
+			<if test="qualify != null">
+				QUALIFY,
+			</if>
+			<if test="cnv != null">
+				CNV,
+			</if>
+			<if test="sv != null">
+				SV,
+			</if>
+			<if test="svJson != null">
+				SV_JSON,
+			</if>
+			<if test="makeCptyNumberVariation != null">
+				MAKE_CPTY_NUMBER_VARIATION,
+			</if>
+			<if test="snvJson != null">
+				SNV_JSON,
+			</if>
+			<if test="regioncountDmdexon != null">
+				REGIONCOUNT_DMDEXON,
+			</if>
+			<if test="regioncountDmdv2 != null">
+				REGIONCOUNT_DMDV2,
+			</if>
+			<if test="statisticsDmdexon != null">
+				STATISTICS_DMDEXON,
+			</if>
+			<if test="statisticsDmdv2 != null">
+				STATISTICS_DMDV2,
+			</if>
+			<if test="vcfDmdexon != null">
+				VCF_DMDEXON,
+			</if>
+			<if test="vcfDmdv2 != null">
+				VCF_DMDV2,
+			</if>
+			<if test="bamBam != null">
+				BAM_BAM,
+			</if>
+			<if test="bamBai != null">
+				BAM_BAI,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="creatorName != null">
+				CREATOR_NAME,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="updatorName != null">
+				UPDATOR_NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="dataCode != null">
+				#{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="taskId != null">
+				#{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test="annotateStatus != null">
+				#{annotateStatus,jdbcType=BIT},
+			</if>
+			<if test="qualify != null">
+				#{qualify,jdbcType=BIT},
+			</if>
+			<if test="cnv != null">
+				#{cnv,jdbcType=VARCHAR},
+			</if>
+			<if test="sv != null">
+				#{sv,jdbcType=VARCHAR},
+			</if>
+			<if test="svJson != null">
+				#{svJson,jdbcType=VARCHAR},
+			</if>
+			<if test="makeCptyNumberVariation != null">
+				#{makeCptyNumberVariation,jdbcType=VARCHAR},
+			</if>
+			<if test="snvJson != null">
+				#{snvJson,jdbcType=VARCHAR},
+			</if>
+			<if test="regioncountDmdexon != null">
+				#{regioncountDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="regioncountDmdv2 != null">
+				#{regioncountDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="statisticsDmdexon != null">
+				#{statisticsDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="statisticsDmdv2 != null">
+				#{statisticsDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="vcfDmdexon != null">
+				#{vcfDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="vcfDmdv2 != null">
+				#{vcfDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="bamBam != null">
+				#{bamBam,jdbcType=VARCHAR},
+			</if>
+			<if test="bamBai != null">
+				#{bamBai,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creatorName != null">
+				#{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatorName != null">
+				#{updatorName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotate">
+		update BIOLOGY_INFO_ANNOTATE
+		<set>
+			<if test="dataCode != null">
+				DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="taskId != null">
+				TASK_ID = #{taskId,jdbcType=VARCHAR},
+			</if>
+			<if test="annotateStatus != null">
+				ANNOTATE_STATUS = #{annotateStatus,jdbcType=BIT},
+			</if>
+			<if test="qualify != null">
+				QUALIFY = #{qualify,jdbcType=BIT},
+			</if>
+			<if test="cnv != null">
+				CNV = #{cnv,jdbcType=VARCHAR},
+			</if>
+			<if test="sv != null">
+				SV = #{sv,jdbcType=VARCHAR},
+			</if>
+			<if test="svJson != null">
+				SV_JSON = #{svJson,jdbcType=VARCHAR},
+			</if>
+			<if test="makeCptyNumberVariation != null">
+				MAKE_CPTY_NUMBER_VARIATION =
+				#{makeCptyNumberVariation,jdbcType=VARCHAR},
+			</if>
+			<if test="snvJson != null">
+				SNV_JSON = #{snvJson,jdbcType=VARCHAR},
+			</if>
+			<if test="regioncountDmdexon != null">
+				REGIONCOUNT_DMDEXON =
+				#{regioncountDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="regioncountDmdv2 != null">
+				REGIONCOUNT_DMDV2 = #{regioncountDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="statisticsDmdexon != null">
+				STATISTICS_DMDEXON =
+				#{statisticsDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="statisticsDmdv2 != null">
+				STATISTICS_DMDV2 = #{statisticsDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="vcfDmdexon != null">
+				VCF_DMDEXON = #{vcfDmdexon,jdbcType=VARCHAR},
+			</if>
+			<if test="vcfDmdv2 != null">
+				VCF_DMDV2 = #{vcfDmdv2,jdbcType=VARCHAR},
+			</if>
+			<if test="bamBam != null">
+				BAM_BAM = #{bamBam,jdbcType=VARCHAR},
+			</if>
+			<if test="bamBai != null">
+				BAM_BAI = #{bamBai,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creatorName != null">
+				CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatorName != null">
+				UPDATOR_NAME = #{updatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="uploadDesc != null">
+				UPLOAD_DESC = #{uploadDesc,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAnnotateBySampleCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT a.* FROM BIOLOGY_INFO_ANNOTATE a
+		WHERE
+		a.DATA_CODE = #{dataCode, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getByAnalaysisSampleId" resultMap="BaseResultMap"
+		parameterType="string">
+		SELECT a.* FROM BIOLOGY_INFO_ANNOTATE a left
+		join
+		BIOLOGY_DIVISION_FASTQ_DATA b on a.SAMPLE_CODE =
+		b.DATA_CODE
+		WHERE b.id = #{0}
+	</select>
+
+
+</mapper>

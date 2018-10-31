@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.ProductMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.Product">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="TESTING_TYPE" property="testingType" jdbcType="VARCHAR" />
+		<result column="TESTING_SUBTYPE" property="testingSubtype"
+			jdbcType="VARCHAR" />
+		<result column="TESTING_DURATION" property="testingDuration"
+			jdbcType="INTEGER" />
+		<result column="TESTING_START_SAMPLE" property="testingStartSample"
+			jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="INTEGER" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="ENABLED" property="enabled" jdbcType="BIT" />
+		<result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR" />
+		<result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="INTEGER"/>
+		<result column="IF_MADE" property="ifMade" jdbcType="BIT" />
+		<result column="TEST_INSTITUTION" property="testInstitution"
+			jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="REPORT_TEMPLATE_ID" property="reportTemplateId"
+			jdbcType="VARCHAR" />
+		<result column="PRODUCT_DUTY" property="productDuty" jdbcType="VARCHAR" />
+		<result column="SAMPLE_PURPOSE" property="samplePurpose"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.todaysoft.lims.technical.mybatis.entity.Product" extends="BaseResultMap">
+		<result column="DESCRIPTION" property="description" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, CODE, NAME, TESTING_TYPE, TESTING_SUBTYPE, TESTING_DURATION,
+		TESTING_START_SAMPLE,
+		PRICE, REMARK, ENABLED, CREATOR_ID, CREATOR_NAME, CREATE_TIME, DEL_FLAG,
+		IF_MADE,
+		TEST_INSTITUTION, UPDATE_TIME, REPORT_TEMPLATE_ID, PRODUCT_DUTY, SAMPLE_PURPOSE
+	</sql>
+	<sql id="Blob_Column_List">
+		DESCRIPTION
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from LIMS_PRODUCT
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from LIMS_PRODUCT
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.Product">
+		insert into LIMS_PRODUCT (ID, CODE, NAME,
+		TESTING_TYPE, TESTING_SUBTYPE, TESTING_DURATION,
+		TESTING_START_SAMPLE, PRICE, REMARK,
+		ENABLED, CREATOR_ID, CREATOR_NAME,
+		CREATE_TIME, DEL_FLAG, IF_MADE,
+		TEST_INSTITUTION, UPDATE_TIME, REPORT_TEMPLATE_ID,
+		PRODUCT_DUTY, SAMPLE_PURPOSE, DESCRIPTION
+		)
+		values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{testingType,jdbcType=VARCHAR}, #{testingSubtype,jdbcType=VARCHAR},
+		#{testingDuration,jdbcType=INTEGER},
+		#{testingStartSample,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER},
+		#{remark,jdbcType=VARCHAR},
+		#{enabled,jdbcType=BIT}, #{creatorId,jdbcType=VARCHAR}, #{creatorName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=INTEGER},
+		#{ifMade,jdbcType=BIT},
+		#{testInstitution,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+		#{reportTemplateId,jdbcType=VARCHAR},
+		#{productDuty,jdbcType=VARCHAR}, #{samplePurpose,jdbcType=VARCHAR},
+		#{description,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Product">
+		insert into LIMS_PRODUCT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="code != null">
+				CODE,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="testingType != null">
+				TESTING_TYPE,
+			</if>
+			<if test="testingSubtype != null">
+				TESTING_SUBTYPE,
+			</if>
+			<if test="testingDuration != null">
+				TESTING_DURATION,
+			</if>
+			<if test="testingStartSample != null">
+				TESTING_START_SAMPLE,
+			</if>
+			<if test="price != null">
+				PRICE,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="enabled != null">
+				ENABLED,
+			</if>
+			<if test="creatorId != null">
+				CREATOR_ID,
+			</if>
+			<if test="creatorName != null">
+				CREATOR_NAME,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG,
+			</if>
+			<if test="ifMade != null">
+				IF_MADE,
+			</if>
+			<if test="testInstitution != null">
+				TEST_INSTITUTION,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="reportTemplateId != null">
+				REPORT_TEMPLATE_ID,
+			</if>
+			<if test="productDuty != null">
+				PRODUCT_DUTY,
+			</if>
+			<if test="samplePurpose != null">
+				SAMPLE_PURPOSE,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="testingType != null">
+				#{testingType,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSubtype != null">
+				#{testingSubtype,jdbcType=VARCHAR},
+			</if>
+			<if test="testingDuration != null">
+				#{testingDuration,jdbcType=INTEGER},
+			</if>
+			<if test="testingStartSample != null">
+				#{testingStartSample,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="enabled != null">
+				#{enabled,jdbcType=BIT},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorName != null">
+				#{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="ifMade != null">
+				#{ifMade,jdbcType=BIT},
+			</if>
+			<if test="testInstitution != null">
+				#{testInstitution,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reportTemplateId != null">
+				#{reportTemplateId,jdbcType=VARCHAR},
+			</if>
+			<if test="productDuty != null">
+				#{productDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="samplePurpose != null">
+				#{samplePurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Product">
+		update LIMS_PRODUCT
+		<set>
+			<if test="code != null">
+				CODE = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="testingType != null">
+				TESTING_TYPE = #{testingType,jdbcType=VARCHAR},
+			</if>
+			<if test="testingSubtype != null">
+				TESTING_SUBTYPE = #{testingSubtype,jdbcType=VARCHAR},
+			</if>
+			<if test="testingDuration != null">
+				TESTING_DURATION = #{testingDuration,jdbcType=INTEGER},
+			</if>
+			<if test="testingStartSample != null">
+				TESTING_START_SAMPLE = #{testingStartSample,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				PRICE = #{price,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="enabled != null">
+				ENABLED = #{enabled,jdbcType=BIT},
+			</if>
+			<if test="creatorId != null">
+				CREATOR_ID = #{creatorId,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorName != null">
+				CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG = #{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="ifMade != null">
+				IF_MADE = #{ifMade,jdbcType=BIT},
+			</if>
+			<if test="testInstitution != null">
+				TEST_INSTITUTION = #{testInstitution,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reportTemplateId != null">
+				REPORT_TEMPLATE_ID = #{reportTemplateId,jdbcType=VARCHAR},
+			</if>
+			<if test="productDuty != null">
+				PRODUCT_DUTY = #{productDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="samplePurpose != null">
+				SAMPLE_PURPOSE = #{samplePurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.todaysoft.lims.technical.mybatis.entity.Product">
+		update LIMS_PRODUCT
+		set CODE = #{code,jdbcType=VARCHAR},
+		NAME = #{name,jdbcType=VARCHAR},
+		TESTING_TYPE = #{testingType,jdbcType=VARCHAR},
+		TESTING_SUBTYPE = #{testingSubtype,jdbcType=VARCHAR},
+		TESTING_DURATION = #{testingDuration,jdbcType=INTEGER},
+		TESTING_START_SAMPLE = #{testingStartSample,jdbcType=VARCHAR},
+		PRICE = #{price,jdbcType=INTEGER},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		ENABLED = #{enabled,jdbcType=BIT},
+		CREATOR_ID = #{creatorId,jdbcType=VARCHAR},
+		CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		DEL_FLAG = #{delFlag,jdbcType=INTEGER},
+		IF_MADE = #{ifMade,jdbcType=BIT},
+		TEST_INSTITUTION = #{testInstitution,jdbcType=VARCHAR},
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+		REPORT_TEMPLATE_ID = #{reportTemplateId,jdbcType=VARCHAR},
+		PRODUCT_DUTY = #{productDuty,jdbcType=VARCHAR},
+		SAMPLE_PURPOSE = #{samplePurpose,jdbcType=VARCHAR},
+		DESCRIPTION = #{description,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.Product">
+		update LIMS_PRODUCT
+		set CODE = #{code,jdbcType=VARCHAR},
+		NAME = #{name,jdbcType=VARCHAR},
+		TESTING_TYPE = #{testingType,jdbcType=VARCHAR},
+		TESTING_SUBTYPE = #{testingSubtype,jdbcType=VARCHAR},
+		TESTING_DURATION = #{testingDuration,jdbcType=INTEGER},
+		TESTING_START_SAMPLE = #{testingStartSample,jdbcType=VARCHAR},
+		PRICE = #{price,jdbcType=INTEGER},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		ENABLED = #{enabled,jdbcType=BIT},
+		CREATOR_ID = #{creatorId,jdbcType=VARCHAR},
+		CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		DEL_FLAG = #{delFlag,jdbcType=INTEGER},
+		IF_MADE = #{ifMade,jdbcType=BIT},
+		TEST_INSTITUTION = #{testInstitution,jdbcType=VARCHAR},
+		UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+		REPORT_TEMPLATE_ID = #{reportTemplateId,jdbcType=VARCHAR},
+		PRODUCT_DUTY = #{productDuty,jdbcType=VARCHAR},
+		SAMPLE_PURPOSE = #{samplePurpose,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByCode" parameterType="string" resultMap="BaseResultMap">
+		select * from LIMS_PRODUCT where CODE=#{0} AND DEL_FLAG=0
+	</select>
+</mapper>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+.ifpass {
+	background-color: red;
+	border: 10px groove blue;
+	width: 300;
+	height: 300;
+	filter: progid:DXImageTransform.microsoft.gradient(gradienttype=1,
+		startColorStr=cyan, endColorStr=red);
+}
+</style>
+</head>
+<body class="gray-bg form-horizontal m-t">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">代办事项</a></li>
+							<li class="active"><strong>生成报告</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox form-horizontal m-t">
+					<div class="ibox-title">
+						<div class="form-group">
+							<input type="hidden" id="sheetid" value="${(sheet.id)!?html}">
+							<input type="hidden" id="semantic"
+								value="${(sheet.semantic)!?html}">
+								<input type="hidden" id="taskActivitiId" value="${sheet.activitiTaskId}">  <input type="hidden"
+								id="taskId" value="${(sheet.taskId)!?html}"> <label
+								class="col-sm-1 control-label">任务编号：</label>
+							<div class="col-sm-2">
+								<input type="text" class="form-control" name="code" id="code"
+									value="${(sheet.code)!?html}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">任务描述：</label> <label
+								class="col-sm-2 control-label" style="text-align: left">${(sheet.description)!?html}</label>
+								<input class="btn btn-primary" type="button" onclick="downloadData()" 
+									style="float: right;"	value="导出任务单"></input> 
+					 			 <input class="btn btn-primary" type="button" onclick="myPreview()" value="打印预览" style="float: right; margin-right: 10px;"></input> 
+			
+						
+						</div>
+					</div>
+					<div class="ibox-content">
+						<table
+							class="table table-striped table-bordered table-hover table-responsive"
+							id="table">
+							<thead>
+								<tr>
+									<th>报告分类</th>
+									<th>分析结果</th>
+									<th>客户是否参与分析</th>
+						
+									<th>项目编号</th>
+									<th>检测分类</th>
+									<th>文件名称</th>
+									<th>姓名</th>
+									<th>性别</th>
+									
+									<th>病历号</th>
+									<th>检测项目</th>
+									<th>送检日期</th>
+									<th>样本编号</th>
+									<th>年龄</th>
+									
+									<th>送检单位</th>
+									<th>检测方法</th>
+									<th>报告日期</th>
+									<th>探针</th>
+									<th>临床诊断</th>
+									
+									<th>重点关注基因</th>
+									<th>病史摘要</th>
+									<th>是否有家族史</th>
+									<th>家族史摘要</th>
+									<th>样本形式</th>
+									
+									<th>客户姓名</th>
+									<th>业务负责人</th>
+									<th>技术负责人</th>
+									<th>报告负责人</th>
+									<th>报告完成日期</th>
+									
+									<th>报告审核人</th>
+									<th>备注</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if sheet?has_content> <#list sheet.sheetTaskList as record>
+								<tr class="trData">
+									<input type="hidden" id="activitiTaskId" value="${(record.activitiTaskId)!?html}">
+									<input type="hidden" id="testingSheetTaskId" value="${(record.id)!?html}">
+									
+									<td></td>
+									<td></td>
+									<td></td>
+						
+									<td class="projectName">${(record.projectName)!?html}</td>
+									<td class="receiveType">${(record.receiveType)!?html}</td>
+									<td class="fileName">${(record.fileName)!?html}</td>
+					                <td class="inspectName">${(record.inspectName)!?html}</td>
+					                
+					                <td><@dict_entry_text category="ORDER_INSPECT_SEX" value=record.sex /><input class="sex" type="hidden" value="${(record.sex)!?html}"></td>
+					                <td class="caseNum">${(record.caseNum)!?html}</td>
+					                <td class="productName">${(record.productName)!?html}</td>
+					                <td class="sendDate"><#if record.sendDate??>${(record.sendDate)?string("yyyy-MM-dd")}</#if></td>
+					                <td class="sourceSampleCode">${(record.sourceSampleCode)!?html}</td>
+					                
+					                <td class="age">${(record.age)!?html}</td>
+					                <td class="institution">${(record.institution)!?html}</td>
+					                <td class="checkManagement">${(record.checkManagement)!?html}</td>
+									<td class="reportDate"><#if record.reportDate??>${(record.reportDate)?string("yyyy-MM-dd")}</#if></td>
+									<td class="probeName">${(record.probeName)!?html}</td>
+									
+									<td class="clinicalDiagnosis">${(record.clinicalDiagnosis)!?html}</td>
+									<td class="focusGenes">${(record.focusGenes)!?html}</td>
+									<td class="caseSummary">${(record.caseSummary)!?html}</td>
+									<td class="familyHistory">${(record.familyHistory)!?html}</td>
+									<td class="familyHistorySummary">${(record.familyHistorySummary)!?html}</td>
+									
+									<td class="sampleName">${(record.sampleType)!?html}</td>
+									<td class="customerName">${(record.customerName)!?html}</td>
+									<td class="businessLeader">${(record.businessLeader)!?html}</td>
+									<td class="technicalLeader">${(record.technicalLeader)!?html}</td>
+									<td class="reportLeader">${(record.reportLeader)!?html}</td>
+									
+									<td class="reportCompleteDate"><#if record.reportCompleteDate??>${(record.reportCompleteDate)?string("yyyy-MM-dd")}</#if></td>
+									<td class="reportVerifier">${(record.reportVerifier)!?html}</td>
+									<td class="remark">${(record.remark)!?html}</td>
+								</tr>
+								</#list> </#if>
+							</tbody>
+						</table>
+						<div class="row" style="margin-top: 34px">
+							<div class="col-lg-12">
+								<div class="col-sm-4 col-sm-offset-5">
+									<button class="btn btn-primary" type="button" onclick="">上传报告</button>
+									<input type="submit" value="完成" class="btn btn-primary" style="margin-right: 20px" onclick="sub()">
+									<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue"  id="formValue" value="">
+</form>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script>
+	function suc(obj) {
+		var dataid = $(obj).attr("data-id");
+		if ($("#info" + dataid).css("display") == "none") {
+			$("#info" + dataid).css("display", "block")
+		} else {
+			$("#info" + dataid).css("display", "none");
+		}
+	}
+	function sub() {
+		var bioInfo = [];
+		$(".trData").each(function(index,object){
+			data={};
+			    data.activitiTaskId = $(".activitiTaskId").eq(index).val(); //工作流
+			    bioInfo.push(data);
+		});
+		console.log(bioInfo);
+		$.ajax({
+			type : "GET",
+			url : "${base}/testSheet/reportCreateSubmit.do",
+			data : {
+			req : JSON.stringify({
+							activitiTaskId : $("#activitiTaskId").val(),
+							testingSheetTaskId : $("#testingSheetTaskId").val(),
+							code : $("#code").val(),
+							id : $("#sheetid").val(),
+							sheetTaskList : bioInfo,
+							semantic : $("#semantic").val()
+						})
+			},
+			dataType : "json",
+			traditional : true,
+			success : function(data) {
+				window.location.href = "${base}/process/excuteList.do";
+			}
+		})
+	}
+	 function downloadData(){
+			var taskActivitiId = $("#taskActivitiId").val();
+			$.ajax({
+				 type:"POST",
+				 url:"${base}/testSheet/downloadOnTestData",
+				 data:{taskActivitiId:taskActivitiId},
+				 async: false,
+				 success:function(data){
+					$("#formValue").val(data);
+					$("#hiddForm").submit();
+			    },
+				 error:function(){
+					alert("failed");
+				 }
+			}); 
+		}     
+</script>
+</html>
+

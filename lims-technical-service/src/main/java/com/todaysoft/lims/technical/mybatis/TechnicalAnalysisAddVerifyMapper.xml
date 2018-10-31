@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TechnicalAnalysisAddVerifyMapper">
+    <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.model.TechnicalAnalysisAddVerify">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CLINICAL_JUDGMENT" property="clinicalJudgment" jdbcType="VARCHAR"/>
+        <result column="CHROM" property="chrom" jdbcType="VARCHAR"/>
+        <result column="START_LOCATION" property="startLocation" jdbcType="VARCHAR"/>
+        <result column="END_LOCATION" property="endLocation" jdbcType="VARCHAR"/>
+        <result column="GENE" property="gene" jdbcType="VARCHAR"/>
+        <result column="NUCLEOTIDE" property="nucleotide" jdbcType="VARCHAR"/>
+        <result column="AMINO_ACID" property="aminoAcid" jdbcType="VARCHAR"/>
+        <result column="PURE" property="pure" jdbcType="VARCHAR"/>
+        <result column="VERIFY_METHOD" property="verifyMethod" jdbcType="VARCHAR"/>
+        <result column="FAMILY_RELATION" property="familyRelation" jdbcType="VARCHAR"/>
+        <result column="TECHNICAL_ANALYSIS_ID" property="technicalAnalysisId" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR"/>
+        <result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, CHROM, START_LOCATION, END_LOCATION, GENE, NUCLEOTIDE, AMINO_ACID, PURE, VERIFY_METHOD,
+        FAMILY_RELATION, TECHNICAL_ANALYSIS_ID,CLINICAL_JUDGMENT,SAMPLE_CODE,DATA_CODE
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TECHNICAL_ANALYSIS_ADD_VERIFY
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getAddVerifyDataByFamilyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from TECHNICAL_ANALYSIS_ADD_VERIFY
+        where TECHNICAL_ANALYSIS_ID = #{familyGroupId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TECHNICAL_ANALYSIS_ADD_VERIFY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByFamilyGroupId" parameterType="java.lang.String">
+        delete from TECHNICAL_ANALYSIS_ADD_VERIFY
+        where TECHNICAL_ANALYSIS_ID = #{familyGroupId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.todaysoft.lims.technical.model.TechnicalAnalysisAddVerify">
+    insert into TECHNICAL_ANALYSIS_ADD_VERIFY (ID, CHROM, START_LOCATION, 
+      END_LOCATION, GENE, NUCLEOTIDE, 
+      AMINO_ACID, PURE, VERIFY_METHOD,
+        FAMILY_RELATION, TECHNICAL_ANALYSIS_ID,CLINICAL_JUDGMENT,SAMPLE_CODE,DATA_CODE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{chrom,jdbcType=VARCHAR}, #{startLocation,jdbcType=VARCHAR}, 
+      #{endLocation,jdbcType=VARCHAR}, #{gene,jdbcType=VARCHAR}, #{nucleotide,jdbcType=VARCHAR}, 
+      #{aminoAcid,jdbcType=VARCHAR}, #{pure,jdbcType=VARCHAR}, #{verifyMethod,jdbcType=VARCHAR},
+        #{familyRelation,jdbcType=VARCHAR}, #{technicalAnalysisId,jdbcType=VARCHAR}
+        , #{clinicalJudgment,jdbcType=VARCHAR}, #{sampleCode,jdbcType=VARCHAR}, #{dataCode,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.model.TechnicalAnalysisAddVerify">
+        insert into TECHNICAL_ANALYSIS_ADD_VERIFY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="chrom != null">
+                CHROM,
+            </if>
+            <if test="startLocation != null">
+                START_LOCATION,
+            </if>
+            <if test="endLocation != null">
+                END_LOCATION,
+            </if>
+            <if test="gene != null">
+                GENE,
+            </if>
+            <if test="nucleotide != null">
+                NUCLEOTIDE,
+            </if>
+            <if test="aminoAcid != null">
+                AMINO_ACID,
+            </if>
+            <if test="pure != null">
+                PURE,
+            </if>
+            <if test="verifyMethod != null">
+                VERIFY_METHOD,
+            </if>
+            <if test="familyRelation != null">
+                FAMILY_RELATION,
+            </if>
+            <if test="technicalAnalysisId != null">
+                TECHNICAL_ANALYSIS_ID,
+            </if>
+            <if test="clinicalJudgment != null">
+                CLINICAL_JUDGMENT,
+            </if>
+            <if test="sampleCode != null">
+                SAMPLE_CODE,
+            </if>
+            <if test="dataCode != null">
+                DATA_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="chrom != null">
+                #{chrom,jdbcType=VARCHAR},
+            </if>
+            <if test="startLocation != null">
+                #{startLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="endLocation != null">
+                #{endLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="gene != null">
+                #{gene,jdbcType=VARCHAR},
+            </if>
+            <if test="nucleotide != null">
+                #{nucleotide,jdbcType=VARCHAR},
+            </if>
+            <if test="aminoAcid != null">
+                #{aminoAcid,jdbcType=VARCHAR},
+            </if>
+            <if test="pure != null">
+                #{pure,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyMethod != null">
+                #{verifyMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="familyRelation != null">
+                #{familyRelation,jdbcType=VARCHAR},
+            </if>
+            <if test="technicalAnalysisId != null">
+                #{technicalAnalysisId,jdbcType=VARCHAR},
+            </if>
+            <if test="clinicalJudgment != null">
+                #{clinicalJudgment,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleCode != null">
+                #{sampleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataCode != null">
+                #{dataCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.todaysoft.lims.technical.model.TechnicalAnalysisAddVerify">
+        update TECHNICAL_ANALYSIS_ADD_VERIFY
+        <set>
+            <if test="chrom != null">
+                CHROM = #{chrom,jdbcType=VARCHAR},
+            </if>
+            <if test="startLocation != null">
+                START_LOCATION = #{startLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="endLocation != null">
+                END_LOCATION = #{endLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="gene != null">
+                GENE = #{gene,jdbcType=VARCHAR},
+            </if>
+            <if test="nucleotide != null">
+                NUCLEOTIDE = #{nucleotide,jdbcType=VARCHAR},
+            </if>
+            <if test="aminoAcid != null">
+                AMINO_ACID = #{aminoAcid,jdbcType=VARCHAR},
+            </if>
+            <if test="pure != null">
+                PURE = #{pure,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyMethod != null">
+                VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="familyRelation != null">
+                FAMILY_RELATION = #{familyRelation,jdbcType=VARCHAR},
+            </if>
+            <if test="technicalAnalysisId != null">
+                TECHNICAL_ANALYSIS_ID = #{technicalAnalysisId,jdbcType=VARCHAR},
+            </if>
+            <if test="clinicalJudgment != null">
+                CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleCode != null">
+                SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataCode != null">
+                DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.model.TechnicalAnalysisAddVerify">
+    update TECHNICAL_ANALYSIS_ADD_VERIFY
+    set CHROM = #{chrom,jdbcType=VARCHAR},
+      START_LOCATION = #{startLocation,jdbcType=VARCHAR},
+      END_LOCATION = #{endLocation,jdbcType=VARCHAR},
+      GENE = #{gene,jdbcType=VARCHAR},
+      NUCLEOTIDE = #{nucleotide,jdbcType=VARCHAR},
+      AMINO_ACID = #{aminoAcid,jdbcType=VARCHAR},
+      PURE = #{pure,jdbcType=VARCHAR},
+      VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+      FAMILY_RELATION = #{familyRelation,jdbcType=VARCHAR},
+        TECHNICAL_ANALYSIS_ID = #{technicalAnalysisId,jdbcType=VARCHAR},
+        CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+        SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+        DATA_CODE = #{dataCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

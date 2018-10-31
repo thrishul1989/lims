@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+ <#include "../print/longpcr_print_sheet.html" />
+ <#include "../excelModelDialog/dna_qc_excel_model.html" />
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/test/longpcr_test.js"></script>
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>LONG-PCR扩增实验</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>LONG-PCR扩增实验</h5>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="myPreview()">
+                            <i class="fa fa-print"></i> 打印任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="downloadData()">
+                            <i class="fa fa-print"></i> 导出任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearClass()">
+                            <i class="fa fa-print"></i> 导入数据
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                    <input type="hidden" value="${sheet.id}" id="sheetId">
+                        <form id="submit_form" class="form-horizontal m-t" action="${base}/testing/longpcr_test_submit.do" method="post">
+                            <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.code)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达人：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignerName)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达时间：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignTime)?string('yyyy-MM-dd HH:mm:ss')}"
+                                        readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">实验员：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.pcrTester)!?html}" readonly="readonly" />
+                                </div>
+                                 <label class="col-sm-1 control-label">试剂盒：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.pcrReagentKitName)!?html}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务描述：</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="3" readonly="readonly">${(sheet.description)!?html}</textarea>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                       <th>实验编号</th>
+			                            <th>样本名称</th>
+			                            <th>原始样本编号</th>
+			                            <th>样本编号</th>
+			                           <th>加样体积</th>
+			                            <th>DNA浓度</th>
+			                            <th>质量等级</th>
+			                            <th>检测产品</th>
+			                            <th>引物名称</th>
+			                            <th>扩增编号</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   <#if sheet.tasks?has_content> <#list sheet.tasks as model>
+								<#if model.tasks?has_content>
+								<#list model.tasks as record>
+								<#if record_index == 0>
+								<tr>
+								<input type="hidden" name="taskId" value="${(record.testingTask.id)}">
+									<td>${(record.testingCode)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.testingTask.inputSample.receivedSample.sampleName)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.testingTask.inputSample.receivedSample.sampleCode)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.testingTask.inputSample.sampleCode)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.dnaVolume)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.dnaConcn)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.qualityLevel)!?html}</td>
+									<td rowspan="${(model.tasks)?size}">${(record.product.name)!?html}</td>
+									<td>${(record.primer.forwardPrimerName)!?html}</td>
+									<td rowspan="${(model.tasks)?size}" name="pcrCode">${(record.pcrCode)!?html}</td>
+									
+								
+								</tr>
+								
+								<#else>
+								
+								<tr>
+									<td>${(record.testingCode)!?html} </td>
+									
+									<td>${(record.primer.forwardPrimerName)!?html}</td>
+									
+									
+									
+								
+								</tr>
+								
+								</#if>
+								</#list>
+								
+								</#if>
+								
+								</#list> </#if>
+                                </tbody>
+                            </table>
+                            <div class="form-group"  id="uploadTableName" style="display: none;">
+                               	<label class="col-sm-1 control-label">数据结果：</label>
+                           	</div>
+                            <div id="uploadTable" style="display: none;">
+                            	<table id="uploadDataTable" class="table table-striped table-bordered table-hover table-responsive">
+	                                <thead>
+	                                    <tr>
+	                                        <th>序号</th>
+		                                    <th>扩增编号</th>
+		                                    <th>产物浓度</th>
+		                                    <th>体积</th>
+		                                    <th>A260/280</th>
+		                                    <th>A260/230</th>
+		                                   
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                
+	                                   
+	                                </tbody>
+	                            </table>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <button type="button" class="btn btn-primary" id="button_submit">完成任务</button>
+                                    <button type="button" class="btn btn-primary" onclick="history.go(-1)">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</body>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        $('body').on('click', '#button_submit', function()
+        {
+            var layerObject = parent.parent.layer;
+            var buttons = [ '确定', '取消' ];
+
+            layerObject.confirm('确定完成任务，提交任务单吗？', {
+                icon : 3,
+                title : '操作确认',
+                btn : buttons,
+                shade : 'transparent'
+            }, function(index)
+            {
+                
+              //1获取实验扩增编号字符串 str1
+                var str1=[];
+                $('[name="pcrCode"]').each(function(){
+                    str1.push($(this).text());
+                })
+                //2获取数据扩增编号字符串 str2
+                var str2=[];
+                var flag=true;
+                $("#uploadDataTable tr").each(function(index){
+                    if(index!=0){
+                     str2.push($(this).find('td').eq(1).text());
+                     if($(this).find('td').eq(2).text()==''||$(this).find('td').eq(3).text()==''||$(this).find('td').eq(4).text()==''||$(this).find('td').eq(5).text()==''){
+                         flag=false;
+                     }
+                    }
+                })
+                    if(str2.length==0){
+                                parent.layer.alert('未成功导入数据', {
+                                    title : "提示"
+                                })
+                    }else{
+                        for(var i=0;i<str2.length;i++){
+                            if($.inArray(str2[i], str1 )!=-1&&str2.length==str1.length&&flag){
+                                $('#submit_form').submit();
+                            }else if(flag==false){
+                                parent.layer.alert('数据存在空值', {
+                                    title : "提示"
+                                });
+                                return false;
+                            }else{
+                                parent.layer.alert('数据与实验数量不匹配', {
+                                    title : "提示"
+                                });
+                                return false;
+                            }
+                            
+                        }
+                    }
+                   
+
+                layerObject.close(index);
+            }, function(index)
+            {
+                layerObject.close(index);
+            });
+        });
+    });
+//-->
+</script>
+</html>

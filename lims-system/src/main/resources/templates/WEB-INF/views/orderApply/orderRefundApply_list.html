@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link rel="stylesheet" href="${plugins}/ladda-bootstrap-master/dist/ladda-themeless.min.css">
+
+<style>
+
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="">退款申请管理</a></li>
+							<li class="active"><strong>退款申请列表</strong></li>
+
+
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+
+						<h5>退款申请列表</h5>
+
+
+					</div>
+					<div class="ibox-content" style="overflow: hidden; zoom: 1">
+
+
+						<div class="col-sm-12">
+
+							<form id="search_from" action="${base}/orderApply/refundList.do" method="post"
+								class="search-form">
+								<div class="row m-b-xs">
+
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" name="orderCode" class="form-control" id="orderCode" placeholder="订单编号"
+												value="${(searcher.orderCode)!?html}">
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<select class="form-control" name="status" data-value="${(searcher.status)!?html}">
+												<option value="">请选择审批状态</option> 
+												<option value="0">待审核</option> 
+												<option value="1">审核通过</option> 
+												<option value="2">审核不通过</option> 
+												<option value="3">审核中</option> 
+											</select>
+										</div>
+									</div>
+									
+									<div class="col-sm-2">
+										<div class="form-group">
+											<select class="form-control" name="orderType" data-value="${(searcher.orderType)!?html}">
+												<option value="">请选择营销中心</option> 
+												<option value="1">临床遗传</option> 
+												<option value="2">临床肿瘤</option> 
+												<option value="3">健康筛查</option> 
+												<option value="4">科技服务</option> 
+											</select>
+										</div>
+									</div>
+									
+									
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" name="ownerId" class="form-control"
+												id="applyDetail.couponApply.createName" placeholder="客户"
+												value="${(searcher.ownerId)!?html}">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" name="creatorId" class="form-control"
+												id="applyDetail.customerName" placeholder="申请业务员"
+												value="${(searcher.creatorId)!?html}">
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" name="examineeName" class="form-control"
+												id="examineeName" placeholder="受检人"
+												value="${(searcher.examineeName)!?html}">
+										</div>
+									</div>
+
+
+
+
+									
+							<div class="form-group">
+										
+									<div class="col-sm-2">
+										<div class="form-group">
+											<select class="form-control" name="handler" data-value="${(searcher.handler)!?html}">
+												<option value="">请选择是否退款</option> 
+												<option value="false">未退款</option> 
+												<option value="true">已退款</option> 
+											
+											</select>
+										</div>
+									</div>
+										
+											
+									<div class="col-sm-2">
+										<input type="text" class="form-control laydate-icon" id="startDate"
+											name="applyTime" value="<#if searcher.applyTime??>${searcher.applyTime!?string('yyyy-MM-dd')}</#if>" placeholder="申请时间起" style="height: 34px"
+											 />
+									</div>
+									
+									<div class="col-sm-2">
+										<input type="text" class="form-control laydate-icon" id="endDate"
+											name="applyEndTime" value="<#if searcher.applyEndTime??>${searcher.applyEndTime!?string('yyyy-MM-dd')}</#if>" placeholder="申请时间止" style="height: 34px"
+											 />
+									</div>
+						  </div>
+								
+
+
+
+									<div class="col-sm-3">
+										<div class="form-group">
+											<button type="submit" class="btn btn-sm btn-success">
+												<i class="fa fa-search"></i> 查询
+											</button>
+											<button type="button" class="btn btn-sm btn-success"
+												onclick="clearCondition('search_from')">
+												<i class="fa fa-remove"></i> 清空
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th class="index">序号</th>
+										<th>订单编号</th>
+										<th>营销中心</th>
+										<th>受检人</th>
+									    <th>客户</th>
+										<th>申请业务员</th>
+										<th>申请时间</th>
+										<th>审批状态</th>
+										<th>退款状态</th>
+										<th>审批节点</th>
+										
+										<th class="flexible-btns">操作</th>
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<#if pagination.records?has_content> <#list pagination.records as record>
+									<tr>
+										<td>${record_index + 1}</td>
+										<td>${record.orderId.code!?html}</td>
+										<td><@testing_type testingType=record.orderId.orderType /></td>
+										<td>${(record.orderId.orderExamineeList[0].name)!?html}</td>
+
+										<td><#if record.orderId.owner??> ${(record.orderId.owner.realName)!?html}</#if></td>
+										<td>${(record.creatorName)!?html}</td>
+										<td><#if record.applyTime??>${record.applyTime!?string('yyyy-MM-dd HH:mm:ss')}</#if></td>
+										<td><#if record.status!?html == '0'><span style="color: #1a7bb9">待审核</span><#elseif record.status!?html == '1'><span style="color: rgb(26, 167, 96)">审批通过</span>
+										<#elseif record.status!?html == '2'><span style="color: rgb(235, 79, 56)">审批不通过</span>
+										<#elseif record.status!?html == '3'><span style="color: #1a7bb9">审核中</span>
+										</#if></td>
+										<td><#if record.handler!?html == 'false'>未退款<#else><span style="color: rgb(26, 167, 96)">已退款</span></#if></td>
+										<td>
+										<#if record.status!?html == "1" && record.orderRefundCheckList?size == 0>销售经理
+										<#else>
+										${(record.orderRefundCheckList[record.orderRefundCheckList?size-1].roleType)!?html}
+										</#if>
+										
+										
+										</td>
+ <td class="flexible-btns">
+
+
+<a href="${base}/orderApply/refundShow.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search"></i> 查看
+                                            </a></td>
+
+									</tr>
+									</#list> </#if>
+
+
+
+								</tbody>
+							</table>
+							<#include "../inc/pagination.html" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		
+	</script>
+</body>
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script>
+
+var start = {
+		  elem: '#startDate',
+		  format: 'YYYY-MM-DD',
+		 
+		  max: '2099-06-16 23:59:59', //最大日期
+		  istime: true,
+		  istoday: true,
+		  choose: function(datas){
+		     end.min = datas; //开始日选好后，重置结束日的最小日期
+		     end.start = datas //将结束日的初始值设定为开始日
+		  }
+		};
+		var end = {
+		  elem: '#endDate',
+		  format: 'YYYY-MM-DD',
+		 
+		  max: '2099-06-16 23:59:59',
+		  istime: true,
+		  istoday: false,
+		  choose: function(datas){
+		    start.max = datas; //结束日选好后，重置开始日的最大日期
+		  }
+		};
+		laydate(start);
+		laydate(end);
+</script>
+
+</html>
+

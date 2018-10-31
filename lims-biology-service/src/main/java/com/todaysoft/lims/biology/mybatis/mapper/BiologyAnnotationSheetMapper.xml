@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyAnnotationSheetMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyAnnotationSheet" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="TESTER_ID" property="testerId" jdbcType="VARCHAR" />
+    <result column="TESTER_NAME" property="testerName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="SheetResultMap" type="com.todaysoft.lims.biology.model.BiologyDivisionSearchSheet" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TESTER_ID" property="testerId" jdbcType="VARCHAR" />
+    <result column="TESTER_NAME" property="testerName" jdbcType="VARCHAR" />
+    <result column="ASSIGNER_NAME" property="assignerName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, CODE, TASK_ID, TESTER_ID, TESTER_NAME, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_ANNOTATION_SHEET
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="getSheetListByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    t.*
+    from
+    BIOLOGY_ANNOTATION_SHEET t
+    where
+    t.TASK_ID = #{id,jdbcType=VARCHAR}
+    ORDER BY
+    t.CREATE_TIME DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_ANNOTATION_SHEET
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationSheet" >
+    insert into BIOLOGY_ANNOTATION_SHEET (ID, CODE, TASK_ID, 
+      TESTER_ID, TESTER_NAME, CREATE_TIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{testerId,jdbcType=VARCHAR}, #{testerName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationSheet" >
+    insert into BIOLOGY_ANNOTATION_SHEET
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="testerId != null" >
+        TESTER_ID,
+      </if>
+      <if test="testerName != null" >
+        TESTER_NAME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="testerId != null" >
+        #{testerId,jdbcType=VARCHAR},
+      </if>
+      <if test="testerName != null" >
+        #{testerName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationSheet" >
+    update BIOLOGY_ANNOTATION_SHEET
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="testerId != null" >
+        TESTER_ID = #{testerId,jdbcType=VARCHAR},
+      </if>
+      <if test="testerName != null" >
+        TESTER_NAME = #{testerName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationSheet" >
+    update BIOLOGY_ANNOTATION_SHEET
+    set CODE = #{code,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      TESTER_ID = #{testerId,jdbcType=VARCHAR},
+      TESTER_NAME = #{testerName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="completeSheetPaging" resultMap="SheetResultMap"
+          parameterType="com.todaysoft.lims.biology.model.TestingSheetRequest">
+    SELECT
+      t.ID,t.CODE,t.TESTER_NAME,t.CREATE_TIME,task.END_TIME AS SUBMIT_TIME,task.STATUS
+    FROM
+      BIOLOGY_ANNOTATION_SHEET t
+    LEFT JOIN BIOLOGY_ANNOTATION_TASK task on t.TASK_ID=task.ID
+    where
+    1=1
+    <if test="completed != null and completed != ''">
+      <choose>
+        <when test="completed =='true' ">AND task.STATUS = 1</when>
+        <otherwise>
+          AND task.STATUS != 1
+        </otherwise>
+      </choose>
+    </if>
+    <if test="code != null and code != ''">
+      <bind name="sequencingCodePattern" value="'%' + _parameter.code + '%'" />
+      AND t.CODE LIKE #{sequencingCodePattern}
+    </if>
+    <if test="assignerName != null and assignerName != ''">
+      <bind name="assignerNamePattern" value="'%' + _parameter.assignerName + '%'" />
+      AND t.TESTER_NAME LIKE #{assignerNamePattern}
+    </if>
+    <if test="testerName != null and testerName != ''">
+      <bind name="testerNamePattern" value="'%' + _parameter.testerName + '%'" />
+      AND t.TESTER_NAME LIKE #{testerNamePattern}
+    </if>
+    <if test="assignTimeStart != null and assignTimeStart != ''">
+      and t.CREATE_TIME &gt;
+      #{assignTimeStart,jdbcType=TIMESTAMP}
+    </if>
+    <if test="assignTimeEnd != null and assignTimeEnd != ''">
+      and t.CREATE_TIME &lt;
+      #{assignTimeEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="sampleCode != null and sampleCode != ''">
+      AND task.SAMPLE_CODE = #{sampleCode}
+    </if>
+    GROUP BY t.TASK_ID ORDER BY task.STATUS = 1 DESC,t.CREATE_TIME DESC,task.END_TIME DESC
+  </select>
+
+
+</mapper>

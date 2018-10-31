@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>已处理列表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script>
+	var base = '${base}'
+</script>
+<script src="${system_js}/report/myEmail.js"></script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li>报告管理</li>
+							<li class="active"><a href="#">已处理列表</a></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>已处理列表</h5>
+
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/repors/reportEmail/handledList.do"
+							method="post" id="search_from" class="form-horizontal m-t toggle-form">
+
+						<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="orderCode" class="form-control" placeholder="订单编号"
+											value="${searcher.orderCode!?html}" />
+									</div>
+								</div>
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="productCode" class="form-control" placeholder="产品编号"
+										   value="${searcher.productCode!?html}" />
+								</div>
+							</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="reportNo" class="form-control" placeholder="报告编号"
+											value="${searcher.reportNo!?html}" />
+									</div>
+
+								</div>
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="orderExaminee" class="form-control" placeholder="受检人"
+										   value="${searcher.orderExaminee!?html}" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="companyName" class="form-control" placeholder="送检医院"
+											value="${searcher.companyName!?html}" />
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select name="issueInvoice" class="form-control" data-value="${searcher.issueInvoice!?html}">
+											<option value=''>请选择发票状态</option>
+											<option value='1'>待开票</option>
+											<option value='2'>可开票</option>
+											<option value='3'>已开票</option>
+											<option value='4'>已寄送</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select name="invoiceType" class="form-control"
+											data-value="${searcher.invoiceType!?html}">
+											<option value=''>请选择发票类型</option>
+											<option value='1'>系统默认开票</option>
+											<option value='2'>提前开票</option>
+										</select>
+									</div>
+								</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="ownerId" class="form-control" placeholder="客户"
+										   value="${searcher.ownerId!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="contractCode" class="form-control" placeholder="合同编号"
+										   value="${searcher.contractCode!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="contractName" class="form-control" placeholder="合同名称"
+										   value="${searcher.contractName!?html}" />
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<select class="form-control" id="testingType" name="testingType" data-value="${searcher.testingType!?html}">
+										<option selected value="">营销中心：</option>
+										<#if testingTypeList??>
+											<#list testingTypeList as entry>
+												<option  value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+										</#if>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<input type="text" name="creatorName" class="form-control" placeholder="业务员"
+										   value="${searcher.creatorName!?html}" />
+								</div>
+							</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="address" class="form-control" placeholder="地址"
+											value="${searcher.address!?html}" />
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="receivedPhone" class="form-control" placeholder="收件人电话"
+											value="${searcher.receivedPhone!?html}" />
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<select name="mailStatus" class="form-control"
+												data-value="${searcher.mailStatus!?html}">
+											<option value=''>是否需要邮寄</option>
+											<option value='0'>不需要邮寄</option>
+											<option value='1'>需要邮寄</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+
+									<div class="input-group">
+										<input type="hidden" value="${searcher.projectManager!?html}" name="projectManager" id="projectManager" />
+										<input type="text" class="form-control" id="prjManager" name="prjManagerName" value="${searcher.prjManagerName!?html}" placeholder="请输入项目管理人" >
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+										</div>
+									</div>
+
+								</div>
+
+							<input type="hidden" name="assignedId" class="form-control" value="" id="assignedId"/>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<button type="submit" class="btn btn-sm btn-success">
+										<i class="fa fa-search"></i> 查询
+									</button>
+									<button type="button" class="btn btn-sm btn-success"
+										onclick="clearHiddenCondition('search_from')">
+										<i class="fa fa-remove"></i> 清空
+									</button>
+								</div>
+							</div>
+
+						</form>
+						<table class="table table-striped table-bordered table-hover " style="table-layout: fixed">
+							<thead>
+								<tr>
+									<th><input type="checkbox" class="check-controller" /></th>
+									<th>订单编号</th>
+									<th>项目管理人</th>
+									<th>产品编号</th>
+									<th>报告编号</th>
+									<th>受检人</th>
+									<th>报告状态</th>
+										<th>快递单号</th>
+										<th>寄送日期</th>
+										<th>寄送人</th>
+									<th class="flexible-btns">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pagination??> <#if pagination.records?has_content> <#list res?keys as key> <#list
+								res[key] as record> <#if record_index == 0>
+								<tr>
+									<td rowspan="${res[key]?size}"><input type="checkbox" class="check-instance"
+										value="${key}" /></td>
+									<td rowspan="${res[key]?size}">${record.orderCode!?html}</td>
+									<td>${record.prjManagerName!?html}</td>
+									<td>${record.productCode!?html}</td>
+									<td>${record.reportNo!?html}</td>
+									<td>${record.orderExaminee!?html}</td>
+									<td><#if record.reportStatus!?html == '0'>未出报告<#elseif record.reportStatus!?html ==
+										'1'>待一审<#elseif record.reportStatus!?html ==
+										'2'>待二审<#elseif record.reportStatus!?html ==
+										'3'>审核通过<#elseif record.reportStatus!?html ==
+										'4'>已寄送<#elseif record.reportStatus!?html ==
+										'5'>不寄送<#else>未出报告</#if>
+									</td>
+									<td rowspan="${res[key]?size}">${record.emailNo!?html}</td>
+									<td rowspan="${res[key]?size}"><#if record.emailTime??>${record.emailTime!?html}</#if></td>
+									<td rowspan="${res[key]?size}">${record.emailName!?html}</td>
+									<td rowspan="${res[key]?size}"><a href="${base}/repors/reportEmail/noEmailView.do?id=${record.id}"
+										class="btn btn-sm btn-success"> 
+										<i class="fa fa-search-plus"></i>查看
+									    </a> 
+									  </td>
+								</tr>
+								<#else>
+								<tr>
+									<td>${record.productCode!?html}</td>
+										<td>${record.reportNo!?html}</td>
+										<td>${record.orderExaminee!?html}</td>
+										<td><#if record.reportStatus!?html == '0'>未出报告<#elseif record.reportStatus!?html ==
+											'1'>待一审<#elseif record.reportStatus!?html ==
+											'2'>待二审<#elseif record.reportStatus!?html ==
+											'3'>审核通过<#elseif record.reportStatus!?html ==
+											'4'>已寄送<#elseif record.reportStatus!?html ==
+											'5'>不寄送<#else>未出报告</#if>
+										</td>
+								</tr>
+								</#if> </#list> </#list> <#else>
+								<tr>
+									<td colspan="12">暂无相关记录</td>
+								</tr>
+								</#if> </#if>
+							</tbody>
+						</table>
+						<#include "../../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

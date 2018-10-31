@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>检测实验</span></li>
+							<li class="active"><strong>多重PCR质检实验</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>多重PCR质检实验</h5>
+						<a href="#" class="btn btn-sm btn-primary" onclick="myPreview()"> <i class="fa fa-print"></i>
+							打印任务单
+						</a> <a href="#" class="btn btn-sm btn-primary" onclick="downloadData()"> <i
+							class="fa fa-print"></i> 导出任务单
+						</a> <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal"
+							onclick="clearClass()"> <i class="fa fa-print"></i> 导入数据
+						</a>
+					</div>
+					<div class="ibox-content">
+						<form id="submit_form" class="form-horizontal m-t"
+							action="${base}/testing/multipcrqc_test_submit.do" method="post">
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<input type="hidden" id="id" name="id" value="${(sheet.id)!?html}" />
+							<div class="form-group">
+								<label class="col-sm-1 control-label">任务编号：</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" value="${(sheet.code)!?html}" readonly="readonly" />
+								</div>
+								<label class="col-sm-1 control-label">下达人：</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" value="${(sheet.assignerName)!?html}"
+										readonly="readonly" />
+								</div>
+								<label class="col-sm-1 control-label">下达时间：</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control"
+										value="${(sheet.assignTime)?string('yyyy-MM-dd HH:mm:ss')}" readonly="readonly" />
+								</div>
+								<label class="col-sm-1 control-label">实验员：</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" value="${(sheet.qcTester)!?html}"
+										readonly="readonly" />
+								</div>
+								<label class="col-sm-1 control-label">试剂盒：</label>
+								<div class="col-sm-2">
+									<input type="text" class="form-control" value="${(sheet.qcReagentKitName)!?html}"
+										readonly="readonly" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-1 control-label">任务描述：</label>
+								<div class="col-sm-11">
+									<textarea class="form-control" rows="3" readonly="readonly">${(sheet.description)!?html}</textarea>
+								</div>
+							</div>
+							<table class="table table-striped table-bordered table-hover table-responsive">
+								<thead>
+									<tr>
+										<th>实验编号</th>
+										<th>样本名称</th>
+										<th>原始样本编号</th>
+										<th>原始样本类型</th>
+										<th>产物编号</th>
+										<th>产物浓度</th>
+										<th>体积(ul)</th>
+										<th>A260/280</th>
+										<th>A260/230</th>
+										<th>质量等级</th>
+										<th>处理方式</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<#if sheet.tasks?has_content> <#list sheet.tasks as record>
+									<tr>
+                                      　　　
+										<td>${(record.testingCode)!?html} </td>
+										<td>${(record.testingTask.inputSample.receivedSample.sampleName)!?html}</td>
+										<td>${(record.testingTask.inputSample.receivedSample.sampleCode)!?html}
+                                        <input type="hidden" name="longpcrSubmitrequest[${record_index}].sheetId">
+                                        </td>
+                                        <td>${(record.testingTask.inputSample.receivedSample.sampleTypeName)!?html}
+                                       
+                                        </td>
+										<td>${(record.testingTask.inputSample.sampleCode)!?html}</td>
+										<td class="concn"></td><input type="hidden" class='concnInput'>
+										<td class="volumn"></td><input type="hidden" class='volumnInput'>
+										<td class="a260280"></td><input type="hidden" class='a260280Input'>
+										<td class="a260230"></td><input type="hidden" class='a260230Input'>
+										<td class="qualityLevel"></td><input type="hidden" class='qualityLevelInput'>
+										 <td>
+                                        <input type="hidden" name="tasks[${record_index}].id" value="${record.testingTask.id!?html}" />
+                                        <div class="checkbox i-checks">
+                                            <label> <input class="toggle-qualified" type="checkbox" data-id="${record.testingCode!?html}"
+                                                 data-sampleCode="${(record.testingTask.inputSample.receivedSample.sampleCode)!?html}"   checked="checked" name="tasks[${record_index}].qualified"> 合格
+                                            </label>
+                                        </div>
+                                    </td>
+
+
+									</tr>
+									</#list> </#if>
+								</tbody>
+							</table>
+							<div class="row" style="margin-top: 34px">
+                            <div class="col-lg-12">
+                                <div class="ibox" style="border: 2px solid #e7eaec; padding: 10px">
+                                    <label class="col-sm-2 control-label" style="text-align: left; margin-bottom: 10px">不合格清单</label>
+                                    <div class="ibox-content" id="content">
+                                        <#if sheet.tasks??> <#list sheet.tasks as record>
+                                        <div id="unqualified_${record.testingCode!?html}" data-id="${record.id!?html}" class="son" style="display: none">
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label">样本编号：</label> <label class="col-sm-1 control-label sample"
+                                                    style="text-align: left">${(record.testingTask.inputSample.sampleCode)!?html}</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label">后续处理：</label>
+                                                <div class="checkbox i-checks">
+                                                   
+                                                    <label> <input type="radio" name="tasks[${record_index}].unqualifiedStrategy" checked="checked" value="1">上报
+                                                    </label>
+                                                    <label> <input type="radio" name="tasks[${record_index}].unqualifiedStrategy" value="3"><font color="red">重新实验
+                                                    </font></label>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label">备注原因：</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" name="tasks[${record_index}].unqualifiedRemark" class="form-control checknull" />
+                                                </div>
+                                            </div>
+                                            <hr style="border: 2px dotted #ccced0; border-bottom: 0; border-right: 0; border-left: 0; width: 100%;">
+                                        </div>
+                                        </#list> </#if>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-5">
+									<button type="button" class="btn btn-primary" id="button_submit">完成任务</button>
+									<button type="button" class="btn btn-primary" onclick="history.go(-1)">返回</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <#include "../excelModelDialog/dna_qc_excel_model.html" />
+	<#include "../print/multipcrqc_print_sheet.html" /> 
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/test/multipcrqcqc_test.js?v=1.0.8"></script>
+<script type="text/javascript">
+<!--
+    $(function()
+    {
+        $('body').on('click', '#button_submit', function()
+        {
+            var layerObject = parent.parent.layer;
+            var buttons = [ '确定', '取消' ];
+
+            layerObject.confirm('确定完成任务，提交任务单吗？', {
+                icon : 3,
+                title : '操作确认',
+                btn : buttons,
+                shade : 'transparent'
+            }, function(index)
+            {
+                var flag=true;
+                $('.concn').each(function(){
+                    if($(this).text()==''){
+                        flag=false;
+                    }
+                })
+                  $('.volumn').each(function(){
+                    if($(this).text()==''){
+                        flag=false;
+                    }
+                })
+                  $('.a260280').each(function(){
+                    if($(this).text()==''){
+                        flag=false;
+                    }
+                })
+                  $('.a260230').each(function(){
+                    if($(this).text()==''){
+                        flag=false;
+                    }
+                })
+                if(flag){
+                $('#submit_form').submit();
+                    
+                }else{
+                    parent.layer.alert('实验数据不全', {
+                        title : "提示"
+                    });
+                }
+                layerObject.close(index);
+            }, function(index)
+            {
+                layerObject.close(index);
+            });
+        });
+    });
+//-->
+</script>
+</html>

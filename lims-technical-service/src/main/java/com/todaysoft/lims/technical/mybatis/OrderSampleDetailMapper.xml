@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.OrderSampleDetailMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.OrderSampleDetail">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+		<result column="ORDER_TYPE" property="orderType" jdbcType="BIT" />
+		<result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NAME" property="customerName"
+			jdbcType="VARCHAR" />
+		<result column="SALESMAN_ID" property="salesmanId" jdbcType="VARCHAR" />
+		<result column="SALESMAN_NAME" property="salesmanName"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+		<result column="SAMPLE_BTYPE" property="sampleBtype" jdbcType="BIGINT" />
+		<result column="SAMPLE_TYPE_ID" property="sampleTypeId"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_TYPE_NAME" property="sampleTypeName"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+		<result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+		<result column="SAMPLE_SIZE" property="sampleSize" jdbcType="DECIMAL" />
+		<result column="SAMPLING_DATE" property="samplingDate"
+			jdbcType="DATE" />
+		<result column="PURPOSE" property="purpose" jdbcType="TINYINT" />
+		<result column="TRANSPORT_STATUS" property="transportStatus"
+			jdbcType="TINYINT" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="SAMPLE_ERROR_STATUS" property="sampleErrorStatus"
+			jdbcType="TINYINT" />
+		<result column="ERROR_REASON" property="errorReason" jdbcType="VARCHAR" />
+		<result column="ACCEPT_SAMPLE_TIME" property="acceptSampleTime"
+			jdbcType="TIMESTAMP" />
+		<result column="SAMPLE_ERROR_NEW_NO" property="sampleErrorNewNo"
+			jdbcType="VARCHAR" />
+		<result column="ERROR_DEAL_REMARK" property="errorDealRemark"
+			jdbcType="VARCHAR" />
+		<result column="FAMILY_RELATION" property="familyRelation"
+			jdbcType="VARCHAR" />
+		<result column="SYNCHRONIZED_STATUS" property="synchronizedStatus"
+			jdbcType="TINYINT" />
+		<result column="OWNER_PHENOTYPE" property="ownerPhenotype"
+			jdbcType="TINYINT" />
+		<result column="OWNER_NAME" property="ownerName" jdbcType="VARCHAR" />
+		<result column="OWNER_AGE" property="ownerAge" jdbcType="SMALLINT" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, ORDER_ID, ORDER_CODE, ORDER_TYPE, CUSTOMER_ID,
+		CUSTOMER_NAME,
+		SALESMAN_ID, SALESMAN_NAME,
+		SAMPLE_ID, SAMPLE_BTYPE,
+		SAMPLE_TYPE_ID, SAMPLE_TYPE_NAME, SAMPLE_CODE,
+		SAMPLE_NAME,
+		SAMPLE_SIZE, SAMPLING_DATE, PURPOSE, TRANSPORT_STATUS, UPDATE_TIME,
+		SAMPLE_ERROR_STATUS,
+		ERROR_REASON, ACCEPT_SAMPLE_TIME,
+		SAMPLE_ERROR_NEW_NO, ERROR_DEAL_REMARK,
+		FAMILY_RELATION,
+		SYNCHRONIZED_STATUS, OWNER_PHENOTYPE, OWNER_NAME, OWNER_AGE
+	</sql>
+
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.OrderSampleDetail">
+		insert into LIMS_ORDER_SAMPLE_DETAILS (ID, ORDER_ID,
+		ORDER_CODE,
+		ORDER_TYPE, CUSTOMER_ID, CUSTOMER_NAME,
+		SALESMAN_ID,
+		SALESMAN_NAME, SAMPLE_ID,
+		SAMPLE_BTYPE, SAMPLE_TYPE_ID,
+		SAMPLE_TYPE_NAME,
+		SAMPLE_CODE, SAMPLE_NAME, SAMPLE_SIZE,
+		SAMPLING_DATE,
+		PURPOSE, TRANSPORT_STATUS,
+		UPDATE_TIME, SAMPLE_ERROR_STATUS,
+		ERROR_REASON,
+		ACCEPT_SAMPLE_TIME, SAMPLE_ERROR_NEW_NO,
+		ERROR_DEAL_REMARK,
+		FAMILY_RELATION, SYNCHRONIZED_STATUS,
+		OWNER_PHENOTYPE,
+		OWNER_NAME, OWNER_AGE)
+		values (#{id,jdbcType=VARCHAR},
+		#{orderId,jdbcType=VARCHAR},
+		#{orderCode,jdbcType=VARCHAR},
+		#{orderType,jdbcType=BIT}, #{customerId,jdbcType=VARCHAR},
+		#{customerName,jdbcType=VARCHAR},
+		#{salesmanId,jdbcType=VARCHAR},
+		#{salesmanName,jdbcType=VARCHAR},
+		#{sampleId,jdbcType=VARCHAR},
+		#{sampleBtype,jdbcType=BIGINT}, #{sampleTypeId,jdbcType=VARCHAR},
+		#{sampleTypeName,jdbcType=VARCHAR},
+		#{sampleCode,jdbcType=VARCHAR},
+		#{sampleName,jdbcType=VARCHAR},
+		#{sampleSize,jdbcType=DECIMAL},
+		#{samplingDate,jdbcType=DATE}, #{purpose,jdbcType=TINYINT},
+		#{transportStatus,jdbcType=TINYINT},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{sampleErrorStatus,jdbcType=TINYINT},
+		#{errorReason,jdbcType=VARCHAR},
+		#{acceptSampleTime,jdbcType=TIMESTAMP},
+		#{sampleErrorNewNo,jdbcType=VARCHAR},
+		#{errorDealRemark,jdbcType=VARCHAR},
+		#{familyRelation,jdbcType=VARCHAR},
+		#{synchronizedStatus,jdbcType=TINYINT},
+		#{ownerPhenotype,jdbcType=TINYINT},
+		#{ownerName,jdbcType=VARCHAR},
+		#{ownerAge,jdbcType=SMALLINT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.OrderSampleDetail">
+		insert into LIMS_ORDER_SAMPLE_DETAILS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="orderId != null">
+				ORDER_ID,
+			</if>
+			<if test="orderCode != null">
+				ORDER_CODE,
+			</if>
+			<if test="orderType != null">
+				ORDER_TYPE,
+			</if>
+			<if test="customerId != null">
+				CUSTOMER_ID,
+			</if>
+			<if test="customerName != null">
+				CUSTOMER_NAME,
+			</if>
+			<if test="salesmanId != null">
+				SALESMAN_ID,
+			</if>
+			<if test="salesmanName != null">
+				SALESMAN_NAME,
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID,
+			</if>
+			<if test="sampleBtype != null">
+				SAMPLE_BTYPE,
+			</if>
+			<if test="sampleTypeId != null">
+				SAMPLE_TYPE_ID,
+			</if>
+			<if test="sampleTypeName != null">
+				SAMPLE_TYPE_NAME,
+			</if>
+			<if test="sampleCode != null">
+				SAMPLE_CODE,
+			</if>
+			<if test="sampleName != null">
+				SAMPLE_NAME,
+			</if>
+			<if test="sampleSize != null">
+				SAMPLE_SIZE,
+			</if>
+			<if test="samplingDate != null">
+				SAMPLING_DATE,
+			</if>
+			<if test="purpose != null">
+				PURPOSE,
+			</if>
+			<if test="transportStatus != null">
+				TRANSPORT_STATUS,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="sampleErrorStatus != null">
+				SAMPLE_ERROR_STATUS,
+			</if>
+			<if test="errorReason != null">
+				ERROR_REASON,
+			</if>
+			<if test="acceptSampleTime != null">
+				ACCEPT_SAMPLE_TIME,
+			</if>
+			<if test="sampleErrorNewNo != null">
+				SAMPLE_ERROR_NEW_NO,
+			</if>
+			<if test="errorDealRemark != null">
+				ERROR_DEAL_REMARK,
+			</if>
+			<if test="familyRelation != null">
+				FAMILY_RELATION,
+			</if>
+			<if test="synchronizedStatus != null">
+				SYNCHRONIZED_STATUS,
+			</if>
+			<if test="ownerPhenotype != null">
+				OWNER_PHENOTYPE,
+			</if>
+			<if test="ownerName != null">
+				OWNER_NAME,
+			</if>
+			<if test="ownerAge != null">
+				OWNER_AGE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="orderCode != null">
+				#{orderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderType != null">
+				#{orderType,jdbcType=BIT},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				#{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="salesmanId != null">
+				#{salesmanId,jdbcType=VARCHAR},
+			</if>
+			<if test="salesmanName != null">
+				#{salesmanName,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				#{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleBtype != null">
+				#{sampleBtype,jdbcType=BIGINT},
+			</if>
+			<if test="sampleTypeId != null">
+				#{sampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTypeName != null">
+				#{sampleTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleCode != null">
+				#{sampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleName != null">
+				#{sampleName,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleSize != null">
+				#{sampleSize,jdbcType=DECIMAL},
+			</if>
+			<if test="samplingDate != null">
+				#{samplingDate,jdbcType=DATE},
+			</if>
+			<if test="purpose != null">
+				#{purpose,jdbcType=TINYINT},
+			</if>
+			<if test="transportStatus != null">
+				#{transportStatus,jdbcType=TINYINT},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sampleErrorStatus != null">
+				#{sampleErrorStatus,jdbcType=TINYINT},
+			</if>
+			<if test="errorReason != null">
+				#{errorReason,jdbcType=VARCHAR},
+			</if>
+			<if test="acceptSampleTime != null">
+				#{acceptSampleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sampleErrorNewNo != null">
+				#{sampleErrorNewNo,jdbcType=VARCHAR},
+			</if>
+			<if test="errorDealRemark != null">
+				#{errorDealRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="familyRelation != null">
+				#{familyRelation,jdbcType=VARCHAR},
+			</if>
+			<if test="synchronizedStatus != null">
+				#{synchronizedStatus,jdbcType=TINYINT},
+			</if>
+			<if test="ownerPhenotype != null">
+				#{ownerPhenotype,jdbcType=TINYINT},
+			</if>
+			<if test="ownerName != null">
+				#{ownerName,jdbcType=VARCHAR},
+			</if>
+			<if test="ownerAge != null">
+				#{ownerAge,jdbcType=SMALLINT},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectByOrderId" parameterType="string" resultMap="BaseResultMap">
+		select * from LIMS_ORDER_SAMPLE_DETAILS where ORDER_ID = #{0}
+	</select>
+	<select id="selectBySampleCode" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_ORDER_SAMPLE_DETAILS where SAMPLE_CODE = #{0}
+	</select>
+	<select id="selectByFamilyAnalysisId"  parameterType="string" resultMap="BaseResultMap">
+		select DISTINCT osd.* from BIOLOGY_FAMILY_ANALYSIS	bfa left join BIOLOGY_FAMILY_ANALYSIS_SAMPLE_RELATION bfasr on bfa.id=bfasr.FAMILY_ANALYSIS_ID
+		left join BIOLOGY_DIVISION_FASTQ_DATA bdfa on bfasr.SAMPLE_ID=bdfa.ID
+		left join LIMS_ORDER_SAMPLE_DETAILS osd on bdfa.SAMPLE_ID=osd.SAMPLE_ID
+		where bfa.id= #{0}
+	</select>
+	<select id="selectBySampleId" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_ORDER_SAMPLE_DETAILS where SAMPLE_ID = #{0}
+	</select>
+</mapper>

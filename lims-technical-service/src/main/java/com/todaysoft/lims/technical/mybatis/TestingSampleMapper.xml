@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingSampleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+		<result column="SAMPLE_TYPE_ID" property="sampleTypeId"
+			jdbcType="VARCHAR" />
+		<result column="SAMPLE_TYPE_NAME" property="sampleTypeName"
+			jdbcType="VARCHAR" />
+		<result column="ORIGINAL_SAMPLE_ID" property="originalSampleId"
+			jdbcType="VARCHAR" />
+		<result column="PARENT_SAMPLE_ID" property="parentSampleId"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingSample"
+		extends="BaseResultMap">
+		<result column="ATTRIBUTES" property="attributes" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, SAMPLE_CODE, SAMPLE_TYPE_ID, SAMPLE_TYPE_NAME,
+		ORIGINAL_SAMPLE_ID,
+		PARENT_SAMPLE_ID
+	</sql>
+	<sql id="Blob_Column_List">
+		ATTRIBUTES
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from LIMS_TESTING_SAMPLE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_SAMPLE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SAMPLE (ID, SAMPLE_CODE,
+		SAMPLE_TYPE_ID,
+		SAMPLE_TYPE_NAME, ORIGINAL_SAMPLE_ID, PARENT_SAMPLE_ID,
+		ATTRIBUTES)
+		values (#{id,jdbcType=VARCHAR},
+		#{sampleCode,jdbcType=VARCHAR},
+		#{sampleTypeId,jdbcType=VARCHAR},
+		#{sampleTypeName,jdbcType=VARCHAR},
+		#{originalSampleId,jdbcType=VARCHAR},
+		#{parentSampleId,jdbcType=VARCHAR},
+		#{attributes,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_SAMPLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="sampleCode != null">
+				SAMPLE_CODE,
+			</if>
+			<if test="sampleTypeId != null">
+				SAMPLE_TYPE_ID,
+			</if>
+			<if test="sampleTypeName != null">
+				SAMPLE_TYPE_NAME,
+			</if>
+			<if test="originalSampleId != null">
+				ORIGINAL_SAMPLE_ID,
+			</if>
+			<if test="parentSampleId != null">
+				PARENT_SAMPLE_ID,
+			</if>
+			<if test="attributes != null">
+				ATTRIBUTES,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleCode != null">
+				#{sampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTypeId != null">
+				#{sampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTypeName != null">
+				#{sampleTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="originalSampleId != null">
+				#{originalSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="parentSampleId != null">
+				#{parentSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="attributes != null">
+				#{attributes,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		update LIMS_TESTING_SAMPLE
+		<set>
+			<if test="sampleCode != null">
+				SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTypeId != null">
+				SAMPLE_TYPE_ID = #{sampleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTypeName != null">
+				SAMPLE_TYPE_NAME = #{sampleTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="originalSampleId != null">
+				ORIGINAL_SAMPLE_ID =
+				#{originalSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="parentSampleId != null">
+				PARENT_SAMPLE_ID = #{parentSampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="attributes != null">
+				ATTRIBUTES = #{attributes,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		update LIMS_TESTING_SAMPLE
+		set SAMPLE_CODE =
+		#{sampleCode,jdbcType=VARCHAR},
+		SAMPLE_TYPE_ID =
+		#{sampleTypeId,jdbcType=VARCHAR},
+		SAMPLE_TYPE_NAME =
+		#{sampleTypeName,jdbcType=VARCHAR},
+		ORIGINAL_SAMPLE_ID =
+		#{originalSampleId,jdbcType=VARCHAR},
+		PARENT_SAMPLE_ID =
+		#{parentSampleId,jdbcType=VARCHAR},
+		ATTRIBUTES =
+		#{attributes,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingSample">
+		update LIMS_TESTING_SAMPLE
+		set SAMPLE_CODE =
+		#{sampleCode,jdbcType=VARCHAR},
+		SAMPLE_TYPE_ID =
+		#{sampleTypeId,jdbcType=VARCHAR},
+		SAMPLE_TYPE_NAME =
+		#{sampleTypeName,jdbcType=VARCHAR},
+		ORIGINAL_SAMPLE_ID =
+		#{originalSampleId,jdbcType=VARCHAR},
+		PARENT_SAMPLE_ID =
+		#{parentSampleId,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectByPrimarySampleCode" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_SAMPLE where SAMPLE_CODE=#{0}
+	</select>
+
+	<select id="selectByParentSample" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_SAMPLE where PARENT_SAMPLE_ID = #{0}
+	</select>
+</mapper>

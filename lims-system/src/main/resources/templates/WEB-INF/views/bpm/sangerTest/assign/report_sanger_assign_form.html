@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析任务</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.1"></script>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <form id="testing_task_form" class="form-horizontal m-t" target="_parent" action="${base}/testing/report_sanger_assign_submit.do"
+                method="post">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">分析员：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="testerId" required data-msg="分析员不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_members semantic = "TECHNICAL-ANALY"> <#list members as s>
+	                        <option value="${s.id!?html}">${s.name!?html}</option>
+	                        </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务描述：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" name="description" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>测序编号</th>
+                                    <th>实验进度</th>
+                                    <th>产品编号</th>
+                                    <th>样本编号</th>
+                                    <th>样本名称</th>
+                                    <th>营销中心</th>
+                                    <th>检测产品</th>
+                                    <th>送检单位</th>
+                                    <th>报告日期</th>
+                                    <th>客户姓名</th>
+                                    <th>业务负责人</th>
+                                    <th>技术负责人</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if data.tasks??> <#list data.tasks as record>
+                                <tr>
+                                    <td>${(record_index + 1)!?html}
+                                        <input type="hidden" name="tasks[${record_index}].id" value="${record.id!}" />
+                                    </td>
+                                    <td>${(record.completeNum)!?html}/${(record.totalNum)!?html}</td>
+                                    <td>${(record.sequencingCode)!?html}</td>
+                                    <td>${(record.productCode)!?html}</td>
+                                    <td>${(record.receivedSampleCode)!?html}</td>
+                                    <td>${(record.receivedSampleName)!?html}</td>
+                                    <td>${(record.marketingCenter)!?html}</td>
+                                    <td title="${(record.productName)!?html}"><#if record.productName?length gt 16>${(record.productName)[0..15]}...<#else>${(record.productName)!?html}</#if></td>
+                                    <td>${(record.customerCompanyName)!?html}</td>
+                                    <td><#if record.reportDate??>${record.reportDate?string('yyyy-MM-dd')}</#if></td>
+                                    <td>${(record.customerName)!?html}</td>
+                                    <td>${(record.businessLeader)!?html}</td>
+                                    <td>${(record.technicalPrincipal)!?html}</td>
+                                </tr>
+                                </#list> </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function()
+    {
+        $("#testing_task_form").validate();
+    });
+</script>
+</html>

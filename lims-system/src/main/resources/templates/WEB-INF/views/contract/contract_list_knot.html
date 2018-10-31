@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>合同管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+<style>
+#L_REAGENT_contract_anchor{
+background-color: #e1e4e4
+}
+
+@media (max-width: 800px) { .table-responsive { width: 100%; margin-bottom: 15px; overflow-x: scroll; overflow-y: hidden; border: 0px solid #dddddd;  -webkit-overflow-scrolling: touch; } .table-responsive > .table { margin-bottom: 0; } .table-responsive > .table > thead > tr > th, .table-responsive > .table > tbody > tr > th, .table-responsive > .table > tfoot > tr > th, .table-responsive > .table > thead > tr > td, .table-responsive > .table > tbody > tr > td, .table-responsive > .table > tfoot > tr > td { white-space: nowrap; }
+
+</style>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ibox-table">
+				<div class="ibox-title">
+                       <h5>合同列表</h5>
+                    </div>
+                    <div class="ibox-content" style="overflow: hidden; zoom: 1">
+                        <div class="col-sm-12">
+	                        <form id="searchcontract_from" action="${base}/contract/selectContract.do" method="post" class="search-form" onsubmit="insertVal()">
+	                            <input type="hidden" class="form-control" id="status" name="status" value="${searcher.status!?html}">
+	                           <input type="hidden" class="form-control" id="flag" name="flag" value="${searcher.flag!?html}">
+	                            <div class="row m-b-xs">
+	                               
+	                                <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" class="form-control" name="code" id="code"  placeholder="合同编号" value="${searcher.code!?html}">
+	                                    </div>
+	                                </div>
+	                                 <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <input type="text" class="form-control" name="name" id="name"  placeholder="合同名称" value="${searcher.name!?html}">
+	                                    </div>
+	                                </div>
+	                                <div class="col-sm-2">
+											<div class="form-control" id="business"
+												placeholder="请选择业务员"></div>
+												<input type="hidden" name="signUser" />
+									</div>
+	                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <select class='form-control' name="marketingCenter"  data-value="${(searcher.marketingCenter)!?html}">
+                                    		<option value=''>请选择营销中心</option>
+                                    		<#list testingTypes as testingType>
+                                    		<option value='${testingType.id}'>${testingType.name}</option>
+                                    		</#list>
+                                    	</select>
+                                    </div>
+                                	</div>
+									<div class="col-sm-2">
+										<div class="input-group">
+											<input type="hidden" value="${searcher.projectManager!?html}" name="projectManager" id="projectManager" />
+											<input type="text" class="form-control" id="prjManager" name="prjManagerName" value="${searcher.prjManagerName!?html}" placeholder="请输入项目管理人" >
+											<div class="input-group-btn">
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+											</div>
+										</div>
+									</div>
+	                                <div class="col-sm-2">
+	                                    <div class="form-group">
+	                                        <button type="submit" class="btn btn-sm btn-success">
+	                                            <i class="fa fa-search"></i> 查询
+	                                        </button>
+	                                        <button type="button" class="btn btn-sm btn-success" onclick="clearHiddenCondition('searchcontract_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </form>
+	                        <div class="table-responsive">
+	                        <table class="table table-bordered">
+	                            <thead>
+	                                <tr>
+	                                    <th class="index">序号</th>
+	                                    <th>合同编号</th>
+	                                    <th>合同名称</th>
+	                                    <th>营销中心</th>
+	                                    <th>业务员</th>
+										<th>项目管理人</th>
+	                                    <th>签订日期</th>
+	                                    <th>终止日期</th>
+	                                    <th>结项日期</th>
+	                                    <th class="flexible-btns">操作</th>
+	                                </tr>
+	                            </thead>
+	                           
+	                 		   <tbody>
+	                           <#if pagination??>
+	                              <#if pagination.records?has_content> 
+	                                <#list pagination.records as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+	                                    <td>${record.code!?html}</td>
+	                                    <td>${record.name!?html}</td>
+	                                    <td>
+	                                    	<#if record.marketingCenter??>
+                                    		<#if record.marketingCenter == 1>临床遗传</#if>
+	                                    	<#if record.marketingCenter == 2>临床肿瘤</#if>
+	                                    	<#if record.marketingCenter == 3>健康筛查</#if>
+	                                    	<#if record.marketingCenter == 4>科技服务</#if>
+	                                    	</#if>
+	                                    </td>
+	                                    <td>${record.signUsername!?html}</td>
+										<td>${record.prjManagerName!?html}</td>
+									    <td><#if record.effectiveStart??>${(record.effectiveStart)!?string('yyyy-MM-dd')} <#else>  ${(record.effectiveStart)!?html} </#if></td>
+									    <td><#if record.effectiveEnd??>${(record.effectiveEnd)!?string('yyyy-MM-dd')} <#else>  ${(record.effectiveEnd)!?html} </#if></td>
+									    <td><#if record.knotTime??>${(record.knotTime)!?string('yyyy-MM-dd')} <#else>  ${(record.knotTime)!?html} </#if></td>
+	                                   	<td class="flexible-btns">
+											<@smm_security_resource resource = "/order/getOrderByContract">
+		                                   	<a href="${base}/order/getOrderByContract?contractId=${record.id}" class="btn btn-sm btn-success"> 
+												<i class="fa fa-search-plus"></i>订单记录
+										    </a>
+										</@smm_security_resource>
+											<@smm_security_resource resource = "/contract/viewPaymentRecord.do">
+										    <a href="${base}/contract/viewPaymentRecord.do?id=${record.id}" class="btn btn-sm btn-success"> 
+												<i class="fa fa-search-plus"></i>付款明细
+									    	</a>
+										</@smm_security_resource>
+											<@smm_security_resource resource = "/contract/showContractInvoice.do">
+										    <a href="${base}/contract/showContractInvoice.do?id=${record.id}" class="btn btn-sm btn-success"> 
+												<i class="fa fa-search-plus"></i>开票明细
+									    	</a>
+										</@smm_security_resource>
+									    	<@smm_security_resource resource = "/contract/view.do">
+										    <a href="${base}/contract/view.do?id=${record.id}" class="btn btn-sm btn-success"> 
+												<i class="fa fa-search-plus"></i>查看
+										    </a> 
+										    </@smm_security_resource>
+										</td>
+	                                </tr>
+	                                </#list>
+	                                </#if>
+	                                </#if>  
+	                            </tbody>  
+	                        </table>
+	                        </div>
+	                      <#include "../inc/pagination.html" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+var b = null;
+<#if businessInfo??>
+	b = ${businessInfo}
+</#if>
+$(function(){
+
+    $("#prjManager").bsSuggest('init', {
+        url : "${base}/smm/role/getSelectList.do?disableStatus="+0+"&name=",
+        getDataMethod : "url",
+        idField : "id",
+        keyField : "name",
+        indexKey: 0,
+        effectiveFields : [ "name" ],
+        effectiveFieldsAlias : {
+            name : "项目管理人名称"
+        }
+    }).on('onDataRequestSuccess', function (e, result) {
+    }).on('onSetSelectValue', function (e, keyword, data) {
+        $('#projectManager').val(data.id);
+    }).on('onUnsetSelectValue', function () {
+        $('#projectManager').val('');
+    });
+	var s = $('#business').magicSuggest({
+
+		width : 190,
+		highlight : true,
+		data : '${base}/business/businessSelect',
+		method : 'get',
+		queryParam : "realName",
+		maxSelection : 1,
+		displayField : "realName",
+		allowFreeEntries : false,
+		renderer : function(v) {
+			return'<div>' +
+	        '<div >' +
+	        
+            '<span>' + v.realName + '</span>' +
+            '<span style="float:right;">' + v.phoneNum + '</span>' +
+            '</div>' +
+        '<div style="clear:both;"></div>';
+		}
+	});	
+	if (null != b) {
+		$('#business').magicSuggest().setSelection(b);
+	}
+});
+
+
+		
+function insertVal(){
+	var business = $('#business').magicSuggest().getSelection()[0];
+	if(undefined != business){
+		$('input[name="signUser"]').val(business.id);
+	} 
+}		
+</script>
+                
+                
+</html>
+

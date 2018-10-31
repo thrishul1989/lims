@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-base-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-biology-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-config-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-eureka-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-export-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-gateway-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-invoice-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-kbm-es-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-maintain-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-ngs-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-order" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-order-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-order-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-order-sync-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-product-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-reagent-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-report-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-schedule" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-schedule-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-system" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-technical-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-testing-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-user-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lims-utils" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

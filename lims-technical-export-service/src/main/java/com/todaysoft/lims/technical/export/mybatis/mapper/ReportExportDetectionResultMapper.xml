@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.export.mybatis.mapper.ReportExportDetectionResultMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="DETAILS" property="details" jdbcType="VARCHAR" />
+    <result column="METHOD_NAME" property="methodName" jdbcType="VARCHAR" />
+    <result column="CLINICAL_JUDGMENT" property="clinicalJudgment" jdbcType="VARCHAR" />
+  </resultMap>
+   <resultMap id="DetectionResultPictureResultMap" type="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResultPicture" >
+    <result column="PIC_NAME" property="picName" jdbcType="VARCHAR" />
+    <result column="PIC_URL" property="picUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TASK_ID, DETAILS, METHOD_NAME, CLINICAL_JUDGMENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_DETECTION_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from REPORT_EXPORT_DETECTION_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    insert into REPORT_EXPORT_DETECTION_RESULT (ID, TASK_ID, DETAILS, 
+      METHOD_NAME, CLINICAL_JUDGMENT)
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{details,jdbcType=VARCHAR}, 
+      #{methodName,jdbcType=VARCHAR}, #{clinicalJudgment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    insert into REPORT_EXPORT_DETECTION_RESULT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="details != null" >
+        DETAILS,
+      </if>
+      <if test="methodName != null" >
+        METHOD_NAME,
+      </if>
+      <if test="clinicalJudgment != null" >
+        CLINICAL_JUDGMENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalJudgment != null" >
+        #{clinicalJudgment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    update REPORT_EXPORT_DETECTION_RESULT
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        DETAILS = #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="methodName != null" >
+        METHOD_NAME = #{methodName,jdbcType=VARCHAR},
+      </if>
+      <if test="clinicalJudgment != null" >
+        CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    update REPORT_EXPORT_DETECTION_RESULT
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      DETAILS = #{details,jdbcType=VARCHAR},
+      METHOD_NAME = #{methodName,jdbcType=VARCHAR},
+      CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectByTaskIdAndClinicalJudgmentAndMethodName" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.technical.export.mybatis.model.ReportExportDetectionResult" >
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT_EXPORT_DETECTION_RESULT 
+    where 1=1 
+    <if test="taskId != null">
+    	and  TASK_ID = #{taskId,jdbcType=VARCHAR}
+    </if>
+    <if test="methodName != null">
+    	and  METHOD_NAME = #{methodName,jdbcType=VARCHAR}
+    </if>
+    <if test="clinicalJudgment != null">
+    	and  CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="selectDetectionResultPictureByTestingTaskId" resultMap="DetectionResultPictureResultMap"  parameterType="java.lang.String" > 
+  	select DATA_PIC.PIC_NAME,DATA_PIC.PIC_URL from LIMS_TESTING_DATA_PIC DATA_PIC
+	inner join LIMS_TESTING_TASK TESTING_TASK on DATA_PIC.DATA_CODE=TESTING_TASK.TESTING_ANALY_DATA_CODE
+	where TESTING_TASK.ID=#{id,jdbcType=VARCHAR}  order by PIC_NAME
+  </select>
+
+</mapper>

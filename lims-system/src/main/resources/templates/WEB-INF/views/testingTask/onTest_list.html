@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>上机任务</title>
+
+
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<script>
+	$(function(){
+
+
+
+		var a=$("#concentration").text();
+		if(a<4){
+			$("#nM").val(a);
+			nMData=$("#concentration").text();
+			$("#nM1").html("dilute to <font color='red'>"+nMData+"</font>nM Add HT1");
+		}
+
+		var nM=11.00;
+	    var	nMData=4;
+	    var pMData=1.8;
+		var pM=135;
+		 $("input").blur(function(){
+	    	 var nMData=$('#nM').val();
+	    	 if(isNaN(nMData)){
+	    		 alert('请输入数字');
+	    	 }else{
+	    		 var dilute=$("#concentration").text();
+	    		 if(a<nMData){
+	    			 alert('请输入正确的稀释值');
+	    			 $("#nM").val("");
+	    			 nMData=$("#concentration").text();
+	    			 nM=dilute*20/nMData -20;
+		    		 $("#concentration").next().html("20ul Sample+<font color='red' id='fourHtOneValue' >"+0+"</font>ul HT1");
+		    		 $("#nM1").html("dilute to <font color='red'>"+0+"</font>nM Add HT1");
+	    		 }else{
+	    		 nM=dilute*20/nMData -20;
+	    		 $("#concentration").next().html("20ul Sample+<font color='red' id='fourHtOneValue' >"+nM.toFixed(2)+"</font>ul HT1");
+	    		 $("#nM1").html("dilute to <font color='red'>"+nMData+"</font>nM Add HT1");
+	    		 }
+	    		 } 
+	    	 pMData=$('#pM').val();
+	    	 if(isNaN(pMData)){
+	    		 alert('请输入数字');
+	    	 }else{
+	    		 if(pMData>20){
+	    			alert('请输入正确的稀释值');
+	    			$("#pM").val("");
+	    			 $("#pM1").html("dilute to <font color='red'>"+0+"</font>pM  (Volume=1500ul)");
+		    		 $("#pMdata").html("<font color='red' id='oneEightHtOneValue' >"+0+"</font>"+"ul 20PM+<font color='red'>"+0+"</font> HT1");
+	    		 }else{
+	    			 pM=pMData*1500/20;
+		    		 pM2=1500-pM
+		    		 $("#pM1").html("dilute to <font color='red'>"+pMData+"</font>pM  (Volume=1500ul)");
+		    		 $("#pMdata").html("<font color='red'  id='oneEightHtOneValue' >"+pM+"</font>"+"ul 20PM+<font color='red'>"+pM2+"</font> HT1");
+	    		 }
+	    	 }
+	      });
+		$("#testingName").bsSuggest('init', {
+			url : "${base}/user/userSelect.do?key=",
+			getDataMethod : "url",
+			idField : "id",
+			keyField : "name",
+			effectiveFields : [ "name" ],
+			effectiveFieldsAlias : {
+				name : "姓名"
+			}
+		}).on('onDataRequestSuccess', function(e, result) {
+
+		}).on('onSetSelectValue', function(e, keyword, data) {
+			$('#executer').val(data.id);
+		}).on('onUnsetSelectValue', function() {
+		});
+        $("#testing_ontesting_form").validate({
+        	submitHandler: function(form){
+        		var values = new Array();
+        			    var data  = {};
+        			    data.testingCode=$("#testCode").text();
+        			    data.activitiTaskId = $("#activitiTaskId").text(); //工作流
+        			    data.fourHtOne=nMData.toFixed(2);
+        			    data.oneEightHtOne=pMData;
+        			    data.cluster=$("#cluster").text();
+        			    data.testingCode=$("#testCode").text();
+        			    data.concentration=	$("#concentration").text();
+        			    data.fourHtOneValue=$("#fourHtOneValue").text();
+        			    data.oneEightHtOneValue=$("#oneEightHtOneValue").text();
+        			    values.push(data);
+        			    console.log(data);
+        		var param=JSON.stringify(values);
+        		$("#param").val(param);
+        		document.forms["testing_dnaqc_form"].submit();
+        	},
+            rules: {
+            	testingName: "required",
+            	oneEightHtOne:"required",
+            	fourHtOne:"required"
+            },
+            messages: {
+            	testingName: "请选择实验负责人",
+            	oneEightHtOne: "请填入稀释浓度",
+            	fourHtOne: "请输入稀释浓度"
+            },
+            errorPlacement: function(error, element) {  
+                error.appendTo(element.parent());  
+            }
+        }); 
+	})
+	
+	
+	
+		
+	
+	
+	function closeModal(){
+		parent.$('#full').modal('hide');
+	}
+	
+
+</script>
+</head>
+<body>
+
+				
+				
+	<div class="wrapper wrapper-content animated fadeInRight"  style=" overflow: auto;">
+		 <div class="col-lg-12" style=" margin-top: 30px">
+		 <form id="testing_ontesting_form" class="form-horizontal m-t" action="${base}/testingTask/createTestTask" method="post" target="iframe0" >
+		    <input type="hidden"  name="param"  id="param"  />
+		    <input type="hidden"  name="executer"  id="executer"  />
+			 <div class="form-group">
+                   <label id="code_label" class="col-sm-2 control-label">任务编号：</label>
+					<div class="col-sm-3">
+						<input type="text"  class="form-control" id="code" name="taskCode" value="${pagination.taskCode!?html}" readonly="readonly"> 
+					</div>
+					<label class="col-sm-2 control-label control-required">实验员：</label>
+					<div class="col-sm-4">
+						<div class="input-group">
+		                        <input type="text" class="form-control" id="testingName" name="testingName"  >
+		                        <div class="input-group-btn">
+		                            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		                                <span class="caret"></span>
+		                            </button>
+		                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                            </ul>
+		                        </div>
+				         </div>
+					</div>
+					<input type="hidden"  name="semantic"  id="semantic"  value="${searcher.semantic!?html}" />
+			</div>
+			 <div class="form-group">
+			 <label id="" class="col-sm-2 control-label ">任务下达人：</label>
+			 <div class="col-sm-3">
+						<input type="text"  class="form-control" id="sendName" name="sendName" value="${(user.archive.name)!?html}" readonly="readonly"> 
+					</div>
+			 <label id="" class="col-sm-2 control-label ">下达时间：</label>
+			 <div class="col-sm-3">
+						<input type="date"  class="form-control" id="sendDate" name="sendDate" value="${.now?string("yyyy-MM-dd")}" readonly="readonly"> 
+					</div>
+			 </div>
+		 <div class="form-group">
+					<label class="col-sm-2 control-label">dilute to  ：nM</label>
+					<div class="col-sm-3">
+						<input type="text"  class="form-control" id="nM"  name="fourHtOne" value="4" > 
+					</div>
+					
+					<label class="col-sm-2 control-label">dilute to ：pM</label>
+					<div class="col-sm-3">
+						<input type="text"  class="form-control" id="pM" name="oneEightHtOne" value="1.8" > 
+					</div>
+			</div>
+			<div class="col-md-10" >
+			
+				<div class="form-group" style="padding-left: 188px">
+				
+				
+<div class="col-sm-3 ">
+					  <input type="submit" class="btn btn-primary" value="下达任务"></input>  
+				</div>
+
+				
+
+	    </div>
+	    
+	    
+			  <table id="testing_dnaqc_detail_table" class="table table-striped table-bordered table-hover dataTables-example"  style="margin-left: 15px;">
+				<thead>
+					<tr>
+						<th>时间</th>
+						<th>MG_NO.</th>	
+						<th>Concentration(nM)</th>
+						<th id="nM1">dilute to <font color='red'>4</font>nM Add HT1</th>
+						<th>RT 5min</th>
+						<th>dilute to 20 pM  Add HT1</th>
+						<th id='pM1'>dilute to <font color='red'>1.8</font>pM  (Volume=1500ul)</th>
+						<th>cluster</th>
+						<th style="display:none">工作流</th>
+					</tr>
+				</thead>
+				<tbody>
+				 <#if pagination.testingTaskDetailList??>
+                   <#list pagination.testingTaskDetailList as record>
+					<tr >
+						<td>${.now?string("yyyy-MM-dd")}</td>
+						<td id="testCode">${record.testCode!?html}</td>
+						<td id="concentration">${record.concentration!?html}</td>
+						<td>20ul Sample+<font color='red' id="fourHtOneValue">11</font>ul HT1</td>
+						<td>5ul Sample+5ul 0.2N NaOH</td>
+						<td>990ul HT1</td>
+						<td id="pMdata"><font color='red' id="oneEightHtOneValue">135</font>ul 20PM+<font color='red'>1365</font>ul HT1</td>
+						<td id="cluster">${record.cluster!?html}</td>
+						<td style="display:none" id="activitiTaskId">${searcher.activitiTaskId!?html}</td>
+					</tr>
+               	 </#list>
+                </#if>
+				</tbody>
+			</table>
+		 </div>
+
+		
+
+
+	</form>
+</div>
+</div>
+</body>
+<script>
+$("input[type='submit']").click(function (){
+	
+	$("#testing_ontesting_form").submit();
+})
+</script>
+
+</html>

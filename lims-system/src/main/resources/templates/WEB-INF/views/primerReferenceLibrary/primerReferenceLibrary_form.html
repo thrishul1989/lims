@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>引物表单-更新引物</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script><!-- 引入自定义包 -->
+<script type="text/javascript">
+
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/primerReferenceLibrary/list.do">引物参考库管理</a></li>
+							<li class="active"><strong>新建引物参考库</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<strong>新建引物参考库</strong>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal m-t toggle-form" id="choseForm"
+							action="${base}/primerReferenceLibrary/create.do" method="post">
+						<input type="hidden" id="id" name="id" value="${(primerReferenceLibrary.id)!?html}" />
+						<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<div class="form-group">
+								<label class="col-sm-2 control-label">外显子：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="codingExon"  id="codingExon"
+										value="${(primerReferenceLibrary.codingExon)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label">外显子区域：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="codingExonArea" id="codingExonArea"
+										value="${(primerReferenceLibrary.codingExonArea)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">染色体编号：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="chromosomeNumber" id="chromosomeNumber"
+										value="${(primerReferenceLibrary.chromosomeNumber)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label control-required">PCR起始点：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="pcrStartPoint" id="pcrStartPoint"
+										value="${(primerReferenceLibrary.pcrStartPoint)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required" >PCR终止点：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="pcrEndPoint" id="pcrEndPoint"
+										value="${(primerReferenceLibrary.pcrEndPoint)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label control-required">反向引物序列：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="reversePrimerSequence" id="reversePrimerSequence"
+										value="${(primerReferenceLibrary.reversePrimerSequence)!?html}" /> 
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required" >正向引物序列：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="forwardPrimerSequence" id="forwardPrimerSequence"
+										value="${(primerReferenceLibrary.forwardPrimerSequence)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label">基因：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="gene" id="gene"
+										value="${(primerReferenceLibrary.gene)!?html}" />
+								</div>
+							</div>
+
+						
+
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class=" btn btn-primary " type="submit">保存</button>
+									<button class=" btn btn-primary " type="button"
+										onclick="goBack()">返回</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		
+	$(function(){
+		 $("#choseForm").validate({
+	            rules: {
+	            	primerReferenceLibraryNo:  {
+	            		required:true,
+	            		maxlength: 64,
+	            		remote:{
+							url: "${base}/primerReferenceLibrary/checkedprimerReferenceLibraryNo?primerReferenceLibraryNo?"+$("#primerReferenceLibraryNo").val()
+						 }
+	            	},
+	            	primerReferenceLibraryType: {
+	            		required:true,
+	            		isEmpty: true
+	            	},
+	            	chromosomeNumber: {
+	            		required:true,
+	            		isEmpty: true
+	            	},
+	            	pcrStartPoint: {
+	            		required:true,
+	            		isEmpty: true
+	            	},
+	            	pcrEndPoint: {
+	            		required:true,
+	            		isEmpty: true
+	            	},
+	            	reverseprimerReferenceLibrarySequence:  {
+	            		required:true,
+	            		isEmpty: true
+	            	},
+	            	forwardprimerReferenceLibrarySequence: {
+	            		required:true,
+	            		isEmpty: true
+	            	}
+	            },
+	            messages: {
+	            	primerReferenceLibraryNo:  {
+	            		remote:"订单名已存在，请重新输入！"
+	            	}
+	            }
+	        });
+	        
+		changeFormAttr();
+	});
+	
+	
+	function changeFormAttr(){
+    	var updateID = '';
+    	updateID  = $("#id").val();
+    	if(updateID.length>0 ){
+    		$("strong").html("修改引物参考库");
+            $('#choseForm').attr('action', '${base}/primerReferenceLibrary/modify.do'); 
+    	}
+    
+  	 }		
+	function goBack() {
+		window.history.back(-1);
+	}
+	</script>
+</body>
+</html>

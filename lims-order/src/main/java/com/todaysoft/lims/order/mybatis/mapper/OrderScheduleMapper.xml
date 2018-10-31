@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.OrderScheduleMapper">
+
+    <!-- 订单实验流程对象 -->
+    <resultMap id="OrderScheduleModel" type="com.todaysoft.lims.order.mybatis.model.OrderScheduleModel">
+        <id column="SCHEDULE_ID" property="scheduleId" />
+        <result column="VERIFY_KEY" property="verifyKey" />
+        <result column="PRODUCT_NAME" property="productName" />
+        <result column="SAMPLE_CODE" property="sampleCode" />
+        <result column="SAMPLE_NAME" property="sampleName" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="METHOD_NAME" property="methodName" />
+        <result column="PROCCESS_STATE" property="proccessState" />
+        <result column="END_TYPE" property="endType" />
+        <result column="ACTIVE_TASK" property="activeTask" />
+        <result column="SCHEDULE_STATUS" property="scheduleStatus" />
+        <result column="POOLING_JSONS" property="poolingJsons" />
+        <result column="START_TIME" property="startTime" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="GENE_SYMBOL" property="geneSymbol" />
+        <result column="CHROMOSOME_LOCATION" property="chromosomeLocation" />
+        <result column="SAMPLE_PURPOSE" property="samplePurpose" />
+    </resultMap>
+    
+    <sql id="BaseSelectColumns">
+         p.name as PRODUCT_NAME,ts.ID as SCHEDULE_ID,ts.VERIFY_KEY,
+		(SELECT GROUP_CONCAT(DISTINCT rsam.SAMPLE_CODE ORDER BY tt.START_TIME SEPARATOR '/') as codes 
+			FROM LIMS_TESTING_SCHEDULE_HISTORY tsh
+			LEFT JOIN LIMS_TESTING_TASK tt on tt.ID = tsh.TASK_ID
+			LEFT JOIN LIMS_TESTING_SAMPLE tsam on tsam.ID = tt.INPUT_SAMPLE_ID
+			LEFT JOIN LIMS_RECEIVED_SAMPLE rsam on rsam.SAMPLE_ID = tsam.ORIGINAL_SAMPLE_ID
+			WHERE tt.semantic != 'PRIMER-DESIGN' AND tt.semantic != 'PCR-NGS-PRIMER-DESIGN' AND tsh.SCHEDULE_ID = ts.id
+			GROUP BY tsh.SCHEDULE_ID) as SAMPLE_CODE
+		,IF(ISNULL(rsa.SAMPLE_NAME),IF(ISNULL(rsa2.SAMPLE_NAME),null,rsa2.SAMPLE_NAME),rsa.SAMPLE_NAME) as SAMPLE_NAME
+		,IF(ISNULL(rsa.TYPE_NAME),IF(ISNULL(rsa2.TYPE_NAME),null,rsa2.TYPE_NAME),rsa.TYPE_NAME) as TYPE_NAME
+		,tm.`NAME` as METHOD_NAME,ts.PROCCESS_STATE,ts.END_TYPE,ts.ACTIVE_TASK,
+		CASE WHEN ts.PROCCESS_STATE='1' and ts.END_TYPE is null THEN '已暂停'
+		WHEN ts.PROCCESS_STATE='2' and ts.END_TYPE is null THEN '已取消'
+		ELSE ts.ACTIVE_TASK END as SCHEDULE_STATUS,temp_tt.pooling_jsons as POOLING_JSONS,ts.START_TIME,
+		(SELECT  IF ( ISNULL(  tt.END_TIME  ),  tt.START_TIME ,  tt.END_TIME  ) FROM LIMS_TESTING_SCHEDULE_HISTORY tsh, LIMS_TESTING_TASK tt WHERE tsh.TASK_ID = tt.ID AND tsh.SCHEDULE_ID = ts.ID order by tt.START_TIME desc limit 0,1)as UPDATE_TIME
+		,IF(ISNULL(tar.GENE_SYMBOL),IF(ISNULL(tar2.GENE_SYMBOL),IF(ISNULL(tar3.GENE_SYMBOL),NULL,tar3.GENE_SYMBOL),tar2.GENE_SYMBOL),tar.GENE_SYMBOL) as GENE_SYMBOL
+		,IF(ISNULL(tar.CHROMOSOME_LOCATION),IF(ISNULL(tar2.CHROMOSOME_LOCATION),IF(ISNULL(tar3.CHROMOSOME_LOCATION),NULL,tar3.CHROMOSOME_LOCATION),tar2.CHROMOSOME_LOCATION),tar.CHROMOSOME_LOCATION) as CHROMOSOME_LOCATION
+    </sql>
+    
+     <sql id="BaseLeftJoinTables">
+        LEFT JOIN LIMS_TESTING_METHOD tm on tm.ID = ts.METHOD_ID
+		LEFT JOIN(
+			SELECT lts.ID,GROUP_CONCAT(ts.`VARIABLES` SEPARATOR '/') as pooling_jsons from LIMS_TESTING_SCHEDULE lts 
+			,LIMS_TESTING_SCHEDULE_HISTORY ltsh ,LIMS_TESTING_TASK ltt ,LIMS_TESTING_SHEET_TASK ltst ,LIMS_TESTING_SHEET ts 
+			where ltsh.SCHEDULE_ID = lts.ID and ltt.id = ltsh.TASK_ID and ltt.SEMANTIC='POOLING'
+			and ltst.TESTING_TASK_ID = ltt.ID and ts.id = ltst.SHEET_ID
+			GROUP BY lts.ID
+			) temp_tt on temp_tt.ID = ts.ID
+		LEFT JOIN LIMS_TESTING_SAMPLE tsa on tsa.ID = ts.SAMPLE_ID
+		LEFT JOIN LIMS_RECEIVED_SAMPLE rsa on rsa.SAMPLE_ID = tsa.ORIGINAL_SAMPLE_ID
+		LEFT JOIN LIMS_RECEIVED_SAMPLE rsa2 on rsa2.SAMPLE_ID = ts.SAMPLE_ID
+		LEFT JOIN LIMS_TESTING_SANGER_VERIFY sv on sv.ID = ts.VERIFY_KEY
+		LEFT JOIN LIMS_TESTING_MLPA_VERIFY mv on mv.ID = ts.VERIFY_KEY
+		LEFT JOIN LIMS_TESTING_QPCR_VERIFY qv on qv.ID = ts.VERIFY_KEY
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY tav on tav.ID = sv.VERIFY_RECORD
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY tav2 on tav2.ID = mv.VERIFY_RECORD
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY tav3 on tav3.ID = qv.VERIFY_RECORD
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD tar on tar.ID = tav.RECORD_ID
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD tar2 on tar2.ID = tav2.RECORD_ID
+		LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD tar3 on tar3.ID = tav3.RECORD_ID
+    </sql>
+    
+    <select id="searchTestingOrderStatusByOrderId" resultMap="OrderScheduleModel" >
+        SELECT 
+        <include refid="BaseSelectColumns"></include>,IFNULL(rsa.PURPOSE,2) SAMPLE_PURPOSE 
+		FROM LIMS_ORDER_PRODUCT op 
+		LEFT JOIN LIMS_PRODUCT p on p.ID = op.PRODUCT_ID
+		LEFT JOIN LIMS_TESTING_SCHEDULE ts on ts.ORDER_ID = op.ORDER_ID and ts.PRODUCT_ID = op.PRODUCT_ID
+		<include refid="BaseLeftJoinTables"></include>
+		WHERE op.ORDER_ID = #{orderId}
+		<if test="productId != null and productId != ''" >
+            AND op.PRODUCT_ID = #{productId}
+        </if>
+    </select>
+    
+    <!-- 科技订单 -->
+    <select id="searchTestingOrderStatusByTecOrderId" resultMap="OrderScheduleModel" >
+    	SELECT 
+        <include refid="BaseSelectColumns"></include>
+        FROM(
+			SELECT DISTINCT lorp.PRODUCT_ID,lors.ORDER_ID
+			FROM LIMS_ORDER_RESEARCH_PRODUCT lorp
+			INNER JOIN LIMS_ORDER_RESEARCH_SAMPLE lors on lorp.ORS_ID = lors.ID
+			WHERE lors.ORDER_ID = #{orderId}
+			<if test="productId != null and productId != ''" >
+            AND op.PRODUCT_ID = #{productId}
+        	</if>
+		) temp_t
+		LEFT JOIN LIMS_PRODUCT p on p.ID = temp_t.PRODUCT_ID
+		LEFT JOIN  LIMS_TESTING_SCHEDULE ts on ts.ORDER_ID = temp_t.ORDER_ID and ts.PRODUCT_ID = temp_t.PRODUCT_ID
+		<include refid="BaseLeftJoinTables"></include>
+    </select>
+    
+    <select id="searchCodeByScheduleId" resultType="java.lang.String" parameterType="java.lang.String">
+    	SELECT rsam.SAMPLE_CODE as codes 
+			FROM LIMS_TESTING_SCHEDULE ts
+			LEFT JOIN LIMS_TESTING_SAMPLE tsam on tsam.ID = ts.SAMPLE_ID
+			LEFT JOIN LIMS_RECEIVED_SAMPLE rsam on rsam.SAMPLE_ID = tsam.ORIGINAL_SAMPLE_ID
+			WHERE ts.ID = #{scheduleId}
+    </select>
+    
+</mapper>

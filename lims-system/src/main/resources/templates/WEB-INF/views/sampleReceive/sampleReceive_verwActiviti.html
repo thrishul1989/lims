@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>xx</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<script type="text/javascript">
+function back(){
+	 window.location.href="${base}/sampleReceive/startActiviti.do";
+}
+</script>
+
+
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+		 <div class="ibox">
+			<div class="ibox-title">
+                 <ol class="breadcrumb">
+                     <li>
+                         <a href="#">流程跟踪</a>
+                     </li>
+                     <li>
+                         <a href="#">具体工作流程进展</a>
+                     </li>
+                 </ol>
+             </div>
+
+             <form >
+             <div style="overflow: auto">
+             	<table class="table table-striped table-bordered table-hover" style="min-width: 130%">
+                         <thead>
+                           <tr>
+                           		<th class="flexible-btns">序号</th>
+								<th class="flexible-btns">样本接收员</th>
+                        		<th class="flexible-btns">样本名称</th>
+                        		<th class="flexible-btns">是否原始样本</th>
+                        		<th class="flexible-btns">样本类别</th>
+								<th class="flexible-btns">编号</th>
+								<th class="flexible-btns">存储位置</th>
+								<th class="flexible-btns">存储类型</th>
+								<th class="flexible-btns">剩余量</th>
+                           </tr>
+                          </thead>
+                          <tbody>
+                          <#if originalSamples??>
+                                <#if originalSamples?has_content> <#list originalSamples as record>
+	                                <tr>
+                                  			<td class="flexible-btns">${record_index + 1}</td>
+                                  		<td class="flexible-btns">${record.executerName!?html}</td>
+										<td class="flexible-btns">${record.typeName!?html}</td>
+	                                	<td class="flexible-btns"><#if record.original == "1">是<#elseif record.original == "0">否</#if></td>
+	                                    <td class="flexible-btns"><@dict_entry_text category="TASK_ELEMENT" value=record.category /></td>
+	                                    <td class="flexible-btns">${record.instCode!?html}</td>
+	                                    <td class="flexible-btns">${record.storageLocation!?html}</td>
+	                                    <td class="flexible-btns"><@dict_entry_text category="STORE_TYPE" value=record.storageType /></td>
+	                                    <td class="flexible-btns"><#if record.remainAmount?has_content>${record.remainAmount!?html}(<@dict_entry_text category="COMPANY" value=record.unit />)</#if></td>
+	                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="19">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                             </#if>
+                        </tbody>
+                    </table>
+             </div>
+             
+             <div style="overflow: auto">
+             
+             
+             
+             <table class="table table-striped table-bordered table-hover" style="min-width: 130%">
+                         <thead>
+                           <tr>
+                           		<th class="flexible-btns">序号</th>
+								<th class="flexible-btns">实验名称</th>
+								<th class="flexible-btns">操作员</th>
+                        		<th class="flexible-btns">样本名称</th>
+                        		<th class="flexible-btns">是否原始样本</th>
+                        		<th class="flexible-btns">样本类别</th>
+								<th class="flexible-btns">编号</th>
+								<th class="flexible-btns">存储位置</th>
+								<th class="flexible-btns">存储类型</th>
+								<th class="flexible-btns">实验投入量</th>
+								<th class="flexible-btns">剩余量</th>
+								<th class="flexible-btns">实验完成时间</th>
+								<th class="flexible-btns">体积</th>
+								<th class="flexible-btns">浓度</th>
+								<th class="flexible-btns">A260/280</th>
+								<th class="flexible-btns">A260/230</th>
+								<th class="flexible-btns">质检结果</th>
+								<th class="flexible-btns">接头编号</th>
+								<th class="flexible-btns">探针名称</th>
+								<th class="flexible-btns">CT</th>
+								<th class="flexible-btns">数据量</th>
+								<th class="flexible-btns">混样体积</th>
+								<th class="flexible-btns">片段长度</th>
+								<th class="flexible-btns">上机浓度</th>
+								<th class="flexible-btns">cluster</th>
+								<th class="flexible-btns">cluster有效率</th>
+								<th class="flexible-btns">有效数据量</th>
+								<th class="flexible-btns">Q30</th>
+                           </tr>
+                          </thead>
+                          <tbody>
+                          <#if sampleTracingList??>
+                                <#if sampleTracingList?has_content> <#list sampleTracingList as record>
+	                                <tr>
+                                  			<td class="flexible-btns">${record_index + 1}</td>
+                                  		<td class="flexible-btns">${record.taskName!?html}</td>
+                                  		<td class="flexible-btns">${record.executerName!?html}</td>
+										<td class="flexible-btns">${record.typeName!?html}</td>
+	                                	<td class="flexible-btns"><#if record.original == "1">是<#elseif record.original == "0">否</#if></td>
+	                                    <td class="flexible-btns"><@dict_entry_text category="TASK_ELEMENT" value=record.category /></td>
+	                                    <td class="flexible-btns">${record.instCode!?html}</td>
+	                                    <td class="flexible-btns">${record.storageLocation!?html}</td>
+	                                    <td class="flexible-btns"><@dict_entry_text category="STORE_TYPE" value=record.storageType /></td>
+	                                    <td class="flexible-btns"><#if record.inputAmount?has_content>${record.inputAmount!?html}(<@dict_entry_text category="COMPANY" value=record.unit />)</#if></td>
+	                                    <td class="flexible-btns"><#if record.remainAmount?has_content>${record.remainAmount!?html}(<@dict_entry_text category="COMPANY" value=record.unit />)</#if></td>
+	                                    <td class="flexible-btns"><#if record.createTime??> ${(record.createTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else>  ${(record.createTime)!?html} </#if></td>
+	                                    <td class="flexible-btns">${record.volume!?html}</td>
+	                                    <td class="flexible-btns">${record.concn!?html}</td>
+	                                    <td class="flexible-btns">${record.index260280!?html}</td>
+	                                    <td class="flexible-btns">${record.index260230!?html}</td>
+	                                    <td class="flexible-btns"><@dict_entry_text category="QT_STATUS" value=record.QTStatus /></td>
+	                                    <td class="flexible-btns">${record.indexCode!?html}</td>
+	                                    <td class="flexible-btns">${record.probeName!?html}</td>
+	                                    <td class="flexible-btns">${record.CT!?html}</td>
+	                                    <td class="flexible-btns">${record.dataSize!?html}</td>
+	                                    <td class="flexible-btns">${record.mixedVolume!?html}</td>
+	                                    <td class="flexible-btns">${record.fragmentLength!?html}</td>
+	                                    <td class="flexible-btns">${record.concentrationPC!?html}</td>
+	                                    <td class="flexible-btns">${record.cluster!?html}</td>
+	                                    <td class="flexible-btns">${record.clusterEffectiveRate!?html}</td>
+	                                    <td class="flexible-btns">${record.efficientData!?html}</td>
+	                                    <td class="flexible-btns">${record.Q30!?html}</td>
+	                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="19">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                             </#if>
+                        </tbody>
+                    </table></div>
+                   </form>
+                   </div>
+          	   </div>
+            </div><!-- row -->
+            
+            	<div class="form-group" style="position: relative;left:160px;">
+					<div class="col-sm-3 col-sm-offset-9">
+                         <button class="btn btn-sm btn-success" type="button" onclick="back()">返回</button>
+                    </div>
+				</div>
+            
+          </div>
+  
+</body>
+
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+</html>

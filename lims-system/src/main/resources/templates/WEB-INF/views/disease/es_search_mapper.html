@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>疾病系统-基因-表型--同步</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript">
+    function mapper(title)
+    {
+
+        $.ajax({
+            type : "post",
+            url : "/disease/esMapper.do",
+            data : {
+                type : title
+            },
+            dataType : "json",
+            success : function(data)
+            {
+            },
+            error : function()
+            {
+            }
+        });
+    }
+
+    $(function()
+    {
+        var refreshUI = function(key, args)
+        {
+            var args = args || false;
+
+            if (!args)
+            {
+                return;
+            }
+
+            var $object = $('#' + key);
+
+            if (args.start)
+            {
+                $object.show();
+                $object.find('.total-count').empty().append(args.totalCount);
+                $object.find('.processed-count').empty().append(args.processedCount);
+                $object.find('.processed-status').empty().append(args.finish ? '已完成' : '处理中');
+            }
+            else
+            {
+                $object.hide();
+            }
+        }
+
+        var refreshStatus = function()
+        {
+            console.log('refresh');
+
+            $.get('${base}/disease/indexes/monitor.do', function(monitor)
+            {
+                var monitor = monitor || false;
+
+                if (!monitor)
+                {
+                    return;
+                }
+
+                refreshUI('products', monitor.products);
+                refreshUI('genes', monitor.genes);
+                refreshUI('diseases', monitor.diseases);
+                refreshUI('phenotypes', monitor.phenotypes);
+            });
+        }
+
+        refreshStatus();
+        setInterval(refreshStatus, 1500);
+    });
+</script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="#">同步管理</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" action="" method="post" enctype='application/json'>
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label ">同步产品：</label>
+                                    <div class="col-sm-3">
+                                        <input type="button" class="btn btn-primary" value="同步产品" onclick="javascript:mapper('1');" />
+                                        <p id="products">
+                                            总记录数：
+                                            <span class="total-count"></span>
+                                            ，已处理记录数：
+                                            <span class="processed-count"></span>
+                                            ，状态：
+                                            <span class="processed-status"></span>
+                                        </p>
+                                    </div>
+                                    <label class="col-sm-2 control-label ">同步疾病：</label>
+                                    <div class="col-sm-3">
+                                        <input type="button" class="btn btn-primary" value="同步疾病" onclick="javascript:mapper('2');" />
+                                        <p id="diseases">
+                                            总记录数：
+                                            <span class="total-count"></span>
+                                            ，已处理记录数：
+                                            <span class="processed-count"></span>
+                                            ，状态：
+                                            <span class="processed-status"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label ">同步基因：</label>
+                                    <div class="col-sm-3">
+                                        <input type="button" class="btn btn-primary" value="同步基因" onclick="javascript:mapper('3');" />
+                                        <p id="genes">
+                                            总记录数：
+                                            <span class="total-count"></span>
+                                            ，已处理记录数：
+                                            <span class="processed-count"></span>
+                                            ，状态：
+                                            <span class="processed-status"></span>
+                                        </p>
+                                    </div>
+                                    <label class="col-sm-2 control-label ">同步表型：</label>
+                                    <div class="col-sm-3">
+                                        <input type="button" class="btn btn-primary" value="同步表型" onclick="javascript:mapper('4');" />
+                                        <p id="phenotypes">
+                                            总记录数：
+                                            <span class="total-count"></span>
+                                            ，已处理记录数：
+                                            <span class="processed-count"></span>
+                                            ，状态：
+                                            <span class="processed-status"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

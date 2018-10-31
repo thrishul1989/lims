@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>项目监控-订单列表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<style>
+<!--
+ul {
+    list-style: none; margin: 0; padding: 0;
+}
+
+ul li {
+    margin: 0; padding: 0;
+}
+-->
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>项目管理</span>
+                            </li>
+                            <li>
+                                <span>项目监控</span>
+                            </li>
+                            <li class="active">
+                                <strong>已结束</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>订单列表</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="search_from" action="${base}/bmm/schedule/unPriorityOrders.do" method="post" class="search-form">
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="orderCode" value="${(searcher.orderCode)!?html}" placeholder="订单编号">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="sampleCode" value="${(searcher.sampleCode)!?html}" placeholder="样本编号">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="contractName" value="${(searcher.contractName)!?html}"
+                                    placeholder="合同名称">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <select class="form-control" name="marketingCenterId" data-value="${(searcher.marketingCenterId)!?html}">
+                                    <option value="">所有营销中心</option>
+                                    <option value="1">临床遗传</option>
+                                    <option value="2">临床肿瘤</option>
+                                    <option value="3">健康筛查</option>
+                                    <option value="4">科技服务</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="examineeName" value="${(searcher.examineeName)!?html}"
+                                    placeholder="受检人姓名">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="customerName" value="${(searcher.customerName)!?html}"
+                                    placeholder="客户姓名">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="customerCompanyName" value="${(searcher.customerCompanyName)!?html}"
+                                    placeholder="送检单位">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="salesmanName" value="${(searcher.salesmanName)!?html}"
+                                    placeholder="业务员名称">
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" id="start" class="form-control laydate-icon" name="plannedFinishStartDate" placeholder="计划完成日期起始"
+                                    readOnly="readOnly" onclick="laydate({istime: false, format: 'YYYY-MM-DD'})"
+                                <#if (searcher.plannedFinishStartDate)??>value="${(searcher.plannedFinishStartDate)!}"</#if> />
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <input type="text" id="end" class="form-control laydate-icon" name="plannedFinishEndDate" placeholder="计划完成日期截止"
+                                    readOnly="readOnly" onclick="laydate({istime: false, format: 'YYYY-MM-DD'})"
+                                <#if (searcher.plannedFinishEndDate)??>value="${(searcher.plannedFinishEndDate)!}"</#if> />
+                            </div>
+                            <!-- <div class="col-sm-2 form-group">
+                                <input type="text" class="form-control" name="postponedNode" value="${(searcher.postponedNode)!?html}" placeholder="延期节点">
+                            </div> -->
+                            <div class="col-sm-2 form-group">
+                                <select class="form-control" id="status" name="status" data-value="${searcher.status!?html}">
+											<option value="">请选择订单状态</option>
+											<option value="4">已取消</option>
+											<option value="5">已完成</option>
+										</select>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="hidden" value="${searcher.projectManager!?html}" name="projectManager" id="projectManager" />
+                                    <input type="text" class="form-control" id="prjManager" name="prjManagerName" value="${searcher.prjManagerName!?html}" placeholder="请输入项目管理人" >
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fa fa-search"></i> 查询
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success" onclick="clearHiddenCondition('search_from')">
+                                    <i class="fa fa-repeat"></i> 重置
+                                </button>
+                            </div>
+                        </form>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>订单编号</th>
+                                    <th>合同名称</th>
+                                    <th>营销中心</th>
+                                    <th>受检人</th>
+                                    <th>客户</th>
+                                    <th>送检单位</th>
+                                    <th>业务员</th>
+                                    <th>项目管理人</th>
+                                    <th>下单时间</th>
+                                    <th>计划完成时间</th>
+                                    <th>订单状态</th>
+                                    <th>延期状态</th>
+                                    <th>是否加急</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if (pagination.records)?? && pagination.records?has_content> <#list pagination.records as record>
+                                <tr id="tr_${record.id!?html}">
+                                    <td>${(record_index+1)!?html}</td>
+                                    <td>${(record.orderCode)!?html}</td>
+                                    <td>${(record.contractName)!?html}</td>
+                                    <td>${(record.orderMarketingCenterName)!?html}</td>
+                                    <td>${(record.examineeName)!?html}</td>
+                                    <td>${(record.customerName)!?html}</td>
+                                    <td>${(record.customerCompanyName)!?html}</td>
+                                    <td>${(record.salesmanName)!?html}</td>
+                                    <td>${(record.prjManagerName)!?html}</td>
+                                    <td><#if (record.orderSubmitTime)??>${(record.orderSubmitTime)?string('yyyy-MM-dd')}</#if></td>
+                                    <td><#if (record.plannedFinishDate)??>${(record.plannedFinishDate)?string('yyyy-MM-dd')}</#if></td>
+                                    <td>
+                                    	<#if record.orderStatus??>
+                                    		<#if (record.orderStatus) == 4>已取消</#if>
+                                    		<#if (record.orderStatus) == 5>已完成</#if>
+                                    	</#if>
+                                    </td>
+                                    <td class="order-postponed-details">-</td>
+                                    <td><#if record.orderIfUrgent??><#if record.orderIfUrgent == 1>是</#if></#if></td>
+                                    <td>
+                                    	<@smm_security_resource resource = "/bmm/schedule/order.do">
+                                        <a href="${base}/bmm/schedule/order.do?id=${record.id}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-search-plus"></i> 查看
+                                        </a>
+                                        </@smm_security_resource>
+                                        <#if record.orderStatus !=4 && record.orderStatus !=5>
+	                                        <#if record.orderIfUrgent??> <#if record.orderIfUrgent == 0>
+	                                        <a href="${base}/bmm/schedule/updateOrderUrgent.do?orderId=${record.id}&ifUrgent=1"
+	                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定为该订单设置加急吗?">
+	                                            <i class="fa fa-edit"></i> 设置加急
+	                                        </a>
+	                                        <#else>
+	                                        <a href="${base}/bmm/schedule/updateOrderUrgent.do?orderId=${record.id}&ifUrgent=0"
+	                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定取消该订单加急标识吗?">
+	                                            <i class="fa fa-ban"></i> 取消加急
+	                                        </a>
+	                                        </#if> <#else>
+	                                        <a href="${base}/bmm/schedule/updateOrderUrgent.do?orderId=${record.id}&ifUrgent=1"
+	                                            class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定为该订单设置加急吗?">
+	                                            <i class="fa fa-edit"></i> 设置加急
+	                                        </a>
+	                                        </#if>
+                                        </#if>
+                                    </td>
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="13">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                        <#include "../../inc/pagination.html" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="template" type="text/html">
+    <div data-toggle="tooltip" data-html="true" data-placement="right">
+		{{if null != postponedWorstNode.postponedDays}}
+			{{if postponedWorstNode.postponedDays > 0}}
+				{{postponedWorstNode.name}}-延期{{postponedWorstNode.postponedDays}}天		
+			{{/if}}
+		{{/if}}
+	</div>
+    <div class="tooltip-content" style="display:none;">
+        <ul>
+        {{each postponedNodes as node i}}
+        <li>
+			{{if null != node.postponedDays}}
+				{{if node.postponedDays > 0}}
+					{{node.name}}-延期{{node.postponedDays}}天
+				{{/if}}
+			{{/if}}
+		</li>
+        {{/each}}
+        </ul>
+    </div>
+    </script>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${plugins}/template/template.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <script src="${system_js}/bootstrap-suggest.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#prjManager").bsSuggest('init', {
+                url : "${base}/smm/role/getSelectList.do?disableStatus="+0+"&name=",
+                getDataMethod : "url",
+                idField : "id",
+                keyField : "name",
+                indexKey: 0,
+                effectiveFields : [ "name" ],
+                effectiveFieldsAlias : {
+                    name : "项目管理人名称"
+                }
+            }).on('onDataRequestSuccess', function (e, result) {
+            }).on('onSetSelectValue', function (e, keyword, data) {
+                $('#projectManager').val(data.id);
+            }).on('onUnsetSelectValue', function () {
+                $('#projectManager').val('');
+            });
+
+        })
+
+ <!--
+                   /*  $(function()
+                    {
+                        var refreshUI = function(record)
+                        {
+                            var nodes = record.postponedNodes || [];
+
+                            if (nodes.length == 0)
+                            {
+                                return;
+                            }
+
+                            var html = template('template', record);
+                            $tr = $('#tr_' + record.orderId);
+                            $tr.find('.order-postponed-details').empty().append(html);
+                            var $tooltip = $tr.find(".order-postponed-details [data-toggle='tooltip']");
+                            var $tooltipContent = $tr.find(".order-postponed-details .tooltip-content");
+                            $tooltip.attr('data-original-title', $tooltipContent.html());
+                            $tooltip.tooltip();
+                        };
+
+                        var refreshOrderPostponedDetails = function(keys)
+                        {
+                            $.get('${base}/bmm/schedule/orders_postponed_details.do', {
+                                'keys' : keys.join(',')
+                            }, function(rsp)
+                            {
+
+                                if (!rsp.success)
+                                {
+                                    return;
+                                }
+
+                                var $tr;
+                                var record;
+                                var records = rsp.records;
+
+                                for (var i = 0; i < records.length; i++)
+                                {
+                                    refreshUI(records[i]);
+                                }
+                            });
+                        }
+                        
+                        <#if (pagination.records)?? && pagination.records?has_content>
+                        var keys = [];
+                        <#list pagination.records as record> 
+                        keys.push('${record.id!?html}');
+                        </#list>
+                        refreshOrderPostponedDetails(keys);
+                        </#if>
+                    }); */
+                //-->
+                </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+.panel-body{
+	padding:0px;
+}
+
+.probe{
+	padding-top: 10px;
+	font-style:bold;
+	font-size:120%;
+	color:#333;
+	float:left;
+	margin-left:50px;
+	font-weight:700;
+	color:#676a6c
+	}
+.probe1{
+	font-weight:700;
+	color:#676a6c;
+	float:right;
+	padding-top: 10px;
+	margin-right:50px
+}
+textarea{
+	margin: 0px; 
+	width: 1100px; 
+	height: 153px;
+	border: 1px solid #e5e6e7;
+	padding: 5px 0px 0px 5px;
+}
+.express_query_code{
+	margin-left:20px;
+	float:left;
+	width:400px;
+	font-size:22px;
+	color:#777777;
+	line-height:20px;
+	height:20px
+}
+.express_query_status{
+	width:400px;
+	font-size:22px;
+	color:#777777;
+	line-height:20px;
+	height:20px
+}
+.express_query_detail{
+	margin-top:20px;
+	background:#FFF;
+	color:#777777;
+	text-align:center
+}
+
+.express_query_detail th{
+	line-height:30px;
+	height:30px;
+	background:#0055A2;
+	color:#fff;
+	font-size:16px;
+}
+.express_query_detail td{
+	line-height:30px;
+	height:30px;
+	color:#777777;
+	font-size:14px;
+}
+
+.file-zoom-content > .file-preview-image{
+	height :auto !important;
+}
+.file-zoom-content{
+	height :auto !important;
+}
+
+.modal-title .kv-zoom-title{
+	display:none;
+}

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <file url="file://$PROJECT_DIR$/lims-utils/src/main/java/com/todaysoft/lims/persist/BaseDaoSupport.java" />
+    </excludeFromCompile>
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="config-server" />
+        <module name="eureka-server" />
+        <module name="export-service" />
+        <module name="gateway-service" />
+        <module name="invoice-service" />
+        <module name="kbm-es-service" />
+        <module name="lims-base-api" />
+        <module name="lims-biology" />
+        <module name="lims-ngs" />
+        <module name="lims-order" />
+        <module name="lims-order-api" />
+        <module name="lims-order-sync" />
+        <module name="lims-schedule" />
+        <module name="lims-schedule-api" />
+        <module name="lims-technical" />
+        <module name="maintain-service" />
+        <module name="order-service" />
+        <module name="product-service" />
+        <module name="reagent-service" />
+        <module name="report-service" />
+        <module name="system" />
+        <module name="testing-service" />
+        <module name="user-service" />
+        <module name="utils" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="config-server" target="1.5" />
+      <module name="eureka-server" target="1.5" />
+      <module name="export-service" target="1.5" />
+      <module name="gateway-service" target="1.5" />
+      <module name="invoice-service" target="1.5" />
+      <module name="kbm-es-service" target="1.5" />
+      <module name="lims-base-api" target="1.8" />
+      <module name="lims-biology" target="1.8" />
+      <module name="lims-ngs" target="1.8" />
+      <module name="lims-order" target="1.8" />
+      <module name="lims-order-api" target="1.8" />
+      <module name="lims-order-sync" target="1.8" />
+      <module name="lims-schedule" target="1.8" />
+      <module name="lims-schedule-api" target="1.8" />
+      <module name="lims-technical" target="1.8" />
+      <module name="maintain-service" target="1.5" />
+      <module name="order-service" target="1.8" />
+      <module name="product-service" target="1.8" />
+      <module name="reagent-service" target="1.5" />
+      <module name="report-service" target="1.5" />
+      <module name="system" target="1.8" />
+      <module name="testing-service" target="1.5" />
+      <module name="user-service" target="1.8" />
+      <module name="utils" target="1.5" />
+      <module name="workspace-lims" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

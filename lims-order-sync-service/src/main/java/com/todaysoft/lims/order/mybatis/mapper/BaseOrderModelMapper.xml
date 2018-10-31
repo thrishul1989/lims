@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.BaseOrderModelMapper">
+    <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.BaseOrderModel">
+        <result column="ORDER_FORM_KEY" property="orderFormKey" jdbcType="VARCHAR"/>
+        <result column="ORDER_FORM_CODE" property="orderFormCode" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_KEY" property="customerKey" jdbcType="VARCHAR"/>
+        <result column="CONTRACT_KEY" property="contractKey" jdbcType="VARCHAR"/>
+        <result column="ORDER_FORM_STATUS" property="orderFormStatus" jdbcType="VARCHAR"/>
+        <result column="ORDER_FORM_TYPE" property="orderFormType" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_PHONE" property="customerPhone" jdbcType="VARCHAR"/>
+        <result column="CONTRACT_CODE" property="contractCode" jdbcType="VARCHAR"/>
+        <result column="CONTRACT_NAME" property="contractName" jdbcType="VARCHAR"/>
+        <result column="UNIT" property="unit" jdbcType="VARCHAR"/>
+        <result column="SALE" property="sale" jdbcType="VARCHAR"/>
+        <result column="PAY_STATUS" property="payStatus" jdbcType="INTEGER"/>
+        <result column="IS_PARTICIPATE" property="isParticipate" jdbcType="VARCHAR"/>
+        <result column="RECEIVER_NAME" property="receiverName" jdbcType="VARCHAR"/>
+        <result column="RECEIVER_PHONE" property="receiverPhone" jdbcType="VARCHAR"/>
+        <result column="RECEIVER_ADDRESS" property="receiverAddress" jdbcType="VARCHAR"/>
+        <result column="URGENT" property="urgent" jdbcType="INTEGER"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="NATION" property="nation" jdbcType="VARCHAR"/>
+        <result column="SEX" property="sex" jdbcType="VARCHAR"/>
+        <result column="BIRTHDAY" property="birthday" jdbcType="VARCHAR"/>
+        <result column="AGE" property="age" jdbcType="VARCHAR"/>
+        <result column="CONTACTS" property="contacts" jdbcType="VARCHAR"/>
+        <result column="CONTACTS_PHONE" property="contactsPhone" jdbcType="VARCHAR"/>
+        <result column="CONTACTS_MAIL" property="contactsMail" jdbcType="VARCHAR"/>
+        <result column="CASE_NO" property="caseNo" jdbcType="VARCHAR"/>
+        <result column="DISEASE_HISTORY" property="diseaseHistory" jdbcType="VARCHAR"/>
+        <result column="FHX_NOTE" property="fhxNote" jdbcType="VARCHAR"/>
+        <result column="REASON" property="reason" jdbcType="VARCHAR"/>
+        <result column="RECORD_FIGURES" property="recordFigures" jdbcType="VARCHAR"/>
+        <result column="FAMILY_FIGURES" property="familyFigures" jdbcType="VARCHAR"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="OrderExamineeModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.OrderExamineeModel">
+        <result column="ENG_NAME" property="engName" jdbcType="VARCHAR"/>
+        <result column="CHINESE_NAME" property="chineseName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="OrderSampleModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.OrderSampleModel">
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_KEY" property="sampleKey" jdbcType="VARCHAR"/>
+        <result column="ORDER_FORM_KEY" property="orderFormKey" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_TYPE" property="sampleType" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_SIZE" property="sampleSize" jdbcType="VARCHAR"/>
+        <result column="SAMPLING_TIME" property="samplingTime" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="AGE_SNAPSHOT" property="age" jdbcType="VARCHAR"/>
+        <result column="RELATION" property="relation" jdbcType="VARCHAR"/>
+        <result column="PURPOSE" property="purpose" jdbcType="VARCHAR"/>
+        <result column="FAMILY_SYMPTOMS" property="familySymptoms" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_STATUS" property="sampleStatus" jdbcType="VARCHAR"/>
+        <result column="RECEIVE_TIME" property="receiveTime" jdbcType="VARCHAR"/>
+        <result column="LOGISTICS" property="logistics" jdbcType="VARCHAR"/>
+        <result column="PACKAGING_TIME" property="packagingTime" jdbcType="VARCHAR"/>
+        <result column="PACKAGING_PEOPLE" property="packagingPeople" jdbcType="VARCHAR"/>
+        <result column="QUALITY_STATUS" property="qualityStatus" jdbcType="VARCHAR"/>
+        <result column="QUALITY_PEOPLE" property="qualityPeople" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="OrderProductModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.OrderProductModel">
+        <result column="ORDER_FORM_KEY" property="orderFormKey" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_KEY" property="productKey" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_STATUS" property="productStatus" jdbcType="VARCHAR"/>
+        <result column="REPORT_PATH" property="reportPath" jdbcType="VARCHAR"/>
+        <result column="GENERATE_REPORT_TIME" property="generateReportTime" jdbcType="VARCHAR"/>
+        <result column="POST_TIME" property="postTime" jdbcType="VARCHAR"/>
+        <result column="LEADER" property="leader" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_CYCLE" property="productCycle" jdbcType="INTEGER"/>
+        <result column="PLAN_REPORT_DATE" property="planReportDate" jdbcType="VARCHAR"/>
+        <result column="ERROR_STATUS" property="errorStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ProductMethodModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.ProductMethodModel">
+        <result column="PRODUCT_KEY" property="productKey" jdbcType="VARCHAR"/>
+        <result column="METHOD_KEY" property="methodKey" jdbcType="VARCHAR"/>
+        <result column="METHOD_NAME" property="methodName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="TestingDataModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.TestingDataModel">
+        <result column="DATA_KEY" property="dataKey" jdbcType="VARCHAR"/>
+        <result column="ORDER_FORM_KEY" property="orderFormKey" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_KEY" property="productKey" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_KEY" property="sampleKey" jdbcType="VARCHAR"/>
+        <result column="METHOD_KEY" property="methodKey" jdbcType="VARCHAR"/>
+        <result column="METHOD_NAME" property="methodName" jdbcType="VARCHAR"/>
+        <result column="DETECT_STATUS" property="detectStatus" jdbcType="VARCHAR"/>
+        <result column="START_TIME" property="startTime" jdbcType="VARCHAR"/>
+        <result column="VERIFY_KEY" property="verifyKey" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR"/>
+        <result column="PROCCESS_STATE" property="proccessState" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ScheduleTaskModelMap" type="com.todaysoft.lims.order.mybatis.mapper.entity.ScheduleTaskModel">
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="TASK_ID" property="taskId" jdbcType="VARCHAR"/>
+        <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR"/>
+        <result column="SEMANTIC" property="semantic" jdbcType="VARCHAR"/>
+        <result column="START_TIME" property="startTime" jdbcType="VARCHAR"/>
+        <result column="END_TIME" property="endTime" jdbcType="VARCHAR"/>
+        <result column="LANE_CODE" property="laneCode" jdbcType="VARCHAR"/>
+        <result column="ATTRIBUTES" property="attributes" jdbcType="VARCHAR"/>
+        <result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR"/>
+        <result column="COMBINE_CODE" property="combineCode" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR"/>
+        <result column="COORDINATE" property="coordinate" jdbcType="VARCHAR"/>
+        <result column="RUN_CODE" property="runCode" jdbcType="VARCHAR"/>
+        <result column="SEQUENCER_TYPE" property="sequencerType" jdbcType="VARCHAR"/>
+        <result column="SITE" property="site" jdbcType="VARCHAR"/>
+        <result column="SYMBOL" property="symbol" jdbcType="VARCHAR"/>
+        <result column="SEQUENCING_CODE" property="sequencingCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getOrderByModel" resultMap="BaseResultMap"
+            parameterType="com.todaysoft.lims.order.model.OrderSyncSearchModel">
+        SELECT
+        o.ID AS ORDER_FORM_KEY,
+        o.CODE AS ORDER_FORM_CODE,
+        DATE_FORMAT(o.CREATE_TIME,'%Y-%m-%d %H:%i:%s') AS CREATE_TIME,
+        o.OWNER_ID AS CUSTOMER_KEY,
+        o.CONTRACT_ID AS CONTRACT_KEY,
+        o.TESTING_STATUS AS ORDER_FORM_STATUS,
+        mc.NAME AS ORDER_FORM_TYPE,
+        customer.REAL_NAME AS CUSTOMER_NAME,
+        customer.PHONE_NUM AS CUSTOMER_PHONE,
+        contract.CODE AS CONTRACT_CODE,
+        contract.NAME AS CONTRACT_NAME,
+        company.NAME AS UNIT,
+        o.CREATOR_NAME AS SALE,
+        o.PAYMENT_STATUS AS PAY_STATUS,
+        dict.DICT_TEXT AS IS_PARTICIPATE,
+        o.RECIPIENT_NAME AS RECEIVER_NAME,
+        o.RECIPIENT_PHONE AS RECEIVER_PHONE,
+        o.RECIPIENT_ADDRESS AS RECEIVER_ADDRESS,
+        o.IF_URGENT AS URGENT,
+        examinee.NAME AS NAME,
+        dictnation.DICT_TEXT AS NATION,
+        dictsex.DICT_TEXT AS SEX,
+        examinee.BIRTHDAY,
+        examinee.AGE_SNAPSHOT AS AGE,
+        examinee.CONTACT_NAME AS CONTACTS,
+        examinee.CONTACT_PHONE AS CONTACTS_PHONE,
+        examinee.CONTACT_EMAIL AS CONTACTS_MAIL,
+        examinee.RECORD_NO AS CASE_NO,
+        examinee.MEDICAL_HISTORY AS DISEASE_HISTORY,
+        examinee.FAMILY_MEDICAL_HISTORY AS FHX_NOTE,
+        examinee.CLINICAL_RECOMMEND AS REASON,
+        examinee.RECORD_FIGURES,
+        examinee.FAMILY_FIGURES
+        FROM
+        LIMS_ORDER o
+        LEFT JOIN LIMS_TESTING_TYPE mc ON o.ORDER_TYPE = mc.ID
+        LEFT JOIN LIMS_CONTRACT contract ON o.CONTRACT_ID = contract.ID
+        LEFT JOIN APP_USER_INFO customer ON o.OWNER_ID = customer.ID
+        LEFT JOIN APP_COMPANY company ON customer.INSTITUTION_ID = company.ID
+        LEFT JOIN LIMS_ORDER_EXAMINEE examinee ON o.ID = examinee.ORDER_ID
+        LEFT JOIN LIMS_DICT dict ON o.DOCTOR_ASSIST = dict.DICT_VALUE AND dict.CATEGORY='ANALYSIS_TYPE'
+        LEFT JOIN LIMS_DICT dictsex ON examinee.SEX = dictsex.DICT_VALUE AND dictsex.CATEGORY='SEX'
+        LEFT JOIN LIMS_DICT dictnation ON examinee.NATION = dictnation.DICT_VALUE AND dictnation.CATEGORY='BASE_NATION'
+        WHERE
+        o.DEL_FLAG = 0 AND ( o.ORDER_TYPE = 1 OR o.ORDER_TYPE = 2 OR o.ORDER_TYPE = 3 )
+        <if test="_parameter.customers != null and _parameter.customers != ''">
+            AND o.OWNER_ID IN
+            <foreach collection="_parameter.customerIdList" item="id" index="index"
+                     open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="_parameter.orderFormCode != null and _parameter.orderFormCode != ''">
+            AND o.CODE = #{_parameter.orderFormCode}
+        </if>
+        <if test="_parameter.contracts != null and _parameter.contracts != ''">
+            AND o.CONTRACT_ID IN
+            <foreach collection="_parameter.contractIdList" item="id" index="index"
+                     open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+
+        <if test="_parameter.beginTime != null">
+            AND o.CREATE_TIME &gt;= #{_parameter.beginTime}
+        </if>
+        <if test="_parameter.endTime != null">
+            AND o.CREATE_TIME &lt;= #{_parameter.endTime}
+        </if>
+        ORDER BY o.CREATE_TIME DESC
+    </select>
+
+    <select id="getOrderExamineeDiseaseByOrderId" resultMap="OrderExamineeModelMap" parameterType="java.lang.String">
+    SELECT
+	  dis.code AS ENG_NAME,dis.NAME AS CHINESE_NAME
+    FROM
+        LIMS_ORDER o
+    LEFT JOIN LIMS_ORDER_EXAMINEE examinee ON o.ID = examinee.ORDER_ID
+    LEFT JOIN LIMS_ORDER_EXAMINEE_DIAGNOSIS oed ON examinee.ID=oed.OE_ID
+    LEFT JOIN LIMS_DISEASE dis on oed.DISEASE_ID=dis.ID
+    WHERE
+        o.ID = #{orderId,jdbcType=VARCHAR} AND dis.ID IS NOT NULL;
+    </select>
+
+    <select id="getOrderExamineeGeneByOrderId" resultMap="OrderExamineeModelMap" parameterType="java.lang.String">
+    SELECT
+        dis.code AS ENG_NAME,dis.SYMBOL AS CHINESE_NAME
+    FROM
+        LIMS_ORDER o
+    LEFT JOIN LIMS_ORDER_EXAMINEE examinee ON o.ID = examinee.ORDER_ID
+    LEFT JOIN LIMS_ORDER_EXAMINEE_GENE oed ON examinee.ID=oed.OE_ID
+    LEFT JOIN LIMS_GENE dis on oed.GENE_ID=dis.ID
+    WHERE
+        o.ID = #{orderId,jdbcType=VARCHAR} AND dis.ID IS NOT NULL;
+    </select>
+
+    <select id="getOrderExamineePhenotypeByOrderId" resultMap="OrderExamineeModelMap" parameterType="java.lang.String">
+    SELECT
+        dis.code AS ENG_NAME,dis.NAME AS CHINESE_NAME
+    FROM
+        LIMS_ORDER o
+    LEFT JOIN LIMS_ORDER_EXAMINEE examinee ON o.ID = examinee.ORDER_ID
+    LEFT JOIN LIMS_ORDER_EXAMINEE_PHENOTYPE oed ON examinee.ID=oed.OE_ID
+    LEFT JOIN LIMS_PHENOTYPE dis on oed.PHENOTYPE_ID=dis.ID
+    WHERE
+        o.ID = #{orderId,jdbcType=VARCHAR} AND dis.ID IS NOT NULL;
+    </select>
+
+    <select id="getOrderPrimarySampleModelByOrderId" resultMap="OrderSampleModelMap" parameterType="java.lang.String">
+      SELECT
+            '本人' AS TYPE,
+            ps.ID AS SAMPLE_KEY,
+            ps.ORDER_ID AS ORDER_FORM_KEY,
+            ps.SAMPLE_CODE,
+            ms.NAME AS SAMPLE_TYPE,
+            ps.SAMPLE_SIZE,
+            ps.SAMPLING_DATE AS SAMPLING_TIME,
+            examinee.NAME,
+            examinee.AGE_SNAPSHOT,
+            '检测' AS PURPOSE,
+            ps.SAMPLE_PACKAGE_STATUS AS SAMPLE_STATUS,
+        DATE_FORMAT(sr.RECEIVE_TIME,'%Y-%m-%d %H:%i:%s') AS RECEIVE_TIME,
+            sr.RECEIVER_NAME AS QUALITY_PEOPLE,
+        rd.QC_STATUS AS QUALITY_STATUS,
+            st.EXPRESS_NO AS LOGISTICS,
+        DATE_FORMAT(st.PACK_DATE,'%Y-%m-%d %H:%i:%s') AS PACKAGING_TIME,
+            ua.NAME AS PACKAGING_PEOPLE
+        FROM
+            LIMS_ORDER_PRIMARY_SAMPLE ps
+        left JOIN LIMS_METADATA_SAMPLE ms ON ps.SAMPLE_TYPE_ID=ms.ID
+        left JOIN LIMS_ORDER_EXAMINEE examinee ON ps.ORDER_ID=examinee.ORDER_ID
+        left JOIN LIMS_SAMPLE_RECEIVING sr on sr.ORDER_ID=ps.ORDER_ID
+        left JOIN LIMS_SAMPLE_RECEIVING_DETAIL rd on ps.SAMPLE_CODE=rd.SAMPLE_CODE
+        LEFT JOIN APP_SAMPLE_TRANSPORT_RELATION str on str.SAMPLE_ID=ps.ID
+        LEFT JOIN APP_SAMPLE_TRANSPORT st on str.PACKAGE_ID=st.ID
+        left JOIN LIMS_USER us on us.ID=st.CREATE_ID
+        left JOIN LIMS_USER_ARCHIVE ua on us.ARCHIVE_ID=ua.ID
+        WHERE
+            ps.ORDER_ID=#{orderId,jdbcType=VARCHAR}
+        group by ps.ID
+    </select>
+
+    <select id="getOrderSubSampleModelByOrderId" resultMap="OrderSampleModelMap" parameterType="java.lang.String">
+        SELECT
+            '家属' AS TYPE,
+            ss.ID AS SAMPLE_KEY,
+            ss.ORDER_ID AS ORDER_FORM_KEY,
+            ss.SAMPLE_CODE,
+            ms.`NAME` AS SAMPLE_TYPE,
+            ss.SAMPLE_SIZE,
+            ss.SAMPLING_DATE AS SAMPLING_TIME,
+            ss.OWNER_NAME AS NAME,
+            ss.OWNER_AGE AS AGE_SNAPSHOT,
+            dictrelation.DICT_TEXT AS RELATION,
+            dictpurpose.DICT_TEXT AS PURPOSE,
+            dictsymptom.DICT_TEXT AS FAMILY_SYMPTOMS,
+            ss.SAMPLE_PACKAGE_STATUS AS SAMPLE_STATUS,
+        DATE_FORMAT(sr.RECEIVE_TIME,'%Y-%m-%d %H:%i:%s') AS RECEIVE_TIME,
+            sr.RECEIVER_NAME AS QUALITY_PEOPLE,
+        rd.QC_STATUS AS QUALITY_STATUS,
+            st.EXPRESS_NO AS LOGISTICS,
+        DATE_FORMAT(st.PACK_DATE,'%Y-%m-%d %H:%i:%s') AS PACKAGING_TIME,
+            ua.`NAME` AS PACKAGING_PEOPLE
+        FROM
+            LIMS_ORDER_SUBSIDIARY_SAMPLE ss
+        left JOIN LIMS_METADATA_SAMPLE ms ON ss.SAMPLE_TYPE_ID=ms.ID
+        left JOIN LIMS_SAMPLE_RECEIVING sr on sr.ORDER_ID=ss.ORDER_ID
+        left JOIN LIMS_SAMPLE_RECEIVING_DETAIL rd on ss.SAMPLE_CODE=rd.SAMPLE_CODE
+        LEFT JOIN APP_SAMPLE_TRANSPORT_RELATION str on str.SAMPLE_ID=ss.ID
+        LEFT JOIN APP_SAMPLE_TRANSPORT st on str.PACKAGE_ID=st.ID
+        LEFT JOIN LIMS_DICT dictrelation ON ss.FAMILY_RELATION = dictrelation.DICT_VALUE AND dictrelation.CATEGORY='FAMILY_RELATION'
+        LEFT JOIN LIMS_DICT dictpurpose ON ss.PURPOSE = dictpurpose.DICT_VALUE AND dictpurpose.CATEGORY =
+        'SAMPLE_PURPOSE'
+        LEFT JOIN LIMS_DICT dictsymptom ON ss.OWNER_PHENOTYPE = dictsymptom.DICT_VALUE AND dictsymptom.CATEGORY =
+        'FAMILY_SYMPTOM'
+        left JOIN LIMS_USER us on us.ID=st.CREATE_ID
+        left JOIN LIMS_USER_ARCHIVE ua on us.ARCHIVE_ID=ua.ID
+        WHERE
+            ss.ORDER_ID=#{orderId,jdbcType=VARCHAR}
+        group by ss.ID
+    </select>
+
+    <select id="getOrderProductModelByOrderId" resultMap="OrderProductModelMap" parameterType="java.lang.String">
+        SELECT
+            op.ORDER_ID AS ORDER_FORM_KEY,
+            p.ID AS PRODUCT_KEY,
+            p.NAME AS PRODUCT_NAME,
+            p.CODE AS PRODUCT_CODE,
+            op.PRODUCT_STATUS AS PRODUCT_STATUS,
+            op.DATA_URL AS REPORT_PATH,
+        DATE_FORMAT(op.REPORT_TIME,'%Y-%m-%d %H:%i:%s') AS GENERATE_REPORT_TIME,
+        DATE_FORMAT(email.EMAIL_TIME,'%Y-%m-%d %H:%i:%s') AS POST_TIME,
+        group_concat(ua.NAME) AS LEADER,
+        p.TESTING_DURATION AS PRODUCT_CYCLE,
+        report.SHOULD_REPORT_DATE AS PLAN_REPORT_DATE,
+        if(report.RESUBMIT=0,"正常","重出") AS ERROR_STATUS
+        FROM
+        LIMS_ORDER_PRODUCT op
+        LEFT JOIN LIMS_PRODUCT p ON op.PRODUCT_ID = p.ID
+        LEFT JOIN LIMS_TESTING_REPORT_EMAIL email ON op.ORDER_ID = email.ORDER_ID AND op.PRODUCT_ID = email.PRODUCT_ID
+        LEFT JOIN LIMS_PRODUCT_PRINCIPAL techDuty ON p.ID = techDuty.PRODUCT_ID
+        LEFT JOIN LIMS_USER us ON us.ID = techDuty.PRINCIPAL_ID
+        LEFT JOIN LIMS_USER_ARCHIVE ua ON us.ARCHIVE_ID = ua.ID
+        LEFT JOIN LIMS_TESTING_REPORT report on op.ORDER_ID=report.ORDER_ID AND op.PRODUCT_ID=report.PRODUCT_ID AND
+        report.DEL_FLAG=0
+        WHERE
+        op.ORDER_ID=#{orderId,jdbcType=VARCHAR}
+        GROUP BY p.ID
+    </select>
+
+    <select id="getProductMethodModelByProductId" resultMap="ProductMethodModelMap" parameterType="java.lang.String">
+        SELECT
+        pm.PRODUCT_ID AS PRODUCT_KEY,
+        pm.TESTING_METHOD_ID AS METHOD_KEY,
+        m.NAME AS METHOD_NAME
+      FROM
+	    LIMS_PRODUCT_TESTING_METHOD pm
+      LEFT JOIN LIMS_TESTING_METHOD m ON pm.TESTING_METHOD_ID = m.ID
+      WHERE
+	  pm.PRODUCT_ID = #{productId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getTestingDataModelByOrderId" resultMap="TestingDataModelMap" parameterType="java.lang.String">
+        SELECT
+            sd.ID AS DATA_KEY,
+            sd.ORDER_ID AS ORDER_FORM_KEY,
+            sd.PRODUCT_ID AS PRODUCT_KEY,
+            sd.SAMPLE_ID AS SAMPLE_KEY,
+            sd.METHOD_ID AS METHOD_KEY,
+            m.NAME AS METHOD_NAME,
+            sd.ACTIVE_TASK AS DETECT_STATUS,
+        DATE_FORMAT(sd.START_TIME,'%Y-%m-%d %H:%i:%s') AS START_TIME,
+            sd.VERIFY_KEY,
+        rs.SAMPLE_CODE,
+        rs.SAMPLE_NAME,
+        sd.PROCCESS_STATE
+        FROM
+            LIMS_TESTING_SCHEDULE sd
+        LEFT JOIN LIMS_TESTING_METHOD m on sd.METHOD_ID=m.ID
+        LEFT JOIN LIMS_TESTING_SAMPLE sa on sd.SAMPLE_ID=sa.ID
+        LEFT JOIN LIMS_RECEIVED_SAMPLE rs ON rs.SAMPLE_ID = sa.ORIGINAL_SAMPLE_ID
+        WHERE
+          sd.ORDER_ID=#{orderId,jdbcType=VARCHAR}
+        ORDER BY sd.START_TIME ASC
+    </select>
+
+    <select id="getTaskListBySchedule" resultMap="ScheduleTaskModelMap" parameterType="java.lang.String">
+        SELECT
+        DATE_FORMAT(his.TASK_TIMESTAMP,'%Y-%m-%d %H:%i:%s') AS UPDATE_TIME,
+            task.ID AS TASK_ID,
+            task.NAME AS TASK_NAME,
+            task.SEMANTIC,
+        DATE_FORMAT(task.START_TIME,'%Y-%m-%d %H:%i:%s') AS START_TIME,
+            task.END_TIME,
+            task.TESTING_LANE_CODE AS LANE_CODE,
+            task.TESTING_SAMPLE_ATTRIBUTES AS ATTRIBUTES,
+            task.TESTING_ANALY_DATA_CODE AS DATA_CODE,
+            task.TESTING_COMBINECODE AS COMBINE_CODE,
+	        task.TESTING_SAMPLE_CODE AS SAMPLE_CODE,
+	        method.COORDINATE,
+            task.VERIFY_CHR_POSITION AS SITE,
+	        task.VERIFY_GENE AS SYMBOL
+        FROM
+            LIMS_TESTING_SCHEDULE_HISTORY his
+        LEFT JOIN LIMS_TESTING_SCHEDULE sd on his.SCHEDULE_ID=sd.ID
+        LEFT JOIN LIMS_TESTING_TASK task ON his.TASK_ID = task.ID
+        LEFT JOIN LIMS_PRODUCT_TESTING_METHOD method on sd.PRODUCT_ID=method.PRODUCT_ID AND sd.METHOD_ID=method.TESTING_METHOD_ID
+        WHERE
+            his.TASK_REFER is null AND his.SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR}
+        ORDER BY
+            his.TASK_TIMESTAMP DESC
+    </select>
+
+    <select id="getNgsTaskListBySchedule" resultMap="ScheduleTaskModelMap" parameterType="java.lang.String">
+        SELECT
+            task.LAN_CODE AS LANE_CODE,
+            task.RUN AS RUN_CODE,
+        task.SEQUECING_MACHINE_CODE AS SEQUENCER_TYPE,
+        task.SEQUECING_CODE AS SEQUENCING_CODE
+        FROM
+            `LIMS_TESTING_SCHEDULE_HISTORY` his
+        LEFT JOIN NGS_SEQUECING_TASK task ON his.TASK_ID = task.ID
+        WHERE
+            his.TASK_REFER = 'NGS_SEQUECING_TASK'
+        AND his.SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR}
+        ORDER BY
+            his.TASK_TIMESTAMP DESC
+    </select>
+
+    <select id="getSiteAndGeneByScheduleAndSangerOrPcrNgs" resultMap="ScheduleTaskModelMap"
+            parameterType="java.lang.String">
+        SELECT
+        	ttar.CHROMOSOME_LOCATION AS SITE,
+            ttar.GENE_SYMBOL AS SYMBOL,
+            ttar.DATA_CODE AS DATA_CODE
+        FROM
+            LIMS_TESTING_SCHEDULE t
+        LEFT JOIN LIMS_TESTING_SANGER_VERIFY sv ON t.VERIFY_KEY = sv.ID
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY ttav ON ttav.ID = sv.VERIFY_RECORD
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD ttar ON ttav.RECORD_ID = ttar.ID
+        WHERE
+	      ttar.ID IS NOT NULL AND t.ID = #{scheduleId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getSiteAndGeneByScheduleAndMlpa" resultMap="ScheduleTaskModelMap" parameterType="java.lang.String">
+        SELECT
+        	ttar.CHROMOSOME_LOCATION AS SITE,
+            ttar.GENE_SYMBOL AS SYMBOL,
+            ttar.DATA_CODE AS DATA_CODE
+        FROM
+          LIMS_TESTING_SCHEDULE t
+        LEFT JOIN LIMS_TESTING_MLPA_VERIFY sv ON t.VERIFY_KEY = sv.ID
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY ttav ON ttav.ID = sv.VERIFY_RECORD
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD ttar ON ttav.RECORD_ID = ttar.ID
+        WHERE
+	      ttar.ID IS NOT NULL AND  t.ID = #{scheduleId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getSiteAndGeneByScheduleAndQpcr" resultMap="ScheduleTaskModelMap" parameterType="java.lang.String">
+        SELECT
+        	ttar.CHROMOSOME_LOCATION AS SITE,
+            ttar.GENE_SYMBOL AS SYMBOL,
+            ttar.DATA_CODE AS DATA_CODE
+        FROM
+            LIMS_TESTING_SCHEDULE t
+        LEFT JOIN LIMS_TESTING_QPCR_VERIFY sv ON t.VERIFY_KEY = sv.ID
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_VERIFY ttav ON ttav.ID = sv.VERIFY_RECORD
+        LEFT JOIN LIMS_TESTING_TECHNICAL_ANALY_RECORD ttar ON ttav.RECORD_ID = ttar.ID
+        WHERE
+	      ttar.ID IS NOT NULL AND t.ID = #{scheduleId,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

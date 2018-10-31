@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>退款明细</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+
+<script src="${system_js}/bootstrap-suggest.js"></script>
+
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script> 
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+<script>
+
+var base = "${base}";
+var order = ${orderJson};
+
+var recordFiguresInit = order.orderRefund[0].refundRecord.operateImgShow;
+var fujianConfig=[]
+if(recordFiguresInit!=undefined){
+	if(recordFiguresInit.indexOf(",")!=0){
+		var initPath = recordFiguresInit.split(",");
+		var truePath = order.orderRefund[0].refundRecord.operateImg.split(",");
+		var picInit =[];
+		for(var i=0;i<initPath.length;i++){
+			if("" != initPath[i]){
+				if(initPath[i].indexOf("doc")>0 || initPath[i].indexOf("txt")>0 || initPath[i].indexOf("xlsx")>0){ 
+					picInit.push ("<div class='file-preview-other-frame'><div class='file-preview-other'><span class='file-icon-4x'><i class='fa fa-file-text-o text-info'></i></span></div></div><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+truePath[i]+"'>下载</a>")
+				}
+				else{
+					picInit.push ("<img src='"+initPath[i]+"' class='file-preview-image' style='max-width:700px;height:150px;'  /><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+truePath[i]+"'>下载</a>");		
+				}
+				
+				fujianConfig.push({caption:truePath[i],width:'120px',key:truePath[i]});
+			}
+			
+		}
+	
+		
+	}
+	
+}
+
+$(function() {
+	
+
+	$("#instrumentImg").fileinput({
+		language: 'zh', // 设置语言
+        uploadUrl: base+'/order/upload.do', 
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        maxFileSize: 5000,
+        showUpload: false, // 是否显示上传按钮
+        showCaption: false,// 是否显示标题
+        showRemove:false,
+        initialPreview:picInit,
+        initialPreviewConfig:fujianConfig,
+	});
+	
+	 $('.btn.btn-primary.btn-file').css('display','none') 
+
+}); 
+
+	    
+</script>
+<style>
+.file-drop-zone {
+	height: auto
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated ">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">缴费业务</a></li>
+							<li class="active"><strong>退款</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					
+					<div class="ibox-content">
+						<form id="backconfirmForm" class="form-horizontal m-t" action="#" method="post" enctype='application/json'>
+							<input type="hidden" name="orderId" id="orderId"  value="${(order.id)!?html}" />
+							<input type="hidden" name="applyId" id="applyId"  value="${(order.orderRefund[0].id)!?html}" />
+							
+							<fieldset>
+							   <div class="form-group">
+									<label class="col-sm-2 control-label control-required">订单编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code"
+											id="code" value="${(order.code)!?html}" readonly="readonly" />
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">应付款：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="realPrice"
+											id="realPrice" value="${(order.realPrice)!?html}" readonly="readonly" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">实付款：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="incomingAmount"
+											id="incomingAmount" value="${(order.incomingAmount)!?html}" readonly="readonly" />
+									</div>
+								</div>
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">申请退款额：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="applyAmount"
+											 value="<@amount_toyuan amount=order.applyAmount />" readonly="readonly" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">审批退款额：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="checkAmount" id="checkAmount"
+											 value="<@amount_toyuan amount=order.orderRefund[0].replyAmount />" readonly="readonly" />
+									</div>
+								</div>
+								
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">退款申请原因：</label>
+									<div class="col-sm-3">
+										 <textarea  class="form-control"name="remark" id="remark" 
+												style="width:390px;height:100px;resize: none" 
+												readonly="readonly">${(order.orderRefund[0].applyReason)!?html}</textarea>	 
+											 
+									</div>
+								</div>
+								
+								
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">退款人：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="paymenter"
+												 value="${(order.orderRefund[0].refundRecord.refundName)!?html}"  readonly="readonly"  />
+                    				</div>
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">退款日期：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" 
+												 value="${(order.orderRefund[0].refundRecord.refundTime)!?string('yyyy-MM-dd')}" readonly="readonly"   />
+                    				</div>
+									
+								</div>
+								
+							
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label ">退款凭证：</label>
+									
+									<div class="col-sm-5">
+										<input id="instrumentImg"  type="file" multiple data-overwrite-initial="false"  >
+									</div>
+                    				
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label">备注：</label>
+									
+									<div class="col-sm-3">
+									
+									 <textarea  class="form-control"name="remark" 
+												style="height:80px;resize: none" readonly="readonly">${(order.orderRefund[0].refundRecord.remark)!?html}</textarea>
+                    				</div>
+									
+								</div>
+								
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label">操作时间：</label>
+									
+									<div class="col-sm-3">
+										<input type="text" class="form-control" 
+												 value="${(order.orderRefund[0].refundRecord.operateTime)!?string('yyyy-MM-dd HH:mm:ss')}" readonly="readonly"  />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label">操作人：</label>
+									
+									<div class="col-sm-3">
+										<input type="text" class="form-control" 
+												 value="${(order.orderRefund[0].refundRecord.operateName)!?html}" readonly="readonly"   />
+									 
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"   class="btn btn-primary"  id="createButton" >确认</button>
+										<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+</html>

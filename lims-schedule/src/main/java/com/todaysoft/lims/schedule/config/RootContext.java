@@ -1,0 +1,109 @@
+package com.todaysoft.lims.schedule.config;
+
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.alibaba.druid.pool.DruidDataSource;
+
+@Configuration
+@EnableConfigurationProperties(Configs.class)
+@EnableTransactionManagement
+@EnableScheduling
+public class RootContext implements ApplicationContextAware
+{
+    private static ApplicationContext context;
+    
+    @Autowired
+    private Configs configs;
+    
+    @Bean
+    public DataSource dataSource()
+        throws Exception
+    {
+        DruidDataSource dataSource = new DruidDataSource();
+        
+        dataSource.setDriverClassName(configs.getDataSourceDriver());
+        dataSource.setUrl(configs.getDataSourceUrl());
+        dataSource.setUsername(configs.getDataSourceUsername());
+        dataSource.setPassword(configs.getDataSourcePassword());
+        dataSource.setMaxActive(configs.getDataSourceMaxActive());
+        dataSource.setInitialSize(configs.getDataSourceInitialSize());
+        
+        dataSource.setMaxWait(60000);
+        dataSource.setMinIdle(1);
+        dataSource.setTimeBetweenEvictionRunsMillis(60000);
+        dataSource.setMinEvictableIdleTimeMillis(30000);
+        
+        dataSource.setRemoveAbandoned(true);
+        dataSource.setRemoveAbandonedTimeout(1800);
+        
+        dataSource.setValidationQuery("SELECT 'x'");
+        dataSource.setTestOnReturn(false);
+        dataSource.setTestOnBorrow(false);
+        dataSource.setTestWhileIdle(true);
+        /** 开启Druid的监控统计功能*/
+        dataSource.setFilters("stat,config");
+        dataSource.setLogAbandoned(true);
+        
+        Properties properties = new Properties();
+        properties.setProperty("config.decrypt", "true");
+        properties.setProperty("config.decrypt.key", configs.getDataSourcePublicKey());
+        dataSource.setConnectProperties(properties);
+        
+        return dataSource;
+    }
+    
+    private Properties hibernateProperties()
+    {
+        Properties properties = new Properties();
+        properties.put("hibernate.dialect", configs.getHibernateDialect());
+        properties.put("hibernate.show_sql", configs.isHibernateShowSql());
+        properties.put("hibernate.format_sql", configs.isHibernateFormatSql());
+        return properties;
+    }
+    
+    @Bean
+    public LocalSessionFactoryBean sessionFactory()
+        throws Exception
+    {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan(new String[] {"com.todaysoft.lims"});
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+    
+    @Bean
+    public HibernateTransactionManager transactionManager(SessionFactory s)
+    {
+        HibernateTransactionManager txManager = new HibernateTransactionManager();
+        txManager.setSessionFactory(s);
+        return txManager;
+    }
+    
+    @Override
+    public void setApplicationContext(ApplicationContext context)
+        throws BeansException
+    {
+        RootContext.context = context;
+    }
+    
+    public static <T> T getBean(Class<T> requiredType)
+    {
+        return context.getBean(requiredType);
+    }
+}

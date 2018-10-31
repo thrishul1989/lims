@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>申请管理-物资申请详情</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script src="${system_js}/materialsApply.form.js"></script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/materialsApply/list.do">物资管理</a></li>
+							<li class="active"><strong>物资申请详情</strong></li>
+							<li style="float: right; padding: 0px"><a
+								href="javascript:history.back(-1)" target="_self"
+								style="padding: 0px; position: relative; top: 9px; right: 16px;">
+									<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a></li>
+						</ol>
+					</div>
+					<div class="ibox ibox-table">
+						<div class="ibox-content">
+							<input type='hidden' id='materialsApplyId'
+								value="${(materialsApply.id)!?html}" />
+							<caption align="top">
+								<strong>申请信息</strong>
+							</caption>
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+									<th class="col-sm-1">申请部门</th>
+									<td class="col-sm-2"><#if materialsApply.testingType ==
+										"1">临床遗传</#if> <#if materialsApply.testingType ==
+										"2">临床肿瘤</#if> <#if materialsApply.testingType ==
+										"3">健康筛选</#if> <#if materialsApply.testingType ==
+										"4">科技服务</#if></td>
+									<th class="col-sm-1">申请人</th>
+									<td class="col-sm-2">${materialsApply.counterman!?html}</td>
+									<th class="col-sm-1">申请日期</th>
+									<td class="col-sm-2"><#if materialsApply.applyTime??>
+										${(materialsApply.applyTime)!?string('yyyy-MM-dd HH:mm:ss')}
+										<#else> ${(materialsApply.applyTime)!?html} </#if></td>
+									<th class="col-sm-1">状态</th>
+									<td class="col-sm-2"><#if materialsApply.status ==
+										"UNTREATED">未处理</#if> <#if materialsApply.status ==
+										"HANDLED">处理中</#if> <#if materialsApply.status ==
+										"COMPLETED">已完成</#if></td>
+								</tr>
+							</table>
+							<caption align="top">
+								<strong>物资信息</strong>
+							</caption>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>物资类别</th>
+										<th>物资名称</th>
+										<th>数量</th>
+										<th>已发数量</th>
+										<th>备注</th>
+									</tr>
+								</thead>
+								<tbody>
+									<#if materialsApply.materialsApplyDetail?has_content> <#list
+									materialsApply.materialsApplyDetail as detail>
+									<tr>
+										<td>${(detail.materialsTypeName)!?html}</td>
+										<td>${(detail.materialsName)!?html}</td>
+										<td>${(detail.materialsCount)!?html}</td>
+										<td>${(detail.materialsSendCount)!?html}</td>
+										<td>${(detail.remark)!?html}</td>
+									</tr>
+									</#list> </#if>
+								</tbody>
+							</table>
+
+							<caption align="top">
+								<strong>收件信息</strong>
+							</caption>
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+									<th class="col-sm-1">收件人</th>
+									<td class="col-sm-2">${materialsApply.recipientName!?html}</td>
+									<th class="col-sm-1">收件人电话</th>
+									<td class="col-sm-2">${materialsApply.recipientTel!?html}</td>
+								</tr>
+								<tr>
+									<th class="col-sm-1">收件人地址</th>
+									<td colspan="4">${materialsApply.fullName!?html}${materialsApply.recipientAddressDetail!?html}</td>
+								</tr>
+							</table>
+
+							<!-- 		   查看				-->
+							<#if flag == "view">
+							<#if transports?has_content> 
+							<caption align="top">
+								<strong>寄件信息</strong>
+							</caption>
+							<#list transports as transport>
+
+							<table
+								class="table table-striped table-bordered table-hover table-details">
+								<tr>
+									<th class="col-sm-1">寄件日期</th>
+									<td class="col-sm-2"><#if transport.sendTime??>
+										${(transport.sendTime)!?string('yyyy-MM-dd')} <#else>
+										${(transport.sendTime)!?html} </#if></td>
+									<th class="col-sm-1">运输方式</th>
+									<td class="col-sm-2"><@dict_entry_text
+										category="TRANSPORT_TYPE" value=transport.transportType /></td>
+								</tr>
+								<tr>
+									<#if transport.transportType == "0">
+									<th class="col-sm-1">运输人姓名</th>
+									<td class="col-sm-2">${transport.transportName!?html}</td>
+									<th class="col-sm-1">运输人电话</th>
+									<td class="col-sm-2">${transport.transportPhone!?html}</td>
+									<#else>
+									<th class="col-sm-1">快递单号</th>
+									<td colspan="4"><a href="javascript:showProcess('${(transport.courierNumber)!?html}',${(transport.transportType)!?html})">${transport.courierNumber!?html}</a></td> </#if>
+								</tr>
+							</table>
+							
+							<table class="table table-bordered" class='tableshow'
+								style="width: 60%">
+								<thead>
+									<tr>
+										<th>物资名称</th>
+										<th>数量</th>
+									</tr>
+								</thead>
+								<tbody>
+								<#if transport.relations?has_content> <#list transport.relations
+							as relation>
+									<tr>
+									<td>${(relation.materialsName)!?html}</td>
+									<td>${(relation.materialSendCount)!?html}</td>
+									</tr>
+							</#list> </#if> 
+								</tbody>
+							</table>
+							</#list> </#if> </#if>
+
+
+							<!-- 		   处理				-->
+							<#if flag == "handle">
+							<div id='temDiv'>
+								<caption align="top">
+									<strong>寄件信息</strong>
+								</caption>
+								<div
+									style="float: right; border: 0.5px #CCCCCC solid; margin-right: 30px; padding: 5px 20px;">
+									<a href="javascript:0" style="color: black;"
+										onclick="addHtml()">添加寄送</a>
+								</div>
+								<div class="onlytable"
+									style="border: 1px #CCCCCC solid; margin-top: 25px;">
+									<table
+										class="table table-striped table-bordered table-hover table-details"
+										style="width: 80%; margin-top: 10px;">
+										<tr>
+											<th class="col-sm-1">寄件日期</th>
+											<td class="col-sm-2"><input type="text"
+												class="form-control laydate-icon" name="sendTime"
+												placeholder="选择日期" readOnly="readOnly" style="height: 34px"
+												onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" />
+											</td>
+
+											<th class="col-sm-1">运输方式</th>
+											<td class="col-sm-2"><select class="form-control"
+												name="transportType" onchange="selectType(this)">
+													<option value="">请选择</option> <@dict_entries
+													category="TRANSPORT_TYPE"> <#if entries??> <#list entries
+													as entry>
+													<option value="${entry.value!}">${entry.text!?html}</option>
+													</#list> </#if> </@dict_entries>
+											</select></td>
+										</tr>
+										<tr id="d1">
+											<th class="col-sm-1">运输人姓名</th>
+											<td class="col-sm-2"><input type="text"
+												name="transportName" class="form-control" />
+											<th class="col-sm-1">运输人电话</th>
+											<td class="col-sm-2"><input type="text"  onblur='checkedPhone(this)'
+												name="transportPhone" class="form-control"/></td>
+										</tr>
+
+										<tr style="display: none" id="d2">
+											<th class="col-sm-1">快递单号</th>
+											<td class="col-sm-2"><input type="text"
+												name="courierNumber" class="form-control" /></td>
+										</tr>
+									</table>
+									<div
+										style="float: right; border: 0.5px #CCCCCC solid; margin-right: 30px; padding: 5px 20px;">
+										<a style="color: black;" data-toggle="modal" id='a'
+											data-target="#formModal" onclick='getVal(this)'>添加清单</a>
+									</div>
+
+									<table class="table table-bordered" class='tableshow' >
+										<thead>
+											<tr>
+												<th>物资名称</th>
+												<th>申请总数量</th>
+												<th>已发数量</th>
+												<th>打包数量</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody class='tbodyShow'>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+
+
+							</#if>
+							<div class="form-group butt">
+								<div class="col-sm-4 col-sm-offset-4 text-center">
+									<#if flag == "handle">
+									<button class=" btn btn-primary " type="button"
+										onclick='insertValue(this)'>提交</button>
+									</#if>
+								</div>
+							</div>
+							
+							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content" style="width:800px;height:500px">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+															<h4 class="modal-title" id="myModalLabel">快递信息</h4>
+														</div>
+														
+														
+												<div style="width:100%; padding-top:30px;">
+													<span class="express_query_code">运单编号：<font color="#0055A2"></font></span>
+													<span class="express_query_status">状态：<font color="#0055A2"></font></span>
+												</div>
+												<div class="express_query_detail">
+													<table id="express_table" width="100%" border="0" align="center">
+														<tr>
+															<th width="30%">时间</th>
+															<th>跟踪记录</th>
+														</tr>
+															
+														
+														
+														
+													</table>
+												</div>
+														
+														
+													</div>
+													<!-- /.modal-content -->
+												</div>
+												<!-- /.modal -->
+											</div>
+											
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">添加寄送物资</h4>
+				</div>
+				   <div class="form-horizontal m-t toggle-form" >
+				<div class="search-form">
+					<div id="test"></div>
+					<div id="trVal"></div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label">物资名称：</label>
+						<div class="col-sm-4">
+							<select class="form-control" name="materialsName" id="materialsName"
+								onchange="selectVal(this)">
+								<option value="">请选择</option> <#if madetails?has_content> <#list
+								madetails as detail>
+								<option value='${(detail.id)!?html}' text='${(detail.materialsName)!?html}' >${(detail.materialsName)!?html}</option>
+								</#list> </#if>
+							</select>
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">申请数量：</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" name="materialsCount"  readonly="readonly"
+								value="${(detail.materialsCount)!?html}" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">已发数量：</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" name="materialsSendCount"  readonly="readonly"
+								value="${(detail.materialsSendCount)!?html}" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">打包数量：</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" name="materialSendCount"  onblur='checkedValue(this)'
+								value="${(detail.count)!?html}" />
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-2 text-center">
+							<button class="btn btn-primary" onclick='getMaterial(this)'>确定</button>
+
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭</button>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
+
+
+	<div style="display: none">
+		<div class="copyDiv"
+			style="border: 1px #CCCCCC solid; margin-top: 20px;">
+			<table
+				class="table table-striped table-bordered table-hover table-details"
+				style="width: 80%; margin-top: 10px;">
+				<tr>
+					<th class="col-sm-1">寄件日期</th>
+					<td class="col-sm-2"><input type="text"
+						class="form-control laydate-icon" name="sendTime"
+						placeholder="选择日期" readOnly="readOnly" style="height: 34px"
+						onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" />
+					</td>
+
+					<th class="col-sm-1">运输方式</th>
+					<td class="col-sm-2"><select class="form-control"
+						name="transportType" onchange="selectType(this)">
+							<option value="">请选择</option> <@dict_entries
+							category="TRANSPORT_TYPE"> <#if entries??> <#list entries as
+							entry>
+							<option value="${entry.value!}">${entry.text!?html}</option>
+							</#list> </#if> </@dict_entries>
+					</select></td>
+				</tr>
+				<tr id="d1">
+					<th class="col-sm-1">运输人姓名</th>
+					<td class="col-sm-2"><input type="text" name="transportName"
+						class="form-control" />
+					<th class="col-sm-1">运输人电话</th>
+					<td class="col-sm-2"><input type="text" name="transportPhone" onblur='checkedPhone(this)'
+						class="form-control" /></td>
+				</tr>
+
+				<tr style="display: none" id="d2">
+					<th class="col-sm-1">快递单号</th>
+					<td class="col-sm-2"><input type="text" name="courierNumber"
+						class="form-control" /></td>
+				</tr>
+			</table>
+			<div
+				style="float: right; border: 0.5px #CCCCCC solid; margin-right: 30px; padding: 5px 20px;">
+				<a href="javascript:0" onclick="deleteHtml(this)">删除<a>
+			</div>
+			<div
+				style="float: right; border: 0.5px #CCCCCC solid; margin-right: 30px; padding: 5px 20px;">
+				<a class='a' style="color: black;" data-toggle="modal"
+					data-target="#formModal" onclick='getVal(this)'>添加清单</a>
+			</div>
+
+			<table class="table table-bordered" class='tableshow'>
+				<thead>
+					<tr>
+						<th>物资名称</th>
+						<th>申请总数量</th>
+						<th>已发数量</th>
+						<th>打包数量</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class='tbodyShow'>
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+
+
+
+
+</body>
+
+<script type="text/javascript">
+var base = '${base}';
+var arr = [];
+<#if list?has_content>
+	arr = ${list}
+</#if>
+
+var companyMap ={
+		"1":"shunfeng",
+		"2":"tiantian",
+		"3":"youzhengguonei"
+	};
+function showProcess(expressNo,type){
+	$('#express_table').html(""); 
+	var param = {};
+	param.com = companyMap[type];;
+	param.num = expressNo;
+	$.get(base+"/order/showTransport.do?param="+JSON.stringify(param) , function(data){
+		  
+		     var tt = data.msg;
+		     var dataObj=eval("("+tt+")");
+		     //console.info(dataObj);
+		     //console.info(dataObj.result);
+		     if(dataObj.message=="ok"){
+		    	 $('.express_query_code').find('font').text(dataObj.nu);
+			     if(dataObj.state == "3"){
+			    	 $('.express_query_status').find('font').text("已签收");
+			     }
+			    
+			     $.each(dataObj.data,function(index,obj){
+			    	  var context =obj.context;
+			    	 $('#express_table').append("<tr><td>"+obj.time+"</td> <td>"+context+"</td> </tr>");
+			     });
+		     }else{
+		    	 $('.express_query_code').find('font').text(expressNo);
+		     
+		    	 $('.express_query_status').find('font').text("查询无结果");
+		     
+		    	 $('#express_table').append(""+dataObj.message+""); 
+		     }
+		    
+			
+		     $('#myModal').modal('show');
+		    
+		     
+	});
+	
+}  
+</script>
+</html>

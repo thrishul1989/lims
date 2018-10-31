@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>业务库-合同</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${system_js}/layer.js"></script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12" style="background-color: white">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>合同详情</h5>
+					</div>
+					<div class="ibox-content">
+						<input id="dataObject" type="hidden" />
+						<caption align="top">
+							<strong>订单信息</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th class="col-sm-1">合同编号</th>
+								<td class="col-sm-2">${contract.code!?html}</td>
+								<th class="col-sm-1">合同名称</th>
+								<td class="col-sm-2">${contract.name!?html}</td>
+								<th class="col-sm-1">合同有效期</th>
+								<td class="col-sm-2"><#if
+									contract.effectiveStart??>${(contract.effectiveStart)!?string('yyyy-MM-dd')}
+									<#else> ${(contract.effectiveStart)!?html} </#if></td>
+								<th class="col-sm-1">合同截止日期</th>
+								<td class="col-sm-2"><#if
+									contract.effectiveEnd??>${(contract.effectiveEnd)!?string('yyyy-MM-dd')}
+									<#else> ${(contract.effectiveEnd)!?html} </#if></td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">营销中心</th>
+								<td class="col-sm-2"><#if contract.marketingCenter ==
+									1>临床遗传</#if> <#if contract.marketingCenter == 2>临床肿瘤</#if> <#if
+									contract.marketingCenter == 3>健康筛选</#if> <#if
+									contract.marketingCenter == 4>科技服务</#if></td>
+								<th class="col-sm-1">业务员</th>
+								<td class="col-sm-2">${contract.signUsername!?html}</td>
+								<th class="col-sm-1">签订日期</th>
+								<td class="col-sm-2"><#if contract.signDate??>${(contract.signDate)!?string('yyyy-MM-dd')} <#else> ${(contract.signDate)!?html} </#if></td>
+								<th class="col-sm-1">项目管理人</th>
+								<td class="col-sm-2"><#if contract.prjManagerName??>${contract.prjManagerName!?html}</#if></td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">是否入院</th>
+								<td class="col-sm-2">
+									<#if contract.hospitalAdmited! == "0">否</#if>
+								<#if contract.hospitalAdmited! == "1">是</#if>
+								</td>
+								<th class="col-sm-1">开票形式</th>
+								<td class="col-sm-2"><@dict_entry_text category="INVOICE_METHOD" value=cc.invoiceMethod/></td>
+								<th class="col-sm-1">启动方式</th>
+								<td class="col-sm-2"><@dict_entry_text category="START_MODE" value=contract.startMode/></td>
+								<th class="col-sm-1">备注说明</th>
+								<td class="col-sm-2">${cc.settlementRemark!?html}</td>
+							</tr>
+							<tr>
+								<#if cc??> <#if (cc.testingPeriod)??&&(cc.testingPeriod)!="">
+								<th class="col-sm-1">实验周期</th>
+								<td class="col-sm-2" colspan="7">${cc.testingPeriod!?html}天</td> <#else>
+								</#if> </#if>
+							</tr>
+						</table>
+
+
+
+						<caption align="top">
+							<strong>甲方信息</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th class="col-sm-1">甲方</th>
+								<td class="col-sm-2">${cpa.companyName!?html}</td>
+								<th class="col-sm-1">联系人</th>
+								<td class="col-sm-2">${cpa.contactName!?html}</td>
+								<th class="col-sm-1">电话</th>
+								<td class="col-sm-2">${cpa.contactPhone!?html}</td>
+								<th class="col-sm-1">邮箱</th>
+								<td class="col-sm-2">${cpa.contactEmai!?html}</td>
+							</tr>
+							<tr>
+                                 	<th class="col-sm-1">邮编</th>
+                                    <td class="col-sm-2">${cpa.zipcode!?html}</td>
+                                    <th class="col-sm-1">发票抬头</th>
+                                    <td class="col-sm-2">${cpa.invoiceTitle!?html}</td>
+                                	<th class="col-sm-1">地址</th>
+                                    <td colspan="4">${cpa.address!?html}</td>
+                                    
+                                </tr>
+						</table>
+
+
+						<caption align="top">
+							<strong>乙方信息</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th class="col-sm-1">乙方</th>
+								<td class="col-sm-2">${cpb.companyName!?html}</td>
+								<th class="col-sm-1">联系人</th>
+								<td class="col-sm-2">${cpb.contactName!?html}</td>
+								<th class="col-sm-1">电话</th>
+								<td class="col-sm-2">${cpb.contactPhone!?html}</td>
+								<th class="col-sm-1">开户银行</th>
+								<td class="col-sm-2">${cpb.depositBank!?html}</td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">账号</th>
+								<td colspan="4">${cpb.bankAccountNo!?html}</td>
+								<th class="col-sm-1">开户名称</th>
+								<td colspan="4">${cpb.bankAccountName!?html}</td>
+							</tr>
+						</table>
+
+
+						<caption align="top">
+							<strong>成果交付</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<th class="col-sm-1">交付形式</th>
+								<td colspan="4"><#if cc.deliveryModes?has_content> <#list
+									cc.deliveryModes as deliveryMode> <#if deliveryMode_index==0>
+									<@dict_entry_text category="DELIVER_FORM" value=deliveryMode/>
+									<#else>, <@dict_entry_text category="DELIVER_FORM"
+									value=deliveryMode/> </#if> </#list> </#if></td>
+								<th class="col-sm-1">交付方式</th>
+								<td colspan="4"><@dict_entry_text category="DELIVER_TYPE"
+									value=cc.deliveryResult/></td>
+							</tr>
+							<tr>
+								<td colspan="8"><strong>结算信息</strong></td>
+							</tr>
+							<th class="col-sm-1">结算方式</th>
+                                    <td colspan="2"><@dict_entry_text category="SETTLEMENT_METHOD" value=cc.settlementMode/></td>
+                                    <th class="col-sm-1">付款明细</th>
+                                    <td colspan="2">${cc.settlementRemark!?html}</td>
+                                    <th class="col-sm-1">合同总额</th>
+                                    <td colspan="2">${contract.realPrice!?html}</td>
+							</tr>
+
+						</table>
+
+						<caption align="top">
+							<strong>产品列表</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<#if contract??> <#if contract.conProducts?has_content> <#list
+							contract.conProducts as cProduct>
+							<tr>
+								<th class="col-sm-1">产品名称</th>
+								<td class="col-sm-2">${cProduct.productName!?html}</td>
+								<th class="col-sm-1">单价</th>
+								<td class="col-sm-2">${cProduct.realContractPrice!?html}</td>
+								<th class="col-sm-1">数量</th>
+								<td class="col-sm-2">${cProduct.signCount!?html}</td>
+								<th class="col-sm-1">价格</th>
+								<td class="col-sm-2">${cProduct.realSignAmount!?html}</td>
+							</tr>
+							<tr>
+								<th class="col-sm-1">服务要求</th>
+								<td colspan="8">${cProduct.requirement!?html}</td>
+							</tr>
+							</#list> </#if> </#if>
+						</table>
+						<caption align="top">
+							<strong>合同原件</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<td>合同文件名</td>
+								<td>更新时间</td>
+								<td>查看</td>
+								<td>下载</td>
+							</tr>
+							<tr>
+								<td>${contract.original}</td>
+								<td><#if
+									contract.updateTime??>${(contract.updateTime)!?string('yyyy-MM-dd')}
+									<#else> ${(contract.updateTime)!?html} </#if></td>
+								<td><a onclick="viewP()" href="<@download_url fileName=contract.original/>">预览</a></td>
+								<td><a
+									href='${base}/contract/download.do?fileName=${contract.original!html}'>下载</a></td>
+							</tr>
+						</table>
+
+
+						<caption align="top">
+							<strong>实验信息</strong>
+						</caption>
+						<table
+							class="table table-striped table-bordered table-hover table-details">
+							<tr>
+								<td class="col-sm-2">序号</td>
+								<td class="col-sm-3">样本种属</td>
+								<td class="col-sm-3">样本类型</td>
+							</tr>
+							<#if contract??> <#if contract.conSamples?has_content> <#list
+							contract.conSamples as cSample>
+							<tr>
+								<td class="col-sm-2">${cSample_index + 1}</td>
+								<td class="col-sm-3"><@dict_entry_text
+									category="SAMPLE_SPECIES" value=cSample.sampleCategory /></td>
+								<td class="col-sm-3"><#if cSample.sampleNames?has_content>
+									<#list cSample.sampleNames as sampleName> <#if sampleName_index
+									== 0>${sampleName}<#else>,${sampleName}</#if> </#list> </#if></td>
+							</tr>
+							</#list> </#if> </#if>
+						</table>
+
+						<caption align="top">
+							<strong>合同对象信息</strong>
+						</caption>
+						<a class="btn btn-sm btn-success" style="float: right;"
+							onclick='subForm("${(contract.marketingCenter)!?html}",false)'
+							data-toggle="modal" data-target="#myModal"> <i
+							class="fa fa-folder-open-o"></i> 增加
+						</a>
+
+						<table id="tab"
+							class="table table-striped table-bordered table-hover table-details">
+							<thead id="thead">
+								<tr>
+									<td class=" col-sm-2">姓名</td>
+									<td class=" col-sm-3">手机号</td>
+									<td class=" col-sm-3">部门</td>
+									<td class=" col-sm-2">单位</td>
+									<td class=" col-sm-2">操作</td>
+								</tr>
+								<#if cus?has_content> <#list cus as cu><#if cu.custormer??>
+								<tr class="copyHtml">
+									<td class=" col-sm-2">${(cu.custormer.realName)!?html}</td>
+									<td class=" col-sm-3">${(cu.custormer.phoneNum)!?html}</td>
+									<td class=" col-sm-3"><@dict_entry_text
+										category="BASE_DEPT" value=cu.custormer.dept /></td>
+									<td class=" col-sm-2"><#if
+										(cu.custormer.company)??>${(cu.custormer.company.name)!?html}</#if></td>
+									<td class=" col-sm-2"><a onclick='deleteTR(this)'>删除</a></td>
+									<input type="hidden" class="userId" value="${cu.custormer.id}" />
+								</tr>
+                                </#if>
+								</#list> </#if>
+							</thead>
+
+						</table>
+
+
+
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-4 text-center">
+								<button class=" btn btn-primary " type="button"
+									onclick='confirmContract(this)' contractId="${contract.id}">确认</button>
+								<button class=" btn btn-primary " type="button"
+									onclick="goBack()">返回</button>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">选择用户</h4>
+				</div>
+				<form id="search_from" action="" method="post" class="search-form">
+					<div class="row m-b-xs">
+						<div class="col-sm-2">
+							<div class="form-group">
+								<input type="text" name="realName" class="form-control"
+									id="realName" placeholder="客户名称"
+									value="${(searcher.realName)!?html}"> <input
+									type="hidden" name="testingType" />
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<input type="text" name="phoneNum" class="form-control"
+									id="phoneNum" placeholder="手机号"
+									value="${(searcher.phoneNum)!?html}">
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<select class="form-control" name="company.name"
+									data-value="${(searcher.company.name)!?html}">
+									<option value="">请选择单位</option> <#if companyList?has_content>
+									<#list companyList as company>
+									<option value="${company.name}">${company.name}</option>
+									</#list></#if>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-sm-3">
+							<div class="form-group">
+								<button type="button" onclick='subForm("${(contract.marketingCenter)!?html}",true)'
+									class="btn btn-sm btn-success">
+									<i class="fa fa-search"></i> 查询
+								</button>
+								<button type="button" class="btn btn-sm btn-success"
+									onclick="clearCondition('search_from')">
+									<i class="fa fa-remove"></i> 清空
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th class="index">序号</th>
+							<th>姓名</th>
+							<th>手机号</th>
+							<th>性别</th>
+							<th>科室</th>
+							<th>单位</th>
+							<th>职称</th>
+						</tr>
+					</thead>
+					<tbody id='tbody'>
+
+					</tbody>
+				</table>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="butt">添加</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+<script type="text/javascript">
+var flag = false;
+<#if contractSignDate??>
+	flag = true
+</#if >
+var prjMUser = false;
+<#if prjMUser??>
+prjMUser = true
+</#if >
+var dataObject = [];	
+function confirmContract(obj){
+	var val = $(obj).attr('contractId');
+	var userId = '';
+	$('#thead').parent().find('.copyHtml').each(function(i,v){
+		userId = userId + $(v).find('.userId').val() +',';	
+	});
+	if(!flag)
+	{
+		layer.alert('合同签订日期不能为空！',{title:"提示"});
+		return ;
+	}
+    //项目管理人
+    if(!prjMUser) {
+       layer.alert('项目管理人不能为空！',{title:"提示"});
+       return ;
+    }
+
+    if(null != userId&&'' != userId){
+		
+		$.ajax({
+			type:"GET",
+			data:{id:val,userId:userId},
+			url:"${base}/contract/confirmContract",
+			success:function(val){
+				if(val==0){
+					
+					parent.window.gotoHtml('confirm');
+				}
+			}		
+		});
+	}else{
+		layer.alert('请选择合同对象！',{title:"提示"});
+	}
+}
+function goBack() {
+	window.history.back(-1);
+}
+
+
+
+function subForm(val,flag){
+	$("input[name='testingType']").val(val);
+	dataObject =[];
+	$("#dataObject").val("")
+	$('#tbody tr').remove();
+	$('.choose').attr("checked", false);
+	if (flag){
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url:'${base}/contract/getCustormers',
+            data:$('#search_from').serialize(),
+            async: false,
+            error: function(request) {
+                alert("error");
+            },
+            success: function(data) {
+        	doSome(data);
+            }
+        });
+	}
+
+}
+
+function doSome(data){
+	for(var i = 0;i<data.length;i++){	
+		var name = data[i].realName||"";
+		var phone = data[i].phoneNum||"";
+		var dept = data[i].deptName||"";
+		var companyName = "";
+		if(undefined !=data[i].company){
+			companyName = data[i].company.name;
+		}
+		var positionName = data[i].positionName||"";
+		var sexName = data[i].sexName||"";
+		$('#tbody').append(
+			 '<tr><td><input type="checkbox" name="choose" class="choose" value="'+data[i].id+'" /></td>'+
+             '<td>'+name+'</td>'+
+             '<td>'+phone+'</td>'+
+             '<td>'+sexName+'</td>'+
+             '<td>'+dept+'</td>'+
+             '<td>'+companyName+'</td>'+
+             '<td>'+positionName+'</td></tr>'
+		);
+	}
+	
+	$(".choose").on("click",function(){
+		if ($(this).val() != "") {
+	            if($(this).is(":checked")){
+				 if(dataObject.indexOf($(this).val())==-1){
+					dataObject.push($(this).val());
+				 }
+			 }else{
+				//删除
+				 if(dataObject.indexOf($(this).val())!=-1){
+					var index =  dataObject.indexOf($(this).val());
+					dataObject.splice(index,1);
+				 }
+			 }
+		}
+		$("#dataObject").val(dataObject.join(","));
+	});
+	
+}
+
+$("#butt").click(function(){
+	if(dataObject.length < 1){
+		layer.alert('请至少选中一条任务！',{title:"提示"});
+	}else{
+	
+		$.ajax({
+			type:"GET",
+			data:{ids:$("#dataObject").val()},
+			url:"${base}/customer/getCustormersByids",
+			success:function(data){
+				$('#myModal').modal('hide');
+				for(var i = 0;i<data.length;i++){
+					var flag = true;
+					var html = $('#tab .copyHtml input');
+					if(html.length > 0){
+						$.each(html,function(j,v){
+							if($(v).val() == data[i].id){
+								flag = false;
+								layer.alert(data[i].realName +' 已被选择！',{title:"提示"});
+							}
+						});
+					}
+				
+				if(flag){
+					var name = data[i].realName||"";
+					var phone = data[i].phoneNum||"";
+					var dept = data[i].deptName||"";
+					var companyName = "";
+					if(undefined !=data[i].company){
+						companyName = data[i].company.name;
+					}
+					$('#tab').append(
+							'<tr class="copyHtml">'+
+							'<td class=" col-sm-2">'+name+'</td>'+
+							'<td class=" col-sm-3">'+phone+'</td>'+
+							'<td class=" col-sm-3">'+dept+'</td>'+
+							'<td class=" col-sm-2">'+companyName+'</td>'+
+							'<td class=" col-sm-2"><a onclick="deleteTR(this)">删除</a></td>'+
+							'<input type="hidden" class="userId" value="'+data[i].id+'"/>'+
+							'</tr>'
+					);
+				}
+				
+				}
+				
+				
+			}
+		});
+	}
+	
+});
+
+function deleteTR(obj){
+	
+	$(obj).parents('tr').remove();
+}
+
+function viewP(){
+	parent.window.canShow();
+}
+
+</script>
+</html>

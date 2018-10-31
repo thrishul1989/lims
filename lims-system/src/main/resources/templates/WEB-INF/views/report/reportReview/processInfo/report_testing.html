@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>检测流程</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+	<link href="${system_css}/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="${system_css}/modules.css">
+<style>
+	/*#testing_test_result_form table {*/
+		/*width: auto;*/
+		/*max-width: none;*/
+	/*}*/
+	#testing_test_result_form table th,
+	#testing_test_result_form table td {
+		white-space: nowrap;
+	}
+	.ibox-table {
+		background-color: white;
+	}
+
+	.chart-box {
+		position: relative;
+		background-color: white;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		height: auto;
+	}
+
+	.chart-box .draw_picture_box{
+		text-align: left;
+		background-color: #e5e5e5;
+		border-left: 44px solid white;
+		padding-right: 10px;
+	}
+
+	.chart-box .draw_picture_box img{
+		margin-left: auto;
+		margin-right: auto;
+		line-height: 0;
+		max-width:100%;
+		height: auto;
+	}
+
+	.chart-box .chart-op-box {
+		position: absolute;
+		top: 10px;
+		left: 0;
+		width: 44px;
+		text-align: center;
+	}
+
+	.chart-box .chart-op-box input[type=checkbox]{
+		width: 18px;
+		height: 18px;
+	}
+
+	.chart-box + form{
+		margin-top: 10px;
+	}
+
+	#capnCnvCollectionDataBox table thead{
+		background-color: lightblue;
+	}
+
+	#capnCnvCollectionDataBox table tbody {
+		background-color: white;
+	}
+
+	.sys-table-box {
+		overflow-y: auto;
+	}
+
+	.sys-table-box > table{
+		table-layout: 100%;
+		white-space: nowrap;
+	}
+
+	.sys-table-box > table th,
+	.sys-table-box > table td {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.sys-info-table caption{
+		background-color: #cccccc;
+		color: black;
+		font-weight: bold;
+	}
+</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>检测样本</h5>
+                    </div>
+	                <div class="ibox-content">
+	                    <form id="testing_sample_form" class="form-horizontal m-t" action="" method="post">
+	                    	<input type="hidden" name="id" value="${(processModel.id)!?html}"/>
+	                    	<input type="hidden" name="semantic" value="${(processModel.semantic)!?html}"/>
+	                    	<input type="hidden" id="checkRecordIds" value="${(processModel.checkRecordIds)!?html}"/>
+	                        <table class="table table-striped table-bordered table-hover table-responsive">
+	                            <thead>
+	                                <tr>
+	                                    <th>样本编号</th>
+	                                    <th>样本名称</th>
+	                                    <th>样本关系</th>
+	                                    <th>样本类型</th>
+	                                    <th>是否合格</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                                <#if processModel.testSamples??> <#list processModel.testSamples as record>
+	                                <tr>
+	                                	<#if record.isResampling == 1>
+	                                		<td style="color: #eb4f38">${(record.sampleCode)!?html}</td>
+		                                    <td style="color: #eb4f38">${(record.sampleName)!?html}</td>
+		                                    <td style="color: #eb4f38">${(record.relation)!?html}</td>
+		                                    <td style="color: #eb4f38">${(record.sampleTypeName)!?html}</td>
+	                                		<#else>
+	                                		<td>${(record.sampleCode)!?html}</td>
+		                                    <td>${(record.sampleName)!?html}</td>
+		                                    <td>${(record.relation)!?html}</td>
+		                                    <td>${(record.sampleTypeName)!?html}</td>
+	                                	</#if>
+
+	                                    <td>
+	                                        <input type="hidden" name="testSamples[${record_index}].id" value="${record.id!?html}" />
+	                                        <input type="hidden" name="testSamples[${record_index}].scheduleId" value="${record.scheduleId!?html}" />
+	                                        <#if  record.isResampling != 1>
+	                                        	<div class="checkbox i-checks" <#if !record.endFlag>style="display: none;"</#if>>
+		                                            <label> <input class="toggle-qualified" type="checkbox" data-id="${record.id!?html}"
+		                                                    <#if record.qualified>checked="checked"</#if> disabled="disabled" name="testSamples[${record_index}].qualified"> 合格
+		                                            </label>
+		                                        </div>
+	                                        </#if>
+	                                    </td>
+	                                </tr>
+	                                </#list> </#if>
+	                            </tbody>
+	                        </table>
+	                        <div class="row" style="margin-top: 34px">
+	                            <div class="col-lg-12">
+	                                <div class="ibox" style="border: 2px solid #e7eaec; padding: 10px">
+	                                    <label class="col-sm-2 control-label" style="text-align: left; margin-bottom: 10px">不合格清单</label>
+	                                    <div class="ibox-content" id="content">
+	                                        <#if processModel.testSamples??> <#list processModel.testSamples as record>
+	                                        <div id="unqualified_${record.id!?html}" data-id="${record.id!?html}" class="son" <#if record.qualified>style="display: none"</#if>>
+	                                            <div class="form-group">
+	                                                <label class="col-sm-1 control-label">样本编号：</label> <label class="col-sm-1 control-label"
+	                                                    style="text-align: left">${record.sampleCode!?html} </label>
+	                                            </div>
+	                                            <div class="form-group">
+	                                                <label class="col-sm-1 control-label">后续处理：</label>
+	                                                <div class="checkbox i-checks">
+	                                                    <label> <input type="radio" name="testSamples[${record_index}].unqualifiedStrategy" value="1" checked="checked">上报
+	                                                    </label>
+	                                                </div>
+	                                            </div>
+	                                            <div class="form-group">
+	                                                <label class="col-sm-1 control-label">备注原因：</label>
+	                                                <div class="col-sm-3">
+	                                                    <input type="text" name="testSamples[${record_index}].unqualifiedRemark" class="form-control checknull" value="${record.unqualifiedRemark!?html}" readonly="readonly"/>
+	                                                </div>
+	                                            </div>
+	                                            <hr style="border: 2px dotted #ccced0; border-bottom: 0; border-right: 0; border-left: 0; width: 100%;">
+	                                        </div>
+	                                        </#list> </#if>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </form>
+	                </div>
+                </div>
+
+
+		<#if processModel.dataColAndMutationDataModel??>
+			<div class="ibox ibox-table">
+				<div class="ibox-title">
+					<h5>实验结果</h5>
+				</div>
+				<div class="sys-table-box mr_t20" id="dataTableBox">
+					<table id="dataTable">
+						<thead>
+						<tr>
+							<th rowspan="2"><input type="checkbox" class="check-controller" /></th>
+							<th rowspan="2" style="width: 50px;">序号</th>
+							<th rowspan="2">加入收藏</th> <#if processModel.dataColAndMutationDataModel??><#if
+								processModel.dataColAndMutationDataModel.colList?has_content><#list processModel.dataColAndMutationDataModel.colList as
+								dcol> <#if dcol=="Evidence">
+							<th class='evidence' data-field="${dcol!?html}"
+								attr-semantic="${dcol!?html}"
+								colspan="${processModel.dataColAndMutationDataModel.senondColName['${dcol}']?size}">${dcol!?html}</th>
+							<#else>
+								<th data-field="${dcol!?html}" attr-semantic="${dcol!?html}"
+									rowspan="2">${dcol!?html}</th> </#if> </#list></#if></#if>
+						</tr>
+						<tr>
+							<#if processModel.dataColAndMutationDataModel??><#if processModel.dataColAndMutationDataModel.colList?has_content><#list
+									processModel.dataColAndMutationDataModel.colList as dcol> <#if dcol=="Evidence"> <#if
+									processModel.dataColAndMutationDataModel.senondColName?has_content><#list
+									processModel.dataColAndMutationDataModel.senondColName["${dcol}"] as secondCol>
+								<th data-field="${secondCol}" attr-semantic="${secondCol}">${secondCol}</th>
+							</#list></#if> </#if> </#list></#if></#if>
+						</tr>
+						</thead>
+						<tbody>
+						<#if (annotateStatus??) && annotateStatus=="7">
+							<tr>
+								<td>正在打分中...</td>
+							</tr>
+							<#else> <#if processModel.dataColAndMutationDataModel??><#if
+									processModel.dataColAndMutationDataModel.dataValue?has_content><#list processModel.dataColAndMutationDataModel.dataValue
+									as dv>
+								<tr>
+									<td><input type="checkbox" class="check-instance" value="${dv['recordId']!?html}"/></td>
+									<td>${dv_index+1}</td>
+									<td><img id="collection"
+											 src="${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />"
+											 alt="" style="height: 30px; cursor: pointer;"
+											 onclick="mutationCollection('${dv['_id']!?html}',this)"
+											 class="${dv['_id']!?html}" /></td> <#if
+										processModel.dataColAndMutationDataModel.colList?has_content><#list processModel.dataColAndMutationDataModel.colList as
+										dcol> <#if dcol_index == 5>
+									<td attr-semantic="${dcol!?html}"><a class="op-btn"
+																		 href="#"
+																		 onclick="showExampleModalLong('${dv['_id']!?html}','${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />','${dv['_id']!?html}')">${dv["${dcol!?html}"]!?html}</a></td>
+									<#elseif dcol_index == 6>
+										<td attr-semantic="${dcol!?html}"><a class="op-btn"
+																			 href="javascript:;"
+																			 onclick="showLeve('${dv['_id']!?html}');">${dv["${dcol!?html}"]!?html}</a></td>
+										<#else> <#if dcol=="遗传方式" || dcol=="关联表型" || dcol=="疾病表型" ||
+												dcol=="疾病信息">
+											<td attr-semantic="${dcol!?html}"
+												title="${dv['${dcol}']!?html}"><#if dv["${dcol}"]??>
+												<#if dv["${dcol}"]?length gt
+														20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if>
+											</#if></td> <#elseif dcol=="变异信息" || dcol=="疾病与基因关联度打分" ||
+												dcol=="人群频率" || dcol=="蛋白功能预测">
+											<td attr-semantic="${dcol!?html}"><a class="op-btn"
+																				 href="javascript:;"
+																				 onclick="detailsShow('${dcol}','${dv['_id']!?html}')"><#if
+													dv["${dcol}"]??><#if dv["${dcol}"]?length gt
+													20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if></#if></a></td>
+											<#elseif dcol=="Evidence"> <#if
+													processModel.dataColAndMutationDataModel.senondColName?has_content><#list
+													processModel.dataColAndMutationDataModel.senondColName["${dcol}"] as secondCol> <#if
+													secondCol="HGMD">
+												<td attr-semantic="${secondCol}"><a class="op-btn"
+																					href="javascript:;"
+																					onclick="detailsShow('${secondCol}','${dv['_id']!?html}')">${dv["${secondCol}"]!?html}</a></td>
+												<#elseif secondCol="clinvar">
+													<td attr-semantic="${secondCol}"
+														title="${dv['${secondCol}']!?html}"><#if
+															dv["${secondCol}"]?has_content>${dv["${secondCol}"]?split("|")[0]!?html}...</#if></td>
+													<#else>
+														<td attr-semantic="${secondCol}">${dv["${secondCol}"]!?html}</td>
+											</#if> </#list></#if> <#elseif dcol=="功能域">
+												<td attr-semantic="${dcol!?html}"
+													title="${dv['${dcol}']!?html}"><#if
+														dv["${dcol}"]?has_content>${dv["${dcol}"]?split("|")[0]!?html}...</#if></td>
+												<#elseif dcol=="染色体位置">
+													<td attr-semantic="${dcol!?html}"><#if dv["${dcol}"]??><a
+															href="javascript:getIgv('${dv["Chr"]}:${dv["Begin"]}-${dv["End"]!dv["Begin"]}','${dv["analysisSampleId"]!?html}')" target="_blank">${dv["${dcol}"]}</a></#if>
+													</td> <#else>
+													<td attr-semantic="${dcol!?html}"><#if
+															dv["${dcol}"]??>${dv["${dcol}"]}</#if></td> </#if> </#if>
+								</#list></#if>
+								</tr>
+							</#list> <#else>
+								<tr>
+									<td>暂无数据</td>
+								</tr>
+							</#if></#if> </#if>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<#else>
+
+             <#if processModel.columnNames?? && (processModel.columnNames)?has_content>
+                <#if semantic != "DT">
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>实验结果</h5>
+                    </div>
+	                <div class="ibox-content" style="overflow: auto;">
+		                <form id="testing_test_result_form" class="form-horizontal m-t" action="" method="post">
+		                    <table class="table table-striped table-bordered table-hover table-responsive" style="min-width: 1020%;table-layout:fixed;">
+		                        <thead>
+		                            <tr>
+		                            	<th>序号</th>
+		                            	<th><input type="checkbox" class="check-controller" /></th>
+		                            	<th>临床相关性判断</th>
+		                            	<th>突变来源</th>
+		                                <#list processModel.columnNames as name>
+		                                	<#if "临床相关性判断" != name && "突变来源" != name>
+		                                    <th>${name!?html}</th>
+		                                    </#if>
+		                                </#list>
+		                            </tr>
+		                        </thead>
+		                        <tbody>
+		                        <#if processModel.columnValues??> <#list processModel.columnValues as values>
+		                       	<tr class="resultTr">
+		                       		<td>${values_index + 1}</td>
+		                       		<#list values as value>
+		                       		<#if value_index == 0>
+		                       		<td><input type="checkbox" class="check-instance" value="${value!?html}"/></td>
+		                       		<input type="hidden" name="processResults[${values_index}].id" class="subRecordId" value="${value!?html}"/>
+		                       		<#elseif value_index == 1>
+		                       		<td>
+		                       			<select class="form-control clinicalJudgment" name="processResults[${values_index}].clinicalJudgment" class="clinicalJudgment" data-value="${(value)!?html}" style="width: 200px;" disabled="disabled">
+		                                    <option value="临床表型高度相关">临床表型高度相关</option>
+		                                    <option value="可疑变异">可疑变异</option>
+		                                    <option value="缺失重复">缺失重复</option>
+		                                    <option value="杂合携带">杂合携带</option>
+		                                </select>
+		                       		</td>
+		                   			<#elseif value_index == 2>
+		                   			<td>
+		                   				<select class="form-control mutationSource" name="processResults[${values_index}].mutationSource" class="mutationSource" data-value="${(value)!?html}" style="width: 100px;" disabled="disabled">
+		                                    <option value="父亲">父亲</option>
+		                                    <option value="母亲">母亲</option>
+		                                    <option value="父母">父母</option>
+		                                    <option value="自发突变">自发突变</option>
+		                                    <option value="未知">未知</option>
+		                                </select>
+		                   			</td>
+		                       		<#else>
+		                       		<#if (values?size-1) != value_index>
+		                       			<td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${value!?html}">${value!?html}</td>
+		                       		</#if>
+		                       		</#if>
+		                       		</#list>
+		                       	</tr>
+		                       	</#list> </#if>
+		                       </tbody>
+		                   </table>
+	                   </form>
+	                </div>
+                </div>
+                <#else>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>实验结果</h5>
+                    </div>
+	                <div class="ibox-content" style="overflow: auto;">
+		                <form class="form-horizontal m-t" action="" method="post">
+		                    <table class="table table-striped table-bordered table-hover table-responsive" style="min-width: 1020%;table-layout:fixed;">
+		                        <thead>
+		                            <tr>
+		                            	<th>序号</th>
+		                            	<th><input type="checkbox" class="check-controller" /></th>
+		                                <#list processModel.columnNames as name>
+		                                	<#if "临床相关性判断" != name && "突变来源" != name>
+		                                    <th>${name!?html}</th>
+		                                    </#if>
+		                                </#list>
+		                            </tr>
+		                        </thead>
+		                        <tbody>
+		                        <#if processModel.columnValues??> <#list processModel.columnValues as values>
+		                       	<tr class="resultTr">
+		                       		<td>${values_index + 1}</td>
+		                       		<#list values as value>
+		                       		<#if value_index == 0>
+		                       		<td><input type="checkbox" class="check-instance" value="${value!?html}"/></td>
+		                       		<input type="hidden" name="processResults[${values_index}].id" class="subRecordId" value="${value!?html}"/>
+		                       		<#elseif value_index == 1 || value_index == 2>
+		                       		<#else>
+		                       		<#if (values?size-1) != value_index>
+		                       			<td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${value!?html}">${value!?html}</td>
+		                       		</#if>
+		                       		</#if>
+		                       		</#list>
+		                       	</tr>
+		                       	</#list> </#if>
+		                       </tbody>
+		                   </table>
+	                   </form>
+	                </div>
+                </div>
+                </#if>
+                </#if>
+		    </#if>
+
+		<div id="capnCnvCollectionDataBox" style="margin-top: -10px;">
+			<!-- capnCnv收藏数据 -->
+			<#if processModel.cnvModel??>
+				<#list processModel.cnvModel as cnvAnalysisPicResultList>
+					<div class="sys-plane mr_t20">
+						<#if cnvAnalysisPicResultList.cnvAnalysisPic??>
+							<div class="chart-box" >
+								<div class="draw_picture_box">
+									<img src="${cnvAnalysisPicResultList.cnvAnalysisPic.imageUrl!?html}"  alt=""
+										 class="chart-img">
+								</div>
+								<div class="chart-op-box">
+									<p>${cnvAnalysisPicResultList.cnvAnalysisPic.clinicalJudgment!?html}</p>
+									<input type="checkbox" class="check-pic" value="${cnvAnalysisPicResultList.cnvAnalysisPic.id!?html}">
+									<!--  <img
+                                            src="${system_images}<@if_collection id = cnvAnalysisPicResultList.cnvAnalysisPic.id tag = 'cnvPic'  />"
+                                            alt="" style="height: 30px; cursor: pointer;"
+                                            onclick="collectionCapcnvPic('${cnvAnalysisPicResultList.cnvAnalysisPic.id!?html}','pic',this)">-->
+								</div>
+							</div>
+						</#if>
+						<form  class="form-horizontal toggle-form"
+							   action="#"
+							   method="post">
+							<input type="hidden" name="sampleAnalysisId"
+								   value="${analysisSampleId!?html}">
+							<div class="sys-table-box mr_t20 writeResult">
+								<table class="sys-table dyTable">
+									<thead>
+									<tr>
+										<th><input type="checkbox" class="check-controller" /></th>
+										<th>加入收藏</th>
+										<th>是否进行家系分析实验</th>
+										<th>家系实验方法</th>
+										<th>验证样本</th>
+										<th>缺失重复类型</th>
+										<th>基因</th>
+										<th>致病性分级</th>
+										<th>染色体位置</th>
+										<th>外显子</th>
+										<th>遗传来源</th>
+										<th>关联疾病</th>
+										<th>遗传方式</th>
+									</tr>
+									</thead>
+									<tbody>
+									<#if cnvAnalysisPicResultList.collectionCnvAnalysisResult?? > <#list
+											cnvAnalysisPicResultList.collectionCnvAnalysisResult as record>
+										<tr>
+											<td><input type="checkbox" class="check-instance" value="${record['id']!?html}"/></td>
+											<td><img  class="form-control collectionbtn" id="img_${record.id!?html}"  src="${system_images}<@if_collection id = record.id tag = 'cnvResult'  />"   data-toggle="modal" alt="" style="width:50px;height: 30px;  cursor: pointer;" onclick="cnvCollection('${record.id!?html}','result',this)"></td>
+											<td>
+												<input
+														name="cnvAnalysisResult[${record_index}].isFamilyAnalysis"
+														class="form-control isFamilyAnalysis" type="text"
+														value="${record.isFamilyAnalysis!?html}" />
+											</td>
+											<td>
+												<input
+														name="cnvAnalysisResult[${record_index}].familyMethod"
+														class="form-control familyMethod" type="text"
+														value="${record.familyMethod!?html}" />
+											</td>
+											<td>
+												<input
+														name="cnvAnalysisResult[${record_index}].verifySample"
+														class="form-control verifySample" type="text"
+														value="${record.verifySample!?html}" />
+											</td>
+
+											<td>
+												<input
+														name="cnvAnalysisResult[${record_index}].clinicalJudgment"
+														class="form-control clinicalJudgment" type="text"
+														value="${record.clinicalJudgment!?html}" />
+											</td>
+
+											<td><input name="cnvAnalysisResult[${record_index}].id"
+													   class="form-control id" type="hidden"
+													   value="${record.id!?html}" /> <input
+													name="cnvAnalysisResult[${record_index}].gene"
+													class="form-control gene" type="text"
+													value="${record.gene!?html}" /></td>
+
+											<td>
+												<input
+														name="cnvAnalysisResult[${record_index}].pathogenicLevel"
+														class="form-control pathogenicLevel" type="text"
+														value="${record.pathogenicLevel!?html}" />
+											</td>
+
+											<td><input
+													name="cnvAnalysisResult[${record_index}].missingArea"
+													class="form-control missingArea" type="text"
+													value="${record.missingArea!?html}" /></td>
+											<td><input name="cnvAnalysisResult[${record_index}].exon"
+													   class="form-control exon" type="text"
+													   value="${record.exon!?html}" /></td>
+											<td><input
+													name="cnvAnalysisResult[${record_index}].inheritSource"
+													class="form-control inheritSource" type="text"
+													value="${record.inheritSource!?html}" /></td>
+											<td><input
+													name="cnvAnalysisResult[${record_index}].relatedDisease"
+													class="form-control relatedDisease" type="text"
+													value="${record.relatedDisease!?html}" /></td>
+											<td><input
+													name="cnvAnalysisResult[${record_index}].inhert"
+													class="form-control inhert" type="text"
+													value="${record.inhert!?html}" /></td>
+
+										</tr>
+									</#list>
+
+									</#if>
+									</tbody>
+								</table>
+							</div>
+							<!--
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5"
+                                    style="margin-left: 950px; margin-top: 10px;">
+                                    <button type="button" class="btn btn-primary btnSave">保存</button>
+                                </div>
+                            </div>
+                            -->
+						</form>
+
+					</div>
+				</#list>
+			</#if>
+		</div>
+
+            </div>
+        </div>
+    </div>
+
+
+	<div class="modal fade" id="detailsModal" tabindex="-2" role="dialog"
+		 aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detailsModalLabel">突变</h5>
+					<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body txt_l">
+					<form action="">
+						<div class="form-group row mr_b0" id="detailsModalDiv">
+							<div class="col-sm-12"></div>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 重新筛选Modal -->
+	<#include "/bpm/technicalanaly/analysis_mutation_refilter.html" />
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalLong" tabindex="-3"
+		 role="dialog" aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="min-width: 80%;">
+			<div class="modal-content">
+				<div class="modal-header">
+
+
+					<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="">
+						<table class="sys-info-table">
+							<caption class="caption">变异信息汇总</caption>
+							<thead>
+							<tr>
+								<th>ACMG致病性分级</th>
+								<th>Mygeno_InterACMG</th>
+								<th>基因</th>
+								<th>染色体位置</th>
+								<th>变异信息</th>
+								<th>纯合/杂合</th>
+								<th>测序深度</th>
+								<th>突变频率</th>
+								<th>dbSNP</th>
+							</tr>
+							</thead>
+							<tbody>
+
+							<tr>
+								<td class="inner" id="tag1"></td>
+								<td class="inner" id="tag2"></td>
+								<td class="inner" id="tag3"></td>
+								<td class="inner" id="tag4"></td>
+								<td class="inner" id="tag5"></td>
+								<td class="inner" id="tag6"></td>
+								<td class="inner" id="tag7"></td>
+								<td class="inner" id="tag8"></td>
+								<td class="inner" id="tag9"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">ACMG致病性分级证据</caption>
+							<tbody id="tag51">
+
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">家系携带信息</caption>
+							<tbody>
+							<tr>
+								<td class="table-active">变异来源</td>
+								<td colspan="7" class="pt-2 pb-2"><label for=""
+																		 class="mb-0 mr-2 " id="tag33">未知</label> <!-- 										<button type="button" class="btn btn-secondary" -->
+									<!-- 											style="font-size: inherit; padding: .125rem .375rem;">验证该位点</button> -->
+								</td>
+							</tr>
+							<tr>
+								<td class="table-active">先证者父亲</td>
+								<td class="inner" id="tag10"></td>
+								<td class="table-active">测序深度</td>
+								<td class="inner" id="tag11"></td>
+								<td class="table-active">先证者母亲</td>
+								<td class="inner" id="tag12"></td>
+								<td class="table-active">测序深度</td>
+								<td class="inner" id="tag13"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">疾病表型关联度打分</caption>
+							<tbody>
+							<tr>
+								<td class="table-active" style="width: 12.5%;">Phenolyzer</td>
+								<td style="width: 20%;" class="inner" id="tag14"></td>
+								<td class="table-active" style="width: 12.5%;">EXOMISER</td>
+								<td class="inner" id="tag15"></td>
+								<td class="table-active" style="width: 12.5%;">Total_Score</td>
+								<td class="inner" id="tag16"></td>
+							</tr>
+							<tr>
+								<td class="table-active">先证者临床表型</td>
+								<td colspan="5" class="inner" id="tag50"></td>
+							</tr>
+							<tr class="table-active">
+								<td colspan="2">关联疾病|遗传方式</td>
+								<td colspan="2">疾病信息</td>
+								<td colspan="2">疾病表型</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="inner" id="tag17"></td>
+								<td colspan="2" class="inner" id="tag18"></td>
+								<td colspan="2" class="inner" id="tag19"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">正常人频率</caption>
+							<tbody>
+							<tr class="table-active">
+								<td>Highest-MAF</td>
+								<td>Inhouse</td>
+								<td>esp6500si</td>
+								<td>1000g2015aug_all</td>
+								<td>ExAC_ALL</td>
+
+							</tr>
+							<tr>
+								<td class="inner" id="tag20"></td>
+								<td class="inner" id="tag21"></td>
+								<td class="inner" id="tag22"></td>
+								<td class="inner" id="tag23"></td>
+								<td class="inner" id="tag24"></td>
+
+							</tr>
+
+							<tr class="table-active">
+
+								<td>ExAC_EAS</td>
+								<td>gnomAD_ALL</td>
+								<td>gnomAD_exome_EAS</td>
+								<td>gnomAD_genome_ALL</td>
+								<td>gnomAD_genome_EAS</td>
+							</tr>
+							<tr>
+
+								<td class="inner" id="tag25"></td>
+								<td class="inner" id="tag26"></td>
+								<td class="inner" id="tag52"></td>
+								<td class="inner" id="tag53"></td>
+								<td class="inner" id="tag54"></td>
+							</tr>
+
+
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">Evidence</caption>
+							<tbody>
+							<tr>
+								<td class="table-active">HGMD</td>
+								<td id="tag55"></td>
+								<td id="tag56"></td>
+								<td id="tag57"></td>
+								<td id="tag58"></td>
+							</tr>
+							<tr>
+								<td class="table-active">ClinVar</td>
+								<td colspan="4" class="inner" id="tag34"></td>
+							</tr>
+							<tr>
+								<td class="table-active">InterVar</td>
+								<td colspan="4" class="inner" id="tag35"></td>
+							</tr>
+							<tr>
+								<td class="table-active">MutInDatabase</td>
+								<td colspan="4" class="inner" id="tag36"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="mr_t20">
+						<table class="sys-info-table">
+							<caption class="caption">蛋白功能预测</caption>
+							<tbody>
+							<tr class="table-active">
+								<td>SIFT</td>
+								<td>Polyphen2</td>
+								<td>MutationTaster</td>
+								<td>GERP++</td>
+								<td>MCAP</td>
+								<td>SPIDEX</td>
+							</tr>
+							<tr>
+								<td class="inner" id="tag27"></td>
+								<td class="inner" id="tag28"></td>
+								<td class="inner" id="tag29"></td>
+								<td class="inner" id="tag30"></td>
+								<td class="inner" id="tag31"></td>
+								<td class="inner" id="tag32"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!--<div class="modal-footer">-->
+				<!--<div class="txt_c ub-f1">-->
+				<!--<button type="button" class="btn btn-primary" data-dismiss="modal" style="width: 150px; margin-right: 50px;">筛选</button>-->
+				<!--<button type="button" class="btn btn-outline-primary" style="width: 150px;">重置筛选</button>-->
+				<!--</div>-->
+				<!--</div>-->
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="modal fade" id="level" tabindex="-3" role="dialog"
+		 aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">
+						<button class="btn btn-outline-secondary btn-sm">Mygeno_InterACMG证据清单</button>
+					</h5>
+
+
+
+					<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="mr_t20" style="height: 400px; overflow: auto">
+
+
+						<table class="sys-info-table">
+							<tbody>
+							<input type="hidden" id="mongoId" value="">
+							<tr class="table-active" id="evidenceDetail">
+								<td>致病性证据</td>
+								<td>证据说明</td>
+								<td>个数</td>
+
+							</tr>
+							<@dict_entries category="INTERACMG">
+							<#list entries as entry>
+								<tr>
+									<td class="evidence" >${entry.value!?html}</td>
+									<td class="desc"><input type="text"	class="form-control sys-input desc" value="" readonly="readonly"></td>
+									<td class="inner"><input type="text" class="form-control sys-input evidenceValue" value="" style="width: 50px" readonly="readonly"></td>
+								</tr>
+
+							</#list>
+							</@dict_entries>
+
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/report/report_solve_testing.js?v=1.0.0"></script>
+
+<script src="${system_js}/bootstrap-table.min.js"></script>
+<script
+		src="https://cdn.bootcss.com/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="${system_js}/analysis/mutation.js"></script>
+<script src="${system_js}/analysis/analysis.js"></script>
+<script type="text/javascript">
+    var PATH = '${base}';
+
+
+    function getIgv(location,mongoId){
+
+        var url = 'http://60.205.205.23:55000/pages/index.html';
+
+        var json = {};
+        var family=[];
+        json.Location = location;
+        $.ajax({
+            type : "GET",
+            url : PATH + "/testing/getFamilyAnnotate.jsp",
+            data : {
+                mongoId : mongoId
+            },
+            dataType : "json",
+            success : function(data) {
+                $.each(data,function(i,o){
+                    var d =  {};
+                    d.sampleNum = o.dataCode;
+                    d.BAM_url = o.bamBam;
+                    d.VCF_url = o.vcfDmdexon;
+                    family.push(d)
+
+                })
+
+                json.IGV = family;
+
+                window.open(url+"?data="+JSON.stringify(json),"_blank");
+
+            }
+
+        })
+
+    }
+    $(function(){
+        $('.dyTable input').attr("readonly","readonly");
+	})
+
+</script>
+</html>

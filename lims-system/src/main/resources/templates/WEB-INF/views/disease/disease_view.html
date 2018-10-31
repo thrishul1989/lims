@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>查看疾病详情</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+</head>
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<ol class="breadcrumb">
+								<li><a href="#">疾病管理</a></li>
+								<li class="active"><strong>疾病详情</strong></li>
+							</ol>
+							<div style="float:right">
+								<a href="${base}/disease/pagingDisease.do"  target="_self" style="margin-top:-18px;padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+						</div>
+							
+						</div>
+					</div>
+					<div class="ibox">
+						<div class="ibox-title">
+							<strong>疾病详情</strong>
+					    </div>
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                   
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>疾病信息</strong></td>
+                        	</tr>
+                        	<#if entity ??>
+                            <tr>
+                                <th class="col-sm-1">疾病编号</th>
+                                <td class="col-sm-2">${entity.code!?html} </td> 
+                                <th class="col-sm-1">疾病名称</th>
+                                <td class="col-sm-2">${entity.name!?html}</td>
+                                <th class="col-sm-1">疾病英文全名</th>
+                                <td class="col-sm-2">${entity.nameEn!?html}</td>
+                                <th class="col-sm-1">发病率</th>
+                                <td class="col-sm-2">${entity.incidence!?html}</td>
+                            </tr>
+                       		<tr>
+                               
+                       			<th class="col-sm-1">发病年龄</th>
+                                <td class="col-sm-2">${entity.onsetAge!?html}</td>
+                                <th class="col-sm-1">突变类型</th>
+                                <td class="col-sm-2">${entity.mutationType!?html}</td>
+                                <th class="col-sm-1">疾病类型</th>
+                                <td class="col-sm-2"><@dict_entry_text category="DISEASE_TYPE" value=entity.diseaseType /></td>
+                       		</tr>
+                       		<tr>
+                                <th class="col-sm-1">疾病简介</th>
+                                <td colspan="7">${entity.description!?html}</td>
+                       		</tr>
+                       	
+                       		<tr>
+                                <th class="col-sm-1">文献报道</th>
+                                <td colspan="7">
+                              <#if entity.documents?has_content>
+                                <#list entity.documents as d>
+	                                  	<#if d_index == 0>
+                                    	 ${d!?html}
+                                    	 <#else>
+                                    	 , ${d!?html}
+                                    	 </#if>
+                                </#list>
+                                </#if>
+                                </td>
+                       		</tr>
+                       		
+                       		<#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关记录</td>
+                                    </tr>
+                            </#if>
+                       		
+                      		<tr>
+                        		<td colspan="8"><strong>遗传方式</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>遗传方式</td>
+                      		</tr>
+                      			<#if entity.hereditaryList?has_content>
+                      			<#list entity.hereditaryList as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td><@dict_entry_text category="HEREDITARY_TYPE" value=d.hereditaryType /></td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                             
+                             
+                             
+                            <tr>
+                        		<td colspan="8"><strong>相关基因</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>基因名称</td>
+								<td>打分</td>
+                      		</tr>
+                      			<#if entity.geneList?has_content>
+                      			<#list entity.geneList as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${d.symbol!?html}</td>
+                      			<td>${d.geneScore!?html}</td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                             
+                            <tr>
+                        		<td colspan="8"><strong>相关表型</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>表型名称</td>
+								<td>表型英文名称</td>
+								<td>打分</td>
+                      		</tr>
+                      			<#if entity.phenotypeList?has_content>
+                      			<#list entity.phenotypeList as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${d.name!?html}</td>
+                      			<td>${d.enName!?html}</td>
+                      			<td>${d.phneotypeScore!?html}</td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                             
+                             
+                             
+                            
+                             
+                             
+                            <tr>
+                        		<td colspan="8"><strong>别名</strong></td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td>序号</td>
+								<td>别名中文</td>
+								<td>别名英文</td>
+                      		</tr>
+                      			<#if entity.alias?has_content>
+                      			<#list entity.alias as d>
+                      		<tr>
+                      			<td>${d_index+1}</td> 
+                      			<td>${d.name!?html}</td>
+                      			<td>${d.nameEn!?html}</td>
+                      		</tr>
+                      			</#list><#else>
+                                    <tr>
+                                        <td colspan="8">暂无相关明细</td>
+                                    </tr>
+                             </#if>
+                             
+                   			 
+                       	</table>
+                    </div>
+                </div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+</html>

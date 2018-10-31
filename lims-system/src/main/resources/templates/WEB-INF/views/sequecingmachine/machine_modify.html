@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>新增探针</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+
+
+
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">测序机型</a></li>
+
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>测序机型</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="sbForm" class="form-horizontal m-t"
+							action="${base}/testing/sequecingMachine/modify.do" method="post"
+							enctype='application/json' onsubmit="return subForm()">
+
+							<input type="hidden" value="${sequecingMachine.id}"
+								name="sequecingMachineId">
+
+							<fieldset>
+								<div class="form-group">
+
+
+									<label class="col-sm-2 control-label control-required">测序机型：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control"
+											name="sequecingMachineCode" id="sequecingMachineCode"
+											value="${(sequecingMachine.sequecingMachineCode)!?html}" />
+									</div>
+
+
+									<label class="col-sm-2 control-label control-required">Lan号：</label>
+									<div class="col-sm-3">
+										<input type="checkbox" id="L1" name="lanCode" value="L1">L1&nbsp;&nbsp;
+										<input type="checkbox" id="L2" name="lanCode" value="L2">L2&nbsp;&nbsp;
+										<input type="checkbox" id="L3" name="lanCode" value="L3">L3&nbsp;&nbsp;
+										<input type="checkbox" id="L4" name="lanCode" value="L4">L4&nbsp;&nbsp;<br />
+										<input type="checkbox" id="L5" name="lanCode" value="L5">L5&nbsp;&nbsp;
+										<input type="checkbox" id="L6" name="lanCode" value="L6">L6&nbsp;&nbsp;
+										<input type="checkbox" id="L7" name="lanCode" value="L7">L7&nbsp;&nbsp;
+										<input type="checkbox" id="L8" name="lanCode" value="L8">L8&nbsp;&nbsp;
+									</div>
+
+
+								</div>
+
+
+
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+
+										<button type="submit" class="btn btn-primary">保存</button>
+										<button class="btn btn-primary goback" type="button">返回</button>
+
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+
+
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+
+<script>
+<#if sequecingMachine.lanList ?? && sequecingMachine.sequecingMachineCode!?html == 'x10'>
+<#list sequecingMachine.lanList as lanRecord>
+$("#${lanRecord.lanCode}").attr("checked", true);
+</#list>
+<#else>
+$("#L1").attr("checked", true);
+$("#L2").attr("checked", true);
+$("#L3").attr("checked", true);
+$("#L4").attr("checked", true);
+$("#L5").attr("checked", false);
+$("#L6").attr("checked", false);
+$("#L7").attr("checked", false);
+$("#L8").attr("checked", false);
+$("#L5").attr("disabled", 'disabled');
+$("#L6").attr("disabled", 'disabled');
+$("#L7").attr("disabled", 'disabled');
+$("#L8").attr("disabled", 'disabled');
+</#if>
+
+
+$('input[name="lanCode"]').click(
+		function() {
+
+			if ($('input[name="lanCode"]:checked').length > 4
+					&& "${sequecingMachine.sequecingMachineCode!?html}" == "x10") {
+				alert("x10只能勾选4个lane号")
+				$(this).attr("checked", false)
+			}
+		})
+		
+		
+		function subForm(){
+
+
+				if ($('input[name="lanCode"]:checked').length > 4
+						&& "${sequecingMachine.sequecingMachineCode!?html}" == "x10") {
+					alert("x10只能勾选4个lane号")
+					$(this).attr("checked", false);
+					return false
+				}
+		
+			return true;
+			
+}
+		
+</script>
+
+</html>

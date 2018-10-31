@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.CnvAnalysisResultMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisResult">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SAMPLE_TEST_ID" property="sampleTestId"
+			jdbcType="VARCHAR" />
+			<result column="SAMPLE_TEST_CODE" property="sampleTestCode"
+			jdbcType="VARCHAR" />
+		<result column="GENE" property="gene" jdbcType="VARCHAR" />
+		<result column="MISSING_AREA" property="missingArea" jdbcType="VARCHAR" />
+		<result column="EXON" property="exon" jdbcType="VARCHAR" />
+		<result column="INHERIT_SOURCE" property="inheritSource"
+			jdbcType="VARCHAR" />
+		<result column="RELATED_DISEASE" property="relatedDisease"
+			jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CNV_ANALYSIS_PIC_ID" property="cnvAnalysisPicId" jdbcType="VARCHAR" />
+		<result column="CLINICAL_JUDGMENT" property="clinicalJudgment" jdbcType="VARCHAR" />
+		<result column="CHROMOSOME" property="chromosome" jdbcType="VARCHAR" />
+		<result column="BEGIN_LOCUS" property="beginLocus" jdbcType="VARCHAR" />
+		<result column="END_LOCUS" property="endLocus" jdbcType="VARCHAR" />
+		<result column="INHERT" property="inhert" jdbcType="VARCHAR" />
+		<result column="PATHOGENIC_LEVEL" property="pathogenicLevel" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingSample"
+		extends="BaseResultMap">
+		<result column="ATTRIBUTES" property="attributes" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID,SAMPLE_TEST_ID,CNV_ANALYSIS_PIC_ID, GENE, MISSING_AREA, EXON,
+		INHERIT_SOURCE,
+		RELATED_DISEASE,CREATE_TIME,UPDATE_TIME,CLINICAL_JUDGMENT,CHROMOSOME,BEGIN_LOCUS,END_LOCUS,INHERT,PATHOGENIC_LEVEL
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getListBySampleTestId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		r.ID,r.SAMPLE_TEST_ID,r.CNV_ANALYSIS_PIC_ID, r.GENE, r.MISSING_AREA, r.EXON,
+		r.INHERIT_SOURCE, r.RELATED_DISEASE,r.CREATE_TIME,r.UPDATE_TIME,r.CLINICAL_JUDGMENT,r.CHROMOSOME,r.BEGIN_LOCUS,r.END_LOCUS,r.INHERT,r.PATHOGENIC_LEVEL,
+		d.DATA_CODE as SAMPLE_TEST_CODE
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT r
+		left join BIOLOGY_DIVISION_FASTQ_DATA d on d.ID = r.SAMPLE_TEST_ID
+		where r.SAMPLE_TEST_ID =
+		#{sampleTestId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisResult">
+		insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		(ID,SAMPLE_TEST_ID,CNV_ANALYSIS_PIC_ID,
+		GENE, MISSING_AREA, EXON,
+		INHERIT_SOURCE,
+		RELATED_DISEASE,CREATE_TIME,UPDATE_TIME,CLINICAL_JUDGMENT,CHROMOSOME,BEGIN_LOCUS,END_LOCUS,INHERT,PATHOGENIC_LEVEL)
+		values
+		(#{id,jdbcType=VARCHAR},#{sampleTestId,jdbcType=VARCHAR},#{cnvAnalysisPicId,jdbcType=VARCHAR},
+		#{gene,jdbcType=VARCHAR}, #{missingArea,jdbcType=VARCHAR},
+		#{exon,jdbcType=VARCHAR},
+		#{inheritSource,jdbcType=VARCHAR},
+		#{relatedDisease,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},
+		#{clinicalJudgment,jdbcType=VARCHAR},#{chromosome,jdbcType=VARCHAR},#{beginLocus,jdbcType=VARCHAR},#{endLocus,jdbcType=VARCHAR},#{inhert,jdbcType=VARCHAR},#{pathogenicLevel,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisResult">
+		insert into LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="sampleTestId != null">
+				SAMPLE_TEST_ID,
+			</if>
+			<if test="cnvAnalysisPicId != null">
+				CNV_ANALYSIS_PIC_ID,
+			</if>
+			<if test="gene != null">
+				GENE,
+			</if>
+			<if test="missingArea != null">
+				MISSING_AREA,
+			</if>
+			<if test="exon != null">
+				EXON,
+			</if>
+			<if test="inheritSource != null">
+				INHERIT_SOURCE,
+			</if>
+			<if test="relatedDisease != null">
+				RELATED_DISEASE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTestId != null">
+				#{sampleTestId,jdbcType=VARCHAR},
+			</if>
+			<if test="cnvAnalysisPicId != null">
+				#{cnvAnalysisPicId,jdbcType=VARCHAR},
+			</if>
+			<if test="gene != null">
+				#{gene,jdbcType=VARCHAR},
+			</if>
+			<if test="missingArea != null">
+				#{missingArea,jdbcType=VARCHAR},
+			</if>
+			<if test="exon != null">
+				#{exon,jdbcType=VARCHAR},
+			</if>
+			<if test="inheritSource != null">
+				#{inheritSource,jdbcType=VARCHAR},
+			</if>
+			<if test="relatedDisease != null">
+				#{relatedDisease,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisResult">
+		update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		<set>
+			<if test="sampleTestId != null">
+				SAMPLE_TEST_ID = #{sampleTestId,jdbcType=VARCHAR},
+			</if>
+			<if test="cnvAnalysisPicId != null">
+				CNV_ANALYSIS_PIC_ID = #{cnvAnalysisPicId,jdbcType=VARCHAR},
+			</if>
+			<if test="gene != null">
+				GENE = #{gene,jdbcType=VARCHAR},
+			</if>
+			<if test="missingArea != null">
+				MISSING_AREA = #{missingArea,jdbcType=VARCHAR},
+			</if>
+			<if test="exon != null">
+				EXON = #{exon,jdbcType=VARCHAR},
+			</if>
+			<if test="inheritSource != null">
+				INHERIT_SOURCE = #{inheritSource,jdbcType=VARCHAR},
+			</if>
+			<if test="relatedDisease != null">
+				RELATED_DISEASE = #{relatedDisease,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.CnvAnalysisResult">
+		update LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		set
+		SAMPLE_TEST_ID =
+		#{sampleTestId,jdbcType=VARCHAR},
+		CNV_ANALYSIS_PIC_ID=#{cnvAnalysisPicId,jdbcType=VARCHAR},
+		GENE = #{gene,jdbcType=VARCHAR},
+		MISSING_AREA = #{missingArea,jdbcType=VARCHAR},
+		EXON =
+		#{exon,jdbcType=VARCHAR},
+		INHERIT_SOURCE =
+		#{inheritSource,jdbcType=VARCHAR},
+		RELATED_DISEASE =
+		#{relatedDisease,jdbcType=VARCHAR},
+		UPDATE_TIME =
+		#{updateTime,jdbcType=TIMESTAMP},
+		CLINICAL_JUDGMENT=#{clinicalJudgment,jdbcType=VARCHAR},
+		CHROMOSOME=#{chromosome,jdbcType=VARCHAR},
+		BEGIN_LOCUS=#{beginLocus,jdbcType=VARCHAR},
+		END_LOCUS=#{endLocus,jdbcType=VARCHAR},
+		INHERT=#{inhert,jdbcType=VARCHAR},
+		PATHOGENIC_LEVEL=#{pathogenicLevel,jdbcType=VARCHAR}
+		
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getDoctorCollectionByAnalysisSampleId" resultMap="BaseResultMap">
+		select r.ID, r.SAMPLE_TEST_ID,r.CNV_ANALYSIS_PIC_ID, r.GENE, r.MISSING_AREA
+		,r.EXON,r.INHERIT_SOURCE,r.RELATED_DISEASE,r.CLINICAL_JUDGMENT,r.CHROMOSOME,r.BEGIN_LOCUS,r.END_LOCUS,r.INHERT,r.PATHOGENIC_LEVEL from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT r where
+		SAMPLE_TEST_ID = #{0} and r.ID in
+		(select CNV_ANALYSIS_ID from
+		LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_COLLECTION where
+		DOCTOR_ID =#{1} and REF = 'result')
+
+	</select>
+
+
+	<select id="getListBySampleTestIdAndCnvAnalysisPicId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		r.ID,r.SAMPLE_TEST_ID,r.CNV_ANALYSIS_PIC_ID,r.GENE, r.MISSING_AREA, r.EXON,
+		r.INHERIT_SOURCE, r.RELATED_DISEASE,r.CREATE_TIME,r.UPDATE_TIME,r.CLINICAL_JUDGMENT,r.CHROMOSOME,r.BEGIN_LOCUS,r.END_LOCUS,r.INHERT,r.PATHOGENIC_LEVEL,
+		d.DATA_CODE as SAMPLE_TEST_CODE
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT r
+		left join BIOLOGY_DIVISION_FASTQ_DATA d on d.ID = r.SAMPLE_TEST_ID
+		where r.SAMPLE_TEST_ID =
+		#{0} and r.CNV_ANALYSIS_PIC_ID=#{1}
+	</select>
+
+	<select id="getListByCnvAnalysisPicId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT where CNV_ANALYSIS_PIC_ID=#{0}
+	</select>
+
+	<select id="getByIdsAndPicId" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_CNV_ANALYSIS_RESULT
+		where 1=1
+		<if test="picId !=null">
+			and CNV_ANALYSIS_PIC_ID =#{picId,jdbcType=VARCHAR}
+		</if>
+		 <if test="ids !=null">
+		   and  ID in
+		 <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+			 #{item}
+		 </foreach>
+		</if>
+	</select>
+</mapper>

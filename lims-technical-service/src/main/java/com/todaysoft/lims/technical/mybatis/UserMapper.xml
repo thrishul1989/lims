@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.UserMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.User">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="username" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="SALT" property="salt" jdbcType="VARCHAR" />
+		<result column="STATE" property="state" jdbcType="BIT" />
+		<result column="ARCHIVE_ID" property="archiveId" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="BIT" />
+		<result column="DELETE_TIME" property="deleteTime" jdbcType="TIMESTAMP" />
+		<association property="userAchive"
+			javaType="com.todaysoft.lims.technical.mybatis.entity.UserAchive">
+			<result column="NAME" property="name" jdbcType="VARCHAR" />
+
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, USERNAME, PASSWORD, SALT, STATE, ARCHIVE_ID,
+		CREATE_TIME, DEL_FLAG,
+		DELETE_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		u.ID, u.USERNAME, u.PASSWORD, u.SALT, u.STATE,
+		u.ARCHIVE_ID, u.CREATE_TIME, u.DEL_FLAG,
+		u.DELETE_TIME,a.NAME
+		from
+		LIMS_USER u left join LIMS_USER_ARCHIVE a on u.ARCHIVE_ID=a.id
+		where
+		u.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_USER
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.User">
+		insert into LIMS_USER (ID,
+		USERNAME, PASSWORD,
+		SALT, STATE, ARCHIVE_ID,
+		CREATE_TIME, DEL_FLAG,
+		DELETE_TIME
+		)
+		values (#{id,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{salt,jdbcType=VARCHAR}, #{state,jdbcType=BIT},
+		#{archiveId,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{delFlag,jdbcType=BIT},
+		#{deleteTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.User">
+		insert into LIMS_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="username != null">
+				USERNAME,
+			</if>
+			<if test="password != null">
+				PASSWORD,
+			</if>
+			<if test="salt != null">
+				SALT,
+			</if>
+			<if test="state != null">
+				STATE,
+			</if>
+			<if test="archiveId != null">
+				ARCHIVE_ID,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG,
+			</if>
+			<if test="deleteTime != null">
+				DELETE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				#{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=BIT},
+			</if>
+			<if test="archiveId != null">
+				#{archiveId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag,jdbcType=BIT},
+			</if>
+			<if test="deleteTime != null">
+				#{deleteTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.User">
+		update LIMS_USER
+		<set>
+			<if test="username != null">
+				USERNAME = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				SALT = #{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				STATE = #{state,jdbcType=BIT},
+			</if>
+			<if test="archiveId != null">
+				ARCHIVE_ID = #{archiveId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG = #{delFlag,jdbcType=BIT},
+			</if>
+			<if test="deleteTime != null">
+				DELETE_TIME = #{deleteTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.User">
+		update LIMS_USER
+		set USERNAME = #{username,jdbcType=VARCHAR},
+		PASSWORD =
+		#{password,jdbcType=VARCHAR},
+		SALT = #{salt,jdbcType=VARCHAR},
+		STATE =
+		#{state,jdbcType=BIT},
+		ARCHIVE_ID = #{archiveId,jdbcType=VARCHAR},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		DEL_FLAG =
+		#{delFlag,jdbcType=BIT},
+		DELETE_TIME = #{deleteTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

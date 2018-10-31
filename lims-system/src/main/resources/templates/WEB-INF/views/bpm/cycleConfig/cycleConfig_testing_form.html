@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>添加页面</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.7" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>检测配置</span></li>
+							<#if testingConfig??>
+							<li class="active"><strong class="toggle-title">修改</strong></li>
+							<#else>
+							<li class="active"><strong class="toggle-title">添加</strong></li>
+							</#if>
+							</li>
+						</ol>
+				</div>
+			</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<#if testingConfig??>
+							<h5 class="toggle-title">修改</h5>
+							<#else>
+							<h5 class="toggle-title">添加</h5>
+						</#if>
+						
+					</div>
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox">
+									<form id="testingConfigForm" class="form-horizontal m-t" action="" method="post">
+										<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+										<input type="hidden" name="id" id="id" <#if testingConfig??>value="${testingConfig.id}"</#if>/>
+										<fieldset >
+											<#if testingConfig??>
+												<#if testingConfig.testingMethod.type == "2">
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">周期名称：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" id="configName"
+																name="configName" disabled="disabled"/>
+														</div>
+														<label class="col-sm-2 control-label">描述：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" name="configDesc"
+																id="configDesc" />
+														</div>
+													</div>
+													<#else>
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">检测方法：</label>
+														<div class="col-sm-3">
+															<select class="form-control testingMethod" name="testingMethod" id="testingMethod" onchange="showOption(this)">
+																  <#if testingMethodList??> 
+																		<#list testingMethodList as entry>
+																		<option value="${entry.id!?html}" data-process="${entry.testingProcess!?html}">${entry.name!?html}</option>
+																		</#list>
+																	</#if>
+															</select>
+														</div>
+														<label class="col-sm-2 control-label control-required">周期名称：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" id="configName"
+																name="configName" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label">描述：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" name="configDesc"
+																id="configDesc" />
+														</div>
+													</div>
+												</#if>
+												<#else>
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">检测方法：</label>
+														<div class="col-sm-3">
+															<select class="form-control testingMethod" name="testingMethod" id="testingMethod" onchange="showOption(this)">
+																  <#if testingMethodList??> 
+																		<#list testingMethodList as entry>
+																		<option value="${entry.id!?html}" data-process="${entry.testingProcess!?html}">${entry.name!?html}</option> 
+																		</#list>
+																	</#if>
+															</select>
+														</div>
+														<label class="col-sm-2 control-label control-required">周期名称：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" id="configName"
+																name="configName" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label">描述：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" name="configDesc"
+																id="configDesc" />
+														</div>
+													</div>
+											</#if>
+											<div id="testingNodeDiv"></div>
+										</fieldset>
+										<div class="form-group">
+					                         <div class="col-sm-4 col-sm-offset-5">
+					                            <button type="submit" class="btn btn-primary" >保存</button>
+					                            <button class="btn btn-primary goback" type="button" >返回</button>
+					                         </div>
+				                    	</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+		</div>
+	</div>
+</div>
+				
+</body>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>	
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	<#if testingConfig??>
+		showNodes("${testingConfig.testingMethod.id}");
+		$("#configName").val("${testingConfig.configName}");
+		$("#configDesc").val("${testingConfig.configDesc}");
+		$("#testingMethod").attr("disabled","disabled");
+		$("#testingMethod").val("${testingConfig.testingMethod.id}");
+		<#else>
+		var testingMethodId=$("#testingMethod").children('option:selected').val();
+		showNodes(testingMethodId);
+	</#if>
+	
+	
+	<#if testingConfig??>
+		<#if (testingConfig.nodes)?has_content>
+			<#list (testingConfig.nodes) as node>
+				$("[data-semantic='${node.nodeSemantic}']").val("${node.threshold}");
+			</#list>
+		</#if>
+	</#if>
+	
+	$("#testingConfigForm").validate({
+		
+		submitHandler:function(form){
+			var testingMethodId = $("#testingMethod").children('option:selected').val();
+			
+			var configName = $("#configName").val();
+			if(configName==""){
+				parent.parent.layer.alert('请输入周期名称！', {title : "提示"});
+				return false;
+			}
+			var configDesc = $("#configDesc").val();
+			
+			var id = $("#id").val();
+			
+			var nodes=[];
+			$(".threshold").each(function(index,obj){
+				var node={threshold:$(obj).val(),nodeName:$(obj).attr("data-name"),nodeSemantic:$(obj).attr("data-semantic")};
+				nodes.push(node);
+			})
+			
+			//遮罩开始
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			//保存
+			$.ajax({
+	            type: "POST",
+	            url: "${base}/bpm/cycleConfig/saveCreate.do",
+	            data: {
+	            	id:id,
+	            	testingMethodId:testingMethodId,
+	            	configName:configName,
+	            	configDesc:configDesc,
+	            	content:JSON.stringify(nodes)
+	             },
+	            dataType: "json",
+	            success: function(data){
+	            	window.location.href="/bpm/cycleConfig/testingConfigList.do";
+	            	layerObject.close(loadindex);
+	            },
+	            error:function(){
+	            	layerObject.close(loadindex);
+	            	
+	            }	 
+	        });
+		},
+		rules: {
+			configName:{
+				required:true,
+        		remote: {
+         		    url: "/bpm/cycleConfig/validate.do",
+         		    type: "post",               
+         		    dataType: "json",          
+         		    data: {
+         		    	velidateConfigName: function() {
+         		            return $("#configName").val();
+         		        },
+         		       testingMethodId: function() {
+	    		            return $("#testingMethod").val();
+	    		        },
+	    		        id:function() {
+	    		            return $("#id").val();
+	    		        }
+         		    }
+         		}
+         		
+			},
+			threshold:{
+        		required:true,
+        		number:true,
+        		min:0.01
+        	}
+			
+		},
+		 messages: {
+			 configName:{
+				 required: "请输入周期名称",
+	             remote:"周期名称已经存在"	
+			 },
+			 threshold:{
+	            	digits:"请输入整数"
+	            }
+			 
+		 }
+	})
+})
+function showOption(t)
+{
+	var testingMethodId=$(t).children('option:selected').val();//这就是selected的值
+	showNodes(testingMethodId);
+	
+}
+function showNodes(testingMethodId)
+{
+	$.ajax({
+		 type:"POST",
+		 traditional: true,
+		 url:"/bpm/cycleConfig/getTaskConfigList.do",
+		 data:{testingMethodId:testingMethodId},
+		 async: false,
+		 success:function(data){
+			 if(null != data && data.length > 0)
+			 {
+				 var tr = "";
+				 for(var i = 0;i<data.length;i++)
+				 {
+					 console.info(data[i]);
+					 if((i+1)%2 == 1)
+					{
+						 tr += "<div class='form-group'><label class='col-sm-2 control-label control-required'>"+data[i].name
+						 +"：</label><div class='col-sm-3'>"
+						 +"<input class='form-control threshold' type='text' data-name="+data[i].name
+						 +" data-semantic="+data[i].semantic
+						 +" id=\"threshold"+i
+						 +"\" name=\"threshold" 
+						 +"\"/></div>";
+					}
+					 else if((i+1)%2 == 0)
+				     {
+						 tr += "<label class='col-sm-2 control-label control-required'>"+data[i].name
+						 +"：</label><div class='col-sm-3'>"
+						 +"<input class='form-control threshold' type='text' data-name="+data[i].name
+						 +" data-semantic="+data[i].semantic
+						 +" id=\"threshold"+i
+						 +"\" name=\"threshold" 
+						 +"\"/></div></div>";
+				     }
+					 else
+					 {
+						 tr += "<label class='col-sm-2 control-label control-required'>"+data[i].name
+						 +"：</label><div class='col-sm-3'>"
+						 +"<input class='form-control threshold' type='text' data-name="+data[i].name
+						 +" data-semantic="+data[i].semantic
+						 +" id=\"threshold"+i
+						 +"\" name=\"threshold" 
+						 +"\"/></div>";
+					 }
+				 }
+				 $("#testingNodeDiv").html(tr);
+			 }
+	    },
+		 error:function(){
+			 alert("failed");
+		}
+	});
+}
+</script>
+
+</html>

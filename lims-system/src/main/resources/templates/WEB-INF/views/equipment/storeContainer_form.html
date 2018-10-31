@@ -1,0 +1,326 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>存储容器表单-添加/修改容器</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+
+<script>
+	
+
+    $(function () {
+    	var baseurl = changeFormAttr();
+        $("#equipment_container_form").validate({
+        	
+        	submitHandler:function(form){
+       			var layerObject = parent.parent.layer;
+	            //遮罩开始
+				var loadindex = layerObject.load();
+	            $('#deviceType').removeAttr('disabled');
+	            
+	            $('#sampleType').removeAttr('disabled');
+		        $.ajax({
+				 type: "POST",
+				 url: baseurl,
+				 data: $('#equipment_container_form').serialize(),
+				 dataType: "json",
+				 success: function(data){
+					//遮罩结束
+					layerObject.close(loadindex);
+					layerObject.msg('新增成功');
+					back();
+					
+				 },
+				 error:function(data){
+					layerObject.close(loadindex);
+					layerObject.msg('后台同步添加中,请稍后点击查询');
+					back();
+				 }
+			 })
+		           
+		           
+		     },
+        	
+        	
+            rules: {
+            	name: {
+            		required:true,
+            		maxlength: 20  ,
+            		remote: {
+            		    url: "${base}/equipment/validate.do",
+            		    type: "post",               
+            		    dataType: "json",          
+            		    data: {
+            		        name: function() {
+            		            return $("#name").val();
+            		        },
+            		        id:function() {
+            		            return $("#id").val();
+            		        }
+            		    }
+            		}
+    				
+            	},
+            	deviceType:{
+            		required:true
+            	},
+            	storageType:{
+             		required:true
+             	},
+             	sampleType:{
+             		required:true
+             	},
+            	locationNo: {
+            		maxlength: 32
+            	},
+            	remark: {
+            		maxlength: 248
+            	},
+            	frame:{
+            		required:true,
+            		digits:true,
+            		min:1,
+            		max:30
+            	},
+            	box:{
+            		required:true,
+            		digits:true,
+            		min:1,
+            		max:15
+            	},
+            	site:{
+            		required:true,
+            		digits:true,
+            		min:1,
+            		max:10
+            	},
+            	cell:{
+            		required:true,
+            		digits:true,
+            		min:1,
+            		max:10
+            	}
+            },
+            messages: {
+                name:  {
+                	required: "请输入容器名称",
+                	maxlength: "容器名称不能超过20个字符",
+                	remote:"容器名称已存在"
+                },
+                deviceType:{
+            		required:"请选择容器类型"
+            	},
+            	storageType:{
+             		required:"请选择存储类型"
+             	},
+            	locationNo: {
+            		maxlength: "容器位置不能超过32个字符"
+            	},
+            	remark: {
+            		maxlength: "容器备注不能超过248个字符"
+            	}
+				
+            }
+        });
+        
+       
+ });
+function changeFormAttr(){
+ 	var updateID = '';
+ 	updateID  = $("#id").val();
+ 	if(updateID.length>0 ){
+ 	    $("#actiontitle").text('修改'); 
+         return '${base}/equipment/modifyStoreContainer.do'; 
+ 	}else{
+ 		 $("#actiontitle").text('新增'); 
+          return '${base}/equipment/saveStoreContainer.do'; 
+ 	}
+ 
+}
+    
+function back(){
+	 window.location.href="${base}/equipment/storeContainer_list.do";
+}
+
+function selectSampleType(id){
+	$.post("${base}/sample/getSampleById.do", { id : id },
+		       function(data){
+		if(data){
+			  $('#deviceType').val(data.storageType);
+		}
+		
+	});
+}
+    
+</script>
+<style>
+textarea{
+	margin: 0px; 
+	width: 1100px; 
+	height: 153px;
+	border: 1px solid #e5e6e7;
+	padding: 5px 0px 0px 5px;
+}
+
+</style>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="javascript:back()">容器管理</a></li>
+							<li class="active"><span id="actiontitle">新增</span></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>存储容器</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="equipment_container_form" class="form-horizontal m-t"
+							action="" method="post" enctype='application/json'>
+						<input type="hidden" name="id" id="id" value="${(container.id)!?html}" />
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">容器编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code"
+											id="code" value=" <#if container.code ??> ${(container.code)!?html}  <#else> 自动生成 </#if>  " readonly="readonly" />
+									</div>
+									<label class="col-sm-2 control-label  control-required">容器名称：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name"
+											id="name" value="${(container.name)!?html}" />
+									</div>
+									
+								</div>
+								<div class="form-group">
+								
+								<label class="col-sm-2 control-label  control-required">样本类型：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="sampleType" id="sampleType"  onchange="selectSampleType(this.value)"  <#if hasUsedLocation > disabled="disabled"  </#if>>
+											<option selected value="">--请选择--</option>
+											<#if sample?has_content> 
+												<#list sample as record>
+												<option value="${record.id}"  <#if record.id ==(container.sampleType!?html)>selected='selected'</#if> >${record.name!?html}  
+												</option>
+												</#list>
+											</#if>
+										</select>
+									</div>
+									
+									<label class="col-sm-2 control-label  control-required">容器类别：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="deviceType" id="deviceType" disabled="disabled">
+											<option selected value="">---请选择---</option>
+										 	<@dict_entries category="STORAGE_DEVICE_TYPE"> 
+		                                        <#if entries??> 
+		                                        <#list entries as entry>
+													<option value="${entry.value!}"<#if entry.value==(container.deviceType!?html)>selected='selected'</#if>
+												>${entry.text!?html}</option> 
+												</#list> 
+												</#if> 
+											</@dict_entries>
+										</select>
+									</div>
+									
+								</div>
+								<div class="form-group">
+								
+									<label class="col-sm-2 control-label  control-required">存储类型：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="storageType" id="storageType">
+											<option selected value="">--请选择--</option>
+											<@dict_entries category="STORAGE_TYPE"> 
+		                                        <#if entries??> 
+		                                        <#list entries as entry>
+													<option value="${entry.value!}"
+												<#if entry.value==(container.storageType!?html)>selected='selected'</#if>>
+												${entry.text!?html}</option> </#list> </#if> 
+											</@dict_entries>
+										</select>
+									</div>
+								
+								
+									
+									<label class="col-sm-2 control-label  control-required">容器规格：</label>
+									<div class="col-sm-1" style="width: 90px">
+										<input type="text" class="form-control" name="frame" id="frame" 
+											value="${(container.frame)!?html}"   <#if hasUsedLocation > readonly="readonly"</#if>  />
+									</div>
+									<label class="control-label" style="float: left">架</label>
+									
+									<div class="col-sm-1" style="width:90px">
+										<input type="text" class="form-control" name="box" id="box" 
+											value="${(container.box)!?html}"  <#if hasUsedLocation > readonly="readonly"</#if> />
+									</div>
+									<label class="control-label" style="float: left">盒</label>
+									
+									<div class="col-sm-1" style="width: 90px">
+										<input type="text" class="form-control" name="site" id="site" 
+											value="${(container.site)!?html}" <#if hasUsedLocation > readonly="readonly"</#if> />
+									</div>
+									<label class="control-label" style="float: left">*</label>
+									
+									<div class="col-sm-1" style="width: 90px">
+										<input type="text" class="form-control" name="cell" id="cell" 
+											value="${(container.cell)!?html}" <#if hasUsedLocation > readonly="readonly"</#if> />
+									</div>
+									 
+									<label class="control-label" style="float: left">(高*宽)位</label>
+									
+									
+									<#if hasUsedLocation ><label id="frame-error" class="error" style="margin-top:7px">存在位置被占用，不能修改规格</label></#if>
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">备注：</label>
+									<div class="col-sm-3">
+										<textarea id="remark" name="remark" placeholder="输入备注信息"  >${(container.remark)!?html}</textarea>
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									 <div class="col-sm-4 col-sm-offset-2">
+										<button class="btn btn-primary" type="submit">保存</button>
+									
+										<button class="btn btn-primary goback" type="button" data-url="${base}/equipment/storeContainer_list.do" >返回</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

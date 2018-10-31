@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>技术分析</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>技术分析</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>任务列表</h5>
+                         <#if searcher.sequencingCode!?html != ''>
+                         <@smm_security_resource resource = "/testing/tecanalys_assign.do">
+	                        <a href="#" id="btn_assign" class="btn btn-sm btn-success">
+	                            <i class="fa fa-plus"></i> 下达任务单
+	                        </a>
+                         </@smm_security_resource>
+                         </#if>
+                         <#if searcher.sequencingCode!?html == ''>
+                         <@smm_security_resource resource = "/testing/technicalAnalysis/exportSummary.do">
+	                        <a href="#" id="btn_export" class="btn btn-sm btn-primary">
+	                            <i class="fa fa-download"></i> 导出汇总表
+	                        </a>
+                         </@smm_security_resource>
+                         </#if>
+                    </div>
+                    <div class="ibox-content">
+                        <form action="${base}/testing/technicalAnalysis_tasks.do" method="post" class="search-form form-inline" id="tecanalys_form">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">测序编号：</label>
+                                    <input type="text" class="form-control" name="sequencingCode" value="${(searcher.sequencingCode)!?html}" >
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">合同编号：</label>
+                                    <input type="text" class="form-control" name="contractCode" value="${(searcher.contractCode)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">检测产品：</label>
+                                    <input type="text" class="form-control" name="testProduct" value="${(searcher.testProduct)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">客户姓名：</label>
+                                    <input type="text" class="form-control" name="customerName" value="${(searcher.customerName)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                               		<label class="control-label">是否参与：</label>
+                                    <select class="form-control" name="isPartaked" data-value="${(searcher.isPartaked)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1/0">参与技术分析</option>
+                                        <option value="0/1">参与报告评审</option>
+                                        <option value="1/1">参与技术分析与报告评审</option>
+                                        <option value="0/0">不参与</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group"> 
+                                    <label class="control-label">送检单位：</label>
+                                    <input type="text" class="form-control" name="subUnit" value="${(searcher.subUnit)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">技术负责人：</label>
+                                    <input type="text" class="form-control" name="technicalDirector" value="${(searcher.technicalDirector)!?html}">
+                                </div>
+                            </div> 
+                            
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">产品负责人：</label>
+                                    <input type="text" class="form-control" name="productDuty" value="${(searcher.productDuty)!?html}">
+                                </div>
+                            </div> 
+                            
+                            
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">营销中心：</label>
+                                    <select class="form-control" name="marketingCenter" data-value="${(searcher.marketingCenter)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">临床遗传</option>
+                                        <option value="2">临床肿瘤</option>
+                                        <option value="3">健康筛查</option>
+                                        <option value="4">科技服务</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">是否加急：</label>
+                                    <select class="form-control" name="ifUrgent" data-value="${(searcher.ifUrgent)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fa fa-search"></i> 查询
+                                </button>
+                                 <button type="button" class="btn btn-sm btn-success" onclick="clearCondition('tecanalys_form')" >
+									<i class="fa fa-remove"></i> 清空
+								</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ibox-content" style="overflow: scroll;">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                   
+                                    <th class="index">序号</th>
+                                    <th>测序编号</th>   
+                                    <th>应完成日期</th>
+                                    <th>创建时间</th>
+                                    <th>是否加急</th>
+                                    <th>操作</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if tasks?? && tasks?has_content> <#list tasks as record>
+                                <tr>
+                                   
+                                    <td>${(record_index + 1)!?html}</td>
+                                    <td><a href="${base}/testing/technicalAnalysis_tasks_detail.do?sequencingCode=${record.sequencingCode}">${(record.sequencingCode)!?html}</a></td>
+                               
+                                    <td><#if (record.plannedFinishDate)??><#if (record.plannedFinishDate)?string("yyyy-MM-dd") != "1970-01-01">${(record.plannedFinishDate)?string("yyyy-MM-dd")}</#if></#if></td>
+                                    <td><#if (record.startTime)??><#if (record.startTime)?string("yyyy-MM-dd HH:mm:ss") != "1970-01-01 00:00:00">${(record.startTime)?string("yyyy-MM-dd HH:mm:ss")}</#if></#if></td>
+                                    <td>
+                                    	<#if record.ifUrgent??>
+                                    		<#if record.ifUrgent == 1>是</#if>
+                                    	</#if>
+                                   </td>
+                                 
+                                    <td>
+                                    <a href="${base}/testing/technicalAnalysis_tasks_detail.do?sequencingCode=${record.sequencingCode}">处理</a>
+                                    </td>
+                                  
+                                    
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="15">暂无技术分析任务</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="assign_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">下达任务单-技术分析</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="assign_frame" name ='assign_frame'src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="released">下达</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="export_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight" style="width: 550px; margin-left: 160px; margin-top: 100px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">导出汇总表</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+	                        <form action="#" method="post" class="search-form form-inline" id="export_form">
+	                            <div style="width: 450px;">
+	                                <div class="form-group">
+	                                    <label class="control-label">测序编号：</label>
+	                                    <input type="text" class="form-control" id="sequencingCode" />
+	                                </div>
+	                            </div>
+	                         </form>
+                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="export_summary">导出</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form action="/testing/tecanalys_assign.do" target="assign_frame" method="post" id="testForm">
+            <input type="hidden" id="keys" name="keys">
+        </form>
+    </div> 
+    <form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <script src="${system_js}/testing/technical_analysis.js?v=1.0.1"></script>
+</body>
+</html>

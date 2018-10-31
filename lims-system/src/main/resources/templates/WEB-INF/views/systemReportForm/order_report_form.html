@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>订单报表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+</head>
+<body>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报表统计</a>
+							<li><a href="#">系统报表</a>
+							<li><a href="#">订单报表</a>
+						</ol>
+					</div>
+					<div class="ibox ibox-table">
+						<form action="/systemReportForm/download.do" method="post" class="form-horizontal m-t"
+							id="search_from">
+							<div class="form-group">
+								<input type="hidden" name="customerId" id="customerId" />
+								<div class="col-sm-2">
+									<input type="text" id="orderCode" name="orderCode" class="form-control"
+										placeholder="订单编号" >
+								</div>
+
+								<div class="col-sm-2">
+									<select class="form-control" id="orderType" name="orderType">
+										<option selected value="">--请选择营销中心--</option>
+										<#if testingTypeList??> 
+												<#list testingTypeList as entry>
+												<option value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+											</#if>
+										</select>
+								</div>
+								
+								<div class="col-sm-2">
+									<select class="form-control" id="testingStatus"
+										name="testingStatus">
+										<option value="">--请选择订单主状态--</option>
+										<option value="-1">待完善</option>
+										<option value="1">待检测下放</option>
+										<option value="2">检测中</option>
+										<option value="3">已暂停</option>
+										<option value="4">已取消</option>
+										<option value="5">已完成</option>
+									</select>
+								</div>
+								
+								<div class="col-sm-2">
+									<select class="form-control" id="paymentStatus"
+										name="paymentStatus">
+										<option value="">--请选择订单支付状态--</option>
+										<option value="0">待付款</option>
+										<option value="1">付款待确认</option>
+										<option value="2">已付款</option>
+									</select>
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" id="productCode" name="productCode" class="form-control"
+											placeholder="产品编号" >
+								</div>
+								
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-2">
+									<div class="input-group">
+										<input type="text" class="form-control" id="customer"
+											name="customerName" 
+											placeholder="请输入客户">
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default dropdown-toggle"
+												data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right" role="menu">
+											</ul>
+										</div>
+										<!-- /btn-group -->
+									</div>
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" name="sampleCode" class="form-control"
+											placeholder="样本编号" >
+								</div>
+								
+								
+								<div class="col-sm-2">
+										<input type="text" name="examineeName" class="form-control"
+											placeholder="受检人" >
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" name="examineePhone" class="form-control"
+											placeholder="受检人电话" >
+								</div>
+								
+								<div class="col-sm-2">
+									<input type="text" id="createName" name="createName"
+										class="form-control" placeholder="业务员">
+								</div>
+								
+							</div>
+							<div class="form-group" >
+								<div class="col-sm-2">
+										<input type="text" id="contractName" name="contractName" class="form-control"
+											placeholder="合同名称" >
+								</div>
+							
+								<div class="col-sm-2">
+									<input type="text" id="contractCode" name="contractCode"
+										class="form-control" placeholder="合同编号">
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" id="startTime" class="form-control laydate-icon" name="startTime" placeholder="下单开始时间"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											/>
+								</div>
+								
+								<div class="col-sm-2">
+									<input type="text" id="endTime" class="form-control laydate-icon" name="endTime" placeholder="下单结束时间"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											 />
+								</div>
+								
+								<div class="col-sm-2">
+										<input type="text" name="recipientPhone" class="form-control"
+											placeholder="收件人电话" />
+								</div>
+								
+								<input type="hidden" id="colNames" name="colNames">
+								<input type="hidden" id="productFlag" name="productFlag">
+								<input type="hidden" id="sampleFlag" name="sampleFlag">
+								<input type="hidden" id="invoiceFlag" name="invoiceFlag">
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-sm btn-primary"  onclick="exportOrder()" >
+								    	<i class="fa fa-print"></i> 导出
+								    </a>
+								</div>
+							</div>
+						</form>
+						<fieldset>
+							    <legend>
+									<div>基本信息&nbsp; &nbsp; <input type="checkbox" id="baseInfoSelect" name="baseInfoSelect">全选</div>
+								</legend>
+
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo"  value="订单编号" checked="checked">订单编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo"  value="订单类型">订单类型
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo"  value="客户">客户
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo"  value="送检单位">送检单位
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo"  value="业务员">业务员
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="订单主状态">订单主状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="订单支付状态">订单支付状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="订单延迟状态">订单延迟状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="订单金额">订单金额
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="客户参与">客户参与
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="所属合同">所属合同
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="采样费用">采样费用
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="创建时间">创建时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="baseInfo" value="启动时间">启动时间
+									</div>
+							  </fieldset>
+							  <br>
+							 <fieldset>
+							    <legend>
+									<div>检测产品&nbsp; &nbsp; <input type="checkbox" id="productInfoSelect" name="productInfoSelect">全选</div>
+								</legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="产品名称">产品名称
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="lane号">lane号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="产品退款状态">产品退款状态
+									</div>
+									<!-- <div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="报告状态">报告状态
+									</div> -->
+									<div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="产品状态">产品状态
+									</div>
+									<!-- <div class="col-sm-2">
+										<input type="checkbox" name="productInfo"  value="出报告日期">出报告日期
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="productInfo" value="寄送日期">寄送日期
+									</div> -->
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>受检人信息&nbsp; &nbsp; <input type="checkbox" id="examineeInfoSelect" name="examineeInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo"  value="名称">名称
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo"  value="民族">民族
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo"  value="性别">性别
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo"  value="出生日期">出生日期
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo"  value="申请检测时年龄">申请检测时年龄
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo" value="籍贯">籍贯
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo" value="联系人">联系人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo" value="联系电话">联系电话
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo" value="联系邮箱">联系邮箱
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="examineeInfo" value="病例号">病例号
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>疾病信息&nbsp; &nbsp; <input type="checkbox" id="diseaseInfoSelect" name="diseaseInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo"  value="临床诊断">临床诊断
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo"  value="重点关注基因">重点关注基因
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo"  value="临床表型">临床表型
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo"  value="病史摘要">病史摘要
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo"  value="家族史摘要">家族史摘要
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="diseaseInfo" value="临床推荐理由">临床推荐理由
+									</div>
+							  </fieldset>
+							  <br>
+							  <!-- <fieldset>
+							    <legend>样本信息</legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo"  value="样本编号">样本编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo"  value="样本类型ID">样本类型ID
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo"  value="样本量">样本量
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo"  value="采样时间">采样时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo"  value="样本状态">样本状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="primarySampleInfo" value="接收日期">接收日期
+									</div>
+							  </fieldset>
+							  <br> -->
+							  <fieldset>
+								  <legend>
+									  <div>样本信息&nbsp; &nbsp; <input type="checkbox" id="subsidiarySampleInfoSelect" name="subsidiarySampleInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本编号">样本编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本类型">样本类型
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本量">样本量
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="采样时间">采样时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本状态">样本状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="打包时间">打包时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo" value="接收日期">接收日期
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本提供者姓名">样本提供者姓名
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本提供者年龄">样本提供者年龄
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="家属关系">家属关系
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="样本用途">样本用途
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="subsidiarySampleInfo"  value="家属症状">家属症状
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>收件信息&nbsp; &nbsp; <input type="checkbox" id="recipientInfoSelect" name="recipientInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="recipientInfo"  value="收件人姓名">收件人姓名
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="recipientInfo"  value="收件人电话">收件人电话
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="recipientInfo"  value="收件人地址">收件人地址
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>费用信息&nbsp; &nbsp; <input type="checkbox" id="costInfoSelect" name="costInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="发票抬头">发票抬头
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="付款方式">付款方式
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="付款状态">付款状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="减免金额">减免金额
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="抵用券">抵用券
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="减免原因">减免原因
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="减免状态">减免状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="减免审核通过时间">减免审核通过时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="应付款">应付款
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="实付款">实付款
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="付款时间">付款时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="costInfo"  value="付款确认时间">付款确认时间
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>退款信息&nbsp; &nbsp; <input type="checkbox" id="refundInfoSelect" name="refundInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="产品编号">产品编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="产品名称">产品名称
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="产品价格">产品价格
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="退款金额">退款金额
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="理由">理由
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="申请时间">申请时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="退款时间">退款时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="refundInfo"  value="状态">状态
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>开票信息&nbsp; &nbsp; <input type="checkbox" id="billingInfoSelect" name="billingInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="开票单号">开票单号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="开票单位">开票单位
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="开票金额">开票金额
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="开票人">开票人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="开票时间">开票时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="领取人">领取人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="寄送状态">寄送状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="快递类别">快递类别
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="快递单号">快递单号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="寄送人">寄送人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="billingInfo"  value="寄送时间">寄送时间
+									</div>
+							  </fieldset>
+							  <br>
+							  <fieldset>
+								  <legend>
+									  <div>报告信息&nbsp; &nbsp; <input type="checkbox" id="reportInfoSelect" name="reportInfoSelect">全选</div>
+								  </legend>
+							    	<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="报告编号">报告编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="报告名称">报告名称
+									</div>
+									<!-- <div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="样本编号">样本编号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="检测产品">检测产品
+									</div> -->
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="出报告时间">出报告时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="出报告人">出报告人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="一审完成时间">一审完成时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="一审审核人">一审审核人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="二审完成时间">二审完成时间
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="二审审核人">二审审核人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="状态">状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="寄送状态">寄送状态
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="寄送内容">寄送内容
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="快递类别">快递类别
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="快递单号">快递单号
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="寄送人">寄送人
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="reportInfo"  value="寄送时间">寄送时间
+									</div>
+							  </fieldset>
+							<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+		        <input type="hidden" name="formValue" id="formValue" value="">
+		    </form>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+$(function(){
+
+    //基本信息全选
+    $("#baseInfoSelect").click(function() {
+        if ($('#baseInfoSelect').is(':checked')) {
+            $("input:checkbox[name='baseInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='baseInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //检测产品全选
+    $("#productInfoSelect").click(function() {
+        if ($('#productInfoSelect').is(':checked')) {
+            $("input:checkbox[name='productInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='productInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //受检人信息全选
+    $("#examineeInfoSelect").click(function() {
+        if ($('#examineeInfoSelect').is(':checked')) {
+            $("input:checkbox[name='examineeInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='examineeInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //疾病信息全选
+    $("#diseaseInfoSelect").click(function() {
+        if ($('#diseaseInfoSelect').is(':checked')) {
+            $("input:checkbox[name='diseaseInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='diseaseInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //样本信息全选
+    $("#subsidiarySampleInfoSelect").click(function() {
+        if ($('#subsidiarySampleInfoSelect').is(':checked')) {
+            $("input:checkbox[name='subsidiarySampleInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='subsidiarySampleInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //收件信息全选
+    $("#recipientInfoSelect").click(function() {
+        if ($('#recipientInfoSelect').is(':checked')) {
+            $("input:checkbox[name='recipientInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='recipientInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //费用信息全选
+    $("#costInfoSelect").click(function() {
+        if ($('#costInfoSelect').is(':checked')) {
+            $("input:checkbox[name='costInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='costInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //退款信息全选
+    $("#refundInfoSelect").click(function() {
+        if ($('#refundInfoSelect').is(':checked')) {
+            $("input:checkbox[name='refundInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='refundInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //开票信息全选
+    $("#billingInfoSelect").click(function() {
+        if ($('#billingInfoSelect').is(':checked')) {
+            $("input:checkbox[name='billingInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='billingInfo']:checkbox").prop('checked', false);
+        }
+    });
+    //报告信息全选
+    $("#reportInfoSelect").click(function() {
+        if ($('#reportInfoSelect').is(':checked')) {
+            $("input:checkbox[name='reportInfo']:checkbox").prop('checked', true);
+        } else {
+            $("input:checkbox[name='reportInfo']:checkbox").prop('checked', false);
+        }
+    });
+	
+	$("#customer").bsSuggest('init', {
+		url : "${base}/customer/getSelectList.do?disableStatus="+0+"&realName=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "realName",
+		indexKey: 0, 
+		effectiveFields : [ "realName" ],
+		effectiveFieldsAlias : {
+			name : "客户名称"
+		}
+	}).on('onDataRequestSuccess', function (e, result) {
+	}).on('onSetSelectValue', function (e, keyword, data) {
+		$('#customerId').val(data.id);
+	}).on('onUnsetSelectValue', function () {
+		$('#customerId').val('');
+	});
+})
+
+
+
+
+	function exportOrder()
+	{
+		var colNameMap={};
+		var baseInfo = [];
+		var productInfo = [];
+		var examineeInfo = [];
+		var diseaseInfo = [];
+		var primarySampleInfo = [];
+		var subsidiarySampleInfo = [];
+		var recipientInfo = [];
+		var costInfo = [];
+		var refundInfo = [];
+		var billingInfo = [];
+		var reportInfo = [];
+		$("input:checkbox[name='baseInfo']:checked").each(function() {
+			baseInfo.push($(this).val());
+		});
+		$("input:checkbox[name='productInfo']:checked").each(function() {
+			productInfo.push($(this).val());
+		});
+		$("input:checkbox[name='examineeInfo']:checked").each(function() {
+			examineeInfo.push($(this).val());
+		});
+		$("input:checkbox[name='diseaseInfo']:checked").each(function() {
+			diseaseInfo.push($(this).val());
+		});
+		$("input:checkbox[name='primarySampleInfo']:checked").each(function() {
+			primarySampleInfo.push($(this).val());
+		});
+		$("input:checkbox[name='subsidiarySampleInfo']:checked").each(function() {
+			subsidiarySampleInfo.push($(this).val());
+		});
+		$("input:checkbox[name='recipientInfo']:checked").each(function() {
+			recipientInfo.push($(this).val());
+		});
+		$("input:checkbox[name='costInfo']:checked").each(function() {
+			costInfo.push($(this).val());
+		});
+		$("input:checkbox[name='refundInfo']:checked").each(function() {
+			refundInfo.push($(this).val());
+		});
+		$("input:checkbox[name='billingInfo']:checked").each(function() {
+			billingInfo.push($(this).val());
+		});
+		$("input:checkbox[name='reportInfo']:checked").each(function() {
+			reportInfo.push($(this).val());
+		});
+		if(baseInfo.length==0 && productInfo.length==0 && examineeInfo.length==0 && diseaseInfo.length==0 && primarySampleInfo.length==0 && subsidiarySampleInfo.length==0 && recipientInfo.length==0 && costInfo.length==0 && refundInfo.length==0 && billingInfo.length==0 && reportInfo.length==0)
+		{
+			alert("请至少选择一列!");
+			return false;
+		}
+		var flag = false;
+		if(baseInfo.length>0)
+		{
+			for(var i = 0;i<baseInfo.length;i++)
+			{
+				if("订单编号" == baseInfo[i])
+				{
+					flag =true;
+				}
+			}
+			colNameMap.baseInfo = baseInfo;
+		}
+		if(!flag)
+		{
+			alert("请选择订单编号!");
+			return false;
+		}
+		
+		var orderType = $('#orderType').val();
+		if(''==orderType)
+		{
+			parent.layer.alert('请选择营销中心',{title:"提示"});
+			return false;
+		}
+		var startTime = $('#startTime').val();
+		var endTime = $('#endTime').val();
+		if('' == startTime || '' == endTime ){
+			parent.layer.alert('请输入下单时间',{title:"提示"});
+			return false;
+		}
+		
+		var productFlag = "";
+		var sampleFlag = "";
+		var invoiceFlag = "";
+		if(productInfo.length>0)
+		{
+			colNameMap.productInfo = productInfo;
+			productFlag = "1";
+		}
+		if(examineeInfo.length>0)
+		{
+			colNameMap.examineeInfo = examineeInfo;
+		}
+		if(diseaseInfo.length>0)
+		{
+			colNameMap.diseaseInfo = diseaseInfo;
+		}
+		if(primarySampleInfo.length>0)
+		{
+			colNameMap.primarySampleInfo = primarySampleInfo;
+		}
+		if(subsidiarySampleInfo.length>0)
+		{
+			colNameMap.subsidiarySampleInfo = subsidiarySampleInfo;
+			sampleFlag = "1";
+		}
+		if(recipientInfo.length>0)
+		{
+			colNameMap.recipientInfo = recipientInfo;
+		}
+		if(costInfo.length>0)
+		{
+			colNameMap.costInfo = costInfo;
+		}
+		if(refundInfo.length>0)
+		{
+			colNameMap.refundInfo = refundInfo;
+			productFlag = "1";
+		}
+		if(billingInfo.length>0)
+		{
+			colNameMap.billingInfo = billingInfo;
+			invoiceFlag = "1";
+		}
+		if(reportInfo.length>0)
+		{
+			colNameMap.reportInfo = reportInfo;
+			productFlag = "1";
+		}
+		$('#colNames').val(JSON.stringify(colNameMap));
+		$('#productFlag').val(productFlag);
+		$('#sampleFlag').val(sampleFlag);
+		$('#invoiceFlag').val(invoiceFlag);
+		
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+
+		$.ajax({
+			type : "POST",
+			url : "/systemReportForm/download.do",
+			data : $('#search_from').serialize(),
+			success : function(sessionId) {
+				//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+				console.log(sessionId+"~~~~~~~~~~~~~~");
+				var timer=window.setInterval(function(){
+					$.ajax({
+						type : "GET",
+						url : "/testing/searchExportResult.do?sessionId="+sessionId,
+						success : function(result) {
+							console.log(result+"~~~~~~~~~~~~~~result");
+							if('' != result)
+							{
+								console.log(result+"~~success");
+								window.clearInterval(timer);
+								layerObject.close(loadindex);
+								$("#formValue").val(result);
+								$("#hiddForm").submit();
+							}
+						},
+						error : function() {
+							alert("failed");
+							layerObject.close(loadindex);
+						}
+					});
+				},5000);
+			},
+			error : function() {
+				alert("failed");
+				layerObject.close(loadindex);
+			}
+		});
+	}
+</script>
+
+</html>

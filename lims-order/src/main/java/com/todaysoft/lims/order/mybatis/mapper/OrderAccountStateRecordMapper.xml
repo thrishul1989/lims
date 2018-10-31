@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.OrderAccountStateRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.OrderAccountStateRecord" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+    <result column="MER_NUM" property="merNum" jdbcType="VARCHAR" />
+    <result column="MER_NAME" property="merName" jdbcType="VARCHAR" />
+    <result column="TERM_ID" property="termId" jdbcType="VARCHAR" />
+    <result column="SETTLEMENT_DATE" property="settlementDate" jdbcType="VARCHAR" />
+    <result column="TRANSACTION_DATE" property="transactionDate" jdbcType="VARCHAR" />
+    <result column="TRADING_TIME" property="tradingTime" jdbcType="VARCHAR" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+    <result column="TRADING_AMOUNT" property="tradingAmount" jdbcType="DECIMAL" />
+    <result column="SERVICE_CHARGE" property="serviceCharge" jdbcType="DECIMAL" />
+    <result column="ENTER_AMOUNT" property="enterAmount" jdbcType="DECIMAL" />
+    <result column="CARD_NUMBER" property="cardNumber" jdbcType="VARCHAR" />
+    <result column="CARD_DOMAIN" property="cardDomain" jdbcType="VARCHAR" />
+    <result column="CARD_SPECIES" property="cardSpecies" jdbcType="VARCHAR" />
+    <result column="REFER_NO" property="referNo" jdbcType="VARCHAR" />
+    <result column="O_REFER_NO" property="oReferNo" jdbcType="VARCHAR" />
+    <result column="O_TRADING_TIME" property="oTradingTime" jdbcType="VARCHAR" />
+    <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SEQ_NO, MER_NUM, MER_NAME, TERM_ID, SETTLEMENT_DATE, TRANSACTION_DATE, TRADING_TIME, 
+    ORDER_ID, TRADING_TYPE, TRADING_AMOUNT, SERVICE_CHARGE, ENTER_AMOUNT, CARD_NUMBER, 
+    CARD_DOMAIN, CARD_SPECIES, REFER_NO, O_REFER_NO, O_TRADING_TIME, PAY_TYPE, BANK_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_STATE_RECORD
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER_ACCOUNT_STATE_RECORD
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountStateRecord" >
+    insert into LIMS_ORDER_ACCOUNT_STATE_RECORD (ID, SEQ_NO, MER_NUM, 
+      MER_NAME, TERM_ID, SETTLEMENT_DATE, 
+      TRANSACTION_DATE, TRADING_TIME, ORDER_ID, 
+      TRADING_TYPE, TRADING_AMOUNT, SERVICE_CHARGE, 
+      ENTER_AMOUNT, CARD_NUMBER, CARD_DOMAIN, 
+      CARD_SPECIES, REFER_NO, O_REFER_NO, 
+      O_TRADING_TIME, PAY_TYPE, BANK_CODE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, #{merNum,jdbcType=VARCHAR}, 
+      #{merName,jdbcType=VARCHAR}, #{termId,jdbcType=VARCHAR}, #{settlementDate,jdbcType=VARCHAR}, 
+      #{transactionDate,jdbcType=VARCHAR}, #{tradingTime,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
+      #{tradingType,jdbcType=VARCHAR}, #{tradingAmount,jdbcType=VARCHAR}, #{serviceCharge,jdbcType=VARCHAR}, 
+      #{enterAmount,jdbcType=VARCHAR}, #{cardNumber,jdbcType=VARCHAR}, #{cardDomain,jdbcType=VARCHAR}, 
+      #{cardSpecies,jdbcType=VARCHAR}, #{referNo,jdbcType=VARCHAR}, #{oReferNo,jdbcType=VARCHAR}, 
+      #{oTradingTime,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountStateRecord" >
+    insert into LIMS_ORDER_ACCOUNT_STATE_RECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="seqNo != null" >
+        SEQ_NO,
+      </if>
+      <if test="merNum != null" >
+        MER_NUM,
+      </if>
+      <if test="merName != null" >
+        MER_NAME,
+      </if>
+      <if test="termId != null" >
+        TERM_ID,
+      </if>
+      <if test="settlementDate != null" >
+        SETTLEMENT_DATE,
+      </if>
+      <if test="transactionDate != null" >
+        TRANSACTION_DATE,
+      </if>
+      <if test="tradingTime != null" >
+        TRADING_TIME,
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="tradingType != null" >
+        TRADING_TYPE,
+      </if>
+      <if test="tradingAmount != null" >
+        TRADING_AMOUNT,
+      </if>
+      <if test="serviceCharge != null" >
+        SERVICE_CHARGE,
+      </if>
+      <if test="enterAmount != null" >
+        ENTER_AMOUNT,
+      </if>
+      <if test="cardNumber != null" >
+        CARD_NUMBER,
+      </if>
+      <if test="cardDomain != null" >
+        CARD_DOMAIN,
+      </if>
+      <if test="cardSpecies != null" >
+        CARD_SPECIES,
+      </if>
+      <if test="referNo != null" >
+        REFER_NO,
+      </if>
+      <if test="oReferNo != null" >
+        O_REFER_NO,
+      </if>
+      <if test="oTradingTime != null" >
+        O_TRADING_TIME,
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE,
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="merName != null" >
+        #{merName,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementDate != null" >
+        #{settlementDate,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDate != null" >
+        #{transactionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingTime != null" >
+        #{tradingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingType != null" >
+        #{tradingType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingAmount != null" >
+        #{tradingAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCharge != null" >
+        #{serviceCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="enterAmount != null" >
+        #{enterAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cardDomain != null" >
+        #{cardDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="cardSpecies != null" >
+        #{cardSpecies,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oReferNo != null" >
+        #{oReferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oTradingTime != null" >
+        #{oTradingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountStateRecord" >
+    update LIMS_ORDER_ACCOUNT_STATE_RECORD
+    <set >
+      <if test="seqNo != null" >
+        SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        MER_NUM = #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="merName != null" >
+        MER_NAME = #{merName,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        TERM_ID = #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementDate != null" >
+        SETTLEMENT_DATE = #{settlementDate,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDate != null" >
+        TRANSACTION_DATE = #{transactionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingTime != null" >
+        TRADING_TIME = #{tradingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingType != null" >
+        TRADING_TYPE = #{tradingType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingAmount != null" >
+        TRADING_AMOUNT = #{tradingAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCharge != null" >
+        SERVICE_CHARGE = #{serviceCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="enterAmount != null" >
+        ENTER_AMOUNT = #{enterAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        CARD_NUMBER = #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cardDomain != null" >
+        CARD_DOMAIN = #{cardDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="cardSpecies != null" >
+        CARD_SPECIES = #{cardSpecies,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        REFER_NO = #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oReferNo != null" >
+        O_REFER_NO = #{oReferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="oTradingTime != null" >
+        O_TRADING_TIME = #{oTradingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE = #{bankCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountStateRecord" >
+    update LIMS_ORDER_ACCOUNT_STATE_RECORD
+    set SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+      MER_NUM = #{merNum,jdbcType=VARCHAR},
+      MER_NAME = #{merName,jdbcType=VARCHAR},
+      TERM_ID = #{termId,jdbcType=VARCHAR},
+      SETTLEMENT_DATE = #{settlementDate,jdbcType=VARCHAR},
+      TRANSACTION_DATE = #{transactionDate,jdbcType=VARCHAR},
+      TRADING_TIME = #{tradingTime,jdbcType=VARCHAR},
+      ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      TRADING_TYPE = #{tradingType,jdbcType=VARCHAR},
+      TRADING_AMOUNT = #{tradingAmount,jdbcType=VARCHAR},
+      SERVICE_CHARGE = #{serviceCharge,jdbcType=VARCHAR},
+      ENTER_AMOUNT = #{enterAmount,jdbcType=VARCHAR},
+      CARD_NUMBER = #{cardNumber,jdbcType=VARCHAR},
+      CARD_DOMAIN = #{cardDomain,jdbcType=VARCHAR},
+      CARD_SPECIES = #{cardSpecies,jdbcType=VARCHAR},
+      REFER_NO = #{referNo,jdbcType=VARCHAR},
+      O_REFER_NO = #{oReferNo,jdbcType=VARCHAR},
+      O_TRADING_TIME = #{oTradingTime,jdbcType=VARCHAR},
+      PAY_TYPE = #{payType,jdbcType=VARCHAR},
+      BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  
+  <select id="countByCondition" resultType="int" >
+        SELECT COUNT(t.ID) FROM LIMS_ORDER_ACCOUNT_STATE_RECORD t
+         WHERE 
+         t.MER_NUM =#{0}
+         and t.TERM_ID=#{1}
+         and t.REFER_NO =#{2} 
+         and t.TRADING_TYPE=#{3}
+        
+  </select>
+  
+  
+  <select id="search" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.mybatis.parameter.OrderAccountStateRecordSearch">
+
+		SELECT 
+		<include refid="Base_Column_List"></include>
+		FROM LIMS_ORDER_ACCOUNT_STATE_RECORD
+		<include refid="SearchFilters"></include>
+		ORDER BY CAST(SEQ_NO AS SIGNED)
+		<include refid="SearchLimit"></include>
+        
+  </select>
+  
+  
+    <sql id="SearchFilters">
+		WHERE 1 = 1
+		<if test="_parameter.transactionDate!= null and _parameter.transactionDate != ''">
+			AND TRANSACTION_DATE = #{transactionDate}
+		</if>
+		<if test="_parameter.referNo!= null and _parameter.referNo != ''">
+			AND REFER_NO = #{referNo}
+		</if>
+		<if test="_parameter.orderId!= null and _parameter.orderId != ''">
+			AND ORDER_ID = #{orderId}
+		</if>
+		<if test="_parameter.tradingType!= null and _parameter.tradingType != ''">
+			AND TRADING_TYPE = #{tradingType}
+		</if>
+		
+	</sql>
+	
+	<sql id="SearchLimit">
+		<if test="_parameter.offset != null and _parameter.limit != null">
+			LIMIT #{_parameter.offset}, #{_parameter.limit}
+		</if>
+	</sql>
+  
+  
+</mapper>

@@ -1,0 +1,1293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.TechnicalAnalyRecordMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecord">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="LOCUS_TYPE" property="locusType" jdbcType="VARCHAR" />
+		<result column="VERIFY" property="verify" jdbcType="VARCHAR" />
+		<result column="VERIFY_METHOD" property="verifyMethod"
+			jdbcType="VARCHAR" />
+		<result column="UP_REFER_GENE" property="upReferGene" jdbcType="VARCHAR" />
+		<result column="DOWN_REFER_GENE" property="downReferGene"
+			jdbcType="VARCHAR" />
+		<result column="REFER_SAMPLE" property="referSample" jdbcType="VARCHAR" />
+		<result column="AAC_DOCUMENT" property="aacDocument" jdbcType="VARCHAR" />
+		<result column="HGVS" property="hgvs" jdbcType="VARCHAR" />
+		<result column="DISEASE_DOCUMENT" property="diseaseDocument"
+			jdbcType="VARCHAR" />
+		<result column="TAG" property="tag" jdbcType="VARCHAR" />
+		<result column="PUBLICATION" property="publication" jdbcType="VARCHAR" />
+		<result column="EFFECT" property="effect" jdbcType="VARCHAR" />
+		<result column="SAMPLE" property="sample" jdbcType="VARCHAR" />
+		<result column="GENE_SYMBOL" property="geneSymbol" jdbcType="VARCHAR" />
+		<result column="CHROMOSOME_LOCATION" property="chromosomeLocation"
+			jdbcType="VARCHAR" />
+		<result column="REF_TRANSCRIPT" property="refTranscript"
+			jdbcType="VARCHAR" />
+		<result column="EXON" property="exon" jdbcType="VARCHAR" />
+		<result column="NUCLEOTIDE_CHANGES" property="nucleotideChanges"
+			jdbcType="VARCHAR" />
+		<result column="AMINOACID_CHANGES" property="aminoacidChanges"
+			jdbcType="VARCHAR" />
+		<result column="GENE_TYPE" property="geneType" jdbcType="VARCHAR" />
+		<result column="AUG_2015" property="aug2015" jdbcType="VARCHAR" />
+		<result column="PATHOGENIC_ANALYSIS" property="pathogenicAnalysis"
+			jdbcType="VARCHAR" />
+		<result column="INHERT" property="inhert" jdbcType="VARCHAR" />
+		<result column="CLINVAR_2016" property="clinvar2016" jdbcType="VARCHAR" />
+		<result column="REFER_ALT_FREQUENCY" property="referAltFrequency"
+			jdbcType="VARCHAR" />
+		<result column="CHROMOSOME" property="chromosome" jdbcType="VARCHAR" />
+		<result column="BEGIN_LOCUS" property="beginLocus" jdbcType="VARCHAR" />
+		<result column="END_LOCUS" property="endLocus" jdbcType="VARCHAR" />
+		<result column="REFER_BASE" property="referBase" jdbcType="VARCHAR" />
+		<result column="ALT_BASE" property="altBase" jdbcType="VARCHAR" />
+		<result column="MUTATION_RATIO" property="mutationRatio"
+			jdbcType="VARCHAR" />
+		<result column="REFER_COUNT" property="referCount" jdbcType="VARCHAR" />
+		<result column="MUTATION_COUNT" property="mutationCount"
+			jdbcType="VARCHAR" />
+		<result column="DEPTH" property="depth" jdbcType="VARCHAR" />
+		<result column="MUTATION_TYPE" property="mutationType"
+			jdbcType="VARCHAR" />
+		<result column="GENE_REGION" property="geneRegion" jdbcType="VARCHAR" />
+		<result column="CYTO_BAND" property="cytoBand" jdbcType="VARCHAR" />
+		<result column="DBSNP147" property="dbsnp147" jdbcType="VARCHAR" />
+		<result column="PATHSNP" property="pathsnp" jdbcType="VARCHAR" />
+		<result column="MUTATION_NORMAL" property="mutationNormal"
+			jdbcType="VARCHAR" />
+		<result column="GENOME_1000" property="genome1000" jdbcType="VARCHAR" />
+		<result column="MUTATION_DATABASE" property="mutationDatabase"
+			jdbcType="VARCHAR" />
+		<result column="AUG_1000G_2015" property="aug1000g2015"
+			jdbcType="VARCHAR" />
+		<result column="ESP6500SI" property="esp6500si" jdbcType="VARCHAR" />
+		<result column="INHOUSE" property="inhouse" jdbcType="VARCHAR" />
+		<result column="EXAC_ALL" property="exacAll" jdbcType="VARCHAR" />
+		<result column="EXAC_EAS" property="exacEas" jdbcType="VARCHAR" />
+		<result column="SIFT" property="sift" jdbcType="VARCHAR" />
+		<result column="SIFT_PREDICT" property="siftPredict" jdbcType="VARCHAR" />
+		<result column="POLYPHEN2" property="polyphen2" jdbcType="VARCHAR" />
+		<result column="POLYPHEN2_PREDICT" property="polyphen2Predict"
+			jdbcType="VARCHAR" />
+		<result column="MUTATION_TASTER" property="mutationTaster"
+			jdbcType="VARCHAR" />
+		<result column="MUTATION_TASTER_PREDICT" property="mutationTasterPredict"
+			jdbcType="VARCHAR" />
+		<result column="GERP" property="gerp" jdbcType="VARCHAR" />
+		<result column="GERP_PREDICT" property="gerpPredict" jdbcType="VARCHAR" />
+		<result column="SPIDEX" property="spidex" jdbcType="VARCHAR" />
+		<result column="DBNSFPINTERPRO" property="dbnsfpinterpro"
+			jdbcType="VARCHAR" />
+		<result column="REVEL_SCORE" property="revelScore" jdbcType="VARCHAR" />
+		<result column="MCAP_SCORE" property="mcapScore" jdbcType="VARCHAR" />
+		<result column="MCAP_PREDICT" property="mcapPredict" jdbcType="VARCHAR" />
+		<result column="SHEET_ID" property="sheetId" jdbcType="VARCHAR" />
+		<result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR" />
+		<result column="CLINICAL_JUDGMENT" property="clinicalJudgment"
+			jdbcType="VARCHAR" />
+		<result column="MUTATION_SOURCE" property="mutationSource"
+			jdbcType="VARCHAR" />
+		<result column="TECHNICAL_FAMILY_GROUP_ID" property="technicalFamilyGroupId"
+			jdbcType="VARCHAR" />
+		<result column="TECHNICAL_TASK_ID" property="technicalTaskId"
+			jdbcType="VARCHAR" />
+		<result column="SOURCE_REF" property="sourceRef" jdbcType="VARCHAR" />
+		<result column="MUTATION_OBJECT_ID" property="mutationObjectId"
+			jdbcType="VARCHAR" />
+		<result column="CNV_RESULT_ID" property="cnvResultId" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecordWithBLOBs"
+		extends="BaseResultMap">
+		<result column="DISEASE" property="disease" jdbcType="LONGVARCHAR" />
+		<result column="DISEASE_PHENOTYPE" property="diseasePhenotype"
+			jdbcType="LONGVARCHAR" />
+		<result column="DISEASE_INFORMATION" property="diseaseInformation"
+			jdbcType="LONGVARCHAR" />
+		<result column="CHANGE_AA" property="changeAa" jdbcType="LONGVARCHAR" />
+		<result column="OTHER_FIELDS" property="otherFields" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, LOCUS_TYPE, VERIFY, VERIFY_METHOD, UP_REFER_GENE,
+		DOWN_REFER_GENE,
+		REFER_SAMPLE,
+		AAC_DOCUMENT, HGVS, DISEASE_DOCUMENT,
+		TAG, PUBLICATION, EFFECT, SAMPLE,
+		GENE_SYMBOL,
+		CHROMOSOME_LOCATION,
+		REF_TRANSCRIPT, EXON, NUCLEOTIDE_CHANGES, AMINOACID_CHANGES,
+		GENE_TYPE, AUG_2015, PATHOGENIC_ANALYSIS, INHERT, CLINVAR_2016,
+		REFER_ALT_FREQUENCY,
+		CHROMOSOME, BEGIN_LOCUS, END_LOCUS, REFER_BASE,
+		ALT_BASE, MUTATION_RATIO,
+		REFER_COUNT,
+		MUTATION_COUNT, DEPTH,
+		MUTATION_TYPE, GENE_REGION, CYTO_BAND, DBSNP147, PATHSNP,
+		MUTATION_NORMAL, GENOME_1000, MUTATION_DATABASE, AUG_1000G_2015,
+		ESP6500SI, INHOUSE,
+		EXAC_ALL, EXAC_EAS, SIFT, SIFT_PREDICT, POLYPHEN2,
+		POLYPHEN2_PREDICT,
+		MUTATION_TASTER,
+		MUTATION_TASTER_PREDICT, GERP,
+		GERP_PREDICT, SPIDEX, DBNSFPINTERPRO, REVEL_SCORE,
+		MCAP_SCORE,
+		MCAP_PREDICT, SHEET_ID, DATA_CODE, CLINICAL_JUDGMENT,
+		MUTATION_SOURCE,
+		TECHNICAL_FAMILY_GROUP_ID,TECHNICAL_TASK_ID, SOURCE_REF, MUTATION_OBJECT_ID,
+		CNV_RESULT_ID
+	</sql>
+	<sql id="Blob_Column_List">
+		DISEASE, DISEASE_PHENOTYPE, DISEASE_INFORMATION, CHANGE_AA,
+		OTHER_FIELDS
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectRecordByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+
+		from LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecordWithBLOBs">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_TECHNICAL_ANALY_RECORD (ID,
+		LOCUS_TYPE,
+		VERIFY,
+		VERIFY_METHOD, UP_REFER_GENE, DOWN_REFER_GENE,
+		REFER_SAMPLE,
+		AAC_DOCUMENT, HGVS,
+		DISEASE_DOCUMENT, TAG, PUBLICATION,
+		EFFECT, SAMPLE,
+		GENE_SYMBOL,
+		CHROMOSOME_LOCATION, REF_TRANSCRIPT, EXON,
+		NUCLEOTIDE_CHANGES, AMINOACID_CHANGES, GENE_TYPE,
+		AUG_2015,
+		PATHOGENIC_ANALYSIS, INHERT,
+		CLINVAR_2016, REFER_ALT_FREQUENCY,
+		CHROMOSOME,
+		BEGIN_LOCUS, END_LOCUS, REFER_BASE,
+		ALT_BASE,
+		MUTATION_RATIO, REFER_COUNT,
+		MUTATION_COUNT, DEPTH, MUTATION_TYPE,
+		GENE_REGION, CYTO_BAND, DBSNP147,
+		PATHSNP, MUTATION_NORMAL,
+		GENOME_1000,
+		MUTATION_DATABASE, AUG_1000G_2015, ESP6500SI,
+		INHOUSE,
+		EXAC_ALL, EXAC_EAS,
+		SIFT, SIFT_PREDICT, POLYPHEN2,
+		POLYPHEN2_PREDICT,
+		MUTATION_TASTER, MUTATION_TASTER_PREDICT,
+		GERP, GERP_PREDICT, SPIDEX,
+		DBNSFPINTERPRO, REVEL_SCORE, MCAP_SCORE,
+		MCAP_PREDICT, SHEET_ID,
+		DATA_CODE,
+		CLINICAL_JUDGMENT, MUTATION_SOURCE,
+		TECHNICAL_FAMILY_GROUP_ID,
+		SOURCE_REF, MUTATION_OBJECT_ID,
+		CNV_RESULT_ID,
+		DISEASE,
+		DISEASE_PHENOTYPE, DISEASE_INFORMATION,
+		CHANGE_AA, OTHER_FIELDS)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{locusType,jdbcType=VARCHAR},
+		#{verify,jdbcType=VARCHAR},
+		#{verifyMethod,jdbcType=VARCHAR},
+		#{upReferGene,jdbcType=VARCHAR},
+		#{downReferGene,jdbcType=VARCHAR},
+		#{referSample,jdbcType=VARCHAR},
+		#{aacDocument,jdbcType=VARCHAR},
+		#{hgvs,jdbcType=VARCHAR},
+		#{diseaseDocument,jdbcType=VARCHAR},
+		#{tag,jdbcType=VARCHAR},
+		#{publication,jdbcType=VARCHAR},
+		#{effect,jdbcType=VARCHAR},
+		#{sample,jdbcType=VARCHAR},
+		#{geneSymbol,jdbcType=VARCHAR},
+		#{chromosomeLocation,jdbcType=VARCHAR},
+		#{refTranscript,jdbcType=VARCHAR}, #{exon,jdbcType=VARCHAR},
+		#{nucleotideChanges,jdbcType=VARCHAR},
+		#{aminoacidChanges,jdbcType=VARCHAR}, #{geneType,jdbcType=VARCHAR},
+		#{aug2015,jdbcType=VARCHAR}, #{pathogenicAnalysis,jdbcType=VARCHAR},
+		#{inhert,jdbcType=VARCHAR},
+		#{clinvar2016,jdbcType=VARCHAR},
+		#{referAltFrequency,jdbcType=VARCHAR},
+		#{chromosome,jdbcType=VARCHAR},
+		#{beginLocus,jdbcType=VARCHAR}, #{endLocus,jdbcType=VARCHAR},
+		#{referBase,jdbcType=VARCHAR},
+		#{altBase,jdbcType=VARCHAR},
+		#{mutationRatio,jdbcType=VARCHAR},
+		#{referCount,jdbcType=VARCHAR},
+		#{mutationCount,jdbcType=VARCHAR}, #{depth,jdbcType=VARCHAR},
+		#{mutationType,jdbcType=VARCHAR},
+		#{geneRegion,jdbcType=VARCHAR},
+		#{cytoBand,jdbcType=VARCHAR},
+		#{dbsnp147,jdbcType=VARCHAR},
+		#{pathsnp,jdbcType=VARCHAR}, #{mutationNormal,jdbcType=VARCHAR},
+		#{genome1000,jdbcType=VARCHAR},
+		#{mutationDatabase,jdbcType=VARCHAR},
+		#{aug1000g2015,jdbcType=VARCHAR}, #{esp6500si,jdbcType=VARCHAR},
+		#{inhouse,jdbcType=VARCHAR}, #{exacAll,jdbcType=VARCHAR},
+		#{exacEas,jdbcType=VARCHAR},
+		#{sift,jdbcType=VARCHAR},
+		#{siftPredict,jdbcType=VARCHAR}, #{polyphen2,jdbcType=VARCHAR},
+		#{polyphen2Predict,jdbcType=VARCHAR},
+		#{mutationTaster,jdbcType=VARCHAR},
+		#{mutationTasterPredict,jdbcType=VARCHAR},
+		#{gerp,jdbcType=VARCHAR},
+		#{gerpPredict,jdbcType=VARCHAR}, #{spidex,jdbcType=VARCHAR},
+		#{dbnsfpinterpro,jdbcType=VARCHAR}, #{revelScore,jdbcType=VARCHAR},
+		#{mcapScore,jdbcType=VARCHAR},
+		#{mcapPredict,jdbcType=VARCHAR},
+		#{sheetId,jdbcType=VARCHAR}, #{dataCode,jdbcType=VARCHAR},
+		#{clinicalJudgment,jdbcType=VARCHAR},
+		#{mutationSource,jdbcType=VARCHAR},
+		#{technicalFamilyGroupId,jdbcType=VARCHAR},
+		#{sourceRef,jdbcType=VARCHAR},
+		#{mutationObjectId,jdbcType=VARCHAR},
+		#{cnvResultId,jdbcType=VARCHAR},
+		#{disease,jdbcType=LONGVARCHAR},
+		#{diseasePhenotype,jdbcType=LONGVARCHAR},
+		#{diseaseInformation,jdbcType=LONGVARCHAR},
+		#{changeAa,jdbcType=LONGVARCHAR}, #{otherFields,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecordWithBLOBs">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+
+		insert into LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="locusType != null">
+				LOCUS_TYPE,
+			</if>
+			<if test="verify != null">
+				VERIFY,
+			</if>
+			<if test="verifyMethod != null">
+				VERIFY_METHOD,
+			</if>
+			<if test="upReferGene != null">
+				UP_REFER_GENE,
+			</if>
+			<if test="downReferGene != null">
+				DOWN_REFER_GENE,
+			</if>
+			<if test="referSample != null">
+				REFER_SAMPLE,
+			</if>
+			<if test="aacDocument != null">
+				AAC_DOCUMENT,
+			</if>
+			<if test="hgvs != null">
+				HGVS,
+			</if>
+			<if test="diseaseDocument != null">
+				DISEASE_DOCUMENT,
+			</if>
+			<if test="tag != null">
+				TAG,
+			</if>
+			<if test="publication != null">
+				PUBLICATION,
+			</if>
+			<if test="effect != null">
+				EFFECT,
+			</if>
+			<if test="sample != null">
+				SAMPLE,
+			</if>
+			<if test="geneSymbol != null">
+				GENE_SYMBOL,
+			</if>
+			<if test="chromosomeLocation != null">
+				CHROMOSOME_LOCATION,
+			</if>
+			<if test="refTranscript != null">
+				REF_TRANSCRIPT,
+			</if>
+			<if test="exon != null">
+				EXON,
+			</if>
+			<if test="nucleotideChanges != null">
+				NUCLEOTIDE_CHANGES,
+			</if>
+			<if test="aminoacidChanges != null">
+				AMINOACID_CHANGES,
+			</if>
+			<if test="geneType != null">
+				GENE_TYPE,
+			</if>
+			<if test="aug2015 != null">
+				AUG_2015,
+			</if>
+			<if test="pathogenicAnalysis != null">
+				PATHOGENIC_ANALYSIS,
+			</if>
+			<if test="inhert != null">
+				INHERT,
+			</if>
+			<if test="clinvar2016 != null">
+				CLINVAR_2016,
+			</if>
+			<if test="referAltFrequency != null">
+				REFER_ALT_FREQUENCY,
+			</if>
+			<if test="chromosome != null">
+				CHROMOSOME,
+			</if>
+			<if test="beginLocus != null">
+				BEGIN_LOCUS,
+			</if>
+			<if test="endLocus != null">
+				END_LOCUS,
+			</if>
+			<if test="referBase != null">
+				REFER_BASE,
+			</if>
+			<if test="altBase != null">
+				ALT_BASE,
+			</if>
+			<if test="mutationRatio != null">
+				MUTATION_RATIO,
+			</if>
+			<if test="referCount != null">
+				REFER_COUNT,
+			</if>
+			<if test="mutationCount != null">
+				MUTATION_COUNT,
+			</if>
+			<if test="depth != null">
+				DEPTH,
+			</if>
+			<if test="mutationType != null">
+				MUTATION_TYPE,
+			</if>
+			<if test="geneRegion != null">
+				GENE_REGION,
+			</if>
+			<if test="cytoBand != null">
+				CYTO_BAND,
+			</if>
+			<if test="dbsnp147 != null">
+				DBSNP147,
+			</if>
+			<if test="pathsnp != null">
+				PATHSNP,
+			</if>
+			<if test="mutationNormal != null">
+				MUTATION_NORMAL,
+			</if>
+			<if test="genome1000 != null">
+				GENOME_1000,
+			</if>
+			<if test="mutationDatabase != null">
+				MUTATION_DATABASE,
+			</if>
+			<if test="aug1000g2015 != null">
+				AUG_1000G_2015,
+			</if>
+			<if test="esp6500si != null">
+				ESP6500SI,
+			</if>
+			<if test="inhouse != null">
+				INHOUSE,
+			</if>
+			<if test="exacAll != null">
+				EXAC_ALL,
+			</if>
+			<if test="exacEas != null">
+				EXAC_EAS,
+			</if>
+			<if test="sift != null">
+				SIFT,
+			</if>
+			<if test="siftPredict != null">
+				SIFT_PREDICT,
+			</if>
+			<if test="polyphen2 != null">
+				POLYPHEN2,
+			</if>
+			<if test="polyphen2Predict != null">
+				POLYPHEN2_PREDICT,
+			</if>
+			<if test="mutationTaster != null">
+				MUTATION_TASTER,
+			</if>
+			<if test="mutationTasterPredict != null">
+				MUTATION_TASTER_PREDICT,
+			</if>
+			<if test="gerp != null">
+				GERP,
+			</if>
+			<if test="gerpPredict != null">
+				GERP_PREDICT,
+			</if>
+			<if test="spidex != null">
+				SPIDEX,
+			</if>
+			<if test="dbnsfpinterpro != null">
+				DBNSFPINTERPRO,
+			</if>
+			<if test="revelScore != null">
+				REVEL_SCORE,
+			</if>
+			<if test="mcapScore != null">
+				MCAP_SCORE,
+			</if>
+			<if test="mcapPredict != null">
+				MCAP_PREDICT,
+			</if>
+			<if test="sheetId != null">
+				SHEET_ID,
+			</if>
+			<if test="dataCode != null">
+				DATA_CODE,
+			</if>
+			<if test="clinicalJudgment != null">
+				CLINICAL_JUDGMENT,
+			</if>
+			<if test="mutationSource != null">
+				MUTATION_SOURCE,
+			</if>
+			<if test="technicalFamilyGroupId != null">
+				TECHNICAL_FAMILY_GROUP_ID,
+			</if>
+			<if test="technicalTaskId != null">
+				TECHNICAL_TASK_ID,
+			</if>
+			<if test="sourceRef != null">
+				SOURCE_REF,
+			</if>
+			<if test="mutationObjectId != null">
+				MUTATION_OBJECT_ID,
+			</if>
+			<if test="cnvResultId != null">
+				CNV_RESULT_ID,
+			</if>
+			<if test="disease != null">
+				DISEASE,
+			</if>
+			<if test="diseasePhenotype != null">
+				DISEASE_PHENOTYPE,
+			</if>
+			<if test="diseaseInformation != null">
+				DISEASE_INFORMATION,
+			</if>
+			<if test="changeAa != null">
+				CHANGE_AA,
+			</if>
+			<if test="otherFields != null">
+				OTHER_FIELDS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="locusType != null">
+				#{locusType,jdbcType=VARCHAR},
+			</if>
+			<if test="verify != null">
+				#{verify,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyMethod != null">
+				#{verifyMethod,jdbcType=VARCHAR},
+			</if>
+			<if test="upReferGene != null">
+				#{upReferGene,jdbcType=VARCHAR},
+			</if>
+			<if test="downReferGene != null">
+				#{downReferGene,jdbcType=VARCHAR},
+			</if>
+			<if test="referSample != null">
+				#{referSample,jdbcType=VARCHAR},
+			</if>
+			<if test="aacDocument != null">
+				#{aacDocument,jdbcType=VARCHAR},
+			</if>
+			<if test="hgvs != null">
+				#{hgvs,jdbcType=VARCHAR},
+			</if>
+			<if test="diseaseDocument != null">
+				#{diseaseDocument,jdbcType=VARCHAR},
+			</if>
+			<if test="tag != null">
+				#{tag,jdbcType=VARCHAR},
+			</if>
+			<if test="publication != null">
+				#{publication,jdbcType=VARCHAR},
+			</if>
+			<if test="effect != null">
+				#{effect,jdbcType=VARCHAR},
+			</if>
+			<if test="sample != null">
+				#{sample,jdbcType=VARCHAR},
+			</if>
+			<if test="geneSymbol != null">
+				#{geneSymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="chromosomeLocation != null">
+				#{chromosomeLocation,jdbcType=VARCHAR},
+			</if>
+			<if test="refTranscript != null">
+				#{refTranscript,jdbcType=VARCHAR},
+			</if>
+			<if test="exon != null">
+				#{exon,jdbcType=VARCHAR},
+			</if>
+			<if test="nucleotideChanges != null">
+				#{nucleotideChanges,jdbcType=VARCHAR},
+			</if>
+			<if test="aminoacidChanges != null">
+				#{aminoacidChanges,jdbcType=VARCHAR},
+			</if>
+			<if test="geneType != null">
+				#{geneType,jdbcType=VARCHAR},
+			</if>
+			<if test="aug2015 != null">
+				#{aug2015,jdbcType=VARCHAR},
+			</if>
+			<if test="pathogenicAnalysis != null">
+				#{pathogenicAnalysis,jdbcType=VARCHAR},
+			</if>
+			<if test="inhert != null">
+				#{inhert,jdbcType=VARCHAR},
+			</if>
+			<if test="clinvar2016 != null">
+				#{clinvar2016,jdbcType=VARCHAR},
+			</if>
+			<if test="referAltFrequency != null">
+				#{referAltFrequency,jdbcType=VARCHAR},
+			</if>
+			<if test="chromosome != null">
+				#{chromosome,jdbcType=VARCHAR},
+			</if>
+			<if test="beginLocus != null">
+				#{beginLocus,jdbcType=VARCHAR},
+			</if>
+			<if test="endLocus != null">
+				#{endLocus,jdbcType=VARCHAR},
+			</if>
+			<if test="referBase != null">
+				#{referBase,jdbcType=VARCHAR},
+			</if>
+			<if test="altBase != null">
+				#{altBase,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationRatio != null">
+				#{mutationRatio,jdbcType=VARCHAR},
+			</if>
+			<if test="referCount != null">
+				#{referCount,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationCount != null">
+				#{mutationCount,jdbcType=VARCHAR},
+			</if>
+			<if test="depth != null">
+				#{depth,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationType != null">
+				#{mutationType,jdbcType=VARCHAR},
+			</if>
+			<if test="geneRegion != null">
+				#{geneRegion,jdbcType=VARCHAR},
+			</if>
+			<if test="cytoBand != null">
+				#{cytoBand,jdbcType=VARCHAR},
+			</if>
+			<if test="dbsnp147 != null">
+				#{dbsnp147,jdbcType=VARCHAR},
+			</if>
+			<if test="pathsnp != null">
+				#{pathsnp,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationNormal != null">
+				#{mutationNormal,jdbcType=VARCHAR},
+			</if>
+			<if test="genome1000 != null">
+				#{genome1000,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationDatabase != null">
+				#{mutationDatabase,jdbcType=VARCHAR},
+			</if>
+			<if test="aug1000g2015 != null">
+				#{aug1000g2015,jdbcType=VARCHAR},
+			</if>
+			<if test="esp6500si != null">
+				#{esp6500si,jdbcType=VARCHAR},
+			</if>
+			<if test="inhouse != null">
+				#{inhouse,jdbcType=VARCHAR},
+			</if>
+			<if test="exacAll != null">
+				#{exacAll,jdbcType=VARCHAR},
+			</if>
+			<if test="exacEas != null">
+				#{exacEas,jdbcType=VARCHAR},
+			</if>
+			<if test="sift != null">
+				#{sift,jdbcType=VARCHAR},
+			</if>
+			<if test="siftPredict != null">
+				#{siftPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="polyphen2 != null">
+				#{polyphen2,jdbcType=VARCHAR},
+			</if>
+			<if test="polyphen2Predict != null">
+				#{polyphen2Predict,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationTaster != null">
+				#{mutationTaster,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationTasterPredict != null">
+				#{mutationTasterPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="gerp != null">
+				#{gerp,jdbcType=VARCHAR},
+			</if>
+			<if test="gerpPredict != null">
+				#{gerpPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="spidex != null">
+				#{spidex,jdbcType=VARCHAR},
+			</if>
+			<if test="dbnsfpinterpro != null">
+				#{dbnsfpinterpro,jdbcType=VARCHAR},
+			</if>
+			<if test="revelScore != null">
+				#{revelScore,jdbcType=VARCHAR},
+			</if>
+			<if test="mcapScore != null">
+				#{mcapScore,jdbcType=VARCHAR},
+			</if>
+			<if test="mcapPredict != null">
+				#{mcapPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="sheetId != null">
+				#{sheetId,jdbcType=VARCHAR},
+			</if>
+			<if test="dataCode != null">
+				#{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="clinicalJudgment != null">
+				#{clinicalJudgment,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationSource != null">
+				#{mutationSource,jdbcType=VARCHAR},
+			</if>
+			<if test="technicalFamilyGroupId != null">
+				#{technicalFamilyGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="technicalTaskId != null">
+				#{technicalTaskId,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceRef != null">
+				#{sourceRef,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationObjectId != null">
+				#{mutationObjectId,jdbcType=VARCHAR},
+			</if>
+			<if test="cnvResultId != null">
+				#{cnvResultId,jdbcType=VARCHAR},
+			</if>
+			<if test="disease != null">
+				#{disease,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="diseasePhenotype != null">
+				#{diseasePhenotype,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="diseaseInformation != null">
+				#{diseaseInformation,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="changeAa != null">
+				#{changeAa,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="otherFields != null">
+				#{otherFields,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecordWithBLOBs">
+		update LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		<set>
+			<if test="locusType != null">
+				LOCUS_TYPE = #{locusType,jdbcType=VARCHAR},
+			</if>
+			<if test="verify != null">
+				VERIFY = #{verify,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyMethod != null">
+				VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+			</if>
+			<if test="upReferGene != null">
+				UP_REFER_GENE = #{upReferGene,jdbcType=VARCHAR},
+			</if>
+			<if test="downReferGene != null">
+				DOWN_REFER_GENE = #{downReferGene,jdbcType=VARCHAR},
+			</if>
+			<if test="referSample != null">
+				REFER_SAMPLE = #{referSample,jdbcType=VARCHAR},
+			</if>
+			<if test="aacDocument != null">
+				AAC_DOCUMENT = #{aacDocument,jdbcType=VARCHAR},
+			</if>
+			<if test="hgvs != null">
+				HGVS = #{hgvs,jdbcType=VARCHAR},
+			</if>
+			<if test="diseaseDocument != null">
+				DISEASE_DOCUMENT = #{diseaseDocument,jdbcType=VARCHAR},
+			</if>
+			<if test="tag != null">
+				TAG = #{tag,jdbcType=VARCHAR},
+			</if>
+			<if test="publication != null">
+				PUBLICATION = #{publication,jdbcType=VARCHAR},
+			</if>
+			<if test="effect != null">
+				EFFECT = #{effect,jdbcType=VARCHAR},
+			</if>
+			<if test="sample != null">
+				SAMPLE = #{sample,jdbcType=VARCHAR},
+			</if>
+			<if test="geneSymbol != null">
+				GENE_SYMBOL = #{geneSymbol,jdbcType=VARCHAR},
+			</if>
+			<if test="chromosomeLocation != null">
+				CHROMOSOME_LOCATION =
+				#{chromosomeLocation,jdbcType=VARCHAR},
+			</if>
+			<if test="refTranscript != null">
+				REF_TRANSCRIPT = #{refTranscript,jdbcType=VARCHAR},
+			</if>
+			<if test="exon != null">
+				EXON = #{exon,jdbcType=VARCHAR},
+			</if>
+			<if test="nucleotideChanges != null">
+				NUCLEOTIDE_CHANGES =
+				#{nucleotideChanges,jdbcType=VARCHAR},
+			</if>
+			<if test="aminoacidChanges != null">
+				AMINOACID_CHANGES = #{aminoacidChanges,jdbcType=VARCHAR},
+			</if>
+			<if test="geneType != null">
+				GENE_TYPE = #{geneType,jdbcType=VARCHAR},
+			</if>
+			<if test="aug2015 != null">
+				AUG_2015 = #{aug2015,jdbcType=VARCHAR},
+			</if>
+			<if test="pathogenicAnalysis != null">
+				PATHOGENIC_ANALYSIS =
+				#{pathogenicAnalysis,jdbcType=VARCHAR},
+			</if>
+			<if test="inhert != null">
+				INHERT = #{inhert,jdbcType=VARCHAR},
+			</if>
+			<if test="clinvar2016 != null">
+				CLINVAR_2016 = #{clinvar2016,jdbcType=VARCHAR},
+			</if>
+			<if test="referAltFrequency != null">
+				REFER_ALT_FREQUENCY =
+				#{referAltFrequency,jdbcType=VARCHAR},
+			</if>
+			<if test="chromosome != null">
+				CHROMOSOME = #{chromosome,jdbcType=VARCHAR},
+			</if>
+			<if test="beginLocus != null">
+				BEGIN_LOCUS = #{beginLocus,jdbcType=VARCHAR},
+			</if>
+			<if test="endLocus != null">
+				END_LOCUS = #{endLocus,jdbcType=VARCHAR},
+			</if>
+			<if test="referBase != null">
+				REFER_BASE = #{referBase,jdbcType=VARCHAR},
+			</if>
+			<if test="altBase != null">
+				ALT_BASE = #{altBase,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationRatio != null">
+				MUTATION_RATIO = #{mutationRatio,jdbcType=VARCHAR},
+			</if>
+			<if test="referCount != null">
+				REFER_COUNT = #{referCount,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationCount != null">
+				MUTATION_COUNT = #{mutationCount,jdbcType=VARCHAR},
+			</if>
+			<if test="depth != null">
+				DEPTH = #{depth,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationType != null">
+				MUTATION_TYPE = #{mutationType,jdbcType=VARCHAR},
+			</if>
+			<if test="geneRegion != null">
+				GENE_REGION = #{geneRegion,jdbcType=VARCHAR},
+			</if>
+			<if test="cytoBand != null">
+				CYTO_BAND = #{cytoBand,jdbcType=VARCHAR},
+			</if>
+			<if test="dbsnp147 != null">
+				DBSNP147 = #{dbsnp147,jdbcType=VARCHAR},
+			</if>
+			<if test="pathsnp != null">
+				PATHSNP = #{pathsnp,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationNormal != null">
+				MUTATION_NORMAL = #{mutationNormal,jdbcType=VARCHAR},
+			</if>
+			<if test="genome1000 != null">
+				GENOME_1000 = #{genome1000,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationDatabase != null">
+				MUTATION_DATABASE = #{mutationDatabase,jdbcType=VARCHAR},
+			</if>
+			<if test="aug1000g2015 != null">
+				AUG_1000G_2015 = #{aug1000g2015,jdbcType=VARCHAR},
+			</if>
+			<if test="esp6500si != null">
+				ESP6500SI = #{esp6500si,jdbcType=VARCHAR},
+			</if>
+			<if test="inhouse != null">
+				INHOUSE = #{inhouse,jdbcType=VARCHAR},
+			</if>
+			<if test="exacAll != null">
+				EXAC_ALL = #{exacAll,jdbcType=VARCHAR},
+			</if>
+			<if test="exacEas != null">
+				EXAC_EAS = #{exacEas,jdbcType=VARCHAR},
+			</if>
+			<if test="sift != null">
+				SIFT = #{sift,jdbcType=VARCHAR},
+			</if>
+			<if test="siftPredict != null">
+				SIFT_PREDICT = #{siftPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="polyphen2 != null">
+				POLYPHEN2 = #{polyphen2,jdbcType=VARCHAR},
+			</if>
+			<if test="polyphen2Predict != null">
+				POLYPHEN2_PREDICT = #{polyphen2Predict,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationTaster != null">
+				MUTATION_TASTER = #{mutationTaster,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationTasterPredict != null">
+				MUTATION_TASTER_PREDICT =
+				#{mutationTasterPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="gerp != null">
+				GERP = #{gerp,jdbcType=VARCHAR},
+			</if>
+			<if test="gerpPredict != null">
+				GERP_PREDICT = #{gerpPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="spidex != null">
+				SPIDEX = #{spidex,jdbcType=VARCHAR},
+			</if>
+			<if test="dbnsfpinterpro != null">
+				DBNSFPINTERPRO = #{dbnsfpinterpro,jdbcType=VARCHAR},
+			</if>
+			<if test="revelScore != null">
+				REVEL_SCORE = #{revelScore,jdbcType=VARCHAR},
+			</if>
+			<if test="mcapScore != null">
+				MCAP_SCORE = #{mcapScore,jdbcType=VARCHAR},
+			</if>
+			<if test="mcapPredict != null">
+				MCAP_PREDICT = #{mcapPredict,jdbcType=VARCHAR},
+			</if>
+			<if test="sheetId != null">
+				SHEET_ID = #{sheetId,jdbcType=VARCHAR},
+			</if>
+			<if test="dataCode != null">
+				DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+			</if>
+			<if test="clinicalJudgment != null">
+				CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationSource != null">
+				MUTATION_SOURCE = #{mutationSource,jdbcType=VARCHAR},
+			</if>
+			<if test="technicalFamilyGroupId != null">
+				TECHNICAL_FAMILY_GROUP_ID =
+				#{technicalFamilyGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="sourceRef != null">
+				SOURCE_REF = #{sourceRef,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationObjectId != null">
+				MUTATION_OBJECT_ID =
+				#{mutationObjectId,jdbcType=VARCHAR},
+			</if>
+			<if test="cnvResultId != null">
+				CNV_RESULT_ID = #{cnvResultId,jdbcType=VARCHAR},
+			</if>
+			<if test="disease != null">
+				DISEASE = #{disease,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="diseasePhenotype != null">
+				DISEASE_PHENOTYPE =
+				#{diseasePhenotype,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="diseaseInformation != null">
+				DISEASE_INFORMATION =
+				#{diseaseInformation,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="changeAa != null">
+				CHANGE_AA = #{changeAa,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="otherFields != null">
+				OTHER_FIELDS = #{otherFields,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecordWithBLOBs">
+		update LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		set LOCUS_TYPE
+		= #{locusType,jdbcType=VARCHAR},
+		VERIFY = #{verify,jdbcType=VARCHAR},
+		VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+		UP_REFER_GENE =
+		#{upReferGene,jdbcType=VARCHAR},
+		DOWN_REFER_GENE =
+		#{downReferGene,jdbcType=VARCHAR},
+		REFER_SAMPLE =
+		#{referSample,jdbcType=VARCHAR},
+		AAC_DOCUMENT =
+		#{aacDocument,jdbcType=VARCHAR},
+		HGVS = #{hgvs,jdbcType=VARCHAR},
+		DISEASE_DOCUMENT = #{diseaseDocument,jdbcType=VARCHAR},
+		TAG =
+		#{tag,jdbcType=VARCHAR},
+		PUBLICATION = #{publication,jdbcType=VARCHAR},
+		EFFECT = #{effect,jdbcType=VARCHAR},
+		SAMPLE =
+		#{sample,jdbcType=VARCHAR},
+		GENE_SYMBOL =
+		#{geneSymbol,jdbcType=VARCHAR},
+		CHROMOSOME_LOCATION =
+		#{chromosomeLocation,jdbcType=VARCHAR},
+		REF_TRANSCRIPT =
+		#{refTranscript,jdbcType=VARCHAR},
+		EXON = #{exon,jdbcType=VARCHAR},
+		NUCLEOTIDE_CHANGES = #{nucleotideChanges,jdbcType=VARCHAR},
+		AMINOACID_CHANGES = #{aminoacidChanges,jdbcType=VARCHAR},
+		GENE_TYPE =
+		#{geneType,jdbcType=VARCHAR},
+		AUG_2015 = #{aug2015,jdbcType=VARCHAR},
+		PATHOGENIC_ANALYSIS = #{pathogenicAnalysis,jdbcType=VARCHAR},
+		INHERT =
+		#{inhert,jdbcType=VARCHAR},
+		CLINVAR_2016 =
+		#{clinvar2016,jdbcType=VARCHAR},
+		REFER_ALT_FREQUENCY =
+		#{referAltFrequency,jdbcType=VARCHAR},
+		CHROMOSOME =
+		#{chromosome,jdbcType=VARCHAR},
+		BEGIN_LOCUS =
+		#{beginLocus,jdbcType=VARCHAR},
+		END_LOCUS =
+		#{endLocus,jdbcType=VARCHAR},
+		REFER_BASE =
+		#{referBase,jdbcType=VARCHAR},
+		ALT_BASE = #{altBase,jdbcType=VARCHAR},
+		MUTATION_RATIO = #{mutationRatio,jdbcType=VARCHAR},
+		REFER_COUNT =
+		#{referCount,jdbcType=VARCHAR},
+		MUTATION_COUNT =
+		#{mutationCount,jdbcType=VARCHAR},
+		DEPTH = #{depth,jdbcType=VARCHAR},
+		MUTATION_TYPE = #{mutationType,jdbcType=VARCHAR},
+		GENE_REGION =
+		#{geneRegion,jdbcType=VARCHAR},
+		CYTO_BAND =
+		#{cytoBand,jdbcType=VARCHAR},
+		DBSNP147 = #{dbsnp147,jdbcType=VARCHAR},
+		PATHSNP = #{pathsnp,jdbcType=VARCHAR},
+		MUTATION_NORMAL =
+		#{mutationNormal,jdbcType=VARCHAR},
+		GENOME_1000 =
+		#{genome1000,jdbcType=VARCHAR},
+		MUTATION_DATABASE =
+		#{mutationDatabase,jdbcType=VARCHAR},
+		AUG_1000G_2015 =
+		#{aug1000g2015,jdbcType=VARCHAR},
+		ESP6500SI =
+		#{esp6500si,jdbcType=VARCHAR},
+		INHOUSE = #{inhouse,jdbcType=VARCHAR},
+		EXAC_ALL = #{exacAll,jdbcType=VARCHAR},
+		EXAC_EAS =
+		#{exacEas,jdbcType=VARCHAR},
+		SIFT = #{sift,jdbcType=VARCHAR},
+		SIFT_PREDICT = #{siftPredict,jdbcType=VARCHAR},
+		POLYPHEN2 =
+		#{polyphen2,jdbcType=VARCHAR},
+		POLYPHEN2_PREDICT =
+		#{polyphen2Predict,jdbcType=VARCHAR},
+		MUTATION_TASTER =
+		#{mutationTaster,jdbcType=VARCHAR},
+		MUTATION_TASTER_PREDICT =
+		#{mutationTasterPredict,jdbcType=VARCHAR},
+		GERP =
+		#{gerp,jdbcType=VARCHAR},
+		GERP_PREDICT =
+		#{gerpPredict,jdbcType=VARCHAR},
+		SPIDEX = #{spidex,jdbcType=VARCHAR},
+		DBNSFPINTERPRO = #{dbnsfpinterpro,jdbcType=VARCHAR},
+		REVEL_SCORE =
+		#{revelScore,jdbcType=VARCHAR},
+		MCAP_SCORE =
+		#{mcapScore,jdbcType=VARCHAR},
+		MCAP_PREDICT =
+		#{mcapPredict,jdbcType=VARCHAR},
+		SHEET_ID =
+		#{sheetId,jdbcType=VARCHAR},
+		DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+		CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+		MUTATION_SOURCE = #{mutationSource,jdbcType=VARCHAR},
+		TECHNICAL_FAMILY_GROUP_ID =
+		#{technicalFamilyGroupId,jdbcType=VARCHAR},
+		SOURCE_REF =
+		#{sourceRef,jdbcType=VARCHAR},
+		MUTATION_OBJECT_ID =
+		#{mutationObjectId,jdbcType=VARCHAR},
+		CNV_RESULT_ID =
+		#{cnvResultId,jdbcType=VARCHAR},
+		DISEASE =
+		#{disease,jdbcType=LONGVARCHAR},
+		DISEASE_PHENOTYPE =
+		#{diseasePhenotype,jdbcType=LONGVARCHAR},
+		DISEASE_INFORMATION =
+		#{diseaseInformation,jdbcType=LONGVARCHAR},
+		CHANGE_AA =
+		#{changeAa,jdbcType=LONGVARCHAR},
+		OTHER_FIELDS =
+		#{otherFields,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyRecord">
+		update LIMS_TESTING_TECHNICAL_ANALY_RECORD
+		set LOCUS_TYPE
+		= #{locusType,jdbcType=VARCHAR},
+		VERIFY = #{verify,jdbcType=VARCHAR},
+		VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+		UP_REFER_GENE =
+		#{upReferGene,jdbcType=VARCHAR},
+		DOWN_REFER_GENE =
+		#{downReferGene,jdbcType=VARCHAR},
+		REFER_SAMPLE =
+		#{referSample,jdbcType=VARCHAR},
+		AAC_DOCUMENT =
+		#{aacDocument,jdbcType=VARCHAR},
+		HGVS = #{hgvs,jdbcType=VARCHAR},
+		DISEASE_DOCUMENT = #{diseaseDocument,jdbcType=VARCHAR},
+		TAG =
+		#{tag,jdbcType=VARCHAR},
+		PUBLICATION = #{publication,jdbcType=VARCHAR},
+		EFFECT = #{effect,jdbcType=VARCHAR},
+		SAMPLE =
+		#{sample,jdbcType=VARCHAR},
+		GENE_SYMBOL =
+		#{geneSymbol,jdbcType=VARCHAR},
+		CHROMOSOME_LOCATION =
+		#{chromosomeLocation,jdbcType=VARCHAR},
+		REF_TRANSCRIPT =
+		#{refTranscript,jdbcType=VARCHAR},
+		EXON = #{exon,jdbcType=VARCHAR},
+		NUCLEOTIDE_CHANGES = #{nucleotideChanges,jdbcType=VARCHAR},
+		AMINOACID_CHANGES = #{aminoacidChanges,jdbcType=VARCHAR},
+		GENE_TYPE =
+		#{geneType,jdbcType=VARCHAR},
+		AUG_2015 = #{aug2015,jdbcType=VARCHAR},
+		PATHOGENIC_ANALYSIS = #{pathogenicAnalysis,jdbcType=VARCHAR},
+		INHERT =
+		#{inhert,jdbcType=VARCHAR},
+		CLINVAR_2016 =
+		#{clinvar2016,jdbcType=VARCHAR},
+		REFER_ALT_FREQUENCY =
+		#{referAltFrequency,jdbcType=VARCHAR},
+		CHROMOSOME =
+		#{chromosome,jdbcType=VARCHAR},
+		BEGIN_LOCUS =
+		#{beginLocus,jdbcType=VARCHAR},
+		END_LOCUS =
+		#{endLocus,jdbcType=VARCHAR},
+		REFER_BASE =
+		#{referBase,jdbcType=VARCHAR},
+		ALT_BASE = #{altBase,jdbcType=VARCHAR},
+		MUTATION_RATIO = #{mutationRatio,jdbcType=VARCHAR},
+		REFER_COUNT =
+		#{referCount,jdbcType=VARCHAR},
+		MUTATION_COUNT =
+		#{mutationCount,jdbcType=VARCHAR},
+		DEPTH = #{depth,jdbcType=VARCHAR},
+		MUTATION_TYPE = #{mutationType,jdbcType=VARCHAR},
+		GENE_REGION =
+		#{geneRegion,jdbcType=VARCHAR},
+		CYTO_BAND =
+		#{cytoBand,jdbcType=VARCHAR},
+		DBSNP147 = #{dbsnp147,jdbcType=VARCHAR},
+		PATHSNP = #{pathsnp,jdbcType=VARCHAR},
+		MUTATION_NORMAL =
+		#{mutationNormal,jdbcType=VARCHAR},
+		GENOME_1000 =
+		#{genome1000,jdbcType=VARCHAR},
+		MUTATION_DATABASE =
+		#{mutationDatabase,jdbcType=VARCHAR},
+		AUG_1000G_2015 =
+		#{aug1000g2015,jdbcType=VARCHAR},
+		ESP6500SI =
+		#{esp6500si,jdbcType=VARCHAR},
+		INHOUSE = #{inhouse,jdbcType=VARCHAR},
+		EXAC_ALL = #{exacAll,jdbcType=VARCHAR},
+		EXAC_EAS =
+		#{exacEas,jdbcType=VARCHAR},
+		SIFT = #{sift,jdbcType=VARCHAR},
+		SIFT_PREDICT = #{siftPredict,jdbcType=VARCHAR},
+		POLYPHEN2 =
+		#{polyphen2,jdbcType=VARCHAR},
+		POLYPHEN2_PREDICT =
+		#{polyphen2Predict,jdbcType=VARCHAR},
+		MUTATION_TASTER =
+		#{mutationTaster,jdbcType=VARCHAR},
+		MUTATION_TASTER_PREDICT =
+		#{mutationTasterPredict,jdbcType=VARCHAR},
+		GERP =
+		#{gerp,jdbcType=VARCHAR},
+		GERP_PREDICT =
+		#{gerpPredict,jdbcType=VARCHAR},
+		SPIDEX = #{spidex,jdbcType=VARCHAR},
+		DBNSFPINTERPRO = #{dbnsfpinterpro,jdbcType=VARCHAR},
+		REVEL_SCORE =
+		#{revelScore,jdbcType=VARCHAR},
+		MCAP_SCORE =
+		#{mcapScore,jdbcType=VARCHAR},
+		MCAP_PREDICT =
+		#{mcapPredict,jdbcType=VARCHAR},
+		SHEET_ID =
+		#{sheetId,jdbcType=VARCHAR},
+		DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+		CLINICAL_JUDGMENT = #{clinicalJudgment,jdbcType=VARCHAR},
+		MUTATION_SOURCE = #{mutationSource,jdbcType=VARCHAR},
+		TECHNICAL_FAMILY_GROUP_ID =
+		#{technicalFamilyGroupId,jdbcType=VARCHAR},
+		SOURCE_REF =
+		#{sourceRef,jdbcType=VARCHAR},
+		MUTATION_OBJECT_ID =
+		#{mutationObjectId,jdbcType=VARCHAR},
+		CNV_RESULT_ID =
+		#{cnvResultId,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="getByObjectId" parameterType="string" resultMap="ResultMapWithBLOBs">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_RECORD where
+		MUTATION_OBJECT_ID=#{0}
+	</select>
+
+	<select id="getByCnvResultId" parameterType="string" resultMap="ResultMapWithBLOBs">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_RECORD where
+		CNV_RESULT_ID=#{0}
+	</select>
+	<select id="selectByFamilyId" parameterType="string" resultMap="BaseResultMap">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_RECORD where
+		TECHNICAL_FAMILY_GROUP_ID=#{0}
+	</select>
+	
+	<select id="selectByMutationId" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_RECORD where
+		MUTATION_OBJECT_ID=#{0}
+	</select>
+
+	<select id="getIDsByCnvResultId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select ID from LIMS_TESTING_TECHNICAL_ANALY_RECORD where
+		CNV_RESULT_ID=#{0}
+	</select>
+
+	<select id="myCollectionCount" parameterType="string"
+		resultType="java.lang.String">
+		select r.ID from LIMS_TESTING_TECHNICAL_ANALY_RECORD r	
+		where
+		r.TECHNICAL_FAMILY_GROUP_ID=#{0}
+		<if test="technicalTaskId !=null and technicalTaskId !=''">
+			and r.TECHNICAL_TASK_ID=#{technicalTaskId,jdbcType=VARCHAR}
+		</if>
+		
+		GROUP BY r.MUTATION_OBJECT_ID
+	</select>
+
+	<delete id="delByMutationObjId" parameterType="string">
+		delete from LIMS_TESTING_TECHNICAL_ANALY_RECORD where MUTATION_OBJECT_ID =
+		#{0}
+	</delete>
+	
+	<select id="selectByFamilyIdAndIds" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from LIMS_TESTING_TECHNICAL_ANALY_RECORD where 1=1
+		<if test="technicalFamilyGroupId !=null and technicalFamilyGroupId !=''">
+			and TECHNICAL_FAMILY_GROUP_ID=#{technicalFamilyGroupId,jdbcType=VARCHAR}
+		</if>
+		<if test="ids !=null">
+			and id in
+		 <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+			 #{item}
+		 </foreach>
+		</if>
+	</select>
+	
+	<select id="selectByCondition" parameterType="com.todaysoft.lims.technical.model.request.MutationCollectionRequest"
+		resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_TECHNICAL_ANALY_RECORD 
+		<include refid="SearchFilters"></include>
+	</select>
+	
+	<sql id="SearchFilters">
+		WHERE 1 = 1
+		<if test="_parameter.analysisSampleId != null and _parameter.analysisSampleId != ''">
+			AND TECHNICAL_FAMILY_GROUP_ID = #{analysisSampleId}
+		</if>
+		<if test="_parameter.method != null and _parameter.method != ''">
+			AND VERIFY_METHOD = #{method}
+		</if>
+
+		<if test="_parameter.mutationId != null and _parameter.mutationId != ''">
+			AND MUTATION_OBJECT_ID = #{mutationId}
+		</if>
+	</sql>
+
+</mapper>

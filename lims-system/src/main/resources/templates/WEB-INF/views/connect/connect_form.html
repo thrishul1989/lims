@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>接头表单-更新接头</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/connect/list.do">接头管理</a></li>
+							<li class="active"><strong>新增接头</strong></li>
+						</ol>
+					</div>
+				</div>
+				<!-- <div class="ibox">
+					<div class="ibox-title">
+						<strong>新增接头</strong>
+					</div>
+					<div class="ibox-content"> -->
+						<form class="form-horizontal m-t toggle-form" id="choseForm"
+							action="${base}/connect/create.do" method="post">
+						<input type="hidden" id="id" name="id" value="${(connect.id)!?html}" />
+						<input type="hidden" id="connectNo" name="connectNo" value="${(connect.connectNum)!?html}" />
+							<div class="search-form">
+							
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">接头号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="connectNum" id="copyNum"
+											value="${(connect.connectNum)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">接头序列：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="connectSequence" 
+											value="${(connect.connectSequence)!?html}" />
+									</div>
+								</div>
+
+							</div>
+
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class=" btn btn-primary " type="button" id="sub">保存</button>
+									
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</div>
+							
+						</form>
+					<!-- </div>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	
+	 function checkForm(){
+		 $("#choseForm").validate({
+	   		 rules: {
+	   			 connectNum:{
+	   				 required:true,
+	   				 remote:{
+							url: "${base}/connect/checkedconnectNum?connectNum?"+$("#connectNum").val()
+						 }
+	   			 },
+	   			
+	   		 },
+	   		 messages:{
+	   			connectNum:{
+	   				 required:"不能为空！" ,
+	   				 remote:"接头号已存在，请重新输入！"
+	   			 },
+	   			
+	   		 }
+	   		
+	   	});
+	}
+		$(function(){
+			
+			var connectNo = $("#connectNo").val();
+			var updateID = '';
+			updateID  = $("#id").val();
+			if(updateID.length>0){
+				$("strong").html("修改接头");
+		        $('#choseForm').attr('action', '${base}/connect/modify.do');
+		       
+			}else{
+				checkForm();
+			} 
+			
+		$("#sub").click(function(){
+				if(connectNo != $("#copyNum").val()){
+					checkForm();
+				}
+				 $("#choseForm").submit();
+			});
+		
+		});
+	    
+	function goBack() {
+		window.history.back(-1);
+	}
+	</script>
+</body>
+</html>

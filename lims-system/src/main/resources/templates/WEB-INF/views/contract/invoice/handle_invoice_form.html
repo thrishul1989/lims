@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:c="http://www.w3.org/1999/html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>发票申请</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>发票管理</span>
+                            </li>
+                            <li class="active">
+                                <strong>合同开票处理</strong>
+                            </li>
+                            <div style="float: right;">
+								<a href="javascript:history.go(-1)" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right">
+									<img src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>申请信息</h5>
+                    </div>
+                    <div class="ibox-content">
+                    	
+                        <div class="row">
+                            <div class="col-lg-12">
+                            
+							 <#include "handle_invoice_info.html" />
+                                
+                              <form id="contract_invoice_form" class="form-horizontal m-t" action="${base}/contract/handelInvoice.do" method="post">
+                                 
+                                    <input id="resultstatus" name="status" type="hidden" value="3"/>
+                                    <input  name="contractId" id="contractId" type="hidden" value="${contract.id!?html}"/>
+                                    <input  name="invoiceApplyId" id="invoiceApplyId" type="hidden" value="${record.id!?html}"/>
+			                       
+										
+										<div class="ibox">
+											<div class="ibox-title">
+												<h5>开票信息</h5>
+												<a onclick="add(this)"
+													style="position: relative; bottom: 11px"
+													class="btn btn-sm btn-success" > 
+													 新增
+												</a>
+											</div>
+											<div class="ibox-content" id="mainContent">
+											
+												<div class="mainGroup" >
+												
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">开票单位:</label>
+														<div class="col-sm-3">
+																<input type="text"  class="form-control"  name="invoiceCompany" 
+															value="${contract.contractPartyB.companyName!?html}" readonly="readonly" />
+														</div>
+														<label class="col-sm-2 control-label control-required">开票金额:</label>
+														<div class="col-sm-3">
+															<input class="form-control" type="text" id="invoiceAccount" name="invoiceAccount"/>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">开票人：</label>
+														<div class="col-sm-3">
+															<select class="form-control" id="invoicePerson" name="invoicePerson">
+																<#if userlist??>
+																	<#list userlist as user>
+																		<option value="${user.id}">${user.name!?html}</option>
+																	</#list>
+																</#if>
+															</select>
+														</div>
+														
+														<label class="col-sm-2 control-label control-required">开票时间：</label>
+														<div class="col-sm-3">
+															<input type="text" id="invoiceTime" value="${.now?string('yyyy-MM-dd')}" 
+																class="form-control laydate-icon" name="invoiceTime" 
+																onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"/>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">开票单号:</label>
+														<div class="col-sm-3">
+															<input id="invoicerNo" class="form-control" type="text" id="invoicerNo" name="invoicerNo"/>
+														</div>
+														<label class="col-sm-2 control-label ">领取人:</label>
+														<div class="col-sm-3">
+															<input id="receiverName" class="form-control" type="text" name="receiverName"/>
+														</div>
+													</div>
+													
+													<DIV style="BORDER-TOP: #adadad 1px dashed; OVERFLOW: hidden; HEIGHT: 1px"></DIV>
+												</div>
+											</div>
+									</div>
+									
+								
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="ibox">
+											<div class="ibox-title">
+												<h5>审核意见</h5>
+												<div class="ibox-tools">
+													<a class="collapse-link"> <i class="fa fa-chevron-down"></i>
+													</a>
+												</div>
+											</div>
+											<div class="ibox-content">
+												<textarea id="remark" class="form-control" name="remark" rows="4"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+                                <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-5">
+                                         	<button type="button" class="btn btn-primary" id="button_submit_rejectapply">审核不通过</button>
+                                         	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button type="submit" class="btn btn-primary" id="createButton" >确认开票</button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-primary goback" type="button">返回</button>
+                                        </div>
+                                </div>
+                               </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+    <script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+    <script src="${plugins}/hplus/content.min.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <!-- 表单验证 -->
+	<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+	<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+    <script type="text/javascript">
+    var base = "${base}";
+    $(function () {
+    	
+        $("#contract_invoice_form").validate({
+        	submitHandler:function(form){
+        		
+        		//form.submit(); 
+	        	var mainGroup=[];
+				var mainGroups=$(".mainGroup");
+			
+				$.each(mainGroups,function(index,obj){
+					
+					var invoiceAccount =Number($(obj).find("input[name='invoiceAccount']").val());
+					
+					if(invoiceAccount!=null && invoiceAccount!=undefined && invoiceAccount !=NaN ){
+						invoiceAccount = invoiceAccount *100;
+					}
+					console.info(invoiceAccount);
+					var main={invoiceCompany:$(obj).find("input[name='invoiceCompany']").val(),invoicePerson:$(obj).find('select[name="invoicePerson"]').val(),
+							invoiceAccount:invoiceAccount,invoiceTime:$(obj).find("input[name='invoiceTime']").val(),
+							invoicerNo:$(obj).find("input[name='invoicerNo']").val(),receiverName:$(obj).find("input[name='receiverName']").val()};
+					mainGroup.push(main);
+				});
+				
+				$("#createButton").attr('disabled', 'disabled');
+				$("#createButton").val('提交中');
+				var layerObject = parent.parent.layer;
+				var loadindex = layerObject.load(); 
+				
+				$.ajax({
+		            type: "post",
+		            url: base+"/contract/handelInvoice.do",
+		            data: {
+		            	status:$("#resultstatus").val(),
+		            	contractId:$("#contractId").val(),
+		            	invoiceApplyId:$("#invoiceApplyId").val(),
+		            	remark:$("#remark").val(),
+		            	detail:JSON.stringify(mainGroup)},
+		            dataType: "json",
+		            success: function(data){
+		            	window.location.href=base+"/contract/contractInvoiceList.do";
+		            	layerObject.close(loadindex);
+		            },
+		            error:function(){
+		            	 layerObject.close(loadindex);
+		            	$("#createButton").removeAttr("disabled");
+		            	$("#createButton").val('提交'); 
+		            }
+						           
+				});
+				
+				
+				
+		     },
+            rules: {
+            	invoiceAccount: {
+            		required:true,
+            		number:true,
+            	},
+            	invoicePerson:{
+            		required:true,
+            	},
+            	invoiceTime:{
+            		required:true,
+            	},
+            	invoicerNo:{
+            		required:true,
+            	}
+            },
+            messages: {
+            	invoiceAccount: {
+            		required:"开票金额必填",
+            	},
+            	invoicerNo:{
+            		required:"开票单号必填",
+            	}
+            }
+        });
+        
+        
+       $("#button_submit_rejectapply").click(function(){
+    	   $("#invoiceAccount").rules("remove"); 
+    	   $("#invoicePerson").rules("remove"); 
+    	   $("#invoiceTime").rules("remove"); 
+    	   $("#invoicerNo").rules("remove");  
+    	   $("#remark").rules("add",{ required: true, messages: { required: "拒绝申请，请给出审批备注!"} }); 
+    	   $("#resultstatus").val(2); //审核不通过 ，1->通过 2 不通过
+    	   $("#contract_invoice_form").submit();
+    	   $("#remark").rules("remove"); 
+    	   $("#invoiceAccount").rules("add",{ required: true,number:true, messages: { required: "开票金额必填"} }); 
+    	   $("#invoicePerson").rules("add",{ required: true, messages: { required: "开票人必填"} }); 
+    	   $("#invoiceTime").rules("add",{ required: true, messages: { required: "开票时间必填"} }); 
+    	   $("#invoicerNo").rules("add",{ required: true, messages: { required: "开票单号必填"} });  
+    	  
+       }) ;
+        
+       
+ });
+    
+    var i=0;
+    function add(obj){
+    	i=i+1;
+    	$(obj).parent().parent().find('#mainContent').append('<div style="margin-top:17px" class="mainGroup">'+
+    			'<img src="${system_images}/rubish.png" style="float: right;cursor: pointer;" onclick="remove(this)"/>'+
+    			'<div class="form-group">'+
+    			    '<label class="col-sm-2 control-label control-required"><span>*</span>开票单位：</label>'+
+    				'<div class="col-sm-3">'+
+    					'<input type="text" class="form-control" id="invoiceCompany'+i+'" name="invoiceCompany"'+
+    						' value="${contract.contractPartyB.companyName!?html}"  readonly="readonly" />'+
+    				'</div>'+
+    				'<label class="col-sm-2 control-label control-required"><span>*</span>开票金额：</label>'+
+    				
+    				'<div class="col-sm-3">'+
+					'<input type="text" class="form-control" id="invoiceAccount'+i+'" name="invoiceAccount"'+
+						' value="" />'+
+					'</div>'+
+    				
+    				'</div>'+
+    				
+    				
+    				'<div class="form-group">'+
+    					'<label class="col-sm-2 control-label control-required"><span>*</span>开票人：</label>'+
+	    				'<div class="col-sm-3">'+
+							$("#invoicePerson").prop("outerHTML")+
+						'</div>'+
+
+    				'<label class="col-sm-2 control-label control-required"><span>*</span>开票时间：</label>'+
+    				
+    				'<div class="col-sm-3">'+
+    					'<input type="text" class="form-control laydate-icon"'+
+    						'name="invoiceTime"  id="invoiceTime'+i+'" value="${.now?string('yyyy-MM-dd')}"'+
+    						'readonly="readonly" style="height: 34px"'+
+    						'onclick="laydate({istime: true, format: \'YYYY-MM-DD\',max: laydate.now()})" />'+
+    				'</div>'+
+    				
+    				'</div>'+
+    				
+    				
+    				'<div class="form-group">'+
+    				
+	    				'<label class="col-sm-2 control-label control-required"><span>*</span>开票单号：</label>'+
+	     				'<div class="col-sm-3">'+
+	     					'<input type="text" class="form-control" id="invoicerNo'+i+'" name="invoicerNo"'+
+	     						' value="" />'+
+	     				'</div>'+
+
+	    				'<label class="col-sm-2 control-label">领取人：</label>'+
+	    				'<div class="col-sm-3">'+
+	    						'<input type="text" class="form-control"  id="receiverName'+i+'" '+ 
+	    							' name="receiverName" value="" /></div> '+
+	    				
+	    				
+	    				'</div>'+
+    				
+
+    			'<DIV style="BORDER-TOP: #adadad 1px dashed; OVERFLOW: hidden; HEIGHT: 1px"></DIV></div>'+
+    				
+    '</div>');
+    }
+   
+    function remove(obj){
+    	$(obj).parent().remove();
+    }
+
+    
+    </script>
+</body>
+</html>

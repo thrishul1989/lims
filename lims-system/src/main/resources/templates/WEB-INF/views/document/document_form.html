@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>基因&疾病文献报道</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript" src="${system_js}/avalon.js"></script>
+
+<!-- 引入自定义包 -->
+
+<style>
+.select {
+	display: inline-block;
+	width: 30%;
+	height: 6.5%;
+	border-color: #e6e6e6;
+}
+
+/* button.btn.btn-default.dropdown-toggle {
+	padding: 14px;
+	background-color: white;
+	color: #c5c5c5;
+	border-color: #e5e6e7;
+} */
+
+
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">文献报道</a></li>
+							<li class="active"><strong> ${(flag)!?html} </strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>文献</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="documentForm" class="form-horizontal m-t" action="${base}/document/modify.do" method="post"
+							enctype='application/json'>
+							<input type="hidden" name="id" id="id" value="${(document.id)!?html}" /> 
+							<input type="hidden" name="knowledge" id="knowledge" value="" />
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">报道文献：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="title"
+											id="title" value="${(document.title)!?html}" />
+									</div>
+
+								</div>
+
+								
+								<div class="form-group">
+									
+									<label class="col-sm-2 control-label">文献链接：</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="link" id="link"
+											value="${(document.link)!?html}" />
+									</div>
+
+								</div>
+								
+								
+							<div ms-controller="addControll" >
+							
+							
+							<div ms-for="(index,el) in @knowledgeList" style="border:1px solid #9bdf70;background:#f0fbeb; paddin-top:10px"> 
+								<div class="form-group"  >
+									
+									<label class="col-sm-2 control-label">基因OMIM：</label>	
+									<div class="col-sm-3">
+										<div class="input-group"  >
+											<input type="text" class="form-control" ms-attr="{id:'geneId'+ index}"  placeholder="请选择" ms-duplex-string="el.geneOmim" />
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+											<input class='form-control' type='hidden'   ms-duplex-string="el.geneId"/>
+										</div> 
+									</div>
+									
+									
+									
+									
+									<label class="col-sm-2 control-label">报道疾病：</label>	
+									<div class="col-sm-3">
+										<div class="input-group"  >
+										<input type="text" class="form-control" ms-attr="{id:'diseaseId'+ index}"  placeholder="请选择" ms-duplex-string="el.diseaseOmim" />
+										<div class="input-group-btn">
+											<button type="button"
+												class="btn btn-default dropdown-toggle"
+												data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right" role="menu">
+											</ul>
+										</div>
+										<!-- /btn-group -->
+										<input class='form-control' type='hidden'   ms-duplex-string="el.diseaseId"/>
+									</div>
+									</div>
+								
+									<div >
+									<input type="button" id="but" class="btn btn-primary" value="删除" ms-click="@remove(e)"/>
+									</div>
+									
+								</div>
+								  
+							
+							<div class="form-group" >
+							
+							<label class="col-sm-2 control-label">报道疾病：</label>	
+									<div class="col-sm-3">
+									<!-- <input class='form-control' type='text'   ms-duplex-string="el.diseaseOmim"/> -->
+								 	<input class='form-control' type='text'   ms-duplex-string="el.diseaseEnName"/> 
+							</div>
+							</div>
+							
+							<div class="form-group" >
+								<label class="col-sm-2 control-label">报道位点：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="locus"
+										id="locus"  ms-duplex-string="el.locus" />
+								</div>
+								
+									<label class="col-sm-2 control-label">氨基酸变化：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="aminoAcid"
+											id="aminoAcid" ms-duplex-string="el.aminoAcid" />
+									</div>
+
+								
+							</div>
+							
+							
+							
+							
+							
+							
+							<div class="form-group">
+									<label class="col-sm-2 control-label">核苷酸变化：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="ribotide"
+											id="ribotide" ms-duplex-string="el.ribotide" />
+									</div>
+									
+									<label class="col-sm-2 control-label">致病因子：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="vfs" ms-duplex-string="el.vfs" >
+										<option selected value="">---请选择---</option>
+									 	<@dict_entries category="VFS"> 
+	                                        <#if entries??> 
+	                                        <#list entries as entry>
+												<option value="${entry.value!}" <#if entry.value==(document.vfs!?html)>selected='selected'</#if>
+											>${entry.text!?html}</option> 
+											</#list> 
+											</#if> 
+										</@dict_entries>
+										</select>
+											
+									</div>
+									
+							</div>
+							
+							<div class="form-group" >
+									<label class="col-sm-2 control-label">突变碱基：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="mutationBbase"
+											id="mutationBbase" ms-duplex-string="el.mutationBbase" />
+									</div>
+								
+								<label class="col-sm-2 control-label">参考碱基：</label>	
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="referBbase"
+										id="referBbase"  ms-duplex-string="el.referBbase"  />
+								</div>
+							</div>
+								
+							
+							
+							
+							</div>
+							<div class="col-sm-9"></div>
+							<div class="col-sm-2">
+									 <input type="button" id="but" class="btn btn-primary" value="增加文献知识库" ms-click="@add(e)"/>
+							</div>
+							
+						</div>
+						
+								
+								
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+										<button type="submit" class="btn btn-primary">保存</button>
+										<button class="btn btn-primary" type="button"
+											onclick="history.go(-1)">返回</button>
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+$(function(){
+	
+		var knowledgeList  = [];
+		 <#if knowledgeList??>
+		 knowledgeList = ${knowledgeList};
+		</#if>
+	
+
+		
+		var record = function () {
+			this.geneId=""
+			this.geneOmim=""
+			this.diseaseId = ""
+			this.diseaseOmim = ""
+			this.diseaseEnName = ""
+			this.locus = ""
+			this.referBbase = ""
+			this.mutationBbase = ""
+			this.aminoAcid = ""
+			this.ribotide = ""
+			this.vfs =""
+		};
+		
+		
+		var selected ="";
+		var i = knowledgeList.length;
+		vm = avalon.define({
+			$id: "addControll",
+			knowledgeList:knowledgeList,
+			add: function (e) {
+				var knowledgeArray = this.knowledgeList;
+				knowledgeArray.push(new record()); 
+				$("#geneId"+i).bsSuggest('init', {
+					url : "${base}/disease/getGenesAll.do?symbol=",
+					getDataMethod : "url",
+					idField : "id",
+					keyField : "code",
+					effectiveFields : [ "code","symbol"],
+					effectiveFieldsAlias : {
+						code : "基因OMIM",
+						symbol : "基因名称"
+					}
+				}).on('onDataRequestSuccess', function(e, result) {
+
+				}).on('onSetSelectValue', function(e, keyword, data) {
+					knowledgeArray[i-1].geneId = data.id;
+					knowledgeArray[i-1].geneOmim = data.code;
+				}).on('onUnsetSelectValue', function() {
+				});
+				
+				
+				$("#diseaseId"+i).bsSuggest('init', {
+					url : "${base}/disease/getDiseaseAll.do?nameEn=",
+					getDataMethod : "url",
+					idField : "id",
+					keyField : "nameEn",
+					effectiveFields : [ "nameEn"],
+					effectiveFieldsAlias : {
+						nameEn : "疾病名称",
+					}
+				}).on('onDataRequestSuccess', function(e, result) {
+
+				}).on('onSetSelectValue', function(e, keyword, data) {
+					knowledgeArray[i-1].diseaseId = data.id;
+					knowledgeArray[i-1].diseaseOmim = data.nameEn;
+				}).on('onUnsetSelectValue', function() {
+				 	knowledgeArray[i-1].diseaseId="";
+				});
+				i++; //自增
+			},
+			remove:function(e,index){
+				index = i-1;
+				this.knowledgeList.splice(index,1);
+				i--;
+			},
+			
+		});
+	 
+	
+		
+		
+		vm.$watch('onReady', function(){
+			if(knowledgeList.length > 0){
+				for(var i = 0;i < knowledgeList.length;i++){
+					var s=$("#geneId"+i).attr("id");
+					$("#geneId"+i).bsSuggest('init', {
+						url : "${base}/disease/getGenesAll.do?symbol=",
+						getDataMethod : "url",
+						idField : "id",
+						keyField : "code",
+						effectiveFields : [ "code","symbol"],
+						effectiveFieldsAlias : {
+							code : "基因OMIM",
+							symbol : "基因名称",
+						}
+					}).on('onDataRequestSuccess', function(e, result) {
+
+					}).on('onSetSelectValue', function(e, keyword, data) {
+						
+						var index = this.id.substr(6);
+						
+						vm.knowledgeList[index].geneId = data.id;
+						vm.knowledgeList[index].geneOmim = data.code;
+						
+					}).on('onUnsetSelectValue', function() {
+					});
+					
+					
+					
+					var s=$("#diseaseId"+i).attr("id");
+					$("#diseaseId"+i).bsSuggest('init', {
+						url : "${base}/disease/getDiseaseAll.do?nameEn=",
+						getDataMethod : "url",
+						idField : "id",
+						keyField : "nameEn",
+						effectiveFields : [ "nameEn"],
+						effectiveFieldsAlias : {
+							nameEn : "疾病名称",
+						}
+					}).on('onDataRequestSuccess', function(e, result) {
+
+					}).on('onSetSelectValue', function(e, keyword, data) {
+						
+						var index = this.id.substr(9);
+						vm.knowledgeList[index].diseaseId = data.id;
+						vm.knowledgeList[index].diseaseOmim = data.nameEn;
+					}).on('onUnsetSelectValue', function() {
+						var index = this.id.substr(9);
+						vm.knowledgeList[index].diseaseId ="";
+					});
+					
+				}
+			}
+		})	
+		
+
+		$("#documentForm").validate({
+			  submitHandler:function(form){
+				  $("#knowledge").val(JSON.stringify(vm.knowledgeList.$model));
+				  console.info(JSON.stringify(vm.knowledgeList.$model));
+				  form.submit();
+			  },
+		      rules: {
+		      	title: {
+		      		required:true,
+		      		
+		      	},
+		      },
+		      messages: {
+		    	  title:  {
+		          	required: "请输入文献标题",
+		          }
+		      }
+		 });
+  
+ 
+});
+</script>
+
+</html>

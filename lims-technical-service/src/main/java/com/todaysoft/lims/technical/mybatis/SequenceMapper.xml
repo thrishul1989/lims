@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.SequenceMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.Sequence">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CURRENT_VALUE" property="currentValue"
+			jdbcType="INTEGER" />
+		<result column="INCREMENT" property="increment" jdbcType="INTEGER" />
+		<result column="BATCH_DATE" property="batchDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, NAME, CURRENT_VALUE, INCREMENT, BATCH_DATE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_SEQUENCE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_SEQUENCE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Sequence">
+		insert into LIMS_SEQUENCE (ID, NAME, CURRENT_VALUE,
+		INCREMENT, BATCH_DATE)
+		values (#{id,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{currentValue,jdbcType=INTEGER},
+		#{increment,jdbcType=INTEGER}, #{batchDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Sequence">
+		insert into LIMS_SEQUENCE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="currentValue != null">
+				CURRENT_VALUE,
+			</if>
+			<if test="increment != null">
+				INCREMENT,
+			</if>
+			<if test="batchDate != null">
+				BATCH_DATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="currentValue != null">
+				#{currentValue,jdbcType=INTEGER},
+			</if>
+			<if test="increment != null">
+				#{increment,jdbcType=INTEGER},
+			</if>
+			<if test="batchDate != null">
+				#{batchDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Sequence">
+		update LIMS_SEQUENCE
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="currentValue != null">
+				CURRENT_VALUE = #{currentValue,jdbcType=INTEGER},
+			</if>
+			<if test="increment != null">
+				INCREMENT = #{increment,jdbcType=INTEGER},
+			</if>
+			<if test="batchDate != null">
+				BATCH_DATE = #{batchDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Sequence">
+		update LIMS_SEQUENCE
+		set NAME = #{name,jdbcType=VARCHAR},
+		CURRENT_VALUE = #{currentValue,jdbcType=INTEGER},
+		INCREMENT =
+		#{increment,jdbcType=INTEGER},
+		BATCH_DATE =
+		#{batchDate,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="string">
+		select * from LIMS_SEQUENCE where NAME=#{0}
+	</select>
+</mapper>

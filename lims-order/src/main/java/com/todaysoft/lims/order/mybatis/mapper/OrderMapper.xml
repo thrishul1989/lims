@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.OrderMapper">
+
+    <!-- 订单列表对象 -->
+    <resultMap id="BaseOrderModel" type="com.todaysoft.lims.order.mybatis.model.BaseOrderModel">
+        <id column="ID" property="id" />
+        <result column="ORDER_CODE" property="orderCode" />
+        <result column="MARKETING_CENTER_ID" property="orderMarketingCenterId" />
+        <result column="MARKETING_CENTER_NAME" property="orderMarketingCenterName" />
+        <result column="ORDER_IF_URGENT" property="orderIfUrgent" />
+        <result column="CONTRACT_ID" property="contractId" />
+        <result column="CONTRACT_CODE" property="contractCode" />
+        <result column="CONTRACT_NAME" property="contractName" />
+        <result column="CUSTOMER_ID" property="customerId" />
+        <result column="CUSTOMER_NAME" property="customerName" />
+        <result column="CUSTOMER_COMPANY_ID" property="customerCompanyId" />
+        <result column="CUSTOMER_COMPANY_NAME" property="customerCompanyName" />
+        <result column="SALESMAN_NAME" property="salesmanName" />
+        <result column="PROJECT_MANAGER" property="projectManager" />
+        <result column="EXAMINEE_NAME" property="examineeName" />
+        <result column="ORDER_SUBMIT_TIME" property="orderSubmitTime"/>
+        <result column="ORDER_STATUS" property="orderStatus"/>
+        <result column="PAYMENT_STATUS" property="paymentStatus"/>
+        <result column="RECEIVED_SAMPLE_STATUS" property="receivedSampleStatus"/>
+        <result column="SHEDULE_STATUS" property="sheduleStatus" />
+        <result column="SUBMIT_SOURCE" property="submitSource"/>
+        <result column="PAY_TYPE" property="payType"/>
+        <result column="INCOMING_AMOUNT" property="incomingAmount"/>
+        <result column="SCHEDULE_PAYMENT_STATUS" property="schedulePaymentStatus"/>
+        
+    </resultMap>
+    
+    <resultMap id="ScheduleMonitorOrderModel" type="com.todaysoft.lims.order.mybatis.model.ScheduleMonitorOrderModel" extends="BaseOrderModel">
+        <result column="ORDER_POSTPONED" property="postponed" />
+        <result column="ORDER_POSTPONED_DAYS" property="postponedDays" />
+        <result column="ORDER_PLANNED_FINISH_DATE" property="plannedFinishDate"/>
+    </resultMap>
+    
+    <resultMap id="TestingMonitorOrderModel" type="com.todaysoft.lims.order.mybatis.model.TestingMonitorOrderModel" extends="BaseOrderModel">
+    </resultMap>
+    
+     <resultMap id="CommonOrderModel" type="com.todaysoft.lims.order.mybatis.model.CommonOrderModel" extends="BaseOrderModel">
+    	<result column="NEED_PAY" property="needPay" />
+        <result column="REMARK" property="remark"/>
+        <result column="DELAY_ID" property="delayId" />
+        <result column="PLAN_PAY_TIME" property="planPayTime"/>
+        <result column="DELAY_CHECK_STATUS" property="delayCheckStatus" />
+        <result column="REDUCE_ID" property="reduceId" />
+        <result column="REDUCE_APPLY_AMOUNT" property="reduceApplyAmount"/>
+        <result column="REDUCE_CHECK_AMOUNT" property="reduceCheckAmount" />
+        <result column="CONTRACT_PARTB" property="contractPartB"/>
+        <result column="CONTRACT_SETTLEMENT_MODE" property="contractsettlementMode" />
+    </resultMap>
+    
+    <sql id="BaseSelectColumns">
+        o.ID AS ID,
+        o.CODE AS ORDER_CODE,
+        o.SUBMIT_TIME AS ORDER_SUBMIT_TIME,
+        o.CREATOR_NAME AS SALESMAN_NAME,
+        o.PROJECT_MANAGER AS PROJECT_MANAGER,
+        o.TESTING_STATUS AS ORDER_STATUS,
+        o.PAYMENT_STATUS AS PAYMENT_STATUS,
+        o.IF_URGENT AS ORDER_IF_URGENT,
+        mc.ID AS MARKETING_CENTER_ID,
+        mc.NAME AS MARKETING_CENTER_NAME,
+        contract.ID AS CONTRACT_ID,
+        contract.CODE AS CONTRACT_CODE,
+        contract.NAME AS CONTRACT_NAME,
+        customer.ID AS CUSTOMER_ID,
+        customer.REAL_NAME AS CUSTOMER_NAME,
+        company.ID AS CUSTOMER_COMPANY_ID,
+        company.NAME AS CUSTOMER_COMPANY_NAME,
+        examinee.NAME AS EXAMINEE_NAME
+    </sql>
+    
+    <sql id="BaseSelectTables">
+        LIMS_ORDER o
+        LEFT JOIN LIMS_TESTING_TYPE mc ON o.ORDER_TYPE = mc.ID
+        LEFT JOIN LIMS_CONTRACT contract ON o.CONTRACT_ID = contract.ID
+        LEFT JOIN APP_USER_INFO customer ON o.OWNER_ID = customer.ID
+        LEFT JOIN APP_COMPANY company ON customer.INSTITUTION_ID = company.ID
+        LEFT JOIN LIMS_ORDER_EXAMINEE examinee on o.ID = examinee.ORDER_ID
+    </sql>
+    
+    <sql id="BaseSelectFilters">
+        o.DEL_FLAG = 0 AND o.TESTING_STATUS != 0
+        <if test="_parameter.orderCode != null and _parameter.orderCode != ''" >
+            <bind name="orderCodePattern" value="_parameter.orderCode + '%'" />
+            AND o.CODE LIKE #{orderCodePattern}
+        </if>
+        <if test="_parameter.contractCode != null and _parameter.contractCode != ''" >
+            <bind name="contractCodePattern" value="_parameter.contractCode + '%'" />
+            AND contract.CODE LIKE #{contractCodePattern}
+        </if>
+        <if test="_parameter.contractName != null and _parameter.contractName != ''" >
+            <bind name="contractNamePattern" value="_parameter.contractName + '%'" />
+            AND contract.NAME LIKE #{contractNamePattern}
+        </if>
+        <if test="_parameter.marketingCenterId != null and _parameter.marketingCenterId != ''" >
+            AND o.ORDER_TYPE = #{_parameter.marketingCenterId}
+        </if>
+        <if test="_parameter.examineeName != null and _parameter.examineeName != ''" >
+            <bind name="examineeNamePattern" value="_parameter.examineeName + '%'" />
+            AND examinee.NAME LIKE #{examineeNamePattern}
+        </if>
+        <if test="_parameter.customerName != null and _parameter.customerName != ''" >
+            <bind name="customerNamePattern" value="_parameter.customerName + '%'" />
+            AND customer.REAL_NAME LIKE #{customerNamePattern}
+        </if>
+        <if test="_parameter.customerCompanyName != null and _parameter.customerCompanyName != ''" >
+            <bind name="customerCompanyNamePattern" value="_parameter.customerCompanyName + '%'" />
+            AND company.NAME LIKE #{customerCompanyNamePattern}
+        </if>
+        <if test="_parameter.salesmanName != null and _parameter.salesmanName != ''" >
+            <bind name="salesmanNamePattern" value="_parameter.salesmanName + '%'" />
+            AND o.CREATOR_NAME LIKE #{salesmanNamePattern}
+        </if>
+        <if test="_parameter.submitStartDate != null" >
+            AND o.SUBMIT_TIME &gt;= #{_parameter.submitStartDate}
+        </if>
+        <if test="_parameter.submitEndDate != null" >
+            AND o.SUBMIT_TIME &lt; #{_parameter.submitEndDate}
+        </if>
+        <if test="_parameter.status != null" >
+            AND o.TESTING_STATUS = #{_parameter.status}
+        </if>
+        <if test="_parameter.paymentStatus != null" >
+            AND o.PAYMENT_STATUS = #{_parameter.paymentStatus}
+        </if>
+        <if test="_parameter.filter != null and _parameter.filter.disabled == false">
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND
+            (
+                (o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>)
+                OR (EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>))
+            )   
+            </if>
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts == null or _parameter.filter.ownerDepts.size() == 0)">
+            AND o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>)   
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts == null and _parameter.filter.ownerDepts.size() == 0)">
+            AND 1 = 2
+            </if>
+        </if>
+    </sql>
+    
+    <sql id="BaseSelectLimit">
+        <if test="_parameter.offset != null and _parameter.limit != null" >
+            LIMIT #{_parameter.offset}, #{_parameter.limit}
+        </if>
+    </sql>
+    
+    <sql id="ScheduleMonitorSelectFilters">
+        <include refid="BaseSelectFilters"></include>
+        <if test="_parameter.sampleCode != null and _parameter.sampleCode != ''" >
+        AND 
+        (
+          (EXISTS (SELECT ops.ID FROM LIMS_ORDER_PRIMARY_SAMPLE ops WHERE ops.ORDER_ID = o.ID AND ops.SAMPLE_CODE = #{_parameter.sampleCode}))
+          OR (EXISTS (SELECT oss.ID FROM LIMS_ORDER_SUBSIDIARY_SAMPLE oss WHERE oss.ORDER_ID = o.ID AND oss.SAMPLE_CODE = #{_parameter.sampleCode}))  
+          OR (EXISTS (SELECT ors.ID FROM LIMS_ORDER_RESEARCH_SAMPLE ors WHERE ors.ORDER_ID = o.ID AND ors.SAMPLE_CODE = #{_parameter.sampleCode}))
+        )
+        </if>
+        <if test="_parameter.postponedNode != null and _parameter.postponedNode != ''" >
+            AND spt.ACTIVED = 1 AND spt.POSTPONED = 1 AND spt.TASK_NAME = #{_parameter.postponedNode}
+        </if>
+        <if test="_parameter.plannedFinishStartDate != null" >
+        AND osm.PLANNED_FINISH_DATE &gt;= #{_parameter.plannedFinishStartDate}
+        </if>
+        <if test="_parameter.plannedFinishEndDate != null" >
+        AND osm.PLANNED_FINISH_DATE &lt; #{_parameter.plannedFinishEndDate}
+        </if>
+        <if test="_parameter.priorityStatus == null" >
+        AND o.TESTING_STATUS not in(4,5)
+        </if>
+        <if test="_parameter.priorityStatus != null" >
+        AND o.TESTING_STATUS in(4,5)
+        </if>
+        <if test="_parameter.projectManager != null and _parameter.projectManager != ''" >
+            AND o.PROJECT_MANAGER = #{_parameter.projectManager}
+        </if>
+        <if test="_parameter.postponedNode != null and _parameter.postponedNode != ''" >
+            GROUP BY o.id	
+        </if>
+
+    </sql>
+    
+    <select id="countForScheduleMonitorOrderSearcher" resultType="int" parameterType="com.todaysoft.lims.order.mybatis.parameter.ScheduleMonitorOrderSearcher">
+        SELECT COUNT(t.id) FROM(
+        SELECT 
+            o.id
+        FROM 
+            <include refid="BaseSelectTables"></include>
+            LEFT JOIN LIMS_ORDER_SCHEDULE_MONITOR osm ON o.ID = osm.ORDER_ID
+            <if test="_parameter.postponedNode != null and _parameter.postponedNode != ''" >
+            	LEFT JOIN LIMS_SCHEDULE_PLAN_TASK spt on spt.order_id = o.id 
+            </if>
+        WHERE
+            <include refid="ScheduleMonitorSelectFilters"></include>
+            ) t
+    </select>
+    
+    <select id="searchScheduleMonitorOrders" resultMap="ScheduleMonitorOrderModel" parameterType="com.todaysoft.lims.order.mybatis.parameter.ScheduleMonitorOrderSearcher">
+        SELECT 
+            <include refid="BaseSelectColumns"></include>,
+            osm.POSTPONED AS ORDER_POSTPONED,
+            osm.POSTPONED_DAYS AS ORDER_POSTPONED_DAYS,
+            osm.PLANNED_FINISH_DATE AS ORDER_PLANNED_FINISH_DATE
+        FROM 
+            <include refid="BaseSelectTables"></include>
+            LEFT JOIN LIMS_ORDER_SCHEDULE_MONITOR osm ON o.ID = osm.ORDER_ID
+            <if test="_parameter.postponedNode != null and _parameter.postponedNode != ''" >
+            	LEFT JOIN LIMS_SCHEDULE_PLAN_TASK spt on spt.order_id = o.id
+            </if>
+        WHERE
+            <include refid="ScheduleMonitorSelectFilters"></include>     
+        ORDER BY o.IF_URGENT DESC, osm.POSTPONED_DAYS DESC, osm.PLANNED_FINISH_DATE, o.SUBMIT_TIME DESC
+        <include refid="BaseSelectLimit"></include>
+    </select>
+    
+    <!-- 状态查询开始 -->
+    <sql id="TestingMonitorSelectFilters">
+        <include refid="BaseSelectFilters"></include>
+        <if test="_parameter.sampleCode != null and _parameter.sampleCode != ''" >
+        AND 
+        (
+          (EXISTS (SELECT ops.ID FROM LIMS_ORDER_PRIMARY_SAMPLE ops WHERE ops.ORDER_ID = o.ID AND ops.SAMPLE_CODE = #{_parameter.sampleCode}))
+          OR (EXISTS (SELECT oss.ID FROM LIMS_ORDER_SUBSIDIARY_SAMPLE oss WHERE oss.ORDER_ID = o.ID AND oss.SAMPLE_CODE = #{_parameter.sampleCode}))  
+          OR (EXISTS (SELECT ors.ID FROM LIMS_ORDER_RESEARCH_SAMPLE ors WHERE ors.ORDER_ID = o.ID AND ors.SAMPLE_CODE = #{_parameter.sampleCode}))
+        )
+        </if>
+        <if test="_parameter.projectManager != null and _parameter.projectManager != ''" >
+            AND o.PROJECT_MANAGER = #{_parameter.projectManager}
+        </if>
+    </sql>
+    
+    <select id="countForTestingMonitorOrderSearcher" resultType="int" parameterType="com.todaysoft.lims.order.mybatis.parameter.TestingMonitorOrderSearcher">
+        SELECT 
+            COUNT(o.id)
+        FROM 
+            <include refid="BaseSelectTables"></include>
+        WHERE
+            <include refid="TestingMonitorSelectFilters"></include>
+    </select>
+    
+    <select id="searchTestingMonitorOrders" resultMap="TestingMonitorOrderModel" parameterType="com.todaysoft.lims.order.mybatis.parameter.TestingMonitorOrderSearcher">
+        SELECT 
+            <include refid="BaseSelectColumns"></include>
+        FROM 
+            <include refid="BaseSelectTables"></include>
+        WHERE
+            <include refid="TestingMonitorSelectFilters"></include>
+        ORDER BY o.SUBMIT_TIME DESC
+        <include refid="BaseSelectLimit"></include>
+    </select>
+    <!-- 状态查询结束 -->
+    
+    
+     <sql id="CommonSelectTables">
+        LIMS_ORDER o
+        LEFT JOIN LIMS_TESTING_TYPE mc ON o.ORDER_TYPE = mc.ID
+        LEFT JOIN LIMS_CONTRACT contract ON o.CONTRACT_ID = contract.ID
+        LEFT JOIN APP_USER_INFO customer ON o.OWNER_ID = customer.ID
+        LEFT JOIN APP_COMPANY company ON customer.INSTITUTION_ID = company.ID
+        LEFT JOIN LIMS_ORDER_EXAMINEE examinee on o.ID = examinee.ORDER_ID
+    </sql>
+    
+     <sql id="CommonSelectColumns">
+        o.ID AS ID,
+        o.CODE AS ORDER_CODE,
+        contract.ID AS CONTRACT_ID,
+        contract.CODE AS CONTRACT_CODE,
+        contract.NAME AS CONTRACT_NAME,
+        mc.ID AS MARKETING_CENTER_ID,
+        mc.NAME AS MARKETING_CENTER_NAME,
+        examinee.NAME AS EXAMINEE_NAME,
+        customer.REAL_NAME AS CUSTOMER_NAME,
+        company.NAME AS CUSTOMER_COMPANY_NAME,
+        o.CREATOR_NAME AS SALESMAN_NAME,
+        ( o.AMOUNT + o.SUBSIDIARY_SAMPLE_AMOUNT - o.DISCOUNT_AMOUNT )*0.01 NEED_PAY,
+        o.TESTING_STATUS AS ORDER_STATUS,
+        o.PAYMENT_STATUS AS PAYMENT_STATUS, 
+        o.SUBMIT_TIME AS ORDER_SUBMIT_TIME,
+        o.SHEDULE_STATUS SHEDULE_STATUS,
+        o.REMARK REMARK,
+        o.PAY_TYPE PAY_TYPE,
+        o.SUBMIT_SOURCE,
+        o.RECEIVED_SAMPLE_STATUS,
+        o.PAYMENT_STATUS,
+        o.INCOMING_AMOUNT*0.01 INCOMING_AMOUNT,
+        o.SCHEDULE_PAYMENT_STATUS SCHEDULE_PAYMENT_STATUS
+    </sql>
+    
+     <sql id="CommonSelectFilters">
+        o.DEL_FLAG = 0 AND o.TESTING_STATUS != 0
+        <if test="_parameter.orderCode != null and _parameter.orderCode != ''" >
+            <bind name="orderCodePattern" value="'%' + _parameter.orderCode + '%'" />
+            AND o.CODE LIKE #{orderCodePattern}
+        </if>
+        <if test="_parameter.contractCode != null and _parameter.contractCode != ''" >
+            <bind name="contractCodePattern" value="'%' + _parameter.contractCode + '%'" />
+            AND contract.CODE LIKE #{contractCodePattern}
+        </if>
+        <if test="_parameter.contractName != null and _parameter.contractName != ''" >
+            <bind name="contractNamePattern" value="'%' + _parameter.contractName + '%'" />
+            AND contract.NAME LIKE #{contractNamePattern}
+        </if>
+        <if test="_parameter.marketingCenterId != null and _parameter.marketingCenterId != ''" >
+            AND o.ORDER_TYPE = #{_parameter.marketingCenterId}
+        </if>
+        <if test="_parameter.examineeName != null and _parameter.examineeName != ''" >
+            <bind name="examineeNamePattern" value="'%' + _parameter.examineeName + '%'" />
+            AND examinee.NAME LIKE #{examineeNamePattern}
+        </if>
+        
+        <if test="_parameter.contactPhone != null and _parameter.contactPhone != ''" >
+            AND examinee.CONTACT_PHONE = #{contactPhone}
+        </if>
+        
+        <if test="_parameter.customerName != null and _parameter.customerName != ''" >
+            <bind name="customerNamePattern" value="'%' + _parameter.customerName + '%'" />
+            AND customer.REAL_NAME LIKE #{customerNamePattern}
+        </if>
+         <if test="_parameter.ownerId != null and _parameter.ownerId != ''" >
+            AND customer.ID = #{ownerId}
+        </if>
+        <if test="_parameter.customerCompanyName != null and _parameter.customerCompanyName != ''" >
+            <bind name="customerCompanyNamePattern" value="'%' + _parameter.customerCompanyName + '%'" />
+            AND company.NAME LIKE #{customerCompanyNamePattern}
+        </if>
+        <if test="_parameter.salesmanName != null and _parameter.salesmanName != ''" >
+            <bind name="salesmanNamePattern" value="'%' + _parameter.salesmanName + '%'" />
+            AND o.CREATOR_NAME LIKE #{salesmanNamePattern}
+        </if>
+         <if test="_parameter.projectManager != null and _parameter.projectManager != ''" >
+             AND o.PROJECT_MANAGER = #{_parameter.projectManager}
+         </if>
+        <if test="_parameter.submitStartDate != null " >
+            AND o.SUBMIT_TIME &gt;= #{_parameter.submitStartDate}
+        </if>
+        <if test="_parameter.submitEndDate != null " >
+            AND o.SUBMIT_TIME &lt; #{_parameter.submitEndDate}
+        </if>
+        <if test="_parameter.testingStatus != null  " >
+            AND o.TESTING_STATUS = #{_parameter.testingStatus}
+        </if>
+
+        <if test="_parameter.notTestingStatus != null  " >
+            AND o.TESTING_STATUS != #{_parameter.notTestingStatus}
+        </if>
+        <if test="_parameter.paymentStatus != null " >
+             AND o.PAYMENT_STATUS = #{_parameter.paymentStatus} 
+        </if>
+        <if test="_parameter.recipientPhone != null and _parameter.recipientPhone != '' " >
+            AND o.RECIPIENT_PHONE = #{_parameter.recipientPhone}
+        </if>
+        <if test="_parameter.schedulePaymentStatus != null  " >
+            AND o.SCHEDULE_PAYMENT_STATUS = #{_parameter.schedulePaymentStatus}
+        </if> 
+        <if test="_parameter.settlementType != null  " >
+            AND o.SETTLEMENT_TYPE = #{_parameter.settlementType}
+        </if> 
+        <if test="_parameter.submitSource != null  "  >
+            AND o.SUBMIT_SOURCE = #{_parameter.submitSource}
+        </if> 
+        <if test="_parameter.sheduleStatus != null " >
+            AND o.SHEDULE_STATUS = #{_parameter.sheduleStatus}
+        </if> 
+        <if test="_parameter.sampleCode != null and _parameter.sampleCode != ''" >
+          <bind name="sampleCodePattern" value="'%' + _parameter.sampleCode + '%'" />
+        AND 
+        (
+          (EXISTS (SELECT ops.ID FROM LIMS_ORDER_PRIMARY_SAMPLE ops WHERE ops.ORDER_ID = o.ID AND ops.SAMPLE_CODE LIKE #{sampleCodePattern} ))
+          OR (EXISTS (SELECT oss.ID FROM LIMS_ORDER_SUBSIDIARY_SAMPLE oss WHERE oss.ORDER_ID = o.ID AND oss.SAMPLE_CODE LIKE #{sampleCodePattern}))  
+          OR (EXISTS (SELECT ors.ID FROM LIMS_ORDER_RESEARCH_SAMPLE ors WHERE ors.ORDER_ID = o.ID AND ors.SAMPLE_CODE LIKE #{sampleCodePattern}))
+        )
+        </if>
+        
+        <if test="_parameter.productCode != null and _parameter.productCode != ''" >
+          <bind name="productCodePattern" value="'%' + _parameter.productCode + '%'" />
+        AND 
+        (
+          (EXISTS (SELECT lop.ID FROM LIMS_ORDER_PRODUCT lop ,LIMS_PRODUCT lp  WHERE lop.ORDER_ID = o.ID AND lop.PRODUCT_ID =lp.ID AND lp.CODE LIKE #{productCodePattern} ))
+          OR (EXISTS (SELECT lors.ID FROM LIMS_ORDER_RESEARCH_SAMPLE lors,LIMS_ORDER_RESEARCH_PRODUCT lorp, LIMS_PRODUCT lp  WHERE lors.ORDER_ID = o.ID AND lorp.ORS_ID=lors.ID AND lp.ID = lorp.PRODUCT_ID AND lp.code LIKE #{productCodePattern}))  
+        )
+        </if>
+        
+        <if test="_parameter.filter != null and _parameter.filter.disabled == false">
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND
+            (
+                (o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>)
+                OR (EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>))
+            )   
+            </if>
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts == null or _parameter.filter.ownerDepts.size() == 0)">
+            AND o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>)   
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts == null and _parameter.filter.ownerDepts.size() == 0)">
+            AND 1 = 2
+            </if>
+        </if>
+    </sql>
+    
+    
+    <select id="countForOrderSearcher" resultType="int" parameterType="com.todaysoft.lims.order.mybatis.parameter.OrderSearcher">
+        SELECT
+            COUNT(DISTINCT o.id)
+        FROM 
+            <include refid="CommonSelectTables"></include>
+           		<if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireDelaySearch == true)">
+            		 <include refid="DelayTables"></include>
+                </if>
+                <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireRefundSearch == true)">
+	            	<include refid="RefundTables"></include>
+	            </if>
+	            <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireReduceSearch == true)">
+                <include refid="ReduceTables"></include>
+                </if>
+                <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireOrderContractSearch == true)">
+                 <include refid="OrderContractTables"></include>
+                </if>
+        WHERE
+            <include refid="CommonSelectFilters"></include>
+            	<if test=" (_parameter.columnFilter != null) and (_parameter.columnFilter.requireDelayColumn == true)">
+            		<include refid="DelayFilters"></include>
+                </if>
+                <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireRefundColumn == true)">
+	            	<include refid="RefundFilters"></include>
+	            </if>
+	            <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireReduceColumn == true)">
+	            <include refid="ReduceFilters"></include>
+	            </if>
+                <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireAlreadyRefundColumn == true)">
+                    <include refid="HandledRefundFilters"></include>
+                </if>
+
+        <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireOrderContractColumn == true)">
+	            <include refid="OrderContractFilters"></include>
+	            </if>
+    </select>
+    
+    
+     <select id="searchOrderList" resultMap="CommonOrderModel" parameterType="com.todaysoft.lims.order.mybatis.parameter.OrderSearcher">
+        SELECT DISTINCT
+            <include refid="CommonSelectColumns"></include>
+            <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireDelaySearch == true)">
+            	<include refid="DelaySelectColumns"></include>
+            </if>
+            <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireReduceSearch == true)">
+           		<include refid="DeduceSelectColumns"></include>
+            </if>
+            <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireOrderContractSearch == true)">
+           	 <include refid="OrderCotractSelectColumns"></include>
+            </if>
+        FROM 
+            <include refid="CommonSelectTables"></include>
+            <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireDelaySearch == true)">
+       			<include refid="DelayTables"></include>
+       		</if>
+       		<if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireRefundSearch == true)">
+	            <include refid="RefundTables"></include>
+	        </if>
+	        <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireReduceSearch == true)">
+	        <include refid="ReduceTables"></include>
+	        </if>
+	        <if test=" (_parameter.tableFilter != null) and (_parameter.tableFilter.requireOrderContractSearch == true)">
+                 <include refid="OrderContractTables"></include>
+            </if>
+        WHERE
+            <include refid="CommonSelectFilters"></include>
+            <if test=" (_parameter.columnFilter != null) and (_parameter.columnFilter.requireDelayColumn == true)">
+            	<include refid="DelayFilters"></include>
+            </if>
+            <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireRefundColumn == true)">
+	            <include refid="RefundFilters"></include>
+	        </if>
+             <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireAlreadyRefundColumn == true)">
+                 <include refid="HandledRefundFilters"></include>
+             </if>
+	        <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireReduceColumn == true)">
+	        <include refid="ReduceFilters"></include>
+	        </if>
+	        <if test=" (_parameter.tableFilter != null) and (_parameter.columnFilter.requireOrderContractColumn == true)">
+	            <include refid="OrderContractFilters"></include>
+	        </if>
+        ORDER BY   ${orderByClause}
+        <include refid="BaseSelectLimit"></include>
+    </select>
+    
+   
+    
+    <sql id="DelaySelectColumns">
+        ,IFNULL(delay.ID,"") AS DELAY_ID,
+        IFNULL(delay.PLAN_PAY_TIME,"") AS PLAN_PAY_TIME,
+        IFNULL(delay.STATUS,"") AS DELAY_CHECK_STATUS
+    </sql>
+    <sql id="DeduceSelectColumns">
+        ,IFNULL(reduce.ID,"") AS REDUCE_ID,
+        IFNULL(reduce.APPLY_AMOUNT*0.01,"0") AS REDUCE_APPLY_AMOUNT,
+        IFNULL(reduce.CHECK_AMOUNT*0.01,"0") AS REDUCE_CHECK_AMOUNT
+    </sql>
+    
+  	<sql id="OrderCotractSelectColumns">
+        ,IFNULL(partb.CONTACT_NAME,"") AS CONTRACT_PARTB,
+        IFNULL(content.SETTLEMENT_MODE,"") AS CONTRACT_SETTLEMENT_MODE
+    </sql>
+    
+    <sql id="OrderContractTables">
+        LEFT JOIN LIMS_CONTRACT_CONTENT content on contract.ID = content.CONTRACT_ID
+        LEFT JOIN LIMS_CONTRACT_PARTY_B partb on contract.ID = partb.CONTRACT_ID
+    </sql>
+    
+    <sql id="OrderContractFilters">
+         AND contract.ID IS NOT NULL
+         AND o.SETTLEMENT_TYPE = 2
+    </sql>
+    
+    
+    <sql id="DelayTables">
+        LEFT JOIN LIMS_ORDER_DELAY delay on o.ID = delay.ORDER_ID
+    </sql>
+    
+     <sql id="RefundTables">
+        LEFT JOIN LIMS_ORDER_REFUND refund on o.ID = refund.ORDER_ID
+    </sql>
+    
+    <sql id="ReduceTables">
+        LEFT JOIN LIMS_ORDER_REDUCE reduce on o.ID = reduce.ORDER_ID
+    </sql>
+   
+    
+    <sql id="DelayFilters">
+        <if test="1==1" >
+            AND o.PAYMENT_DELAY_STATUS = 2
+            AND o.TESTING_STATUS != 4
+            AND o.PAYMENT_STATUS = 0
+        </if>
+    </sql>
+    
+    <sql id="RefundFilters">
+          AND o.PAYMENT_STATUS = 2
+          AND refund.STATUS = 1
+          AND refund.HANDLER = 0
+    </sql>
+
+    <sql id="HandledRefundFilters">
+        AND o.PAYMENT_STATUS = 2
+        AND refund.STATUS = 1
+        AND refund.HANDLER = 1
+    </sql>
+    <sql id="ReduceFilters">
+    	AND (reduce.STATUS != 0 OR reduce.ID IS NULL )
+        AND (
+		o.AMOUNT + o.SUBSIDIARY_SAMPLE_AMOUNT - o.DISCOUNT_AMOUNT -o.INCOMING_AMOUNT - CASE
+		WHEN reduce.CHECK_AMOUNT IS NULL THEN
+			0
+		ELSE
+			reduce.CHECK_AMOUNT
+		END
+	) > 0
+	
+    </sql>
+    
+    <select id="countForReceiveSample" resultType="int" parameterType="com.todaysoft.lims.order.mybatis.parameter.OrderSearcher">
+        SELECT 
+            COUNT(r.id)
+        FROM 
+           LIMS_SAMPLE_RECEIVING r
+           LEFT JOIN LIMS_ORDER o ON r.ORDER_ID = o.ID
+           LEFT JOIN APP_USER_INFO customer ON o.OWNER_ID = customer.ID
+      	   LEFT JOIN LIMS_ORDER_EXAMINEE examinee on o.ID = examinee.ORDER_ID
+      	   LEFT JOIN LIMS_CONTRACT contract ON o.CONTRACT_ID = contract.ID
+      	    JOIN 
+      	   (
+      	   	 SELECT d.* FROM LIMS_SAMPLE_RECEIVING_DETAIL d
+      	   	 WHERE 1 = 1
+      	   	 <if test="_parameter.sampleCode != null and _parameter.sampleCode != ''" >
+      	   	  
+            	AND d.SAMPLE_CODE LIKE '%${sampleCode}%'
+        	 </if>
+        	  GROUP BY d.RECORD_ID
+      	   ) ds ON ds.RECORD_ID=r.ID
+        WHERE
+         1 = 1
+          <include refid="SampleReceiveSelectFilters"></include>
+    </select>
+    
+     <select id="searchReceiveSampleList" resultMap="ReceiveSampleModel" parameterType="com.todaysoft.lims.order.mybatis.parameter.OrderSearcher">
+        SELECT 
+          r.ID ,
+          o.CODE ORDER_CODE,
+          r.RECEIVER_NAME ,
+          r.RECEIVE_TIME ,
+          r.REMARK ,
+          r.STATUS ,
+          o.ORDER_TYPE ,
+          o.CREATOR_NAME ,
+          customer.REAL_NAME AS CUSTOMER_NAME,
+          examinee.NAME AS EXAMINEE_NAME,
+          contract.NAME AS CONTRACT_NAME
+        FROM 
+           LIMS_SAMPLE_RECEIVING r
+           LEFT JOIN LIMS_ORDER o ON r.ORDER_ID = o.ID
+           LEFT JOIN APP_USER_INFO customer ON o.OWNER_ID = customer.ID
+      	   LEFT JOIN LIMS_ORDER_EXAMINEE examinee on o.ID = examinee.ORDER_ID
+      	   LEFT JOIN LIMS_CONTRACT contract ON o.CONTRACT_ID = contract.ID
+      	    JOIN 
+      	   (
+      	   	 SELECT d.* FROM LIMS_SAMPLE_RECEIVING_DETAIL d 
+      	   	 WHERE 1 = 1
+      	   	 <if test="_parameter.sampleCode != null and _parameter.sampleCode != ''" >
+            	AND d.SAMPLE_CODE LIKE '%${sampleCode}%'
+        	 </if>
+      	   	 GROUP BY d.RECORD_ID
+      	   	 
+      	   ) ds ON ds.RECORD_ID=r.ID
+        WHERE
+           1 = 1
+           <include refid="SampleReceiveSelectFilters"></include>
+        ORDER BY r.RECEIVE_TIME DESC
+        <include refid="BaseSelectLimit"></include>
+    </select>
+    
+     <resultMap id="ReceiveSampleModel" type="com.todaysoft.lims.order.response.ReceiveSampleOrderResponse" >
+    	<result column="ID" property="id" />
+        <result column="ORDER_CODE" property="orderCode"/>
+        <result column="RECEIVER_NAME" property="receiveName" />
+        <result column="RECEIVE_TIME" property="receiveTime" />
+        <result column="REMARK" property="remark"/>
+        <result column="STATUS" property="status" />
+        <result column="ORDER_TYPE" property="orderType" />
+        <result column="CREATOR_NAME" property="creatorName" />
+        <result column="CUSTOMER_NAME" property="customerName" />
+        <result column="EXAMINEE_NAME" property="examineeName" />
+        <result column="CONTRACT_NAME" property="contractName" />
+    </resultMap>
+    
+    <sql id="SampleReceiveSelectFilters">
+    	<if test="_parameter.orderCode != null and _parameter.orderCode != ''" >
+            <bind name="orderCodePattern" value="_parameter.orderCode + '%'" />
+            AND o.CODE LIKE #{orderCodePattern}
+        </if>
+       
+        <if test="_parameter.contractName != null and _parameter.contractName != ''" >
+            <bind name="contractNamePattern" value="_parameter.contractName + '%'" />
+            AND contract.NAME LIKE #{contractNamePattern}
+        </if>
+        <if test="_parameter.marketingCenterId != null and _parameter.marketingCenterId != ''" >
+            AND o.ORDER_TYPE = #{_parameter.marketingCenterId}
+        </if>
+        <if test="_parameter.examineeName != null and _parameter.examineeName != ''" >
+            <bind name="examineeNamePattern" value="_parameter.examineeName + '%'" />
+            AND examinee.NAME LIKE #{examineeNamePattern}
+        </if>
+        <if test="_parameter.ownerId != null and _parameter.ownerId != ''" >
+            AND customer.ID = #{ownerId}
+        </if>
+        <if test="_parameter.salesmanName != null and _parameter.salesmanName != ''" >
+            <bind name="salesmanNamePattern" value="_parameter.salesmanName + '%'" />
+            AND o.CREATOR_NAME LIKE #{salesmanNamePattern}
+        </if>
+        <if test="_parameter.submitStartDate != null" >
+            AND o.SUBMIT_TIME &gt;= #{_parameter.submitStartDate}
+        </if>
+        <if test="_parameter.submitEndDate != null" >
+            AND o.SUBMIT_TIME &lt; #{_parameter.submitEndDate}
+        </if>
+       
+     
+        <if test="_parameter.filter != null and _parameter.filter.disabled == false">
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND
+            (
+                (o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>)
+                OR (EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>))
+            )   
+            </if>
+            <if test="(_parameter.filter.owners != null and _parameter.filter.owners.size() > 0) and (_parameter.filter.ownerDepts == null or _parameter.filter.ownerDepts.size() == 0)">
+            AND o.CREATOR_ID IN <foreach collection="_parameter.filter.owners" item="ownerId" index="index" open="(" separator="," close=")">#{ownerId}</foreach>
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts != null and _parameter.filter.ownerDepts.size() > 0)">
+            AND EXISTS (SELECT u.ID FROM LIMS_USER u LEFT JOIN LIMS_USER_ARCHIVE ua ON u.ARCHIVE_ID = ua.ID WHERE o.CREATOR_ID = u.ID AND ua.DEPT_ID IN <foreach collection="_parameter.filter.ownerDepts" item="ownerDeptId" index="index" open="(" separator="," close=")">#{ownerDeptId}</foreach>)   
+            </if>
+            <if test="(_parameter.filter.owners == null or _parameter.filter.owners.size() == 0) and (_parameter.filter.ownerDepts == null and _parameter.filter.ownerDepts.size() == 0)">
+            AND 1 = 2
+            </if>
+        </if>
+    </sql>
+</mapper>

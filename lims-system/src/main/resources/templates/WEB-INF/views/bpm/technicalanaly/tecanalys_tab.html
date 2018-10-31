@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>实验室管理系统</title>
+
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link rel="stylesheet" href="${system_css}/style.css">
+
+<!-- <link rel="stylesheet" href="${system_css}/common.css">
+<link rel="stylesheet" href="${system_css}/modules.css">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet"> -->
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ul id="myTab" class="nav nav-tabs">
+							<li <#if flag == '0'>class="active"<#else></#if>><a href="#sampleinfo" data-toggle="tab" id="sampleinfoTab">样本信息</a></li>
+							<li <#if flag == '1'>class="active"<#else></#if>><a href="#qualitycontrol" data-toggle="tab" id="qualitycontrolTab">质控</a></li>
+							<li <#if flag == '2'>class="active"<#else></#if>><a href="#mutationlist" data-toggle="tab" id="mutationlistTab">突变列表</a></li>
+							<li <#if flag == '3'>class="active"<#else></#if>><a href="#capcnvanalysis" data-toggle="tab" id="capcnvanalysisTab">capcnv分析</a></li>
+							<li <#if flag == '4'>class="active"<#else></#if>><a href="#svdata" data-toggle="tab" id="svdataTab">sv数据</a></li>
+							<li <#if flag == '5'>class="active"<#else></#if>><a href="#regioncout" data-toggle="tab" id="regioncoutTab">regioncout</a></li>
+							<#if request.ifRecheck?? && request.ifRecheck == "1">
+								<li style="float: right"><a href="#" class="btn btn-outline-secondary mr_r10" onclick="recheck()">复核确认</a></li>
+							<#else>
+								<#if familyTaskList?size lte 1>
+								<li style="float: right"><a
+										href="javascript:unqualifiedReport('${analysisSampleId!?html}')"
+										class="btn btn-outline-secondary mr_r10">不合格上报</a></li>
+								</#if>		
+								<li style="float: right"><a href="javascript:confirmTechnical('${analysisSampleId!?html}')" class="btn btn-outline-secondary mr_r10">提交复核</a></li>
+							</#if>
+						</ul>
+						
+						
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div id="myTabContent" class="tab-content">
+						<div <#if flag == '0'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="sampleinfo">
+							<iframe <#if flag == '0'> src="${base}/testing/technicalanaly_sampleinfo.do?familyGroupId=${analysisSampleId}" <#else>src=""</#if>
+								style="background: white; width: 100%; height:760px; "
+								frameborder="no" border="0" id="sampleinfo_frame"></iframe>
+						</div>
+						<div <#if flag == '1'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="qualitycontrol">
+							<iframe <#if flag == '1'> src="${base}/testing/technicalanaly_qualitycontrol.do?analysisSampleId=${analysisSampleId}" <#else>src=""</#if>
+								style="background: white; width: 100%; height: 760px; "
+								frameborder="no" border="0" id="qualitycontrol_frame"></iframe>
+						</div>
+						<div <#if flag == '2'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="mutationlist">
+				<iframe
+				<#if flag == '2'>
+					src="${base}/testing/analysisMutation.jsp?dataCode=${dataCode}&sampleCode=${sampleCode}&analysisFamilyId=${analysisSampleId}&ifRecheck=${request.ifRecheck!?html}&id=${request.id!?html}"
+					<#else>src=""
+				</#if>
+								style="background: white; width: 100%; height: 760px; "
+								frameborder="no" border="0" id="mutationlist_frame"></iframe>
+						</div>		
+						<div <#if flag == '3'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="capcnvanalysis">
+							<iframe <#if flag == '3'> src="${base}/testing/technicalanaly_capcnvanalysis.do?dataCode=${dataCode}&analysisSampleId=${analysisSampleId}" <#else>src=""</#if>
+								style="background: white; width: 100%; height: 760px; "
+								frameborder="no" border="0" id="capcnvanalysis_frame"></iframe>
+						</div>
+						<div <#if flag == '4'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="svdata">
+							<iframe <#if flag == '4'> src="${base}/testing/technicalanaly_svdata.do?analysisSampleId=${analysisSampleId}" <#else>src=""</#if>
+								style="background: white; width: 100%; height: 760px; "
+								frameborder="no" border="0" id="svdata_frame"></iframe>
+						</div>		
+						<div <#if flag == '5'> class="tab-pane fade in active"<#else> class="tab-pane fade"</#if> id="regioncout">
+							<iframe <#if flag == '5'> src="${base}/testing/analysisRegioncout.jsp?analysisSampleId=${analysisSampleId!?html}"<#else>src=""</#if>
+								style="background: white; width: 100%; height: 760px; "
+								frameborder="no" border="0" id="regioncout_frame"></iframe>
+						</div>																					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 处理Modal -->
+	<div class="modal fade" id="recheckModal" tabindex="-2" role="dialog"
+		aria-labelledby="" aria-hidden="true" >
+		<div class="modal-dialog" role="document" style="min-width: 800px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body txt_l">
+					<form id="resolve_form" action="${base}/testing/submitRecheckTechnicalTask.do" class="form-horizontal m-t">
+						<input type="hidden" id="technicalFamilyGroupId"	name="familyGroupId" value="${analysisSampleId!?html}" />
+						
+						<div class="form-group row">
+							<label class="col-sm-3 control-label">复核结果：</label>
+							<div class="col-sm-4 pd_l0 mr_t5 text-left">
+								<input type="radio" name="status" value="5" checked="checked">通过&nbsp;&nbsp;&nbsp;
+								<input type="radio" name="status" value="6">不通过
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label">复核说明：</label>
+							<div class="col-sm-8 pd_l0 mr_t5">
+								<textarea class="form-control" rows="4" id="note" name="note"></textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4 col-sm-offset-5"
+								style="margin-left: 250px; margin-top: 10px;">
+								<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+								<button type="button" class="btn btn-primary"
+									data-dismiss="modal">取消</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="report_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated bounceInRight"
+				 style="width: 550px; margin-left: 160px; margin-top: 100px;text-align:left">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">异常上报</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+						
+					</div>
+					<div class="modal-body">
+						<div>
+							<form action="#" method="post" class="search-form form-inline" id="report_form">
+								<input type="hidden" id="taskId" name="taskId"/>
+
+								<div style="width: 450px;" style="float: left">
+									<#if familyTaskList?has_content>
+										<#list familyTaskList as task>
+											<div class="form-group">
+												<label class="control-label">${task.testingAnalyDataCode!?html}：</label>
+												<input type="checkbox" name="reportState" value="${task.id!?html}"/> 上报
+											</div>
+											<br>
+										</#list>
+									</#if>
+									<div class="form-group">
+										<label class="control-label">备注原因：</label>
+										<textarea class="form-control" id="remark" name="remark" rows="3"
+												  cols="45"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="operate_button">确定</button>
+						<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+</body>
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script src="${system_js}/analysis/technical_common.js"></script>
+<script type="text/javascript">
+
+var loadindex = layer.load();
+var PATH = '${base}';
+
+$('body').on('click', '#sampleinfoTab', function(){
+	$('#sampleinfo_frame').attr('src', '${base}/testing/technicalanaly_sampleinfo.do?familyGroupId=${analysisSampleId}');
+	$('#qualitycontrol_frame').attr('src', '');
+	//$('#mutationlist_frame').attr('src', '');
+	$('#capcnvanalysis_frame').attr('src', '');
+	$('#svdata_frame').attr('src', '');
+	$('#regioncout_frame').attr('src', '');
+}).on('click', '#qualitycontrolTab', function(){
+	$('#sampleinfo_frame').attr('src', '');
+	$('#qualitycontrol_frame').attr('src', '${base}/testing/technicalanaly_qualitycontrol.do?analysisSampleId=${analysisSampleId}');
+	//$('#mutationlist_frame').attr('src', '');
+	$('#capcnvanalysis_frame').attr('src', '');
+	$('#svdata_frame').attr('src', '');
+	$('#regioncout_frame').attr('src', '');
+/* }).on('click', '#mutationlistTab', function(){
+	$('#sampleinfo_frame').attr('src', '');
+	$('#qualitycontrol_frame').attr('src', '');
+	$('#mutationlist_frame').attr('src', '${base}/testing/analysisMutation.jsp?analysisFamilyId=${analysisSampleId}');
+	$('#capcnvanalysis_frame').attr('src', '');
+	$('#svdata_frame').attr('src', '');
+	$('#regioncout_frame').attr('src', ''); */
+}).on('click', '#capcnvanalysisTab', function(){
+	$('#sampleinfo_frame').attr('src', '');
+	$('#qualitycontrol_frame').attr('src', '');
+	//$('#mutationlist_frame').attr('src', '');
+	$('#capcnvanalysis_frame').attr('src', '${base}/testing/technicalanaly_capcnvanalysis.do?dataCode=${dataCode}&analysisSampleId=${analysisSampleId}');
+	$('#svdata_frame').attr('src', '');
+	$('#regioncout_frame').attr('src', '');
+}).on('click', '#svdataTab', function(){
+	$('#sampleinfo_frame').attr('src', '');
+	$('#qualitycontrol_frame').attr('src', '');
+	//$('#mutationlist_frame').attr('src', '');
+	$('#capcnvanalysis_frame').attr('src', '');
+	$('#svdata_frame').attr('src', '${base}/testing/technicalanaly_svdata.do?analysisSampleId=${analysisSampleId}');
+	$('#regioncout_frame').attr('src', '');
+}).on('click', '#regioncoutTab', function(){
+	$('#sampleinfo_frame').attr('src', '');
+	$('#qualitycontrol_frame').attr('src', '');
+	//$('#mutationlist_frame').attr('src', '');
+	$('#capcnvanalysis_frame').attr('src', '');
+	$('#svdata_frame').attr('src', '');
+	$('#regioncout_frame').attr('src', '${base}/testing/analysisRegioncout.jsp?analysisSampleId=${analysisSampleId!?html}');
+});
+
+$('#operate_button').on('click', function () {
+	
+	var id_array = new Array();
+	$('input[name="reportState"]:checked').each(function () {
+		id_array.push($(this).val());//向数组中添加元素
+	});
+	var reportState = id_array.join(',');//将数组元素连接起来以构建一个字符串
+	console.log(reportState + "~~~");
+	var remark = $('#remark').val();
+	if ('' == reportState || typeof(reportState) == "undefined") {
+		parent.parent.layer.alert('请至少选择一个样本是否上报', {title: "提示"});
+		return false;
+	} else {
+		
+		$.ajax({
+			type: "POST",
+			traditional: true,
+			url: '${base}/testing/technicalReportOperate.do',
+			data: {
+				reportState: reportState,
+				remark: remark
+			},
+			async: false,
+			success: function (data) {
+				$('#operate_dialog').modal('hide');
+				window.location.href = "${base}/testing/technicalanaly.do";
+			},
+			error: function () {
+				alert("failed");
+			}
+		});
+		
+	}
+});
+
+
+$("#btnSave").on('click', function () {
+	 var loadindex = parent.layer.load();
+	 $.ajax({
+			type: "POST",
+			url: '${base}/testing/submitRecheckTechnicalTask.do',
+			data: $("#resolve_form").serialize(),
+			async: true,
+			success: function (data) {
+				parent.layer.closeAll();
+				window.location.href="${base}/testing/technical_recheck_list.do";
+			},
+			error: function () {
+				$("#recheckModal").modal('hide');
+				parent.layer.closeAll();
+				alert("failed");
+			}
+		});
+});
+
+function confirmTechnical(analysisSampleId){
+	if(checkTaskIsFinished(analysisSampleId)){
+		parent.layer.confirm('确认提交复核？', {
+		  btn: ['是','否'] 
+		}, function(index){
+			window.location.href="${base}/testing/submitTechnicalTask.do?familyGroupId="+analysisSampleId;
+			parent.layer.close(index);
+		}, function(index){
+			parent.layer.close(index);
+		});
+	}else{
+		parent.parent.layer.alert('还有任务正在执行,稍后提交', {title: "提示"});
+	}
+}
+
+
+</script>
+</html>
+

@@ -1,0 +1,316 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>单位管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+
+
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+
+
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<!-- 引入自定义包 -->
+
+
+<style>
+.select {
+	display: inline-block;
+	width: 30%;
+	height: 6.5%;
+	border-color: #e6e6e6;
+}
+
+button.btn.btn-default.dropdown-toggle {
+	padding: 14px;
+	background-color: white;
+	color: #c5c5c5;
+	border-color: #e5e6e7;
+}
+</style>
+
+<script>
+
+$().ready(function () {
+
+    $("#companyForm").validate({
+        rules: {
+        	code:  {
+        		required:true,
+        		maxlength: 10,
+        		remote: {
+        		    url: "${base}/company/validate.do",     //后台处理程序
+        		    type: "post",               //数据发送方式
+        		    dataType: "json",           //接受数据格式   
+        		    data: {                     //要传递的数据
+        		        code: function() {
+        		            return $("#code").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+        	},
+        	name: {
+        		required:true,
+        		maxlength: 20
+        	},
+        	address:{
+        		required:true,
+        	},
+        	'province.id':{
+        		required:true,
+        	},
+        	'city.id':{
+        		required:true,
+        	}
+        },
+        messages: {
+        	code:  {
+                required: "请输入单位编号",
+                maxlength: "单位编号不能超过10个字符",
+            	remote:"编号已经存在"
+            },
+            name:  {
+            	required: "请输入单位名称",
+            	maxlength: "单位名称不能超过20个字符"
+            }
+        }
+    });
+    
+   
+});   		    
+</script>
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">单位</a></li>
+
+							<li class="active"><strong>${(flag)!?html}</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>单位</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="companyForm" class="form-horizontal m-t"
+							action="${base}/company/companyModify.do" method="post"
+							enctype='application/json'>
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<input type="hidden" name="id" id="id"
+								value="${(company.id)!?html}" /> <input type="hidden"
+								name="createTime" id="createTime"
+								value="<#if company.createTime??>${(company.createTime)!?string('yyyy-MM-dd')}</#if>" />
+
+							<fieldset>
+								<div class="form-group">
+									<!-- <label class="col-sm-2 control-label control-required">单位编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code"
+											id="code" value="${(company.code)!?html}" />
+									</div> -->
+
+									<label class="col-sm-2 control-label control-required">单位名称：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name"
+											 id="name" value="${(company.name)!?html}" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<!-- <label class="col-sm-2 control-label">单位全拼：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="pinyin" readonly="readonly"
+											id="pinyin" value="${(company.pinyin)!?html}" />
+									</div> -->
+
+									<label class="col-sm-2 control-label">单位别名：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="otherName"
+											id="otherName" value="${(company.otherName)!?html}" />
+									</div>
+
+									<label class="col-sm-1 control-label"
+										style="text-align: left; padding-left: 0px; font-weight: 100">(多个别名用,分割)</label>
+
+
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label">联系电话：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="hotline"
+											id="hotline" value="${(company.hotline)!?html}" />
+
+									</div>
+
+									<!-- <label class="col-sm-2 control-label">官方网站：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="website"
+											id="website" value="${(company.website)!?html}" />
+									</div> -->
+								</div>
+
+								<div class="form-group">
+
+									<label class="col-sm-2 control-label  control-required">请选择区域：</label>
+									<div class="col-sm-3 ">
+										<select class="form-control" name="province.id" data-value='${(company.province.id)!?html}'
+											onchange="selectOpt(this)">
+											<option value=''>请选择</option>
+										<#if areaList??>
+										<#list areaList as area>
+											<option value='${area.id}'>${area.name}</option>
+										</#list></#if>
+										</select>
+										<select class="form-control" name="city.id" data-value='${(company.city.id)!?html}'
+											onchange="selectCountyOpt(this)">
+											<#if citys??>
+											<#list citys as city>
+											<option value='${city.id}'>${city.name}</option>
+											</#list></#if>
+										</select>
+										<select class="form-control" name="county.id" data-value='${(company.county.id)!?html}'>
+											<#if countys??>
+											<#list countys as county>
+											<option value='${county.id}'>${county.name}</option>
+											</#list></#if>
+											
+										</select>
+										
+									</div>
+
+								</div>
+
+
+
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">详细地址：</label>
+									<div class="col-sm-3">
+										<textarea type="text" class="form-control" name="address"
+											id="address">${(company.address)!?html}</textarea>
+									</div>
+								</div>
+
+								<!-- <div class="form-group">
+								<label class="col-sm-2 control-label">备注：</label>
+									<div class="col-sm-8">
+									<textarea  class="form-control" name="remarks"
+											id="remarks">${(company.remarks)!?html}</textarea>
+									</div>
+								</div> -->
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+										<button type="submit" class="btn btn-primary">保存</button>
+										<button class="btn btn-primary" type="button"
+											onclick="history.go(-1)">返回</button>
+
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+<script type="text/javascript">
+
+function selectOpt(obj){
+	
+	$(obj).next().empty();
+	$(obj).next().next().empty();
+	$(obj).next().next().append('<option value="">请选择</option>');
+	var obj_ = $('select[name="city.id"]');
+		
+	$.ajax({
+		type:'GET',
+		url:'${base}/company/getAreas.do?parentId='+$(obj).val(),
+		success:function(data){
+			for(i in data){
+				obj_.append(
+					'<option value="'+data[i].id+'">'+data[i].name+'</option>'	
+				);	
+			}
+		}
+ 	});
+} 
+
+function selectCountyOpt(obj){
+	
+	var obj_ = $('select[name="county.id"]');
+		
+	$.ajax({
+		type:'GET',
+		url:'${base}/company/getAreas.do?parentId='+$(obj).val(),
+		success:function(data){
+			for(i in data){
+				obj_.append(
+					'<option value="'+data[i].id+'">'+data[i].name+'</option>'	
+				);	
+			}
+		}
+ 	});
+} 
+
+
+/* function toLetter(obj){
+	
+	$.ajax({
+		url:"${base}/company/toLetter.do?name="+$(obj).val(),
+		type:"GET",
+		success:function(data){
+			
+			$('#pinyin').val(data);
+		}
+	});
+} */
+
+
+</script>
+
+</html>

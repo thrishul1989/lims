@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>绝对定量列表-绝对定量管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/qt.js?v=1.0.3"></script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            <li class="active">
+                                <strong>绝对定量</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>任务列表</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form action="${base}/testing/qt_tasks.do" method="post" class="search-form form-inline">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">测序编号：</label>
+                                    <input type="text" class="form-control" name="sampleCode" value="${(searcher.sampleCode)!?html}">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">是否加急：</label>
+                                    <select class="form-control" name="ifUrgent" data-value="${(searcher.ifUrgent)!?html}">
+                                        <option value="">所有类型</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fa fa-search"></i> 查询
+                                </button>
+                            </div>
+                        </form>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th>测序编号</th>
+                                    <th>创建时间</th>
+                                    <th>是否加急</th>
+                                    <th class="flexible-btns">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <#if tasks??> <#list tasks as record>
+                                <tr>
+                                    <td>${record_index+1}</td>
+                                    <td>${(record.sampleCode)!?html}</td>
+                                    <td>${(record.createTime)!?string('yyyy-MM-dd HH:mm:ss')}</td>
+                                    <td>
+                                    	<#if record.ifUrgent??>
+                                    		<#if record.ifUrgent == 1>是</#if>
+                                    	</#if>
+                                    </td>
+                                    <td class="flexible-btns">
+                                    	<@smm_security_resource resource = "/testing/qt_assign.do">
+                                        <a href="#" data-id="${(record.id)!?html}" class="btn btn-sm btn-success btn-assign">
+                                            <i class="fa fa-plus"></i> 处理
+                                        </a>
+                                        </@smm_security_resource>
+                                    </td>
+                                </tr>
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="4">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="full" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">下达任务单-绝对定量</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="assign_ifrmae" src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="released">下达</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

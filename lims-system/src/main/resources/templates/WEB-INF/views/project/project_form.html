@@ -1,0 +1,533 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+
+
+<style>
+button.btn.btn-default.dropdown-toggle {
+	padding: 14px;
+	background-color: white;
+	color: #c5c5c5;
+	border-color: #e5e6e7;
+}
+
+.modal-backdrop {
+	position: relative;
+}
+
+button.btn.btn-default.fileinput-upload.fileinput-upload-button {
+	display: none
+}
+
+.table>thead>tr {
+	font-size: 13px
+}
+.error {
+	color: red;
+}
+
+
+
+
+
+</style>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">项目管理</a></li>
+
+							<li class="active"><strong>${(flag)!?html}</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>项目</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="projectForm" class="form-horizontal m-t" action=""
+							method="post" enctype='application/json'>
+							<input type="hidden" name="id" id="id"
+								value="${(project.id)!?html}" />
+
+							<fieldset>
+								<div class="form-group">
+
+
+									<label class="col-sm-1 control-label control-required">项目编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code" id="code"
+											value="${(project.code)!?html}" />
+									</div>
+
+									<label class="col-sm-1 control-label control-required">项目名称：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(project.name)!?html}" />
+									</div>
+									
+									<label class="col-sm-1 control-label control-required">项目类型：</label>
+									
+									<div class="col-sm-3">
+										<select class="form-control" name="projectType" data-value="${(project.projectType)!?html}" id="projectType" placeholder="请选择项目类型" >
+                                        <@dict_entries category="PROJECT_TYPE">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                       
+                                        <option value="${entry.value!}" <#if project.projectType??><#if entry.value==project.projectType >selected</#if></#if> >${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+
+									</div>
+									
+
+								</div>
+
+								<div class="form-group">
+								
+								<label class="col-sm-1 control-label control-required">项目负责人：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" class="form-control"
+												data-id="${(project.projectLeader.id)!?html}"
+												id="projectLeader"
+												value="${(project.projectLeader.archive.name)!?html}">
+										
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+									
+									
+
+									<label class="col-sm-1 control-label ">技术负责人：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" class="form-control"
+												data-id="${(project.technicalLeader.id)!?html}"
+												id="technicalLeader"
+												value="${(project.technicalLeader.archive.name)!?html}">
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+
+
+									<label class="col-sm-1 control-label ">实验负责人：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" class="form-control"
+												data-id="${(project.experimentLeader.id)!?html}"
+												id="experimentLeader"
+												value="${(project.experimentLeader.archive.name)!?html}">
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+
+
+									
+
+								</div>
+
+
+								<div class="form-group">
+
+
+									<label class="col-sm-1 control-label">合同号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="contractNo"
+											id="contractNo" value="${(project.contractNo)!?html}" />
+									</div>
+
+									<label class="col-sm-1 control-label">经费：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="expenditure"
+											id="expenditure" value="${(project.expenditure)!?html}" />
+									</div>
+
+									<label class="col-sm-1 control-label">状态：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="status" id="status"
+											data-value=${(project.status)!}>
+											<option value="">请选择状态</option>
+
+											<option value="EFFECTIVE"<#if project??><#if project.status??><#if
+												project.status=='EFFECTIVE' >selected</#if></#if></#if>>可用</option>
+											<option value="UNEFFECTIVE"<#if project??><#if project.status??><#if
+												project.status=='UNEFFECTIVE' >selected</#if></#if></#if>>不可用</option>
+
+										</select>
+									</div>
+
+
+								</div>
+
+								<div class="form-group">
+
+
+
+									<label class="col-sm-1 control-label control-required">检测产品：</label>
+									<div class="col-sm-3">
+										<div  class="form-control" id="product"  placeholder="请选择相关产品"></div>
+									</div>
+
+									<label class="col-sm-1 control-label">客户：</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input  type="text" class="form-control" data-id="${(project.customer.id)!?html}"
+												id="customer" value="${(project.customer.name)!?html}" >
+											<div class="input-group-btn">
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+												</ul>
+											</div>
+											<!-- /btn-group -->
+										</div>
+									</div>
+
+									<label class="col-sm-1 control-label">描述：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="describe" id="describe"
+											value="${(project.describe)!?html}" />
+									</div>
+								</div>
+								
+								
+								
+
+
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-7">
+
+										<input type="submit" value="保存" class="btn btn-primary"
+											>
+										<button class="btn btn-primary goback" type="button"
+											>返回</button>
+
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+
+</body>
+
+
+
+
+<script>
+$().ready(function () {
+
+$("#projectForm").validate({
+	submitHandler: function(form) {      
+		//教研匹配框
+		if($("#projectLeader").attr("data-id")==""||$("#projectLeader").attr("data-id")==null){
+			parent.layer.alert('请选择正确的项目负责人！',{title:"提示"});
+			return false;
+			
+		}
+		/* if($("#technicalLeader").attr("data-id")==""||$("#projectLeader").attr("data-id")==null){
+			parent.layer.alert('请选择正确的技术负责人！',{title:"提示"});
+			return false;
+			
+		}
+		if($("#experimentLeader").attr("data-id")==""||$("#projectLeader").attr("data-id")==null){
+			parent.layer.alert('请选择正确的实验负责人！',{title:"提示"});
+			return false;
+			
+		} */
+		var id=[];
+		var productList=$('#product').magicSuggest().getSelection();
+		if(productList.length==0){
+			parent.layer.alert('请输入关联产品！',{title:"提示"});
+			return false;
+		}
+		$.each(productList,function(index,obj){
+			id.push(obj.id);
+		})
+		var ids = id.join(",");
+		
+		
+	
+		window.location.href = "${base}/project/modifyProjecr.do?id="
+			+ $("#id").val() + "&code=" + $("#code").val() + "&name="
+			+ $("#name").val() + "&projectLeader.id="
+			+ $("#projectLeader").attr("data-id") + "&technicalLeader.id="
+			+ $("#technicalLeader").attr("data-id")
+			+ "&experimentLeader.id="
+			+ $("#experimentLeader").attr("data-id") + "&customer.id="
+			+ $("#customer").attr("data-id") + "&contractNo="
+			+ $("#contractNo").val() + "&expenditure="
+			+ $("#expenditure").val() + "&status=" + $("#status").val()
+			+ "&describe="+$("#describe").val()+"&productArray="+ids+"&projectType="+$("#projectType").val()  
+	   },
+	   
+    rules: {
+    	code:  {
+    		required:true,
+    		maxlength: 10,
+    		remote: {
+    		    url: "${base}/project/validate.do",     //后台处理程序
+    		    type: "post",               //数据发送方式
+    		    dataType: "json",           //接受数据格式   
+    		    data: {                     //要传递的数据
+    		        code: function() {
+    		            return $("#code").val();
+    		        },
+    		        id:function() {
+    		            return $("#id").val();
+    		        }
+    		    }
+    		}
+    	},
+    	name: {
+    		required:true,
+    		maxlength: 20,
+    		remote: {
+    		    url: "${base}/project/validate.do",     //后台处理程序
+    		    type: "post",               //数据发送方式
+    		    dataType: "json",           //接受数据格式   
+    		    data: {                     //要传递的数据
+    		        name: function() {
+    		            return $("#name").val();
+    		        },
+    		        id:function() {
+    		            return $("#id").val();
+    		        }
+    		    }
+    		}
+    	},
+    	expenditure:{
+    		min:0
+    	},
+    	projectType:{
+    		required:true
+    	}
+       
+    },
+    messages: {
+    	code:  {
+            required: "请输入项目编号",
+            maxlength: "项目编号不能超过10个字符",
+        	remote:"编号已经存在"
+        },
+        name:  {
+        	required: "请输入项目名称",
+        	maxlength: "项目名称不能超过20个字符",
+        	remote:"名称已经存在"
+        },
+        expenditure:  {
+        	min: "请输入有效的数字"
+        },
+        projectType:{
+        	required: "请输入项目类型",
+    	}
+       
+    }
+});
+
+
+
+	$("#projectLeader").bsSuggest('init', {
+		url : "${base}/user/userSelect.do?key=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "name",
+		effectiveFields : [ "name", "phone" ],
+		effectiveFieldsAlias : {
+			name : "姓名",
+			phone : "手机"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+
+	$("#technicalLeader").bsSuggest('init', {
+		url : "${base}/user/userSelect.do?key=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "name",
+		effectiveFields : [ "name", "phone" ],
+		effectiveFieldsAlias : {
+			name : "姓名",
+			phone : "手机"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+
+	$("#experimentLeader").bsSuggest('init', {
+		url : "${base}/user/userSelect.do?key=",
+		getDataMethod : "url",
+		idField : "id",		keyField : "name",
+		effectiveFields : [ "name", "phone" ],
+		effectiveFieldsAlias : {
+			name : "姓名",
+			phone : "手机"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+
+
+	
+	
+	$("#customer").bsSuggest('init', {
+		url : "${base}/customer/getSelectList.do?key=",
+		getDataMethod : "url",
+		idField : "id",		
+		keyField : "name",
+		effectiveFields : [ "name", "phone" ],
+		effectiveFieldsAlias : {
+			name : "姓名",
+			phone : "手机"
+		}
+	}).on('onDataRequestSuccess', function(e, result) {
+
+	}).on('onSetSelectValue', function(e, keyword, data) {
+
+	}).on('onUnsetSelectValue', function() {
+		console.log('onUnsetSelectValue');
+	});
+	
+	
+	
+	/***/
+	var s=	$('#product').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/product/productSelect.do?',
+	    method:'get',
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	            '<div style="font-weight:700;color:#676a6c;float:right;padding-top: 10px;margin-right:50px">' + v.code + '</div>' +
+	            '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+
+	     
+	
+
+	
+	
+		
+	//为多选矿赋值 ---修改的时候执行
+	if($("#id").val()!=''){
+		 $.ajax({
+             type: "GET",
+             url: "${base}/project/getProject.do",
+             data: {id:$("#id").val()},
+             dataType: "json",
+             success: function(data){
+            	 $('#product').magicSuggest().setSelection(data.productList)
+             }
+         });
+		
+	}
+		
+
+	
+	
+})
+
+	
+</script>
+
+
+
+</html>

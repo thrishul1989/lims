@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/ajaxfileupload.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+
+
+<script>
+	var system_images = "${system_images}";
+	var base = "${base}";
+</script>
+<script src="${system_js}/order/checkorder_show.js"></script>
+
+
+
+
+<style>
+.file-drop-zone {
+	height: auto
+}
+
+.t .ms-sel-ctn {
+	background-position: 98%
+}
+</style>
+</head>
+
+
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<#if flag??><#else>
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报告发票邮寄查看</a></li>
+							<li class="active"><strong>订单详情</strong></li>
+						</ol>
+						<div style="float: right">
+							<a href="javascript:history.go(-1)" target="_self"
+								style="margin-top: -18px; padding: 0px; position: relative; right: 16px; float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</div>
+					</#if>
+				</div>
+				<div class="ibox">
+					<#if flag??><#else>
+					<div class="ibox-title">
+						<strong>订单详情</strong>
+					</div>
+					</#if>
+					<div class="ibox ibox-table">
+						<div class="ibox-content">
+
+							<table class="table table-striped table-bordered table-hover table-details">
+								<tr>
+									<td colspan="8"><strong>订单信息</strong></td>
+								</tr>
+								<#if record ??>
+								<tr>
+									<th class="col-sm-1">订单编号</th>
+									<td class="col-sm-2">${(record.code)!?html}</td>
+									<th class="col-sm-1">订单类型</th>
+									<td class="col-sm-2"><#if record.orderType == "1">临床遗传</#if> <#if record.orderType ==
+										"2">临床肿瘤</#if> <#if record.orderType == "3">健康筛查</#if> <#if record.orderType ==
+										"4">科技服务</#if></td>
+									<th class="col-sm-1">客户</th>
+									<td class="col-sm-2"><#if record.owner?? >${(record.owner.name)!?html} </#if></td>
+									<th class="col-sm-1">送检单位</th>
+									<td class="col-sm-2"><#if record.owner??> <#if record.owner.company??>
+										${(record.owner.company.name)!?html} </#if></#if></td>
+
+
+								</tr>
+								<tr>
+									<th class="col-sm-1">业务员</th>
+									<td class="col-sm-2">${(record.creatorName)!?html}</td>
+									<th class="col-sm-1">订单状态</th>
+									<td class="col-sm-2"><@dict_entry_text category="ORDER_STATE" value=record.status />
+									<th class="col-sm-1">订单金额</th>
+									<td class="col-sm-2"><#if record.realPrice !="0.0">
+										${(record.realPrice)!?html}<#else>0</#if></td>
+
+									<th class="col-sm-1">创建时间</th>
+									<td class="col-sm-2"><#if record.createTime??>
+										${(record.createTime)!?string('yyyy-MM-dd HH:mm:ss')} <#else> ${(record.createTime)!?html}
+										</#if></td>
+
+								</tr>
+								<tr>
+									<#if record.orderType != "4" >
+									<th class="col-sm-1">客户参与</th>
+									<td class="col-sm-2"><@dict_entry_text category="ANALYSIS_TYPE"
+										value=record.doctorAssist /></td> </#if>
+									<th class="col-sm-1">所属合同</th>
+									<td class="col-sm-2"><#if record.contract??> ${(record.contract.name)!?html} </#if></td>
+									<th class="col-sm-1">受检人</th>
+									<td class="col-sm-2">${(orderExaminee)!?html}</td>
+								</tr>
+
+								</#if>
+
+
+							</table>
+							<#if record.orderType != "4" >
+							<table class="table table-striped table-bordered table-hover table-details">
+
+								<tr>
+									<td colspan="8"><strong>检测产品</strong></td>
+								</tr>
+
+								<tr>
+									<td>序号</td>
+									<td>产品名称</td>
+									<td>报告状态</td>
+									<td>报告编号</td>
+
+								</tr>
+								<#if record.orderProductList?has_content> <#list record.orderProductList as d>
+								<tr>
+									<td>${d_index+1}</td>
+									<td>${(d.product.name)!?html}</td>
+									<td><#if d.reportStatus!?html == '0'>未出报告<#elseif d.reportStatus!?html ==
+										'1'>待一审<#elseif d.reportStatus!?html ==
+										'2'>待二审<#elseif d.reportStatus!?html ==
+										'3'>审核通过<#elseif d.reportStatus!?html ==
+										'4'>已寄送<#elseif d.reportStatus!?html ==
+										'5'>不寄送<#else>未出报告</#if>
+
+									</td>
+									<td>${(d.reportNo)!?html}</td>
+								</tr>
+								</#list><#else>
+								<tr>
+									<td colspan="8">暂无相关明细</td>
+								</tr>
+								</#if>
+							</table>
+
+							</#if>
+
+
+							<table class="table table-striped table-bordered table-hover table-details">
+
+
+								<tr>
+									<td colspan="8"><strong>收件信息</strong></td>
+								</tr>
+
+								<tr>
+									<td class="col-sm-1">收件人姓名</td>
+									<td class="col-sm-2">${(record.recipientName)!?html}</td>
+									<td class="col-sm-1">收件人电话</td>
+									<td class="col-sm-2">${(record.recipientPhone)!?html}</td>
+									<td class="col-sm-1">收件人地址</td>
+									<td class="col-sm-2">${(record.recipientAddress)!?html}</td>
+
+								</tr>
+
+
+							</table>
+
+
+<table class="table table-striped table-bordered table-hover table-details">
+
+
+								<tr>
+									<td colspan="8"><strong>开票信息</strong></td>
+								</tr>
+
+								<tr>
+									<td class="col-sm-1">申请类型</td>
+									<td class="col-sm-1">开票单号</td>
+									<td class="col-sm-1">发票抬头</td>
+									<td class="col-sm-1">开票时间</td>
+									<td class="col-sm-1">开票单位</td>
+									<td class="col-sm-1">开票金额</td>
+
+                                   <td class="col-sm-1">领取人</td>
+                                   <td class="col-sm-1">发票状态</td>
+								</tr>
+								
+								<#if financeInvoiceTask ?? &&  financeInvoiceTask.infoList?has_content> <#list financeInvoiceTask.infoList as re>
+								<tr>
+								<td><#if record.invoiceApplyType!?html == '1'>默认开票<#elseif record.invoiceApplyType!?html == '2'>提前开票<#else>默认开票</#if></td>
+								<td>${re.invoicerNo!?html}</td>
+								<td>${financeInvoiceTask.invoiceTitle!?html}</td>
+									<td>${re.invoiceTime!?string('yyyy-MM-dd')}</td>
+									<td> <@dict_entry_text category="TEST_INSTITUTION" value=financeInvoiceTask.institution /></td>
+									<td>${re.invoiceAmount!?html}</td>
+									<td>${re.receiverName!?html}</td>
+									<td><#if record.issueInvoice!?html == '1'>待开票<#elseif record.issueInvoice!?html == '2'>可开票
+									<#elseif record.issueInvoice!?html == '3'>已开票<#elseif record.issueInvoice!?html == '4'>已寄送
+									</#if></td>
+								</tr>
+								</#list>
+								</#if>
+								
+								
+
+
+							</table>
+							
+							
+
+<#if reportEmail ?? && reportEmail.status!?html == '3'> 
+<table class="table table-striped table-bordered table-hover table-details">
+
+
+								<tr>
+									<td colspan="8"><strong>邮寄信息</strong></td>
+								</tr>
+
+								<tr>
+									<td class="col-sm-1">寄件日期</td>
+									<td class="col-sm-1">运输方式</td>
+									<td class="col-sm-1">快递单号</td>
+									<td class="col-sm-1">运输人姓名</td>
+									<td class="col-sm-1">运输人电话</td>
+									<td class="col-sm-1">寄件内容</td>
+
+								</tr>
+								
+								
+								<tr>
+								<td><#if reportEmail.emailTime??>${reportEmail.emailTime?string('yyyy-MM-dd')}</#if></td>
+								<td><@dict_entry_text category="TRANSPORT_TYPE" value=reportEmail.emailType /></td>
+								<td><a href="javascript:showProcess(${(reportEmail.emailNo)!?html},${(reportEmail.emailType)!?html})">${reportEmail.emailNo!?html}</a></td>
+								<td>${reportEmail.emailName!?html}</td>
+								<td>${reportEmail.emailPhone!?html}</td>
+								<td>${reportEmail.emailContent!?html}</td>
+								</tr>
+							
+								
+								
+								
+
+
+							</table>
+								</#if>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content" style="width:800px;height:500px">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+															<h4 class="modal-title" id="myModalLabel">快递信息</h4>
+														</div>
+														
+														
+												<div style="width:100%; padding-top:30px;">
+													<span class="express_query_code">运单编号：<font color="#0055A2"></font></span>
+													<span class="express_query_status">状态：<font color="#0055A2"></font></span>
+												</div>
+												<div class="express_query_detail">
+													<table id="express_table" width="100%" border="0" align="center">
+														<tr>
+															<th width="30%">时间</th>
+															<th>跟踪记录</th>
+														</tr>
+															
+														
+														
+														
+													</table>
+												</div>
+														
+														
+													</div>
+													<!-- /.modal-content -->
+												</div>
+												<!-- /.modal -->
+											</div>
+											
+											
+											
+</body>
+
+<script>
+
+var companyMap ={
+		"1":"shunfeng",
+		"2":"tiantian",
+		"3":"youzhengguonei"
+	};
+	
+	
+function showProcess(expressNo,type){
+	$('#express_table').html(""); 
+	var param = {};
+	param.com = companyMap[type];;
+	param.num = expressNo;
+	$.get(base+"/order/showTransport.do?param="+JSON.stringify(param) , function(data){
+		  
+		     var tt = data.msg;
+		     var dataObj=eval("("+tt+")");
+		     //console.info(dataObj);
+		     //console.info(dataObj.result);
+		     if(dataObj.message=="ok"){
+		    	 $('.express_query_code').find('font').text(dataObj.nu);
+			     if(dataObj.state == "3"){
+			    	 $('.express_query_status').find('font').text("已签收");
+			     }
+			    
+			     $.each(dataObj.data,function(index,obj){
+			    	  var context =obj.context;
+			    	 $('#express_table').append("<tr><td>"+obj.time+"</td> <td>"+context+"</td> </tr>");
+			     });
+		     }else{
+		    	 $('.express_query_code').find('font').text(expressNo);
+		     
+		    	 $('.express_query_status').find('font').text("查询无结果");
+		     
+		    	 $('#express_table').append(""+dataObj.message+""); 
+		     }
+		    
+			
+		     $('#myModal').modal('show');
+		    
+		     
+	});
+	
+} 
+</script>
+
+
+</html>

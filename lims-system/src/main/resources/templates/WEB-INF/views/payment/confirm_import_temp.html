@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>付款待确认订单 --批量处理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+
+</head>
+<body class="gray-bg" >
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+            <div class="ibox">
+                    <div class="ibox-title" style="border-color: white">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="#">待付款确认列表</a>
+                            </li>
+                            <li class="active">
+                                <strong>批量列表</strong>
+                            </li>
+                           
+                        </ol>
+                    </div>
+                </div>
+               
+                <div class="ibox ibox-table">
+                   <div class="ibox-title">
+                        <h5>待付款确认列表</h5>
+                         <span style="float: right">
+	                        <ul style=list-style:none;margin:0;>
+	                        <li style="display:inline;margin-right: 12px">
+	                        	<div style="width: 30px;height: 10px;background-color: #FF9955;display: inline-block;"></div>异常数据</li>
+	                         <li style="display:inline;margin-right: 12px">
+	                         <div style="width: 30px;height: 10px;background-color: #66FF00;display: inline-block;"></div>提示：缴费日期格式为：2017-03-17,金额：支持两位小数整数</li>
+	                        </ul>
+                        </span>
+                    </div>
+                    <div class="ibox-content" style=" zoom: 1;min-height: 350px;overflow: scroll;">
+                        <div class="col-sm-12">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="index">序号</th>
+                                    <th><span style="color:red" >*</span>订单编号</th>
+                                    <th>支付方式</th>
+                                    <th style="width:80px">（交易）参考号</th>
+                                    <th style="width:80px">收据单号</th>
+                                    <th>转账人</th>
+                                    <th>转账日期</th>
+                                    <th>转账卡号</th>
+                                    <th>支付备注</th>
+                                    <th>应付款</th>
+                                    <th>减免申请</th>
+                                    <th>减免状态</th>
+                                    <th>申请金额</th>
+                                    <th>审批金额</th>
+                                    <th>付款人</th>
+                                    <th><span style="color:red" >*</span>缴费日期</th>
+                                    <th><span style="color:red">*</span>确认到账金额</th>
+                                    <th>备注</th>
+                                    <th class="flexible-btns">异常原因</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <#if importList??>
+                              <#if importList?has_content> 
+                              <#list importList as record>
+                               <tr class="datatr">                         
+                                   <td >${record_index + 1}</td>
+                                   <td name="orderCode">${record.orderCode!?html}</td>
+                                   <td name="payType">${record.payType!?html}</td>
+                                   <td name="posNo" class="col-md-1">${record.posNo!?html}</td>
+                                   <td name="receiptRolls" class="col-md-1">${record.receiptRolls!?html}</td>
+                                   <td name="transferMember" >${record.transferMember!?html}</td>
+                                   <td name="transferNo">${record.transferNo!?html}</td>
+                                   <td name="transferDate">${record.transferDate!?html}</td>
+                                   <td name="transRemark">${record.transRemark!?html}</td>
+                                   <td name="realPrice">${record.realPrice!?html}</td>
+                                   <td name="reduceApply">${record.reduceApply!?html}</td>
+                                   <td name="reduceStatus">${record.reduceStatus!?html}</td>
+                                   <td name="applyPrice">${record.applyPrice!?html}</td>
+                                   <td name="checkPrice">${record.checkPrice!?html}</td>
+                                   <td name="paymenter">${record.paymenter!?html}</td>
+                                   <td name="paymentTime">${record.paymentTime!?html}</td>
+                                   <td name="incommingAmoun">${record.incommingAmoun!?html}</td>
+                                   <td name="remark">${record.remark!?html}</td>
+                                   
+ 								   <td name="errorReson"  class="flexible-btns-3">
+                                    
+                                  </td>
+                                 </tr>
+                                 </#list>
+                                </#if>
+                                </#if>
+                            </tbody>
+                            </table>
+                
+					<div >
+						<button type="button" class="btn btn-primary" onclick="save()">提交</button>
+						<button class="btn btn-primary goback" type="button" data-url="${base}/payment/appPaymentConfirm.do?status=2" >返回</button>
+					</div>
+				
+			
+                        </div>
+                    </div>
+                </div><!-- ibox-table -->
+                
+            </div>
+        </div>
+    </div> 
+	
+     
+</body>
+
+<script>
+
+
+function save(){
+	var dataList=[];
+	var resultInfoAll = [];
+	var result = true;
+
+	$.each($('.datatr'),function(index,obj){
+		
+		var data={	orderCode:$(obj).find('td[name="orderCode"]').html(),
+					paymenter:$(obj).find('td[name="paymenter"]').html(),
+					paymentTime:$(obj).find('td[name="paymentTime"]').html(),
+					incommingAmoun:$(obj).find('td[name="incommingAmoun"]').html(),
+				    remark:$(obj).find('td[name="remark"]').html()
+				  }
+		var resultInfo = "\n错误提示:";
+		if(isNull(data.orderCode)){
+			
+			resultInfo +="订单编号不能为空,";
+			result = false;
+		}else{
+			 for(var i in dataList) {
+				 if(data.orderCode == dataList[i].orderCode ){
+					 resultInfo +="订单编号重复,";result = false;
+				 }
+			 } 
+			 console.info(checkOrderStatus(data.orderCode));
+			  if(checkOrderStatus(data.orderCode)){
+				
+				 resultInfo +="订单状态不是付款待确认,";
+				 result = false;
+			 }; 
+			
+		}
+		if(isNull(data.paymentTime)){
+			resultInfo +="缴费时间不能为空,";
+			result = false;
+		}else{
+			//判断时间格式
+			if(!isDate(data.paymentTime,"yyyy-MM-dd")){
+				resultInfo +="缴费时间格式不对,";
+				result = false;
+			}
+		}
+		
+		if(isNull(data.incommingAmoun)){
+			resultInfo +="确认到账金额不能为空,";
+			result = false;
+		}else{
+			//判断金额为正数字，支持2位小数
+			 if(!checkTowFloat(data.incommingAmoun)){
+				resultInfo +="确认到账金额只能为数字，并且仅支持两位小数";
+				result = false;
+			} 
+		}
+		
+		if(result){
+			dataList.push(data);
+		}else{
+			$(obj).css("background-color","#FF9955");
+			resultInfoAll.push(resultInfo);
+			$(obj).find('td[name="errorReson"]').text(resultInfo);
+			result = true;
+		}	
+		
+	});
+   	if(resultInfoAll.length >0){
+		return false;
+	}else{
+		
+		var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+		$.ajax({
+	        type: "POST",
+	        url: "${base}/payment/insertData.do",
+	        data: {orderList:JSON.stringify(dataList)},
+	        dataType: "text",
+	        success: function(data){
+	        	window.location.href="${base}/payment/appPaymentConfirm.do?status=2";
+	        	layerObject.close(loadindex);
+	     	},
+	        error:function(){
+	        	layerObject.close(loadindex);
+	        }
+	    }); 
+	}  
+	
+	
+
+}
+
+ function checkOrderStatus(code){
+	
+	 var result = false;
+		$.ajax({
+	        cache: true,
+	        type: "GET",
+	        url:'${base}/order/getOrderStatusByCode.do',
+	        data:{code: code},
+	        async: false,
+	        error: function(request) {
+	            alert("error");
+	        },
+	        success: function(data) {
+	        	
+             	if(!data || data != 2){
+             		result = true;
+             	}
+	        }
+	    });
+		return result ; 
+	
+} 
+
+/** 
+ * 判断字符串是否为日期格式 
+ * @param str string 字符串 
+ * @param formatStr string 日期格式， 如下 yyyy-MM-dd 
+ */  
+this.isDate = function(str, formatStr){  
+    if (formatStr == null){  
+        formatStr = "yyyyMMdd";  
+    }  
+    var yIndex = formatStr.indexOf("yyyy");  
+    if(yIndex==-1){  
+        return false;  
+    }  
+    var year = str.substring(yIndex,yIndex+4);  
+    var mIndex = formatStr.indexOf("MM");  
+    if(mIndex==-1){  
+        return false;  
+    }  
+    var month = str.substring(mIndex,mIndex+2);  
+    var dIndex = formatStr.indexOf("dd");  
+    if(dIndex==-1){  
+        return false;  
+    }  
+    var day = str.substring(dIndex,dIndex+2);  
+    if(!isNumber(year)||year>"2100" || year< "1900"){  
+        return false;  
+    }  
+    if(!isNumber(month)||month>"12" || month< "01"){  
+        return false;  
+    }  
+    if(day>getMaxDay(year,month) || day< "01"){  
+        return false;  
+    }  
+    return true;  
+}  
+
+/** 
+ *    变量是否为数字 
+ */  
+this.isNumber = function(str)  
+{  
+    var regExp = /^\d+$/g;  
+    return regExp.test(str);  
+} 
+this.getMaxDay = function(year,month) {  
+    if(month==4||month==6||month==9||month==11)  
+        return "30";  
+    if(month==2)  
+        if(year%4==0&&year%100!=0 || year%400==0)  
+            return "29";  
+        else  
+            return "28";  
+    return "31";  
+}  
+
+function isNull(val) {  
+    if (val == undefined || val == null || val == "" || val == ''  
+        || val == "undefined" || val == "null" || val == "NULL") {  
+        return true;  
+    }  
+    return false;  
+}  
+
+function checkTowFloat(source) {  
+    var regex = /^[0-9]+\d*[\.\d]?\d{0,2}$/g;  
+    return regex.test(source);  
+}  
+</script>
+    
+</html>
+

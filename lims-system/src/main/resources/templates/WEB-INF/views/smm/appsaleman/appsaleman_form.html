@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户表单-用户管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/chosen/chosen.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/smm/appsaleman/list.do">APP业务管理员</a></li>
+							<li class="active"><strong class="toggle-title">添加APP业务员</strong>
+							</li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5 class="toggle-title">新增业务员</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="user_form" class="form-horizontal m-t" method="post"
+							action="${base}/smm/appsaleman/create.do" onsubmit="return canLogin()">
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}"
+								value="${(Request[REPEAT_SUBMIT_TOKEN])!}" /> <input
+								type="hidden" name="userId" id='userId'
+								value="${(appsaleman.userId)!}" /> <input type="hidden"
+								id='leadId' /> <input type="hidden" id='testingType' />
+								<input type="hidden" id='appType' value='${(appsaleman.testingType)!?html}'/>
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">姓名：</label>
+									<div class="col-sm-3">
+										<div class="form-control" id="name" placeholder="请选择"></div>
+									</div>
+									<label class="col-sm-2 control-label">登录名：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="user.username"
+											id="username" value="${(appsaleman.user.username)!}"
+											readonly="readonly" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">性别：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="user.archive.gender"
+											disabled="disabled" id="gender">
+											<option value="">请选择</option>
+											<option value="MALE">男</option>
+											<option value="FEMALE">女</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label">手机号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control"
+											name="user.archive.phone" id='phone'
+											value="${(appsaleman.user.archive.phone)!}"
+											readonly="readonly" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">营销中心：</label>
+									<div class="col-sm-3">
+										<input id='hid' type="hidden"
+											value="${(appsaleman.testingType)!?html}" /> <select
+											class='form-control' name="testingType"
+											onchange="canSelect(this)">
+											<option value=''>---请选择营销中心---</option> <#list testingTypes as
+											testingType>
+											<option value='${testingType.id!}'<#if
+												appsaleman??><#if
+												testingType.id==(appsaleman.testingType!?html)>selected='selected'</#if></#if>
+												>${testingType.name}</option> </#list>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label control-required">职位：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="roleType" id="roleType">
+											<option selected value=''>---请选择职位---</option>
+											<@dict_entries category="BUSINESS_ROLE_TYPE">
+											<#if entries??>
+											<#list entries as entry>
+											<option value="${entry.value!}"<#if appsaleman??><#if entry.value==(appsaleman.roleType!?html)>selected='selected'</#if></#if> >${entry.text!?html}</option>
+											</#list>
+											</#if>
+											</@dict_entries>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">项目管理人：</label>
+									<div class="col-sm-3">
+										<div class="form-control" id="prjManager" placeholder="---请选择项目管理人---"></div>
+										<input type="hidden" name="projectManager" id='projectManager' value="${(appsaleman.projectManager)!}" />
+									</div>
+
+									<label class="col-sm-2 control-label control-required">所属区域：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="belongArea" id="belongArea">
+											<option selected value=''>---请选择所属区域---</option>
+											<@dict_entries category="BELONG_AREA">
+											<#if entries??>
+											<#list entries as entry>
+											<option value="${entry.value!}"<#if appsaleman??><#if entry.value==(appsaleman.belongArea!?html)>selected='selected'</#if></#if> >${entry.text!?html}</option>
+											</#list>
+											</#if>
+											</@dict_entries>
+										</select>
+									</div>
+								</div>
+
+								</div>
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+										<button class="btn btn-primary" type="submit">保存</button>
+										<button class="btn btn-primary goback" type="button">返回</button>
+									</div>
+								</div>
+							</fieldset>
+							<input type="hidden" id="flag">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script type="text/javascript" src="${plugins}/chosen/chosen.jquery.js"></script>
+	<script type="text/javascript"
+		src="${plugins}/validation/jquery.validate.min.js"></script>
+	<script type="text/javascript"
+		src="${plugins}/validation/additional-methods.min.js"></script>
+	<script type="text/javascript"
+		src="${plugins}/validation/localization/messages_zh.min.js"></script>
+	<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${system_js}/system.js"></script>
+	<script src="${system_js}/jquery.cxselect.min.js"></script>
+	<script src="${system_js}/magicsuggest-min.js"></script>
+	<script src="${system_js}/layer.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		
+		$("#user_form").validate({
+	  		 rules: {
+	  			testingType:{
+	  				 required:true,
+	  			 },
+	  			roleType:{
+	  				 required:true,
+	  			 },
+                 belongArea:{
+                     required:true,
+                 },
+	  		 },
+	  	});
+
+        var prjManager =  $('#prjManager').magicSuggest({
+            width: 190,
+            highlight: true,
+            data:'${base}/smm/role/getPrjManagerList.do',
+            method:'get',
+            queryParam:"key",
+            maxSelection: 1,
+            displayField:'name',
+            allowFreeEntries:false,
+            renderer: function(v){
+                return '<div >'
+                    +'<span>' + v.name + '</span>'
+                    +'<span style="float:right;">' + v.phone + '</span>'
+                    +'</div>';
+            }
+        });
+
+        $(prjManager).on('selectionchange',function(e,m){
+            var obj_ = this.getSelection()[0];
+            if (obj_!=undefined)
+			{
+                $('#projectManager').val(obj_.id);
+			}
+			else
+			{
+                $('#projectManager').val('');
+			}
+        });
+
+        var name =	$('#name').magicSuggest({
+		    width: 190,
+		    highlight: true,
+	        data:'${base}/smm/user/UserSelect.do',
+		    method:'get',
+		    queryParam:"key",
+		  maxSelection: 1,
+		displayField:'name',
+		    allowFreeEntries:false,
+		    renderer: function(v){
+		    return '<div >'
+			    +'<span>' + v.name + '</span>'
+			    +'<span style="float:right;">' + v.phone + '</span>'
+			    +'</div>';
+		    }
+		});
+
+ 	$(name).on('selectionchange',function(e,m){
+            var obj_ = this.getSelection()[0];
+            $('#username').val(obj_.username);
+            $('#gender').val(obj_.sex);
+            $('#phone').val(obj_.phone);
+            $('#userId').val(obj_.id);
+            $('#leadId').val(obj_.leaderId);
+
+            if(null != obj_.leaderId && '' != obj_.leaderId){
+
+                $.ajax({
+                    type:'get',
+                    url:'${base}/smm/appsaleman/getTestingType?id='+obj_.leaderId,
+                    success:function(data){
+                        $('#testingType').val(data);
+                    }
+                });
+            }
+        });
+    var usm = null;
+ 	<#if usm??>
+ 		usm = ${usm}
+		$('#name').magicSuggest().setSelection(${usm});
+
+		$('#user_form').attr('action','${base}/smm/appsaleman/modify.do');
+		$('strong').text('修改业务员');
+		$('h5').text('修改业务员');
+		$('#name').magicSuggest().disable();
+       <#if pmu??>
+        $('#prjManager').magicSuggest().setSelection(${pmu});
+		</#if>
+	</#if>
+
+	if(null != usm){
+		 $('#leadId').val(usm.leaderId);
+	}
+	});
+
+
+	function canSelect(obj){
+		$('#flag').val('right');
+		if($('h5').text()=='修改业务员'){
+			 if($('#appType').val() != $(obj).val()){
+
+				 //有上级
+				 if(null != $('#leadId').val() && ""!= $('#leadId').val()){
+
+					 if($('#testingType').val() != null&&''!= $('#testingType').val()){
+						if($(obj).val() != $('#testingType').val()){
+
+							 parent.layer.alert('当前你有上级领导，上级领导的营销中心和当前不一致！',{title:"提示"});
+							 $('#flag').val('wrong');
+							 return false;
+						}
+					 }
+
+				 }else{
+
+				 }
+				 //有下级
+				 var userId = $('#userId').val();
+				 if(null != userId&&'' != userId)
+				 {
+					 $.ajax({
+						 type:"get",
+						 async: false,
+						 url:"${base}/smm/appsaleman/getDataById?userId="+userId,
+						 success:function(data){
+							 if(data)
+							 {
+								 parent.layer.alert('当前你有下级，如需更改营销中心，请先解除上下级关系',{title:"提示"});
+								 $(obj).val($("#hid").val());
+								 $('#flag').val('wrong');
+								 return false;
+							 }
+						 }
+					 });
+				  // 是否绑定客户
+				 $.ajax({
+					 type:"get",
+					 async: false,
+					 url:"${base}/smm/appsaleman/getCustomerByAppId?appId="+userId,
+					 success:function(data){
+						 if(!data){
+							 parent.layer.alert('当前已绑定客户，不能更改机构！',{title:"提示"});
+							 $(obj).val($("#hid").val());
+							 $('#flag').val('wrong');
+							 return false;
+						 }
+					 }
+				 });
+				 }
+			 }
+
+		}else{//新增
+			 //有上级
+			 if(null != $('#leadId').val() && ""!= $('#leadId').val()){
+				var flag = true;
+				 $.ajax({
+					 type:"get",
+					 async: false,
+					 url:"${base}/smm/appsaleman/getBusinessInfo?id="+$('#leadId').val(),
+				    success:function(data){
+						    if(data){
+						    	if($('#testingType').val() != null&&''!= $('#testingType').val()){
+
+									if($(obj).val() != $('#testingType').val()){
+										$('#flag').val('wrong');
+										flag = false;
+									}
+
+						    	}}
+						    }
+						  });
+				if(!flag){
+
+					 parent.layer.alert('当前选择的营销中心和你领导的不一致！',{title:"提示"});
+					 $("select[name='testingType']").val('');
+					 $('#flag').val('wrong');
+				}
+
+			 //无上级
+			  } else{
+
+			  }
+		}
+	}
+	
+	function canLogin(){
+		
+		if(null != $('#leadId').val() && ""!= $('#leadId').val()){
+			var flag = true;
+			 $.ajax({
+				 type:"get",
+				 async: false,
+				 url:"${base}/smm/appsaleman/getBusinessInfo?id="+$('#leadId').val(),
+			    success:function(data){
+					    if(data){
+					    	if($('#testingType').val() != null&&''!= $('#testingType').val()){
+								if($("select[name='testingType']").val() != $('#testingType').val()){
+									
+									parent.layer.alert('当前选择的营销中心和你领导的不一致！',{title:"提示"});
+									flag =  false;
+								}
+						
+					    	}}
+					    }
+					  });
+			 return flag;
+		}
+		if($('#flag').val() == 'wrong'){
+			return false;
+		}
+		 var nameVal = $('#name').magicSuggest().getSelection()[0];
+		  if(undefined==nameVal) {
+			  parent.layer.alert('请选择姓名！',{title:"提示"});
+			  return false;
+		  }
+
+        var prjManagerVal = $('#prjManager').magicSuggest().getSelection()[0];
+        if(undefined==prjManagerVal) {
+            parent.layer.alert('请选择项目管理人！',{title:"提示"});
+            return false;
+        }
+
+
+        if(null == $('#leadId').val()&&""== $('#leadId').val()){
+			  if($("#roleType").val() != "1"){
+				  parent.layer.alert('请选择上级领导！',{title:"提示"});
+				  return false;
+			  }
+		  } 
+	}
+
+	
+	</script>
+</body>
+</html>

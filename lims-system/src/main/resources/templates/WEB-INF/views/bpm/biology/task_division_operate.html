@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>数据拆分</title>
+	<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+	<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+	<link href="${system_css}/animate.min.css" rel="stylesheet">
+	<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+	<script type="text/html" id="addTemp">
+		<#include "./sample_add_temp.html"/>
+	</script>
+	<style type="text/css">
+		.addEroBorder {
+			border-color: #F00 !important;
+		}
+	</style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<ol class="breadcrumb">
+						<li>
+							<span>生信分析</span>
+						</li>
+						<li class="active">
+							<strong>数据拆分</strong>
+						</li>
+						<div style="float: right;">
+							<a href="javascript:history.go(-1)" target="_self"
+							   style="padding: 0px; position: relative; right: 16px; float: right"> <img
+									src="${system_images}/backbtn.png" style="height: 24px;" />
+							</a>
+						</div>
+					</ol>
+				</div>
+			</div>
+			<div class="ibox ibox-table">
+				<div class="ibox-title">
+					<h5>数据拆分</h5>
+					<a href="#" id="isShowOperate" class="btn btn-sm btn-primary submitForm">
+						<i class="fa fa-print"></i> 启动拆分
+					</a>
+				</div>
+				<div class="ibox-content">
+					<form id="submit_form" class="form-horizontal m-t" action="${base}/testing/biologyStartDivision.do" method="post">
+						<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+						<input type="hidden" value="${(taskId)!?html}" name="taskId"/>
+						<div class="form-group">
+							<label class="col-sm-1 control-label">测序编号：</label>
+							<div class="col-sm-2">
+								<input type="text" class="form-control" value="${(squencingCode)!?html}" readonly="readonly" />
+							</div>
+						</div>
+						<table class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>待分析样本</th>
+								<th>数据编号</th>
+								<th>接头</th>
+							</tr>
+							</thead>
+							<tbody>
+								<#if originalList?? && originalList?has_content>
+									<#list originalList as record>
+										<tr>
+											<td>
+												<input type="hidden" class="dataCodeExist" value="${(record.dataCode)!?html}">
+												<input type="hidden" class="indexCodeExist" value="${(record.indexCode)!?html}">
+												${(record_index+1)!?html}
+											</td>
+											<td>${(record.sampleCode)!?html}</td>
+											<td>${(record.dataCode)!?html}</td>
+											<td>${(record.indexCode)!?html}</td>
+										</tr>
+									</#list>
+									<#else>
+										<tr>
+											<td colspan="4">未查询到拆分样本</td>
+										</tr>
+								</#if>
+							</tbody>
+						</table>
+
+						<div class="ibox-title">
+							<h5>新增样本</h5>
+							<a href="javascript:;" class="btn btn-sm btn-success add"><i class="fa fa-plus"></i> 新增</a>
+							</a>
+						</div>
+						<div class="col-sm-10">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th class="col-sm-2">待分析样本</th>
+										<th class="col-sm-4">数据编号</th>
+										<th class="col-sm-1">接头</th>
+										<th class="col-sm-1">操作</th>
+									</tr>
+								</thead>
+								<tbody id="sampleTr">
+									<#if laterList?? && laterList?has_content>
+										<#list laterList as record>
+											<tr>
+												<td  class="col-sm-1"><input name="sampleCode" class="form-control checknull sampleCode" type="text" value="${record.sampleCode!?html}" required></td>
+												<td  class="col-sm-1"><input name="dataCode" class="form-control checknull dataCode" type="text" value="${record.dataCode!?html}" required></td>
+												<td  class="col-sm-1"><input name="indexCode" class="form-control checknull indexCode" type="text" value="${record.indexCode!?html}" required></td>
+												<td  class="col-sm-1"><a class="btn btn-sm btn-success remove" href="javascript:" style="background-color: rgb(235, 79, 56); border-color: rgb(235, 79, 56);"><i class="fa fa-trash"></i> 删除</a></td>
+											</tr>
+										</#list>
+									</#if>
+								</tbody>
+							</table>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/biology/biology.operate.js?v=201711202"></script>
+<script type="text/javascript">
+	<!--
+	$(function()
+	{
+		$('body').on('click', '.submitForm', function()
+		{
+			var layerObject = parent.parent.layer;
+			var buttons = [ '确定', '取消' ];
+
+			layerObject.confirm('您确定启动拆分吗？', {
+				icon : 3,
+				title : '操作确认',
+				btn : buttons,
+				shade : 'transparent'
+			}, function(index)
+			{
+				var flag = true;
+				var checknull = $(".checknull:visible");
+				$.each(checknull, function(index, check)
+				{//判断必填
+					if ($(check).val() == null || $(check).val() == "")
+					{
+						parent.layer.alert('请输入必填项', {
+							title : "提示"
+						});
+						$(check).addClass('addEroBorder');
+						flag = false;
+						return false;
+					}
+					else
+					{
+						if ($(check).hasClass('addEroBorder'))
+						{
+							$(check).removeClass('addEroBorder');
+						}
+					}
+				});
+				if(flag)
+				{
+					var dataCodeArr = [];
+					var dataCodeExist = $(".dataCodeExist");
+					$.each(dataCodeExist, function(index, code)
+					{//判断必填
+						dataCodeArr.push($(code).val());
+					});
+					$.each($(".dataCode"), function(index, code)
+					{//判断必填
+						dataCodeArr.push($(code).val());
+					});
+
+					var nary=dataCodeArr.sort();
+					for(var i=0;i<nary.length;i++){
+						if (nary[i]==nary[i+1]){
+							parent.layer.alert('数据编号重复'+nary[i], {
+								title : "提示"
+							});
+							flag = false;
+							return false;
+						}
+					}
+				}
+				if(flag)
+				{
+					var indexCodeArr = [];
+					var indexCodeExist = $(".indexCodeExist");
+					$.each(indexCodeExist, function(index, code)
+					{//判断必填
+						indexCodeArr.push($(code).val());
+					});
+					$.each($(".indexCode"), function(index, code)
+					{//判断必填
+						indexCodeArr.push($(code).val());
+					});
+
+					var naryIndex=indexCodeArr.sort();
+					for(var i=0;i<naryIndex.length;i++){
+						if (naryIndex[i]==naryIndex[i+1]){
+							parent.layer.alert('接头号重复'+naryIndex[i], {
+								title : "提示"
+							});
+							flag = false;
+							return false;
+						}
+					}
+				}
+
+				if (flag)
+				{
+					$('#submit_form').submit();
+                    $('#isShowOperate').hide();//启动拆分后提交页面，隐藏按钮，以防多次提交
+					layerObject.close(index);
+				}
+			}, function(index)
+			{
+				layerObject.close(index);
+			});
+		});
+
+
+		$("#sampleTr").on("blur",".dataCode",function () {
+			var dataCode = $(this).val();
+
+			var dataCodeArr = [];
+			var dataCodeExist = $(".dataCodeExist");
+			$.each(dataCodeExist, function(index, code)
+			{//判断必填
+				dataCodeArr.push($(code).val());
+			});
+			if($.inArray(dataCode, dataCodeArr)>0)
+			{
+				parent.layer.alert('该数据编号已存在请重新输入', {
+					title : "提示"
+				});
+				$(this).val('');
+				return;
+			}
+
+			$.each($(".dataCode"), function(index, code)
+			{//判断必填
+				dataCodeArr.push($(code).val());
+			});
+		}).on("blur",".indexCode",function () {
+			var indexCode = $(this).val();
+
+			var indexCodeArr = [];
+			var indexCodeExist = $(".indexCodeExist");
+			$.each(indexCodeExist, function(index, code)
+			{//判断必填
+				indexCodeArr.push($(code).val());
+			});
+			if($.inArray(indexCode, indexCodeArr)>0)
+			{
+				parent.layer.alert('该接头号已存在请重新输入', {
+					title : "提示"
+				});
+				$(this).val('');
+				return;
+			}
+			$.each($(".indexCode"), function(index, code)
+			{//判断必填
+				indexCodeArr.push($(code).val());
+			});
+		})
+
+
+	});
+	//-->
+</script>
+</html>

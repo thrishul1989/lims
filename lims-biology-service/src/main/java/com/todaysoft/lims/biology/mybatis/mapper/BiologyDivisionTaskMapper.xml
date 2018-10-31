@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyDivisionTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyDivisionTask" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SEQUENCING_CODE" property="sequencingCode" jdbcType="VARCHAR" />
+    <result column="SEQUENCING_TYPE" property="sequencingType" jdbcType="VARCHAR" />
+    <result column="RUN_CODE" property="runCode" jdbcType="VARCHAR" />
+    <result column="LANE_CODE" property="laneCode" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="RESUBMIT" property="resubmit" jdbcType="BIT" />
+    <result column="RESUBMIT_COUNT" property="resubmitCount" jdbcType="INTEGER" />
+    <result column="IF_URGENT" property="ifUrgent" jdbcType="BIT" />
+    <result column="URGENT_UPDATE_TIME" property="urgentUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="URGENT_NAME" property="urgentName" jdbcType="VARCHAR" />
+      <result column="RESULT_CONTENT" property="resultContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SEQUENCING_CODE, SEQUENCING_TYPE, RUN_CODE, LANE_CODE, START_TIME, END_TIME, 
+    STATUS, RESUBMIT, RESUBMIT_COUNT, IF_URGENT, URGENT_UPDATE_TIME, URGENT_NAME
+  </sql>
+
+  <insert id="insertTask" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionTask" >
+      <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+          select replace(uuid(),'-','') from dual
+      </selectKey>
+   INSERT INTO BIOLOGY_DIVISION_TASK (
+      ID,
+      SEQUENCING_CODE,
+      SEQUENCING_TYPE,
+      RUN_CODE,
+      LANE_CODE,
+      START_TIME,
+      END_TIME,
+      STATUS,
+      RESUBMIT,
+      RESUBMIT_COUNT,
+      IF_URGENT,
+      URGENT_UPDATE_TIME,
+      URGENT_NAME,
+      RESULT_CONTENT
+  )values (
+      #{id},
+      #{sequencingCode,jdbcType=VARCHAR},
+      #{sequencingType,jdbcType=VARCHAR},
+      #{runCode,jdbcType=VARCHAR},
+      #{laneCode,jdbcType=VARCHAR},
+      #{startTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER},
+      #{resubmit,jdbcType=BIT},
+      #{resubmitCount,jdbcType=INTEGER},
+      #{ifUrgent,jdbcType=BIT},
+      #{urgentUpdateTime,jdbcType=TIMESTAMP},
+      #{urgentName,jdbcType=VARCHAR},
+      #{resultContent,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateById" parameterType="com.todaysoft.lims.biology.model.BiologyDivisionTask" >
+    update
+      BIOLOGY_DIVISION_TASK
+      <set >
+          <if test="endTime != null" >
+              END_TIME = #{endTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="status != null" >
+              STATUS = #{status,jdbcType=INTEGER},
+          </if>
+          <if test="resubmit != null" >
+              RESUBMIT = #{resubmit,jdbcType=BIT},
+          </if>
+          <if test="resubmitCount != null" >
+              RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+          </if>
+          <if test="resultContent != null" >
+              RESULT_CONTENT = #{resultContent,jdbcType=INTEGER},
+          </if>
+      </set>
+    where
+      ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="getTaskById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+          t.*
+        from
+          BIOLOGY_DIVISION_TASK t
+        where
+          t.ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getDivisionTaskBySquencingCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+          t.*
+        from
+          BIOLOGY_DIVISION_TASK t
+        where
+          t.END_TIME IS NOT NULL AND t.SEQUENCING_CODE = #{squencingCode,jdbcType=VARCHAR}
+          ORDER BY t.END_TIME DESC  limit 1;
+    </select>
+
+    <select id="getTaskSearchList" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.biology.model.request.BioDivisionListRequest">
+        SELECT
+            t.ID,
+            t.SEQUENCING_CODE,
+            t.SEQUENCING_TYPE,
+            t.RUN_CODE,
+            t.LANE_CODE,
+            t.START_TIME,
+            t.END_TIME,
+            t.STATUS,
+            t.RESUBMIT,
+            t.RESUBMIT_COUNT,
+            t.RESULT_CONTENT,
+            MAX(O.IF_URGENT)AS IF_URGENT
+        FROM
+          BIOLOGY_DIVISION_TASK t
+        LEFT JOIN LIMS_TESTING_SCHEDULE_ACTIVE A ON t.id = A.TASK_ID
+        LEFT JOIN LIMS_TESTING_SCHEDULE S ON S.id = A.SCHEDULE_ID
+        LEFT JOIN LIMS_ORDER O on O.id = S.ORDER_ID
+        WHERE
+          <include refid="BaseSelectFilters"></include>
+        GROUP BY t.ID ORDER BY O.IF_URGENT desc,t.RESUBMIT_COUNT DESC ,t.START_TIME ASC
+    </select>
+
+
+    <sql id="BaseSelectFilters">
+           t.STATUS !=5
+        <if test="_parameter.sequencingCode != null and _parameter.sequencingCode != ''" >
+            <bind name="sequencingCodePattern" value="'%' + _parameter.sequencingCode + '%'" />
+            AND t.SEQUENCING_CODE LIKE #{sequencingCodePattern}
+        </if>
+        <if test="_parameter.createStartDate != null" >
+            AND t.START_TIME &gt;= #{_parameter.createStartDate}
+        </if>
+        <if test="_parameter.createEndDate != null" >
+            AND t.START_TIME &lt; #{_parameter.createEndDate}
+        </if>
+        <if test="_parameter.status != null" >
+            AND t.STATUS = #{_parameter.status}
+        </if>
+    </sql>
+
+
+
+</mapper>

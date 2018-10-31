@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TechnicalAnalyTestingTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyTestingTask" >
+    <id column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="SEQUENCING_CODE" property="sequencingCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TASK_ID, SEQUENCING_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_TASK_TECHNICAL_ANALY
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_TESTING_TASK_TECHNICAL_ANALY
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyTestingTask" >
+    insert into LIMS_TESTING_TASK_TECHNICAL_ANALY (TASK_ID, SEQUENCING_CODE)
+    values (#{taskId,jdbcType=VARCHAR}, #{sequencingCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyTestingTask" >
+    insert into LIMS_TESTING_TASK_TECHNICAL_ANALY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="sequencingCode != null" >
+        SEQUENCING_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="sequencingCode != null" >
+        #{sequencingCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyTestingTask" >
+    update LIMS_TESTING_TASK_TECHNICAL_ANALY
+    <set >
+      <if test="sequencingCode != null" >
+        SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.TechnicalAnalyTestingTask" >
+    update LIMS_TESTING_TASK_TECHNICAL_ANALY
+    set SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR}
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </update>
+</mapper>

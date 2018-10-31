@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.SampleMapper">
+
+    <!-- 订单列表对象 -->
+    <resultMap id="GanalysisSampleModel" type="com.todaysoft.lims.order.response.GanalysisSampleInfo">
+        <id column="ID" property="id" />
+        <result column="SAMPLE_CODE" property="code" />
+        <result column="EXAMINEE_NAME" property="examineeName" />
+        <result column="RECORD_NO" property="recordNo" />
+        <result column="SEX" property="examineeSex" />
+        <result column="BIRTHDAY" property="birthday" />
+        <result column="AGE_SNAPSHOT" property="ageSnapshot" />
+        <result column="NATION" property="nation" />
+        <result column="ORIGIN" property="origin" />
+        <result column="CONTACT_NAME" property="contactName" />
+        <result column="CONTACT_PHONE" property="contactPhone" />
+        <result column="CONTACT_EMAIL" property="contactEmail" />
+        <result column="RECIPIENT_ADDRESS" property="contactAddress" />
+        <result column="SAMPLE_TYPE_NAME" property="typeName"/>
+        <result column="NAME" property="customerCompany"/>
+        <result column="SAMPLE_BTYPE" property="businessType"/>
+        <result column="PRIMARY_SAMPLE_ID" property="primarySampleId"/>
+        <result column="PRIMARY_SAMPLE_CODE" property="primarySampleCode"/>
+        <result column="FAMILY_RELATION" property="familyRelation" />
+        <result column="ORDER_ID" property="orderId" />
+        <result column="OWNER_PHENOTYPE" property="ownerPhenotype" />
+    </resultMap>
+    
+    
+    <sql id="BaseSelectLimit">
+        <if test="_parameter.offset != null and _parameter.limit != null" >
+            LIMIT #{_parameter.offset}, #{_parameter.limit}
+        </if>
+    </sql>
+    
+    
+    <select id="countForSample" resultType="int" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest">
+        SELECT 
+            COUNT(d.id)
+        FROM 
+            LIMS_ORDER_SAMPLE_DETAILS d
+            JOIN LIMS_ORDER o ON d.ORDER_ID = o.ID
+        WHERE
+        	o.OWNER_ID = #{customerId}
+        	AND o.DEL_FLAG = 0 
+        	AND o.TESTING_STATUS != 0
+        	AND o.SHEDULE_STATUS = 2
+        	AND d.SYNCHRONIZED_STATUS = 0
+        	AND (d.PURPOSE IN (2,3) or d.PURPOSE IS NULL)
+    </select>
+    
+     <select id="searchSampleList" resultMap="GanalysisSampleModel" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest">
+        SELECT 
+           d.SAMPLE_ID id,	
+           d.SAMPLE_CODE,
+           CASE WHEN d.SAMPLE_BTYPE!=1 THEN d.OWNER_NAME
+           ELSE examinee.NAME END AS EXAMINEE_NAME,
+           examinee.RECORD_NO,
+           examinee.SEX,
+           examinee.BIRTHDAY,
+           CASE WHEN d.SAMPLE_BTYPE!=1 THEN CONCAT(d.OWNER_AGE,'岁') 
+           ELSE examinee.AGE_SNAPSHOT END AS AGE_SNAPSHOT,
+           examinee.NATION,
+           examinee.ORIGIN,
+           examinee.CONTACT_NAME,
+           examinee.CONTACT_PHONE,
+           examinee.CONTACT_EMAIL,
+           o.RECIPIENT_ADDRESS,
+           d.SAMPLE_TYPE_NAME,
+           company.NAME,
+           d.SAMPLE_BTYPE,
+           d.FAMILY_RELATION,
+           d.ORDER_ID,
+           d.OWNER_PHENOTYPE
+        FROM 
+        	LIMS_ORDER_SAMPLE_DETAILS d
+            JOIN LIMS_ORDER o ON d.ORDER_ID = o.ID
+            LEFT JOIN APP_USER_INFO customer ON customer.ID = o.OWNER_ID
+	        LEFT JOIN APP_COMPANY company ON customer.INSTITUTION_ID = company.ID
+	        LEFT JOIN LIMS_ORDER_EXAMINEE examinee on o.ID = examinee.ORDER_ID
+        WHERE
+            o.OWNER_ID = #{customerId}
+           AND o.DEL_FLAG = 0 
+           AND o.SHEDULE_STATUS = 2
+           AND d.SYNCHRONIZED_STATUS = 0
+           AND o.TESTING_STATUS != 0
+           AND o.ORDER_TYPE != 4
+           AND (d.PURPOSE IN (2,3) or d.PURPOSE IS NULL)
+           <include refid="BaseSelectLimit"></include>
+    </select>
+  
+   <update id="updateLimsSampleStatus1" parameterType="com.todaysoft.lims.order.model.CallBackSampleModel">
+        UPDATE LIMS_ORDER_SUBSIDIARY_SAMPLE oss set oss.SYNCHRONIZED_STATUS = 1
+        WHERE oss.ID in 
+         <foreach item="item" index="index" collection="sampleIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+   </update>
+   <update id="updateLimsSampleStatus2" parameterType="com.todaysoft.lims.order.model.CallBackSampleModel"> 
+         UPDATE LIMS_ORDER_PRIMARY_SAMPLE ops set ops.SYNCHRONIZED_STATUS = 1
+        WHERE ops.ID in 
+         <foreach item="item" index="index" collection="sampleIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+   </update>   
+   <update id="updateLimsSampleStatus3" parameterType="com.todaysoft.lims.order.model.CallBackSampleModel">
+         UPDATE LIMS_ORDER_RESEARCH_SAMPLE ors set ors.SYNCHRONIZED_STATUS = 1
+        WHERE ors.ID in 
+         <foreach item="item" index="index" collection="sampleIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+   </update>
+    
+    
+       <resultMap id="SampleKeywordModel" type="com.todaysoft.lims.order.response.SampleKeyword">
+        <id column="ID" property="id" />
+        <result column="CODE" property="code" />
+        <result column="NAME" property="name" />
+        </resultMap>
+    
+    
+      <select id="searchDisease" resultMap="SampleKeywordModel" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest">
+        select 
+        	s.ID,
+       		s.CODE,
+       		s.NAME
+        from 
+		LIMS_ORDER o 
+		LEFT JOIN LIMS_ORDER_EXAMINEE e on o.ID = e.ORDER_ID
+		LEFT JOIN LIMS_ORDER_EXAMINEE_DIAGNOSIS d on d.OE_ID = e.ID
+		LEFT JOIN LIMS_DISEASE s on s.ID = d.DISEASE_ID
+		WHERE o.ID = #{orderId} AND s.ID is not null;
+    </select>
+    
+     <select id="searchGene" resultMap="SampleKeywordModel" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest"  >
+       select 
+       		s.ID,
+       		s.CODE,
+       		s.SYMBOL NAME
+       	from 
+			LIMS_ORDER o 
+			LEFT JOIN LIMS_ORDER_EXAMINEE e on o.ID = e.ORDER_ID
+			LEFT JOIN LIMS_ORDER_EXAMINEE_GENE d on d.OE_ID = e.ID
+			LEFT JOIN LIMS_GENE s on s.ID = d.GENE_ID
+		WHERE o.ID = #{orderId} AND s.ID is not null;
+    </select>
+    
+     <select id="searchPhenotype" resultMap="SampleKeywordModel" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest">
+        select 
+        	s.ID,
+       		s.CODE,
+       		s.NAME
+		FROM
+			LIMS_ORDER o
+		LEFT JOIN LIMS_ORDER_EXAMINEE e ON o.ID = e.ORDER_ID
+		LEFT JOIN LIMS_ORDER_EXAMINEE_PHENOTYPE ep ON ep.OE_ID = e.ID
+		LEFT JOIN LIMS_PHENOTYPE s ON ep.PHENOTYPE_ID = s.ID
+		WHERE o.ID = #{orderId} AND s.ID is not null;
+    </select>
+    
+    <resultMap id="PrimarySampleModel" type="com.todaysoft.lims.order.mybatis.model.PrimarySample">
+        <id column="ID" property="id" />
+        
+     </resultMap>
+     
+     <resultMap id="BasicSampleModel" type="com.todaysoft.lims.order.model.BasicSampleModel">
+      		<id column="SAMPLE_ID" property="sampleId" />
+      		<result column="ORDER_ID" property="orderId" />
+      		<result column="SAMPLE_CODE" property="sampleCode" />
+       		<result column="SAMPLE_TYPE" property="sampleType" />
+        	<result column="SAMPLE_SIZE" property="sampleSize" />
+         	<result column="SAMPLE_NAME" property="sampleName" />
+          	<result column="SAMPLING_DATE" property="samplingDate" />
+            <result column="SAMPLE_BTYPE" property="sampleBtype" />
+            <result column="PURPOSE" property="purpose" />
+            <result column="SAMPLE_PACKAGE_STATUS" property="samplePackageStatus" />
+            <result column="ERROR_DEAL_REMARK" property="errorDealRemark" />
+     		<result column="SAMPLE_ERROR_STATUS" property="sampleErrorStatus" />
+            <result column="ERROR_REASON" property="errorReason" />
+            <result column="FAMILY_RELATION" property="familyRelation" />
+     </resultMap>
+    
+    <select id="searchPrimarySample" resultMap="PrimarySampleModel" parameterType="com.todaysoft.lims.order.request.SampleSynchronizeRequest">
+        select 
+        	s.ID,s.SAMPLE_CODE CODE
+		FROM
+			LIMS_ORDER_PRIMARY_SAMPLE s
+		WHERE s.ORDER_ID = #{orderId} AND s.SAMPLE_ERROR_NEW_NO IS NULL;
+    </select>
+    
+    <select id="seacherBasicSample" resultMap="BasicSampleModel" parameterType="com.todaysoft.lims.order.model.BasicSampleRequest">
+       	SELECT
+			`PS`.`ORDER_ID` AS `ORDER_ID`,
+			`PS`.`ID` AS `SAMPLE_ID`,
+			1 AS `SAMPLE_BTYPE`,
+			`PS`.`SAMPLE_TYPE_ID` AS `SAMPLE_TYPE`,
+			`PS`.`SAMPLE_CODE` AS `SAMPLE_CODE`,
+			`OE`.`NAME` AS `SAMPLE_NAME`,
+			`PS`.`SAMPLE_SIZE` AS `SAMPLE_SIZE`,
+			`PS`.`SAMPLE_PACKAGE_STATUS` AS `SAMPLE_PACKAGE_STATUS`,
+			`PS`.`SAMPLING_DATE` AS `SAMPLING_DATE`,
+			NULL AS `PURPOSE`,
+			`PS`.`SAMPLE_PACKAGE_STATUS` AS `TRANSPORT_STATUS`,
+			`PS`.`UPDATE_TIME` AS `UPDATE_TIME`,
+			`PS`.`ERROR_DEAL_REMARK` AS `ERROR_DEAL_REMARK`,
+			`PS`.`SAMPLE_ERROR_STATUS` AS `SAMPLE_ERROR_STATUS`,
+			`PS`.`ERROR_REASON` AS `ERROR_REASON`,
+			`PS`.`ACCEPT_SAMPLE_TIME` AS `ACCEPT_SAMPLE_TIME`,
+			`PS`.`SAMPLE_ERROR_NEW_NO` AS `SAMPLE_ERROR_NEW_NO`,
+			 NULL AS `FAMILY_RELATION`,
+			 `PS`.`SYNCHRONIZED_STATUS` AS SYNCHRONIZED_STATUS,
+			 NULL AS `OWNER_PHENOTYPE`,
+			 NULL AS `OWNER_NAME`,
+			 NULL AS `OWNER_AGE`
+		FROM
+			(
+				`LIMS_ORDER_PRIMARY_SAMPLE` `PS`
+				LEFT JOIN `LIMS_ORDER_EXAMINEE` `OE` ON (
+					(
+						`PS`.`EXAMINEE_ID` = `OE`.`ID`
+					)
+				)
+			)
+		WHERE
+		1=1
+            <if test="sampleCode!=null  and sampleCode.trim().length()>0">
+             	 AND `PS`.SAMPLE_CODE = #{sampleCode}
+	        </if>
+	        <if test="orderId!=null  and orderId.trim().length()>0">
+             	 AND `PS`.ORDER_ID = #{orderId}
+	        </if>
+		UNION  ALL
+			SELECT
+				`SS`.`ORDER_ID` AS `ORDER_ID`,
+				`SS`.`ID` AS `SAMPLE_ID`,
+				2 AS `2`,
+				`SS`.`SAMPLE_TYPE_ID` AS `SAMPLE_TYPE`,
+				`SS`.`SAMPLE_CODE` AS `SAMPLE_CODE`,
+				`SS`.`OWNER_NAME` AS `SAMPLE_NAME`,
+				`SS`.`SAMPLE_SIZE` AS `SAMPLE_SIZE`,
+				`SS`.`SAMPLE_PACKAGE_STATUS` AS `SAMPLE_PACKAGE_STATUS`,
+				`SS`.`SAMPLING_DATE` AS `SAMPLING_DATE`,
+				`SS`.`PURPOSE` AS `PURPOSE`,
+				`SS`.`SAMPLE_PACKAGE_STATUS` AS `SAMPLE_PACKAGE_STATUS`,
+				`SS`.`UPDATE_TIME` AS `UPDATE_TIME`,
+				`SS`.`ERROR_DEAL_REMARK` AS `ERROR_DEAL_REMARK`,
+				`SS`.`SAMPLE_ERROR_STATUS` AS `SAMPLE_ERROR_STATUS`,
+				`SS`.`ERROR_REASON` AS `ERROR_REASON`,
+				`SS`.`ACCEPT_SAMPLE_TIME` AS `ACCEPT_SAMPLE_TIME`,
+				`SS`.`SAMPLE_ERROR_NEW_NO` AS `SAMPLE_ERROR_NEW_NO`,
+			    `SS`.`FAMILY_RELATION` AS `FAMILY_RELATION`,
+			    `SS`.`SYNCHRONIZED_STATUS` AS SYNCHRONIZED_STATUS,
+			    `SS`.`OWNER_PHENOTYPE` AS OWNER_PHENOTYPE,
+				`SS`.`OWNER_NAME` AS `OWNER_NAME`,
+			    `SS`.`OWNER_AGE` AS `OWNER_AGE`
+			FROM
+				`LIMS_ORDER_SUBSIDIARY_SAMPLE` `SS`
+			WHERE
+				1=1
+	            <if test="sampleCode!=null  and sampleCode.trim().length()>0">
+	             	 AND `SS`.SAMPLE_CODE = #{sampleCode}
+		        </if>
+		        <if test="orderId!=null  and orderId.trim().length()>0">
+	             	 AND `SS`.ORDER_ID = #{orderId}
+		        </if>
+		UNION ALL
+			SELECT
+				`RS`.`ORDER_ID` AS `ORDER_ID`,
+				`RS`.`ID` AS `SAMPLE_ID`,
+				3 AS `3`,
+				`RS`.`SAMPLE_TYPE_ID` AS `SAMPLE_TYPE`,
+				`RS`.`SAMPLE_CODE` AS `SAMPLE_CODE`,
+				`RS`.`SAMPLE_NAME` AS `SAMPLE_NAME`,
+				`RS`.`SAMPLE_SIZE` AS `SAMPLE_SIZE`,
+				`RS`.`SAMPLE_PACKAGE_STATUS` AS `SAMPLE_PACKAGE_STATUS`,
+				`RS`.`SAMPLING_DATE` AS `SAMPLING_DATE`,
+				NULL AS `NULL`,
+				`RS`.`SAMPLE_PACKAGE_STATUS` AS `SAMPLE_PACKAGE_STATUS`,
+				`RS`.`UPDATE_TIME` AS `UPDATE_TIME`,
+				`RS`.`ERROR_DEAL_REMARK` AS `ERROR_DEAL_REMARK`,
+				`RS`.`SAMPLE_ERROR_STATUS` AS `SAMPLE_ERROR_STATUS`,
+				`RS`.`ERROR_REASON` AS `ERROR_REASON`,
+				`RS`.`ACCEPT_SAMPLE_TIME` AS `ACCEPT_SAMPLE_TIME`,
+				`RS`.`SAMPLE_ERROR_NEW_NO` AS `SAMPLE_ERROR_NEW_NO`,
+				 NULL AS `FAMILY_RELATION`,
+				 `RS`.`SYNCHRONIZED_STATUS` AS SYNCHRONIZED_STATUS,
+		 		 NULL AS `OWNER_PHENOTYPE`,
+				 NULL AS `OWNER_NAME`,
+		         NULL AS `OWNER_AGE`
+			FROM
+				`LIMS_ORDER_RESEARCH_SAMPLE` `RS`
+			WHERE
+				1=1
+	            <if test="sampleCode!=null  and sampleCode.trim().length()>0">
+	             	 AND `RS`.SAMPLE_CODE = #{sampleCode}
+		        </if>
+		        <if test="orderId!=null  and orderId.trim().length()>0">
+	             	 AND `RS`.ORDER_ID = #{orderId}
+		        </if>
+    </select>
+   
+   
+</mapper>

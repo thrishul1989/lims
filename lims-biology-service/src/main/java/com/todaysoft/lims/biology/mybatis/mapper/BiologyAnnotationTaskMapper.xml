@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.BiologyAnnotationTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.BiologyAnnotationTask" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SEQUENCING_CODE" property="sequencingCode" jdbcType="VARCHAR" />
+    <result column="ORDER_TYPE" property="orderType" jdbcType="INTEGER" />
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="METHOD_ID" property="methodId" jdbcType="VARCHAR" />
+    <result column="PRIMARY_SAMPLE" property="primarySample" jdbcType="INTEGER" />
+    <result column="FAMILY" property="family" jdbcType="INTEGER" />
+    <result column="FAMILY_STATE" property="familyState" jdbcType="INTEGER" />
+    <result column="SAMPLE_CODE" property="sampleCode" jdbcType="VARCHAR" />
+    <result column="DATA_CODE" property="dataCode" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="ANNOTATION_STATE" property="annotationState" jdbcType="INTEGER" />
+    <result column="STATISTICS_STATE" property="statisticsState" jdbcType="INTEGER" />
+    <result column="RESUBMIT" property="resubmit" jdbcType="INTEGER" />
+    <result column="RESUBMIT_COUNT" property="resubmitCount" jdbcType="INTEGER" />
+    <result column="IF_URGENT" property="ifUrgent" jdbcType="INTEGER" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ERROR_STATE" property="errorState" jdbcType="INTEGER"/>
+  </resultMap>
+
+  <resultMap id="OrderProductResultMap" type="com.todaysoft.lims.biology.model.OrderProductInfoModel" >
+    <result column="ORDER_CODE" property="orderCode" />
+    <result column="ORDER_TYPE" property="orderType" />
+    <result column="CONTRACT_ID" property="contractId" />
+    <result column="DELIVERY_MODE" property="deliveryMode" />
+    <result column="BUSINESS_TYPE" property="businessType" />
+    <result column="ORDER_ID" property="orderId" />
+  </resultMap>
+
+  <resultMap id="OrderSampleResultMap" type="com.todaysoft.lims.biology.model.OrderSampleInfoModel" >
+    <result column="ORDER_CODE" property="orderCode" />
+    <result column="SAMPLE_CODE" property="sampleCode" />
+    <result column="SAMPLE_ID" property="sampleId" />
+    <result column="PURPOSE" property="purpose" />
+    <result column="PHENOTYPE" property="phenotype" />
+    <result column="SEX" property="sex" />
+    <result column="ORDER_TYPE" property="orderType" />
+    <result column="RELATION" property="relation" />
+    <result column="SYMPTOM" property="symptom" />
+  </resultMap>
+
+  <resultMap id="PhenotypeModelResultMap" type="com.todaysoft.lims.biology.model.PhenotypeModel" >
+    <result column="ID" property="id" />
+    <result column="CODE" property="code" />
+    <result column="NAME" property="name" />
+  </resultMap>
+
+  <resultMap id="ScheduleMap" type="com.todaysoft.lims.biology.model.ScheduleSampleModel" >
+    <result column="ACTIVE_TASK" property="activeTask" />
+    <result column="ID" property="id" />
+    <result column="PROCCESS_STATE" property="proccessState" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, SEQUENCING_CODE, ORDER_TYPE,ORDER_CODE,PRODUCT_CODE, PRODUCT_NAME,
+    METHOD_ID, PRIMARY_SAMPLE, FAMILY, FAMILY_STATE, SAMPLE_CODE, DATA_CODE, START_TIME,
+    END_TIME, STATUS, ANNOTATION_STATE, STATISTICS_STATE, RESUBMIT, RESUBMIT_COUNT,REMARK,ERROR_STATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BIOLOGY_ANNOTATION_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getTaskById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    t.*
+    from
+    BIOLOGY_ANNOTATION_TASK t
+    where
+    t.ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getTaskByDataCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      t.*
+    from
+      BIOLOGY_ANNOTATION_TASK t
+    where
+      t.DATA_CODE = #{dataCode}
+    order by t.START_TIME DESC limit 1;
+  </select>
+
+  <select id="getScheduleByTestingSample" resultMap="ScheduleMap" parameterType="java.lang.String" >
+    SELECT
+	  t.ACTIVE_TASK,t.ID,t.PROCCESS_STATE
+    FROM
+	  LIMS_TESTING_SCHEDULE t
+    LEFT JOIN LIMS_ORDER o ON t.ORDER_ID = o.ID
+    LEFT JOIN LIMS_PRODUCT p ON t.PRODUCT_ID = p.ID
+    LEFT JOIN LIMS_TESTING_METHOD m ON t.METHOD_ID = m.ID
+    LEFT JOIN LIMS_TESTING_SAMPLE s ON t.SAMPLE_ID = s.ID
+  WHERE
+	t.VERIFY_TARGET IS NULL
+  AND o.CODE = #{0}
+  AND p.CODE = #{1}
+  AND m.SEMANTIC = #{2}
+  AND s.SAMPLE_CODE = #{3}
+  AND o.DEL_FLAG = 0
+  AND p.DEL_FLAG = 0
+  LIMIT 1;
+  </select>
+
+  <select id="getScheduleByReceivedSample" resultMap="ScheduleMap" parameterType="java.lang.String" >
+    SELECT
+      t.ACTIVE_TASK,t.ID,t.PROCCESS_STATE
+    FROM
+      LIMS_TESTING_SCHEDULE t
+    LEFT JOIN LIMS_ORDER o ON t.ORDER_ID = o.ID
+    LEFT JOIN LIMS_PRODUCT p ON t.PRODUCT_ID = p.ID
+    LEFT JOIN LIMS_TESTING_METHOD m ON t.METHOD_ID = m.ID
+    LEFT JOIN LIMS_RECEIVED_SAMPLE s ON t.SAMPLE_ID = s.SAMPLE_ID
+    WHERE
+      t.VERIFY_TARGET IS NULL
+      AND o.CODE = #{0}
+      AND p.CODE = #{1}
+      AND m.SEMANTIC = #{2}
+      AND s.SAMPLE_CODE = #{3}
+      AND o.DEL_FLAG = 0
+      AND p.DEL_FLAG = 0
+    LIMIT 1;
+  </select>
+
+  <select id="getTaskSearchList" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.biology.model.request.BiologyAnnotatioListRequest">
+    SELECT
+      t.*,
+      IFNULL(O.IF_URGENT,0) AS IF_URGENT
+    FROM
+      BIOLOGY_ANNOTATION_TASK t
+    LEFT JOIN LIMS_ORDER O on O.CODE = t.ORDER_CODE
+    LEFT JOIN  LIMS_TESTING_SCHEDULE_HISTORY h on t.id = h.TASK_ID
+    LEFT JOIN  LIMS_TESTING_SCHEDULE s on s.id = h.SCHEDULE_ID
+    WHERE
+      <include refid="BaseSelectFilters"></include>
+    AND  s.PROCCESS_STATE !=2
+    GROUP BY t.ID ORDER BY O.IF_URGENT desc,t.RESUBMIT_COUNT DESC ,t.START_TIME ASC
+  </select>
+
+  <select id="getOrderInfoBySampleCode" resultMap="OrderProductResultMap" parameterType="java.lang.String" >
+     SELECT
+        ord.CODE AS ORDER_CODE,ord.ORDER_TYPE AS ORDER_TYPE,ord.CONTRACT_ID AS CONTRACT_ID,con.DELIVERY_MODE AS DELIVERY_MODE,
+        rs.BUSINESS_TYPE AS BUSINESS_TYPE,ord.ID AS ORDER_ID
+    FROM
+        LIMS_RECEIVED_SAMPLE rs
+    LEFT JOIN LIMS_ORDER ord on rs.ORDER_ID=ord.ID
+    LEFT JOIN LIMS_CONTRACT_CONTENT con ON ord.CONTRACT_ID=con.CONTRACT_ID
+    WHERE
+        rs.SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR};
+  </select>
+
+  <select id="getFamilySampleByCode" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+  SELECT
+      ord.CODE AS ORDER_CODE,rs.SAMPLE_ID,rs.SAMPLE_CODE,rs.PURPOSE
+  FROM
+      LIMS_RECEIVED_SAMPLE rs
+  LEFT JOIN LIMS_ORDER ord on rs.ORDER_ID=ord.ID
+  WHERE
+      ord.CODE = #{0}
+      AND (rs.PURPOSE=2 or rs.PURPOSE=3)
+  </select>
+
+  <select id="getOrderSamplesByOrderCode" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+    SELECT
+    ord.CODE AS ORDER_CODE,rs.SAMPLE_ID,rs.SAMPLE_CODE,rs.PURPOSE
+    FROM
+      LIMS_RECEIVED_SAMPLE rs
+    LEFT JOIN LIMS_ORDER ord on rs.ORDER_ID=ord.ID
+    WHERE
+      ord.CODE = #{orderCode}
+    AND (rs.PURPOSE is NULL or rs.PURPOSE=2 or rs.PURPOSE=3)
+  </select>
+
+  <select id="getPhenotypeModelByPrimaySample" resultMap="PhenotypeModelResultMap" parameterType="java.lang.String" >
+   SELECT
+	p.ID,p.CODE,p.NAME
+  FROM
+	LIMS_PHENOTYPE p
+  left join LIMS_ORDER_EXAMINEE_PHENOTYPE ep on ep.PHENOTYPE_ID = p.ID
+  left join LIMS_ORDER_PRIMARY_SAMPLE ps on ps.EXAMINEE_ID=ep.OE_ID
+  where ps.SAMPLE_CODE=#{sampleCode};
+  </select>
+
+  <select id="getSubSampleRelation" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+    SELECT
+	  oss.FAMILY_RELATION AS RELATION,oss.OWNER_PHENOTYPE AS SYMPTOM
+    FROM
+	  LIMS_ORDER_SUBSIDIARY_SAMPLE oss
+    where
+      oss.SAMPLE_CODE=#{sampleCode};
+  </select>
+
+
+
+  <select id="getPrimarySampleSexByCode" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+     SELECT
+        ops.SAMPLE_CODE,oe.SEX
+    FROM
+        LIMS_ORDER_PRIMARY_SAMPLE ops
+    left JOIN
+      LIMS_ORDER_EXAMINEE oe on ops.EXAMINEE_ID=oe.id
+    WHERE
+      ops.SAMPLE_CODE=#{sampleCode,jdbcType=VARCHAR};
+  </select>
+
+  <select id="getSubSampleSexByCode" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+    SELECT
+        subSample.SAMPLE_CODE,
+        dict.DICT_TEXT AS SEX
+    FROM
+        LIMS_ORDER_SUBSIDIARY_SAMPLE subSample
+    LEFT JOIN LIMS_DICT dict ON dict.DICT_VALUE = subSample.FAMILY_RELATION
+    WHERE
+        subSample.SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR}
+    AND dict.CATEGORY = 'FAMILY_RELATION';
+  </select>
+
+  <select id="getPhenotypeByOrderCode" resultMap="OrderSampleResultMap" parameterType="java.lang.String" >
+    SELECT
+        Group_concat(p.CODE) AS PHENOTYPE
+    FROM
+        LIMS_ORDER ord
+    left join LIMS_ORDER_EXAMINEE exm on ord.id=exm.ORDER_ID
+    left JOIN LIMS_ORDER_EXAMINEE_PHENOTYPE oep on exm.ID=oep.OE_ID
+    left JOIN LIMS_PHENOTYPE p on oep.PHENOTYPE_ID=p.ID
+    where
+      ord.CODE=#{orderCode,jdbcType=VARCHAR};
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BIOLOGY_ANNOTATION_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationTask" >
+    insert into BIOLOGY_ANNOTATION_TASK (ID, SEQUENCING_CODE,ORDER_TYPE,
+      ORDER_CODE, PRODUCT_CODE,
+      PRODUCT_NAME, METHOD_ID, PRIMARY_SAMPLE, 
+      FAMILY, FAMILY_STATE, SAMPLE_CODE, 
+      DATA_CODE, START_TIME, END_TIME, 
+      STATUS, ANNOTATION_STATE, STATISTICS_STATE,
+    RESUBMIT, RESUBMIT_COUNT,REMARK,ERROR_STATE)
+    values (#{id,jdbcType=VARCHAR}, #{sequencingCode,jdbcType=VARCHAR},#{orderType,jdbcType=INTEGER},
+      #{orderCode,jdbcType=VARCHAR}, #{productCode,jdbcType=VARCHAR},
+      #{productName,jdbcType=VARCHAR}, #{methodId,jdbcType=VARCHAR}, #{primarySample,jdbcType=INTEGER},
+      #{family,jdbcType=INTEGER}, #{familyState,jdbcType=INTEGER}, #{sampleCode,jdbcType=VARCHAR},
+      #{dataCode,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{annotationState,jdbcType=INTEGER}, #{statisticsState,jdbcType=INTEGER},
+    #{resubmit,jdbcType=INTEGER},
+    #{resubmitCount,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},#{errorState,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationTask" >
+    insert into BIOLOGY_ANNOTATION_TASK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sequencingCode != null" >
+        SEQUENCING_CODE,
+      </if>
+      <if test="orderType != null" >
+        ORDER_TYPE,
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE,
+      </if>
+      <if test="productCode != null" >
+        PRODUCT_CODE,
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME,
+      </if>
+      <if test="methodId != null" >
+        METHOD_ID,
+      </if>
+      <if test="primarySample != null" >
+        PRIMARY_SAMPLE,
+      </if>
+      <if test="family != null" >
+        FAMILY,
+      </if>
+      <if test="familyState != null" >
+        FAMILY_STATE,
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE,
+      </if>
+      <if test="dataCode != null" >
+        DATA_CODE,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="annotationState != null" >
+        ANNOTATION_STATE,
+      </if>
+      <if test="statisticsState != null" >
+        STATISTICS_STATE,
+      </if>
+      <if test="resubmit != null" >
+        RESUBMIT,
+      </if>
+      <if test="resubmitCount != null" >
+        RESUBMIT_COUNT,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="errorState != null">
+        ERROR_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sequencingCode != null" >
+        #{sequencingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodId != null" >
+        #{methodId,jdbcType=VARCHAR},
+      </if>
+      <if test="primarySample != null" >
+        #{primarySample,jdbcType=INTEGER},
+      </if>
+      <if test="family != null" >
+        #{family,jdbcType=INTEGER},
+      </if>
+      <if test="familyState != null" >
+        #{familyState,jdbcType=INTEGER},
+      </if>
+      <if test="sampleCode != null" >
+        #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null" >
+        #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="annotationState != null" >
+        #{annotationState,jdbcType=INTEGER},
+      </if>
+      <if test="statisticsState != null" >
+        #{statisticsState,jdbcType=INTEGER},
+      </if>
+      <if test="resubmit != null" >
+        #{resubmit,jdbcType=INTEGER},
+      </if>
+      <if test="resubmitCount != null" >
+        #{resubmitCount,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="errorState != null">
+        #{errorState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="createTaskList" parameterType="java.util.List">
+    insert into BIOLOGY_ANNOTATION_TASK
+    (ID, SEQUENCING_CODE, ORDER_TYPE,ORDER_CODE, PRODUCT_CODE, PRODUCT_NAME,
+    METHOD_ID, PRIMARY_SAMPLE, FAMILY, FAMILY_STATE, SAMPLE_CODE, DATA_CODE, START_TIME,
+    END_TIME, STATUS, ANNOTATION_STATE, STATISTICS_STATE, RESUBMIT, RESUBMIT_COUNT,REMARK,ERROR_STATE)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id},#{item.sequencingCode},#{item.orderType},#{item.orderCode},
+      #{item.productCode},#{item.productName},#{item.methodId},#{item.primarySample},
+      #{item.family},#{item.familyState},#{item.sampleCode},#{item.dataCode},#{item.startTime},
+      #{item.endTime},#{item.status},#{item.annotationState},#{item.statisticsState},#{item.resubmit},#{item.resubmitCount},#{item.remark},#{item.errorState}
+      )
+    </foreach>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationTask" >
+    update BIOLOGY_ANNOTATION_TASK
+    <set >
+      <if test="sequencingCode != null" >
+        SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        ORDER_TYPE = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null" >
+        ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="methodId != null" >
+        METHOD_ID = #{methodId,jdbcType=VARCHAR},
+      </if>
+      <if test="primarySample != null" >
+        PRIMARY_SAMPLE = #{primarySample,jdbcType=INTEGER},
+      </if>
+      <if test="family != null" >
+        FAMILY = #{family,jdbcType=INTEGER},
+      </if>
+      <if test="familyState != null" >
+        FAMILY_STATE = #{familyState,jdbcType=INTEGER},
+      </if>
+      <if test="sampleCode != null" >
+        SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null" >
+        DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="annotationState != null" >
+        ANNOTATION_STATE = #{annotationState,jdbcType=INTEGER},
+      </if>
+      <if test="statisticsState != null" >
+        STATISTICS_STATE = #{statisticsState,jdbcType=INTEGER},
+      </if>
+      <if test="resubmit != null" >
+        RESUBMIT = #{resubmit,jdbcType=INTEGER},
+      </if>
+      <if test="resubmitCount != null" >
+        RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="errorState != null">
+        REMARK = #{errorState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.biology.model.BiologyAnnotationTask" >
+    update BIOLOGY_ANNOTATION_TASK
+    set SEQUENCING_CODE = #{sequencingCode,jdbcType=VARCHAR},
+      ORDER_TYPE = #{orderType,jdbcType=INTEGER},
+      ORDER_CODE = #{orderCode,jdbcType=VARCHAR},
+      PRODUCT_CODE = #{productCode,jdbcType=VARCHAR},
+      PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      METHOD_ID = #{methodId,jdbcType=VARCHAR},
+      PRIMARY_SAMPLE = #{primarySample,jdbcType=INTEGER},
+      FAMILY = #{family,jdbcType=INTEGER},
+      FAMILY_STATE = #{familyState,jdbcType=INTEGER},
+      SAMPLE_CODE = #{sampleCode,jdbcType=VARCHAR},
+      DATA_CODE = #{dataCode,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=INTEGER},
+      ANNOTATION_STATE = #{annotationState,jdbcType=INTEGER},
+      STATISTICS_STATE = #{statisticsState,jdbcType=INTEGER},
+      RESUBMIT = #{resubmit,jdbcType=INTEGER},
+      RESUBMIT_COUNT = #{resubmitCount,jdbcType=INTEGER},
+    REMARK = #{remark,jdbcType=VARCHAR},
+    ERROR_STATE = #{errorState,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <sql id="BaseSelectFilters">
+    ( (t.STATUS = 0 OR t.STATISTICS_STATE = 1) AND t.FAMILY != 0 AND O.DEL_FLAG=0 AND (t.ERROR_STATE != 2 or t.ERROR_STATE is NULL))
+    <if test="_parameter.sequencingCode != null and _parameter.sequencingCode != ''" >
+      <bind name="sequencingCodePattern" value="'%' + _parameter.sequencingCode + '%'" />
+      AND t.SEQUENCING_CODE LIKE #{sequencingCodePattern}
+    </if>
+    <if test="_parameter.orderCode != null and _parameter.orderCode != ''" >
+      <bind name="orderCodePattern" value="'%' + _parameter.orderCode + '%'" />
+      AND t.ORDER_CODE LIKE #{orderCodePattern}
+    </if>
+    <if test="_parameter.createStartDate != null" >
+      AND t.START_TIME &gt;= #{_parameter.createStartDate}
+    </if>
+    <if test="_parameter.createEndDate != null" >
+      AND t.START_TIME &lt; #{_parameter.createEndDate}
+    </if>
+    <if test="_parameter.annotationState != null" >
+      AND t.ANNOTATION_STATE = #{_parameter.annotationState}
+    </if>
+    <if test="_parameter.urgent != null" >
+      <choose>
+        <when test="_parameter.urgent != 0 ">AND O.IF_URGENT = #{_parameter.urgent}</when>
+        <when test="_parameter.urgent == 0">AND (O.IF_URGENT = #{_parameter.urgent} or O.IF_URGENT is null)</when>
+      </choose>
+    </if>
+  </sql>
+
+
+</mapper>

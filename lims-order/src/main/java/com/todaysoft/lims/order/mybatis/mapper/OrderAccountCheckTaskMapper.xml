@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.OrderAccountCheckTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTask" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TRADING_DATE" property="tradingDate" jdbcType="VARCHAR" />
+    <result column="INTERFACE_CODE" property="interfaceCode" jdbcType="BIT" />
+    <result column="RECONCILIATION_DATE" property="reconciliationDate" jdbcType="VARCHAR" />
+    <result column="RECONCILIATION_RESULT" property="reconciliationResult" jdbcType="BIT" />
+    <result column="SETTLE_STATUS" property="settleStatus" jdbcType="BIT" />
+    <result column="RECONCILIATION_STATUS" property="reconciliationStatus" jdbcType="BIT" />
+    <result column="SOLVE_RESULT" property="solveResult" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TRADING_DATE, INTERFACE_CODE, RECONCILIATION_DATE, RECONCILIATION_RESULT, SETTLE_STATUS, 
+    RECONCILIATION_STATUS, SOLVE_RESULT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTaskExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart >= 0" >
+      limit #{limitStart}, #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_TASK
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTaskExample" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTask" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_TASK (ID, TRADING_DATE, INTERFACE_CODE, 
+      RECONCILIATION_DATE, RECONCILIATION_RESULT, SETTLE_STATUS, 
+      RECONCILIATION_STATUS, SOLVE_RESULT)
+    values (#{id,jdbcType=VARCHAR}, #{tradingDate,jdbcType=VARCHAR}, #{interfaceCode,jdbcType=BIT}, 
+      #{reconciliationDate,jdbcType=VARCHAR}, #{reconciliationResult,jdbcType=BIT}, #{settleStatus,jdbcType=BIT}, 
+      #{reconciliationStatus,jdbcType=BIT}, #{solveResult,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTask" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="tradingDate != null" >
+        TRADING_DATE,
+      </if>
+      <if test="interfaceCode != null" >
+        INTERFACE_CODE,
+      </if>
+      <if test="reconciliationDate != null" >
+        RECONCILIATION_DATE,
+      </if>
+      <if test="reconciliationResult != null" >
+        RECONCILIATION_RESULT,
+      </if>
+      <if test="settleStatus != null" >
+        SETTLE_STATUS,
+      </if>
+      <if test="reconciliationStatus != null" >
+        RECONCILIATION_STATUS,
+      </if>
+      <if test="solveResult != null" >
+        SOLVE_RESULT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tradingDate != null" >
+        #{tradingDate,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceCode != null" >
+        #{interfaceCode,jdbcType=BIT},
+      </if>
+      <if test="reconciliationDate != null" >
+        #{reconciliationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reconciliationResult != null" >
+        #{reconciliationResult,jdbcType=BIT},
+      </if>
+      <if test="settleStatus != null" >
+        #{settleStatus,jdbcType=BIT},
+      </if>
+      <if test="reconciliationStatus != null" >
+        #{reconciliationStatus,jdbcType=BIT},
+      </if>
+      <if test="solveResult != null" >
+        #{solveResult,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTaskExample" resultType="java.lang.Integer" >
+    select count(*) from LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradingDate != null" >
+        TRADING_DATE = #{record.tradingDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interfaceCode != null" >
+        INTERFACE_CODE = #{record.interfaceCode,jdbcType=BIT},
+      </if>
+      <if test="record.reconciliationDate != null" >
+        RECONCILIATION_DATE = #{record.reconciliationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reconciliationResult != null" >
+        RECONCILIATION_RESULT = #{record.reconciliationResult,jdbcType=BIT},
+      </if>
+      <if test="record.settleStatus != null" >
+        SETTLE_STATUS = #{record.settleStatus,jdbcType=BIT},
+      </if>
+      <if test="record.reconciliationStatus != null" >
+        RECONCILIATION_STATUS = #{record.reconciliationStatus,jdbcType=BIT},
+      </if>
+      <if test="record.solveResult != null" >
+        SOLVE_RESULT = #{record.solveResult,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_TASK
+    set ID = #{record.id,jdbcType=VARCHAR},
+      TRADING_DATE = #{record.tradingDate,jdbcType=VARCHAR},
+      INTERFACE_CODE = #{record.interfaceCode,jdbcType=BIT},
+      RECONCILIATION_DATE = #{record.reconciliationDate,jdbcType=VARCHAR},
+      RECONCILIATION_RESULT = #{record.reconciliationResult,jdbcType=BIT},
+      SETTLE_STATUS = #{record.settleStatus,jdbcType=BIT},
+      RECONCILIATION_STATUS = #{record.reconciliationStatus,jdbcType=BIT},
+      SOLVE_RESULT = #{record.solveResult,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTask" >
+    update LIMS_ORDER_ACCOUNT_CHECK_TASK
+    <set >
+      <if test="tradingDate != null" >
+        TRADING_DATE = #{tradingDate,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceCode != null" >
+        INTERFACE_CODE = #{interfaceCode,jdbcType=BIT},
+      </if>
+      <if test="reconciliationDate != null" >
+        RECONCILIATION_DATE = #{reconciliationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reconciliationResult != null" >
+        RECONCILIATION_RESULT = #{reconciliationResult,jdbcType=BIT},
+      </if>
+      <if test="settleStatus != null" >
+        SETTLE_STATUS = #{settleStatus,jdbcType=BIT},
+      </if>
+      <if test="reconciliationStatus != null" >
+        RECONCILIATION_STATUS = #{reconciliationStatus,jdbcType=BIT},
+      </if>
+      <if test="solveResult != null" >
+        SOLVE_RESULT = #{solveResult,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.order.mybatis.model.OrderAccountCheckTask" >
+    update LIMS_ORDER_ACCOUNT_CHECK_TASK
+    set TRADING_DATE = #{tradingDate,jdbcType=VARCHAR},
+      INTERFACE_CODE = #{interfaceCode,jdbcType=BIT},
+      RECONCILIATION_DATE = #{reconciliationDate,jdbcType=VARCHAR},
+      RECONCILIATION_RESULT = #{reconciliationResult,jdbcType=BIT},
+      SETTLE_STATUS = #{settleStatus,jdbcType=BIT},
+      RECONCILIATION_STATUS = #{reconciliationStatus,jdbcType=BIT},
+      SOLVE_RESULT = #{solveResult,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

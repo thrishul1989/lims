@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>实验报表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+</head>
+<body >
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报表统计</a>
+							<li><a href="#">实验报表</a>
+						</ol>
+					</div>
+				 <form action="#" method="post"	class="form-horizontal m-t" id="export_form">
+						<fieldset>
+						 	<legend>样本实验统计:</legend>
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<select class="form-control"  id="center" name="marketingCenter" >
+										<option value="">请选择营销中心</option>
+										<option value="1">临床遗传</option>
+										<option value="2">临床肿瘤</option>
+										<option value="3">健康筛查</option>
+										<option value="4">科技服务</option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="sampleTestingStart" name="start" placeholder="下单开始时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										value="${(searcher.start)!?html}"/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="sampleTestingEnd" name="end" placeholder="下单结束时间"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											 value="${(searcher.end)!?html}"/>
+								</div>
+						</div>
+					</fieldset>
+			</form>	 
+			<a href="#" class="btn btn-sm btn-primary"  onclick="sample_testing_export()" >
+		           <i class="fa fa-print"></i> 样本实验统计导出
+		    </a>
+
+			 <form action="#" method="post"	class="form-horizontal m-t" id="export_form1">
+						<fieldset>
+						 	<legend>工作任务统计:</legend>
+							<div class="form-group">
+								<div class="col-sm-2">
+										<input type="checkbox" id="workSelect" name="workSelect">全选
+								</div>
+								<label class="col-sm-2 control-label">实验名称：</label>
+								<div class="col-sm-12">
+										<#list taskList as task>
+											<div class="col-sm-2">
+												<input type="checkbox" name="taskSemantic"  value="${task.semantic!?html}">${task.name!?html}
+											</div>
+										</#list>
+								</div>
+							</div>
+
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<input type="text" class="form-control laydate-icon" id="assignStart" name="start" placeholder="下达开始时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+							</div>
+							
+							<div class="col-sm-2">
+								<input type="text" class="form-control laydate-icon" id="assignEnd" name="end" placeholder="下达结束时间"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+							</div>
+							</div>
+					</fieldset>
+			</form>	 
+			<a href="#" class="btn btn-sm btn-primary"  onclick="task_sheet_export()" >
+		           <i class="fa fa-print"></i> 工作任务统计
+		    </a>
+
+					<form action="#" method="post"	class="form-horizontal m-t" id="export_form2">
+						<fieldset>
+							<legend>样本成功率统计:</legend>
+							<div class="form-group">
+								<div class="col-sm-2">
+									<input type="checkbox" id="sampleSuccSelect" name="sampleSuccSelect">全选
+								</div>
+								<label class="col-sm-2 control-label">实验名称：</label>
+								<div class="col-sm-12">
+									<div class="col-sm-2">
+										<input type="checkbox" name="taskSemantic"  value="DNA-QC">DNA质检
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="taskSemantic"  value="CDNA-QC">CDNA质检
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="taskSemantic"  value="LIBRARY-QC">文库质检
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="taskSemantic"  value="MULTIPCR-QC">多重PCR质检
+									</div>
+									<div class="col-sm-2">
+										<input type="checkbox" name="taskSemantic"  value="Long-QC">Long-PCR质检
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="assignStart1" name="start" placeholder="下达开始时间"
+										   readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+								</div>
+
+								<div class="col-sm-2">
+									<input type="text" class="form-control laydate-icon" id="assignEnd1" name="end" placeholder="下达结束时间"
+										   readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+					<a href="#" class="btn btn-sm btn-primary"  onclick="export_task_success()" >
+		           <i class="fa fa-print"></i> 样本成功率统计导出
+		    </a>
+					<form action="#" method="post"	class="form-horizontal m-t" id="export_form3">
+						<fieldset>
+							<legend>异常任务处理统计:</legend>
+							<div class="form-group">
+								<div class="col-sm-2">
+									<input type="checkbox" id="failSuccSelect" name="failSuccSelect">全选
+								</div>
+								<label class="col-sm-2 control-label">实验名称：</label>
+								<div class="col-sm-12">
+									<div class="col-sm-12">
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="DNA-QC">DNA质检
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="CDNA-QC">CDNA质检
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="LIBRARY-QC">文库质检
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="LIBRARY-CAP">文库捕获
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="TECHNICAL-ANALY">技术分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="PCR-NGS-PRIMER-DESIGN">PCR-NGS引物设计合成
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="PCR-ONE">一次PCR
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="DATA-ANALYSIS">SANGER验证-数据分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="PRIMER-DESIGN">引物设计合成
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="SANGER-PCR-ONE">SANGER检测-一次PCR
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="MLPA-DATA-ANALYSIS">MLPA数据分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="PCR-NGS-DATA-ANALYSIS">PCR-NGS数据分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="SANGER-PCR-TWO">SANGER检测-二次PCR
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="SANGER-DATA-ANALYSIS">SANGER检测-数据分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="FLUO-ANALYSE">荧光检测数据分析
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="MULTIPCR-QC">多重PCR质检
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="Long-QC">Long-PCR质检
+										</div>
+										<div class="col-sm-2">
+											<input type="checkbox" name="taskSemantic"  value="DT-DATA-ANALYSIS">动态突变-数据分析
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group" >
+								<div class="col-sm-2">
+									<input type="text" class="form-control laydate-icon" id="assignStart3" name="start" placeholder="异常提交开始时间"
+										   readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+								</div>
+
+								<div class="col-sm-2">
+									<input type="text" class="form-control laydate-icon" id="assignEnd3" name="end" placeholder="异常提交结束时间"
+										   readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" value=""/>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+
+					<a href="#" class="btn btn-sm btn-primary"  onclick="export_task_fail()" >
+		           <i class="fa fa-print"></i> 异常任务处理导出
+		    </a>
+					
+		 	<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+		        <input type="hidden" name="formValue" id="formValue" value="">
+		    </form>	
+	
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		$("#workSelect").click(function() {
+			if($('#workSelect').is(':checked'))
+			{
+				$("#export_form1 [name = taskSemantic]:checkbox").prop('checked',true);
+			}else{
+				$("#export_form1 [name = taskSemantic]:checkbox").prop('checked',false);
+			}
+		});
+
+		$("#sampleSuccSelect").click(function() {
+			if($('#sampleSuccSelect').is(':checked'))
+			{
+				$("#export_form2 [name = taskSemantic]:checkbox").prop('checked',true);
+			}else{
+				$("#export_form2 [name = taskSemantic]:checkbox").prop('checked',false);
+			}
+		});
+
+		$("#failSuccSelect").click(function() {
+			if($('#failSuccSelect').is(':checked'))
+			{
+				$("#export_form3 [name = taskSemantic]:checkbox").prop('checked',true);
+			}else{
+				$("#export_form3 [name = taskSemantic]:checkbox").prop('checked',false);
+			}
+		});
+	});
+
+	//样本实验统计
+	function sample_testing_export()
+	{
+		var flag = true;
+		var center = $('#center').val();
+		if(''==center)
+		{
+			flag = false;
+			parent.layer.alert('请选择营销中心',{title:"提示"});
+			return;
+		}
+		var sampleTestingStart = $('#sampleTestingStart').val();
+		var sampleTestingEnd = $('#sampleTestingEnd').val();
+		if('' == sampleTestingStart || '' == sampleTestingEnd ){
+			flag = false;
+			parent.layer.alert('请输入下单时间',{title:"提示"});
+			return;
+		}
+		if(flag)
+		{
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			$.ajax({
+				type : "POST",
+				url : "/testing/exportSampleTesting.do",
+				data : $('#export_form').serialize(),
+				success : function(sessionId) {
+					//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+					var timer=window.setInterval(function(){
+						$.ajax({
+							type : "GET",
+							url : "/testing/searchExportResult.do?sessionId="+sessionId,
+							success : function(result) {
+								if('' != result)
+								{
+									window.clearInterval(timer);
+									layerObject.close(loadindex);
+									$("#formValue").val(result);
+									$("#hiddForm").submit();
+								}
+							},
+							error : function() {
+								alert("failed");
+								layerObject.close(loadindex);
+							}
+						});
+					},5000);
+				},
+				error : function() {
+					alert("failed");
+					layerObject.close(loadindex);
+				}
+			});
+		}
+	}
+
+	//工作任务统计表
+	function task_sheet_export()
+	{
+		var flag = true;
+		var selVal = $("#export_form1 [name = taskSemantic]:checked").val();
+		if(''==selVal || typeof(selVal)=="undefined")
+		{
+			flag = false;
+			parent.layer.alert('请至少选择一个实验名称',{title:"提示"});
+			return;
+		}
+		var assignStart = $('#assignStart').val();
+		var assignEnd = $('#assignEnd').val();
+		if('' == assignStart || '' == assignEnd ){
+			flag = false;
+			parent.layer.alert('请输入下达时间',{title:"提示"});
+			return;
+		}
+		if(flag)
+		{
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			$.ajax({
+				type : "POST",
+				url : "/testing/exportTaskSheet.do",
+				data : $('#export_form1').serialize(),
+				success : function(sessionId) {
+					//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+					var timer=window.setInterval(function(){
+						$.ajax({
+							type : "GET",
+							url : "/testing/searchExportResult.do?sessionId="+sessionId,
+							success : function(result) {
+								if('' != result)
+								{
+									window.clearInterval(timer);
+									layerObject.close(loadindex);
+									$("#formValue").val(result);
+									$("#hiddForm").submit();
+								}
+							},
+							error : function() {
+								alert("failed");
+								layerObject.close(loadindex);
+							}
+						});
+					},5000);
+				},
+				error : function() {
+					alert("failed");
+					layerObject.close(loadindex);
+				}
+			});
+		}
+	}
+
+	//样本成功率统计统计表
+	function export_task_success()
+	{
+		var flag = true;
+		var selVal = $("#export_form2 [name = taskSemantic]:checked").val();
+		if(''==selVal || typeof(selVal)=="undefined")
+		{
+			flag = false;
+			parent.layer.alert('请至少选择一个实验名称',{title:"提示"});
+			return;
+		}
+		var assignStart = $('#assignStart1').val();
+		var assignEnd = $('#assignEnd1').val();
+		if('' == assignStart || '' == assignEnd ){
+			flag = false;
+			parent.layer.alert('请输入下达时间',{title:"提示"});
+			return;
+		}
+		if(flag)
+		{
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			$.ajax({
+				type : "POST",
+				url : "/testing/exportTaskSucessRate.do",
+				data : $('#export_form2').serialize(),
+				success : function(sessionId) {
+					//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+					var timer=window.setInterval(function(){
+						$.ajax({
+							type : "GET",
+							url : "/testing/searchExportResult.do?sessionId="+sessionId,
+							success : function(result) {
+								if('' != result)
+								{
+									window.clearInterval(timer);
+									layerObject.close(loadindex);
+									$("#formValue").val(result);
+									$("#hiddForm").submit();
+								}
+							},
+							error : function() {
+								alert("failed");
+								layerObject.close(loadindex);
+							}
+						});
+					},5000);
+				},
+				error : function() {
+					alert("failed");
+					layerObject.close(loadindex);
+				}
+			});
+		}
+	}
+
+	//异常任务处理
+	function export_task_fail()
+	{
+		var flag = true;
+		var selVal = $("#export_form3 [name = taskSemantic]:checked").val();
+		if(''==selVal || typeof(selVal)=="undefined")
+		{
+			flag = false;
+			parent.layer.alert('请至少选择一个实验名称',{title:"提示"});
+			return;
+		}
+		var assignStart = $('#assignStart3').val();
+		var assignEnd = $('#assignEnd3').val();
+		if('' == assignStart || '' == assignEnd ){
+			flag = false;
+			parent.layer.alert('请输入异常提交时间',{title:"提示"});
+			return;
+		}
+		if(flag)
+		{
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			$.ajax({
+				type : "POST",
+				url : "/testing/exportFailTasks.do",
+				data : $('#export_form3').serialize(),
+				success : function(sessionId) {
+					//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+					var timer=window.setInterval(function(){
+						$.ajax({
+							type : "GET",
+							url : "/testing/searchExportResult.do?sessionId="+sessionId,
+							success : function(result) {
+								if('' != result)
+								{
+									window.clearInterval(timer);
+									layerObject.close(loadindex);
+									$("#formValue").val(result);
+									$("#hiddForm").submit();
+								}
+							},
+							error : function() {
+								alert("failed");
+								layerObject.close(loadindex);
+							}
+						});
+					},5000);
+				},
+				error : function() {
+					alert("failed");
+					layerObject.close(loadindex);
+				}
+			});
+		}
+	}
+
+</script>
+
+
+</html>

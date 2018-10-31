@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库捕获任务</title>
+
+
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<script>
+
+	$(function(){
+	
+		$("#testingName").bsSuggest('init', {
+			url : "${base}/user/userSelect.do?key=",
+			getDataMethod : "url",
+			idField : "id",
+			keyField : "name",
+			effectiveFields : [ "name" ],
+			effectiveFieldsAlias : {
+				name : "姓名"
+			}
+		}).on('onDataRequestSuccess', function(e, result) {
+
+		}).on('onSetSelectValue', function(e, keyword, data) {
+			$('#executer').val(data.id);
+		}).on('onUnsetSelectValue', function() {
+		});
+		
+
+			
+        $("#testing_task_form").validate({
+        	
+        	submitHandler: function(form){
+        		var values = new Array();
+        		$("#testing_task_detail_table tr").each(function(index,object){
+        			if(index > 0){
+        				var tr = $(this);
+        			    var tds = tr.find("td");
+        			    var data  = {};
+        			    data.testingCode=tds.eq(0).text();  //文库编号
+        			    data.probeId = tds.eq(9).text();//探针Id
+						data.probeName = tds.eq(10).text();//探针Id
+        			    data.outputSamplecode=tds.eq(2).text();  //输出样本编号
+        			    data.outputSampleLocation=tds.eq(7).text(); //输出样本位置
+        			    data.inputSamplecode=tds.eq(2).text(); //捕获code、location不变
+        			    data.inputSmapleLocation=tds.eq(7).text(); //捕获code、location不变
+        			    data.indexCode = tds.eq(5).text(); //接头
+        			    data.activitiTaskId=tds.eq(8).text(); //工作流
+        			    data.concn = tds.eq(4).text();//浓度
+        			    data.sampleVolume = tds.eq(3).text();//体积
+        			    data.sampleName = tds.eq(6).text();//原始样本类型
+        			    values.push(data);
+        			}
+        		  
+        		});
+        		var param=JSON.stringify(values);
+        		$("#param").val(param);
+				$("#wkbhCode").val($("#catch_code").val());
+        		document.forms["testing_task_form"].submit();
+        	},
+            rules: {
+            	testingName: "required",
+            	method:"required",
+            	catch_code: {
+            		required:true,
+            		
+            		remote: {
+            		    url: "${base}/testingTask/validateCatchCode.do",     //后台处理程序
+            		    type: "post",               //数据发送方式
+            		    dataType: "json",           //接受数据格式   
+            		    data: {                     //要传递的数据
+            		    	wkbhCode: function() {
+            		            return $("#catch_code").val();
+            		        }
+            		    }
+            		}
+            	}
+        	
+            },
+            
+            messages: {
+            	testingName: "请输入分配人员",
+            	method:"请选择质检方法",
+            	catch_code:  {
+                	required: "请输入编号",
+                	remote:"编号已经存在"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent());  
+            }
+        }); 
+		
+        
+        
+       $("#catch_code").on("keyup", function(data) {
+			var index = $(this).val();
+			var relation = $(".cacth_code_relation").filter(':visible');
+			$.each(relation,function(ind,obj){
+				var num=ind+1
+				$(obj).text(index+"-"+num)
+				if(index==''){
+					$(obj).text('');
+				}
+			})
+			
+		});
+        
+		
+	})
+	
+	
+
+		
+	
+	
+	
+	
+	function closeModal(){
+		parent.$('#full').modal('hide');
+	}
+	
+	
+	
+	jQuery.fn.rowspan = function(colIdx) { 
+        return this.each(function(){
+        var that;
+        $('tr', this).each(function(row) {
+        $('td:eq('+colIdx+')', this).filter(':visible').each(function(col) {
+        if (that!=null && $(this).html() == $(that).html()) {
+        	rowspan = $(that).attr("rowSpan");
+        if (rowspan == undefined) {
+	        $(that).attr("rowSpan",1);
+	        rowspan = $(that).attr("rowSpan"); 
+	     }
+	        rowspan = Number(rowspan)+1;
+	        $(that).attr("rowSpan",rowspan);
+	        $(this).hide();
+	        $(that).prev().attr("rowSpan",rowspan);
+	        $(this).prev().hide();
+        } else {
+       		 that = this;
+        }
+     	});
+  	 });
+	});
+	}
+
+	$(function() {
+        $("#testing_task_detail_table").rowspan(1); //合并单元格
+     });
+</script>
+</head>
+<body>
+
+				
+				
+<div class="wrapper wrapper-content animated fadeInRight" >
+		 <div class="col-lg-12" style=" margin-top: 30px">
+		 	
+		 <form id="testing_task_form" class="form-horizontal m-t" action="${base}/testingTask/createTestTask" method="post" target="iframe0" >
+		    <input type="hidden"  name="param"  id="param"  />
+		    <input type="hidden"  name="executer"  id="executer"  />
+			 <input type="hidden"  name="wkbhCode"  id="wkbhCode"  />
+
+
+			 <div class="form-group">
+			<label id="code_label" class="col-sm-2 control-label">任务编号：</label>
+					<div class="col-sm-3">
+						<input type="text"  class="form-control" id="code" name="taskCode" value="${pagination.taskCode!?html}" readonly="readonly"> 
+					</div>
+				
+				
+				
+				<label class="col-sm-2 control-label control-required">实验负责人：</label>
+				<div class="col-sm-4">
+					 <div class="input-group"> 
+	                        <input type="text" class="form-control" id="testingName" name="testingName"  />
+	                        <div class="input-group-btn">
+	                            <button type="button"  class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	                                <span class="caret"></span>
+	                            </button>
+	                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+	                            </ul>
+	                        </div>
+			          </div> 
+				</div>
+				
+				
+				
+			
+		
+				
+				<input type="hidden"  name="semantic"  id="semantic"  value="${searcher.semantic!?html}" ></input> 
+					
+			 </div>		
+		    
+		     <div class="form-group">
+			 <label id="" class="col-sm-2 control-label ">任务下达人：</label>
+			 <div class="col-sm-3">
+						<input type="text"  class="form-control" id="sendName" name="sendName" value="${(user.archive.name)!?html}" readonly="readonly"> 
+					</div>
+			 <label id="" class="col-sm-2 control-label ">下达时间：</label>
+			 <div class="col-sm-3">
+						<input type="date"  class="form-control" id="sendDate" name="sendDate" value="${.now?string("yyyy-MM-dd")}" readonly="readonly"> 
+					</div>
+			 </div>
+			 
+			<!-- <div class="form-group">
+					<label id="" class="col-sm-2 control-label ">试剂盒：</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="reagentKit"
+							name="reagentKit" value="${(reagentKit.code)!?html}(${(reagentKit.name)!?html})"
+							readonly="readonly">
+					</div>
+					<label class="col-sm-2 control-label">批次号：</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="batchNum"
+							name="batchNum" value="" readonly="readonly">
+					</div>
+				</div>
+			 <div class="form-group">
+					<label class="col-sm-2 control-label">投入次数：</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="batchNum"
+							name="batchNum" value="${(pagination.testingTaskDetailList)?size}" readonly="readonly">
+					</div>
+					</div> -->
+		     <div class="form-group">
+		     
+		     <label class="col-sm-2 control-label control-required">捕获溶度方法：</label>
+		     		<div class="col-sm-2" id="testMethod">
+						 <@dict_entries category="LIBRARY_CATCH">
+		                     <#if entries??>
+			                     <#list entries as entry>
+			                     	<input type="checkbox" name="method" id="method" value="${entry.value!}"  />${entry.text!?html}
+			                     </#list>
+		                     </#if>
+	                    </@dict_entries>
+				</div>
+		     </div>
+		    
+		    <div class="form-group">
+				<label class="col-sm-2 control-label">任务描述：</label>
+				<div class="col-sm-10">
+					<textarea  class="form-control" name="description"
+						id="description"  value="" ></textarea>
+				</div>
+		    </div>
+		   
+			<div class="col-md-10" >
+			
+				<div class="form-group" style="padding-left: 188px">
+				
+				
+<div class="col-sm-3 ">
+					  <input type="submit" class="btn btn-primary" value="下达任务"></input>  
+				</div>
+
+				
+	    </div>
+	    
+	    
+			  <table id="testing_task_detail_table" class="table table-striped table-bordered table-hover dataTables-example"  style="margin-left: 15px;">
+				<thead>
+					<tr>
+						<th ><span id="hidden">请输入编号：<input type="text" class="form-control" id="catch_code" size="10px" value="" name="catch_code"/></span><span id="show"></span></th>
+						<th>Probe</th>
+						<th>样本编号</th>
+						<th>混样体积</th>
+						<th>文库溶度</th>
+						<th>Index编号</th>
+						<th>样本形式</th>
+						<th class="addFlag">文库位置</th>
+						<th style="display:none">工作流</th>
+						<th style="display:none">ProbeId</th>
+						<th style="display:none">ProbeName</th>
+					</tr>
+				</thead>
+				<tbody>
+				 <#if pagination.testingTaskDetailList??>
+                   <#list pagination.testingTaskDetailList as record>
+					<tr>
+						<td class="cacth_code_relation" ></td>
+						<td>${record.probeName!?html}</td> 
+						<td>${record.sourceSampleCode!?html}</td>
+						<td>${record.volume!?html}</td>
+						<td>${record.concentration!?html}</td>
+						<td>${record.connectorId!?html}</td>
+						<td>${record.sourceSampleType!?html}</td>
+						<td class="addFlag2">${record.sourceSampleLocation!?html}</td>
+						<td style="display:none">${record.testingTaskId!?html}</td>
+						<td style="display:none">${record.probeId!?html}</td>
+						<td style="display:none">${record.probeName!?html}</td>
+					</tr>
+               	 </#list>
+                </#if>
+				</tbody>
+			</table>
+		 </div>
+	</form>
+</div>
+</div>
+</body>
+<script>
+$("input[type='submit']").click(function (){
+	
+	$("#testing_task_form").submit();
+})
+</script>
+
+
+</html>

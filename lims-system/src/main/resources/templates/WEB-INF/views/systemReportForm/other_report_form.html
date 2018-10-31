@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>其他报表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="#">报表统计</a>
+							<li><a href="#">系统报表</a>
+							<li><a href="#">其他报表</a>
+						</ol>
+					</div>
+					<div class="ibox ibox-table">
+						<form action="#" method="post" class="form-horizontal m-t"
+							id="search_from">
+							<div class="form-group">
+								<input type="hidden" name="ownerId" id="ownerId" />
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="productName" id="productName"
+										placeholder="产品">
+								</div>
+								<div class="col-sm-2">
+									<select class='form-control' name="testingMethod">
+										<option selected value="">--请选择检测方法--</option>
+										<#if testingMethodList??> 
+												<#list testingMethodList as entry>
+												<#if entry.type == "1">
+													<option value="${entry.id!?html}">${entry.name!?html}</option>
+												</#if>
+											</#list>
+											</#if>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<div class="input-group">
+										<input type="text" class="form-control" id="customer"
+											name="customerName" 
+											placeholder="请输入客户">
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default dropdown-toggle"
+												data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right" role="menu">
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<select class='form-control' id="marketingCenter" name="marketingCenter">
+										<option selected value="">--请选择营销中心--</option>
+										<#if testingTypeList??> 
+												<#list testingTypeList as entry>
+												<option value="${entry.id!?html}">${entry.name!?html}</option>
+											</#list>
+											</#if>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="createTimeStart" name="createTimeStart" placeholder="下单时间起"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="createTimeEnd" name="createTimeEnd" placeholder="下单时间止"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											 />
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="planTimeStart" name="planTimeStart" placeholder="预计完成时间起"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="planTimeEnd" name="planTimeEnd" placeholder="预计完成时间止"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											 />
+								</div>
+							</div>
+							<!-- <div class="form-group">
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="actualTimeStart" name="actualTimeStart" placeholder="实际完成时间起"
+										readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+										/>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"  class="form-control laydate-icon" id="actualTimeEnd" name="actualTimeEnd" placeholder="实际完成时间止"
+											readOnly="readOnly" style="height: 34px" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})"
+											 />
+								</div>
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-sm btn-primary"
+										onclick="exportOtherReport()"> <i class="fa fa-print"></i> 导出
+									</a>
+								</div>
+							</div> -->
+						</form>
+						<a href="#" class="btn btn-sm btn-primary"  onclick="exportOtherReport()" >
+				           <i class="fa fa-print"></i> 其他报表导出
+				    	</a>
+				    	<form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+					        <input type="hidden" name="formValue" id="formValue" value="">
+					    </form>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript">
+$(function(){
+	
+	$("#customer").bsSuggest('init', {
+		url : "${base}/customer/getSelectList.do?disableStatus="+0+"&realName=",
+		getDataMethod : "url",
+		idField : "id",
+		keyField : "realName",
+		indexKey: 0, 
+		effectiveFields : [ "realName" ],
+		effectiveFieldsAlias : {
+			name : "客户名称"
+		}
+	}).on('onDataRequestSuccess', function (e, result) {
+	}).on('onSetSelectValue', function (e, keyword, data) {
+		$('#ownerId').val(data.id);
+	}).on('onUnsetSelectValue', function () {
+		$('#ownerId').val('');
+	});
+})
+
+function exportOtherReport()
+{
+	var orderType = $('#marketingCenter').val();
+	console.info(orderType);
+	if(''==orderType)
+	{
+		parent.layer.alert('请选择营销中心',{title:"提示"});
+		return false;
+	}
+	var startTime = $('#createTimeStart').val();
+	var endTime = $('#createTimeEnd').val();
+	if('' == startTime || '' == endTime ){
+		parent.layer.alert('请输入下单时间',{title:"提示"});
+		return false;
+	}
+	
+	var layerObject = parent.parent.layer;
+	var loadindex = layerObject.load();
+
+	$.ajax({
+		type : "POST",
+		url : "/systemReportForm/exportOtherReportForm.do",
+		data : $('#search_from').serialize(),
+		success : function(sessionId) {
+			//定时任务根据返回的结果去查询 报表有没有结束 如果结束了返回true然后下载这个报表
+			var timer=window.setInterval(function(){
+				$.ajax({
+					type : "GET",
+					url : "/testing/searchExportResult.do?sessionId="+sessionId,
+					success : function(result) {
+						if('' != result)
+						{
+							window.clearInterval(timer);
+							layerObject.close(loadindex);
+							$("#formValue").val(result);
+							$("#hiddForm").submit();
+						}
+					},
+					error : function() {
+						alert("failed");
+						layerObject.close(loadindex);
+					}
+				});
+			},5000);
+		},
+		error : function() {
+			alert("failed");
+			layerObject.close(loadindex);
+		}
+	});
+}
+</script>
+</html>

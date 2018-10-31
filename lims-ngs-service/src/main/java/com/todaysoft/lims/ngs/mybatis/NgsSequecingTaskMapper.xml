@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.ngs.mybatis.NgsSequecingTaskMapper">
+	<resultMap id="BaseResultMap" type="com.todaysoft.lims.ngs.model.NgsSequecingTask">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="TINYINT" />
+
+		<result column="RE_SEQUECING" property="reSequecing" jdbcType="TINYINT" />
+		<result column="RE_SEQUECING_COUNT" property="reSequecingCount"
+			jdbcType="TINYINT" />
+		<result column="SEQUECING_CODE" property="sequecingCode"
+			jdbcType="VARCHAR" />
+		<result column="DATA_SIZE" property="dataSize" jdbcType="DECIMAL" />
+		<result column="SEQUECING_CON" property="sequecingCon"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_CON" property="firstDiluteCon"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_SAMPLE_INPUTVOLUME" property="firstDiluteSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_HT_INPUTVOLUME" property="firstDiluteHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_SAMPLE_INPUTVOLUME" property="secondDiluteSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_REAGENT_INPUTVOLUME" property="secondDiluteReagentInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_CON" property="secondDiluteCon"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_HT_INPUTVOLUME" property="secondDiluteHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_CON" property="finalCon" jdbcType="DECIMAL" />
+		<result column="FINAL_INPUTVOLUME" property="finalInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_SAMPLE_INPUTVOLUME" property="finalSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_HT_INPUTVOLUME" property="finalHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="RUN" property="run" jdbcType="VARCHAR" />
+		<result column="SEQUECING_TYPE" property="sequecingType"
+			jdbcType="TINYINT" />
+		<result column="SEQUECING_MACHINE_CODE" property="sequecingMachineCode"
+			jdbcType="VARCHAR" />
+		<result column="LAN_CODE" property="lanCode" jdbcType="VARCHAR" />
+		<result column="SEQUECING_STRATEGY" property="sequecingStrategy"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="NgsTaskMap"
+		type="com.todaysoft.lims.ngs.model.NgsSequecingTaskModel">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="TINYINT" />
+		<result column="IF_URGENT" property="ifUrgent" jdbcType="TINYINT" />
+		<result column="URGENT_UPDATE_TIME" property="urgentUpdateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="URGENT_NAME" property="urgentName" jdbcType="VARCHAR" />
+		<result column="RE_SEQUECING" property="reSequecing" jdbcType="TINYINT" />
+		<result column="RE_SEQUECING_COUNT" property="reSequecingCount"
+			jdbcType="TINYINT" />
+		<result column="SEQUECING_CODE" property="sequecingCode"
+			jdbcType="VARCHAR" />
+		<result column="DATA_SIZE" property="dataSize" jdbcType="DECIMAL" />
+		<result column="SEQUECING_CON" property="sequecingCon"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_CON" property="firstDiluteCon"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_SAMPLE_INPUTVOLUME" property="firstDiluteSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FIRST_DILUTE_HT_INPUTVOLUME" property="firstDiluteHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_SAMPLE_INPUTVOLUME" property="secondDiluteSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_REAGENT_INPUTVOLUME" property="secondDiluteReagentInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_CON" property="secondDiluteCon"
+			jdbcType="DECIMAL" />
+		<result column="SECOND_DILUTE_HT_INPUTVOLUME" property="secondDiluteHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_CON" property="finalCon" jdbcType="DECIMAL" />
+		<result column="FINAL_INPUTVOLUME" property="finalInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_SAMPLE_INPUTVOLUME" property="finalSampleInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="FINAL_HT_INPUTVOLUME" property="finalHtInputvolume"
+			jdbcType="DECIMAL" />
+		<result column="RUN" property="run" jdbcType="VARCHAR" />
+		<result column="SEQUECING_TYPE" property="sequecingType"
+			jdbcType="TINYINT" />
+		<result column="SEQUECING_MACHINE_CODE" property="sequecingMachineCode"
+			jdbcType="VARCHAR" />
+		<result column="LAN_CODE" property="lanCode" jdbcType="VARCHAR" />
+		<result column="SEQUECING_STRATEGY" property="sequecingStrategy"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, CREATE_TIME, END_TIME, STATUS, RE_SEQUECING,
+		RE_SEQUECING_COUNT,
+		SEQUECING_CODE, DATA_SIZE, SEQUECING_CON,
+		FIRST_DILUTE_CON,
+		FIRST_DILUTE_SAMPLE_INPUTVOLUME,
+		FIRST_DILUTE_HT_INPUTVOLUME,
+		SECOND_DILUTE_SAMPLE_INPUTVOLUME,
+		SECOND_DILUTE_REAGENT_INPUTVOLUME,
+		SECOND_DILUTE_CON,
+		SECOND_DILUTE_HT_INPUTVOLUME,
+		FINAL_CON,FINAL_INPUTVOLUME,
+		FINAL_SAMPLE_INPUTVOLUME,
+		FINAL_HT_INPUTVOLUME, RUN, SEQUECING_TYPE,
+		SEQUECING_MACHINE_CODE,LAN_CODE, SEQUECING_STRATEGY
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from NGS_SEQUECING_TASK
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+
+	<insert id="insertSelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingTask">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+
+		insert into NGS_SEQUECING_TASK
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+
+			<if test="reSequecing != null">
+				RE_SEQUECING,
+			</if>
+			<if test="reSequecingCount != null">
+				RE_SEQUECING_COUNT,
+			</if>
+			<if test="sequecingCode != null">
+				SEQUECING_CODE,
+			</if>
+			<if test="dataSize != null">
+				DATA_SIZE,
+			</if>
+			<if test="sequecingCon != null">
+				SEQUECING_CON,
+			</if>
+			<if test="firstDiluteCon != null">
+				FIRST_DILUTE_CON,
+			</if>
+			<if test="firstDiluteSampleInputvolume != null">
+				FIRST_DILUTE_SAMPLE_INPUTVOLUME,
+			</if>
+			<if test="firstDiluteHtInputvolume != null">
+				FIRST_DILUTE_HT_INPUTVOLUME,
+			</if>
+			<if test="secondDiluteSampleInputvolume != null">
+				SECOND_DILUTE_SAMPLE_INPUTVOLUME,
+			</if>
+			<if test="secondDiluteReagentInputvolume != null">
+				SECOND_DILUTE_REAGENT_INPUTVOLUME,
+			</if>
+			<if test="secondDiluteCon != null">
+				SECOND_DILUTE_CON,
+			</if>
+			<if test="secondDiluteHtInputvolume != null">
+				SECOND_DILUTE_HT_INPUTVOLUME,
+			</if>
+			<if test="finalCon != null">
+				FINAL_CON,
+			</if>
+			<if test="finalInputvolume != null">
+				FINAL_INPUTVOLUME,
+			</if>
+			<if test="finalSampleInputvolume != null">
+				FINAL_SAMPLE_INPUTVOLUME,
+			</if>
+			<if test="finalHtInputvolume != null">
+				FINAL_HT_INPUTVOLUME,
+			</if>
+			<if test="run != null">
+				RUN,
+			</if>
+			<if test="sequecingType != null">
+				SEQUECING_TYPE,
+			</if>
+			<if test="sequecingMachineCode != null">
+				SEQUECING_MACHINE_CODE,
+			</if>
+			<if test="lanCode != null">
+				LAN_CODE,
+			</if>
+			<if test="sequecingStrategy != null">
+				SEQUECING_STRATEGY,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+
+			<if test="reSequecing != null">
+				#{reSequecing,jdbcType=TINYINT},
+			</if>
+			<if test="reSequecingCount != null">
+				#{reSequecingCount,jdbcType=TINYINT},
+			</if>
+			<if test="sequecingCode != null">
+				#{sequecingCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dataSize != null">
+				#{dataSize,jdbcType=DECIMAL},
+			</if>
+			<if test="sequecingCon != null">
+				#{sequecingCon,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteCon != null">
+				#{firstDiluteCon,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteSampleInputvolume != null">
+				#{firstDiluteSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteHtInputvolume != null">
+				#{firstDiluteHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteSampleInputvolume != null">
+				#{secondDiluteSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteReagentInputvolume != null">
+				#{secondDiluteReagentInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteCon != null">
+				#{secondDiluteCon,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteHtInputvolume != null">
+				#{secondDiluteHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalCon != null">
+				#{finalCon,jdbcType=DECIMAL},
+			</if>
+			<if test="finalInputvolume != null">
+				#{finalInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalSampleInputvolume != null">
+				#{finalSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalHtInputvolume != null">
+				#{finalHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="run != null">
+				#{run,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingType != null">
+				#{sequecingType,jdbcType=TINYINT},
+			</if>
+			<if test="sequecingMachineCode != null">
+				#{sequecingMachineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lanCode != null">
+				#{lanCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingStrategy != null">
+				#{sequecingStrategy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingTask">
+		update NGS_SEQUECING_TASK
+		<set>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=TINYINT},
+			</if>
+
+			<if test="reSequecing != null">
+				RE_SEQUECING = #{reSequecing,jdbcType=TINYINT},
+			</if>
+			<if test="reSequecingCount != null">
+				RE_SEQUECING_COUNT =
+				#{reSequecingCount,jdbcType=TINYINT},
+			</if>
+			<if test="sequecingCode != null">
+				SEQUECING_CODE = #{sequecingCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dataSize != null">
+				DATA_SIZE = #{dataSize,jdbcType=DECIMAL},
+			</if>
+			<if test="sequecingCon != null">
+				SEQUECING_CON = #{sequecingCon,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteCon != null">
+				FIRST_DILUTE_CON = #{firstDiluteCon,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteSampleInputvolume != null">
+				FIRST_DILUTE_SAMPLE_INPUTVOLUME =
+				#{firstDiluteSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="firstDiluteHtInputvolume != null">
+				FIRST_DILUTE_HT_INPUTVOLUME =
+				#{firstDiluteHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteSampleInputvolume != null">
+				SECOND_DILUTE_SAMPLE_INPUTVOLUME =
+				#{secondDiluteSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteReagentInputvolume != null">
+				SECOND_DILUTE_REAGENT_INPUTVOLUME =
+				#{secondDiluteReagentInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteCon != null">
+				SECOND_DILUTE_CON = #{secondDiluteCon,jdbcType=DECIMAL},
+			</if>
+			<if test="secondDiluteHtInputvolume != null">
+				SECOND_DILUTE_HT_INPUTVOLUME =
+				#{secondDiluteHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalCon != null">
+				FINAL_CON = #{finalCon,jdbcType=DECIMAL},
+			</if>
+			<if test="finalInputvolume != null">
+				FINAL_INPUTVOLUME =
+				#{finalInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalSampleInputvolume != null">
+				FINAL_SAMPLE_INPUTVOLUME =
+				#{finalSampleInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="finalHtInputvolume != null">
+				FINAL_HT_INPUTVOLUME =
+				#{finalHtInputvolume,jdbcType=DECIMAL},
+			</if>
+			<if test="run != null">
+				RUN = #{run,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingType != null">
+				SEQUECING_TYPE = #{sequecingType,jdbcType=TINYINT},
+			</if>
+			<if test="sequecingMachineCode != null">
+				SEQUECING_MACHINE_CODE =
+				#{sequecingMachineCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lanCode != null">
+				LAN_CODE = #{lanCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sequecingStrategy != null">
+				SEQUECING_STRATEGY =
+				#{sequecingStrategy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="getNgsSequecingList" resultMap="NgsTaskMap"
+		parameterType="com.todaysoft.lims.ngs.model.NgsSequecingTaskModel">
+		select  T.ID,
+		T.CREATE_TIME,MAX(O.IF_URGENT)AS IF_URGENT,O.URGENT_UPDATE_TIME,O.URGENT_NAME,
+		T.SEQUECING_CODE,T.DATA_SIZE,T.STATUS from
+		NGS_SEQUECING_TASK T LEFT
+		JOIN
+		LIMS_TESTING_SCHEDULE_ACTIVE A ON T.id = A.TASK_ID
+		LEFT JOIN
+		LIMS_TESTING_SCHEDULE S ON S.id = A.SCHEDULE_ID
+		LEFT JOIN LIMS_ORDER O
+		on O.id = S.ORDER_ID where T.`STATUS` = 1 and S.PROCCESS_STATE = 0 
+
+		<if test="sequecingCode != null and sequecingCode != ''">
+			and T.SEQUECING_CODE = #{sequecingCode}
+		</if>
+		<if test="ifUrgent == 1">
+			and O.IF_URGENT = #{ifUrgent}
+		</if>
+		<if test="ifUrgent == 0">
+			and O.IF_URGENT IS NULL
+		</if>
+		 GROUP BY T.ID
+	</select>
+
+	<select id="ngsSequecingMonitorList" resultMap="NgsTaskMap"
+		parameterType="com.todaysoft.lims.ngs.model.NgsSequecingMonitorRequest">
+		select  T.ID, T.CREATE_TIME,T.END_TIME,MAX(O.IF_URGENT)AS IF_URGENT,
+		T.SEQUECING_CODE,T.DATA_SIZE,T.STATUS from
+		NGS_SEQUECING_TASK T LEFT
+		JOIN
+		LIMS_TESTING_SCHEDULE_ACTIVE A ON T.id = A.TASK_ID
+		LEFT JOIN
+		LIMS_TESTING_SCHEDULE S ON S.id = A.SCHEDULE_ID
+		LEFT JOIN LIMS_ORDER O
+		on O.id = S.ORDER_ID where T.STATUS in
+		(3,5,6) and S.PROCCESS_STATE = 0 
+		<if test="sequecingCode != null and sequecingCode != ''">
+			and T.SEQUECING_CODE = #{sequecingCode}
+		</if>
+		<if test="timeStart != null and timeStart != ''">
+			and T.CREATE_TIME &gt;= #{timeStart}
+		</if>
+		<if test="timeEnd != null and timeEnd  != ''">
+			and T.END_TIME &lt;= #{timeEnd}
+		</if>
+		<if test="ifUrgent == 1">
+			and O.IF_URGENT = #{ifUrgent}
+		</if>
+		<if test="ifUrgent == 0">
+			and O.IF_URGENT IS NULL
+		</if>
+		 GROUP BY T.ID 
+		order by O.IF_URGENT desc , T.END_TIME asc
+
+	</select>
+
+
+</mapper>

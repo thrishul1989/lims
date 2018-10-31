@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>xx</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+
+
+
+</style>
+
+<script type="text/javascript">
+
+function startActiviti(sampleInstanceId,productId){
+	var layerObject = parent.parent.layer;
+	 if(sampleInstanceId!='' && productId!=''){
+		 layerObject.confirm('您确认要启动该样本吗？', {
+			 icon : 3,
+			 title : '操作确认',
+			 btn : ['确认','取消'],
+			 shade : '0.3'
+		 }, function(index){
+			 //遮罩开始
+			var loadindex = layerObject.load();
+			  $.ajax({
+				 type: "POST",
+				 url: "${base}/sampleReceive/startWork.do",
+				 data: {
+					 sampleInstanceId:sampleInstanceId,
+					 productId:productId
+				 },
+				 dataType: "json",
+				 success: function(data){
+					//遮罩结束
+					layerObject.close(loadindex);
+					layerObject.alert('启动成功！',{title:"提示"});
+					window.location.href = "${base}/sampleReceive/startActiviti.do"
+					layerObject.close(index);
+					
+				 },
+				 error:function(data){
+					//遮罩异常结束
+					layerObject.close(loadindex);
+					layerObject.alert('启动失败！',{title:"提示"});
+				 }
+			 }) 
+		 }, function(index) {
+			 layerObject.close(index);    
+		 });
+
+	}else{
+		alert(sampleInstanceId+productId+"缺少任务开启项");
+	} 
+	
+}
+
+
+
+
+
+
+</script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+      <div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+                 <ol class="breadcrumb">
+                     <li>
+                         <a href="#">样本接收</a>
+                     </li>
+                     <li>
+                         <a href="#">待启动样本列表</a>
+                     </li>
+                 </ol>
+             </div>
+		</div>
+
+ 	  <div class="ibox ibox-table">
+            <div class="ibox-title">
+                <h5>待启动样本列表</h5>
+            </div>
+             
+			 
+			<div class="ibox-content" style="overflow: hidden; zoom: 1">
+             <form action="${base}/sampleReceive/startActiviti.do" method="post" class="search-form">
+						<div class="row m-b-xs">
+							
+							<div class="col-sm-2">
+								<div class="form-group">
+									<select class="form-control" name="state" id="state"  data-value=${(searcher.state)!}>
+                                        <option value="">---请选择样本状态---</option>
+                                        <@dict_entries category="SAMPLE_RECEIVE_DETAIL_STATE">
+	                                        <#if entries??>
+	                                        <#list entries as entry>
+	                                        <option value="${entry.value!}">${entry.text!?html}</option>
+	                                        </#list>
+	                                        </#if>
+                                        </@dict_entries>
+                                    </select>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<button type="submit" class="btn btn-sm btn-success">
+										<i class="fa fa-search"></i> 查询
+									</button>
+								</div>
+							</div>
+						</div>
+			</form>
+
+             <table class="table table-striped table-bordered table-hover">
+                         <thead>
+                           <tr>
+                           		<th>序号</th>
+                        		<th style="display:none">明细主键</th>
+								<th>样本实例编码</th>
+								<th style="display:none">样本类型主键</th>
+								<th>样本名称</th>
+								<th>样本数量</th>
+								<!-- <th>包含所有产品信息</th>  -->
+								
+								<th>样本标识</th>
+								<th>受检人</th>
+								<th>临检存储位置</th>
+								<th>样本创建时间</th>
+								<th>状态</th>
+								<th>产品信息(操作)</th> 
+								
+                           </tr>
+                          </thead>
+                          <tbody>
+                          <#if pagination??>
+                                <#if pagination.records?has_content> <#list pagination.records as record>
+                                
+	                                <tr>
+	                                  		<td>${record_index + 1}</td>
+											<td style="display:none">${record.id!?html}</td>
+		                                	<td>${record.sampleInstanceCode!?html}</td>
+		                                    <td style="display:none">${record.code!?html}</td>
+		                                    <td>${record.name!?html}</td>
+		                                    <td>${record.sampleCount!?html}(<@dict_entry_text category="COMPANY" value=record.company />)</td>
+		                                    <!-- <td>${record.productId!?html}</td> -->
+		                                   
+		                                    <td>
+		                                    	<#if (record.sampleIdentification)??>
+		                      					<#if record.sampleIdentification == "1">附属样本<#else>主样本</#if>
+		                      					<#else></#if>
+											</td>
+		                                   
+		                                    <td>${record.inspectMan!?html}</td>
+		                                    <td>${record.temporaryStorageLocation!?html}</td>
+		                                     <td>${record.acceptDate!?html}</td>
+		                                    <td><@dict_entry_text category="SAMPLE_RECEIVE_DETAIL_STATE" value=record.state /></td>
+		                                    <td><#if record.productList?has_content> <#list record.productList as product> 
+		                                    	<div style="margin: 4px auto;">
+		                                    	<#if (record.state)??>
+												<#if record.state == "1"><a onclick="startActiviti(${record.id},${product})"  class="btn btn-sm btn-success " >
+				                                    		  ${product} (启动)
+				                                    		</a> 
+												<#else><a href="${base}/sampleReceive/tracing.do?sampleInstanceId=${record.id}&productId=${product}"  class="btn btn-sm btn-success " >
+			                                    		  ${product} (查看流程)
+			                                    		</a></#if>
+											<#else></#if>
+		                                    		
+		                                    		
+		                                    		
+		                                    		
+	                                            
+		                                    	</div>
+		                                    			                                    
+		                                    	</#list>
+		                                    	<#else>
+				                                    <div style="margin: 4px auto;">
+		                                    			无关联产品
+		                                    		</div>
+		                                    	
+		                                    	</#if> 
+		                                    </td>
+		                              		
+	                                </tr>
+	                                
+                                
+                                </#list> <#else>
+                                <tr>
+                                    <td colspan="10">暂无相关记录</td>
+                                </tr>
+                                </#if>
+                                </#if>
+                            </tbody>
+                    </table>
+
+                    
+                    
+              	   <#include "../inc/pagination.html" />
+
+                   </div><!-- ibox content -->
+                 </div><!-- ibox-table -->
+          	 </div><!-- col-lg-12 -->
+         </div><!-- row -->
+  </div>
+</body>
+
+ <script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script type="text/javascript" src="${plugins}/jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${system_js}/system.js"></script>
+    <script type="text/javascript" src="${system_js}/metadata.tree.js"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+</html>

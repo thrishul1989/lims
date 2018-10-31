@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingReportSampleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingReportSample">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+		<result column="SCHEDULE_ID" property="scheduleId" jdbcType="VARCHAR" />
+		<result column="METHOD_ID" property="methodId" jdbcType="VARCHAR" />
+		<result column="SAMPLE_ID" property="sampleId" jdbcType="VARCHAR" />
+		<result column="PURPOSE" property="purpose" jdbcType="VARCHAR" />
+		<result column="QUALIFIED" property="qualified" jdbcType="BIT" />
+		<result column="UNQUALIFIED_REMARK" property="unqualifiedRemark"
+			jdbcType="VARCHAR" />
+		<result column="UNQUALIFIED_STRATEGY" property="unqualifiedStrategy"
+			jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="COMBINE_TYPE" property="combineType" jdbcType="VARCHAR" />
+		<result column="MUTATION_SOURCE" property="mutationSource"
+			jdbcType="VARCHAR" />
+		<result column="COMBINE_CODE" property="combineCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, REPORT_ID, SCHEDULE_ID, METHOD_ID, SAMPLE_ID, PURPOSE,
+		QUALIFIED,
+		UNQUALIFIED_REMARK,
+		UNQUALIFIED_STRATEGY, UPDATE_TIME,
+		COMBINE_TYPE, MUTATION_SOURCE, COMBINE_CODE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_REPORT_SAMPLE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_REPORT_SAMPLE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingReportSample">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_REPORT_SAMPLE (ID, REPORT_ID,
+		SCHEDULE_ID,
+		METHOD_ID, SAMPLE_ID, PURPOSE,
+		QUALIFIED,
+		UNQUALIFIED_REMARK, UNQUALIFIED_STRATEGY,
+		UPDATE_TIME, COMBINE_TYPE,
+		MUTATION_SOURCE,
+		COMBINE_CODE)
+		values (#{id,jdbcType=VARCHAR},
+		#{reportId,jdbcType=VARCHAR},
+		#{scheduleId,jdbcType=VARCHAR},
+		#{methodId,jdbcType=VARCHAR}, #{sampleId,jdbcType=VARCHAR},
+		#{purpose,jdbcType=VARCHAR},
+		#{qualified,jdbcType=BIT},
+		#{unqualifiedRemark,jdbcType=VARCHAR},
+		#{unqualifiedStrategy,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP}, #{combineType,jdbcType=VARCHAR},
+		#{mutationSource,jdbcType=VARCHAR},
+		#{combineCode,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingReportSample">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into LIMS_TESTING_REPORT_SAMPLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="reportId != null">
+				REPORT_ID,
+			</if>
+			<if test="scheduleId != null">
+				SCHEDULE_ID,
+			</if>
+			<if test="methodId != null">
+				METHOD_ID,
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID,
+			</if>
+			<if test="purpose != null">
+				PURPOSE,
+			</if>
+			<if test="qualified != null">
+				QUALIFIED,
+			</if>
+			<if test="unqualifiedRemark != null">
+				UNQUALIFIED_REMARK,
+			</if>
+			<if test="unqualifiedStrategy != null">
+				UNQUALIFIED_STRATEGY,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="combineType != null">
+				COMBINE_TYPE,
+			</if>
+			<if test="mutationSource != null">
+				MUTATION_SOURCE,
+			</if>
+			<if test="combineCode != null">
+				COMBINE_CODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="reportId != null">
+				#{reportId,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleId != null">
+				#{scheduleId,jdbcType=VARCHAR},
+			</if>
+			<if test="methodId != null">
+				#{methodId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				#{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="purpose != null">
+				#{purpose,jdbcType=VARCHAR},
+			</if>
+			<if test="qualified != null">
+				#{qualified,jdbcType=BIT},
+			</if>
+			<if test="unqualifiedRemark != null">
+				#{unqualifiedRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="unqualifiedStrategy != null">
+				#{unqualifiedStrategy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="combineType != null">
+				#{combineType,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationSource != null">
+				#{mutationSource,jdbcType=VARCHAR},
+			</if>
+			<if test="combineCode != null">
+				#{combineCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingReportSample">
+		update LIMS_TESTING_REPORT_SAMPLE
+		<set>
+			<if test="reportId != null">
+				REPORT_ID = #{reportId,jdbcType=VARCHAR},
+			</if>
+			<if test="scheduleId != null">
+				SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR},
+			</if>
+			<if test="methodId != null">
+				METHOD_ID = #{methodId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleId != null">
+				SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+			</if>
+			<if test="purpose != null">
+				PURPOSE = #{purpose,jdbcType=VARCHAR},
+			</if>
+			<if test="qualified != null">
+				QUALIFIED = #{qualified,jdbcType=BIT},
+			</if>
+			<if test="unqualifiedRemark != null">
+				UNQUALIFIED_REMARK =
+				#{unqualifiedRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="unqualifiedStrategy != null">
+				UNQUALIFIED_STRATEGY =
+				#{unqualifiedStrategy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="combineType != null">
+				COMBINE_TYPE = #{combineType,jdbcType=VARCHAR},
+			</if>
+			<if test="mutationSource != null">
+				MUTATION_SOURCE = #{mutationSource,jdbcType=VARCHAR},
+			</if>
+			<if test="combineCode != null">
+				COMBINE_CODE = #{combineCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingReportSample">
+		update LIMS_TESTING_REPORT_SAMPLE
+		set REPORT_ID =
+		#{reportId,jdbcType=VARCHAR},
+		SCHEDULE_ID =
+		#{scheduleId,jdbcType=VARCHAR},
+		METHOD_ID =
+		#{methodId,jdbcType=VARCHAR},
+		SAMPLE_ID = #{sampleId,jdbcType=VARCHAR},
+		PURPOSE = #{purpose,jdbcType=VARCHAR},
+		QUALIFIED =
+		#{qualified,jdbcType=BIT},
+		UNQUALIFIED_REMARK =
+		#{unqualifiedRemark,jdbcType=VARCHAR},
+		UNQUALIFIED_STRATEGY =
+		#{unqualifiedStrategy,jdbcType=VARCHAR},
+		UPDATE_TIME =
+		#{updateTime,jdbcType=TIMESTAMP},
+		COMBINE_TYPE =
+		#{combineType,jdbcType=VARCHAR},
+		MUTATION_SOURCE =
+		#{mutationSource,jdbcType=VARCHAR},
+		COMBINE_CODE =
+		#{combineCode,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectByScheduleId" parameterType="string"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_REPORT_SAMPLE where
+		SCHEDULE_ID=#{0}
+	</select>
+</mapper>

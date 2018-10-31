@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库捕获任务单</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <span>检测实验</span>
+                            </li>
+                            <li class="active">
+                                <strong>文库捕获</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                    <div class="ibox-title">
+                        <h5>文库捕获任务单</h5>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="myPreview()">
+                            <i class="fa fa-print"></i> 打印任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="downloadData()">
+                            <i class="fa fa-print"></i> 导出任务单
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearClass()">
+                            <i class="fa fa-print"></i> 导入数据
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="submit_form" class="form-horizontal m-t" action="${base}/testing/wk_catch_test_submit.do" method="post">
+                            <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                            <input type="hidden" id="id" name="id" value="${(sheet.id)!?html}" />
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.code)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达人：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.assignerName)!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">下达时间：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control"
+                                    <#if sheet.assignTime??> value="${(sheet.assignTime)?string('yyyy-MM-dd HH:mm:ss')}" </#if> readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">试剂盒：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${sheet.reagentKitName!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">质检方法：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" value="${sheet.methods!?html}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务描述：</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="3" readonly="readonly">${(sheet.description)!?html}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">任务编号：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${sheet.batchCode!?html}" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">投入量：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" value="${(sheet.libraryInputSize!0)?string('0.##')}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <table id="groups" class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>实验编号</th>
+                                        <th>探针</th>
+                                        <th>数据量（G）</th>
+                                        <th>原始样本类型</th>
+                                        <th>文库编号</th>
+                                        <th>投入体积</th>
+                                        <th>文库接头</th>
+                                        <th>文库浓度</th>
+                                        <th>片段长度</th>
+                                        <th>捕获浓度</th>
+                                        <th>实验结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <#if sheet.groups?? && sheet.groups?has_content> <#list sheet.groups as group> <#if group.samples?size == 1>
+                                    <tr>
+                                        <td>${(group.testingCode)!?html}</td>
+                                        <td>${(group.probeName)!?html}</td>
+                                        <td>${(group.probeDatasize!0)?string('0.##')}</td>
+                                        <td>${(group.samples[0].originalSampleTypeName)!?html}</td>
+                                        <td>${(group.samples[0].sampleCode)!?html}</td>
+                                        <td>${((group.samples[0].inputVolume)!0)?string('0.##')}</td>
+                                        <td>${(group.samples[0].libraryIndex)!?html}</td>
+                                        <td>${((group.samples[0].concn)!0)?string('0.##')}</td>
+                                        <td>${(group.samples[0].fragmentLengthStart)!?html}-${(group.samples[0].fragmentLengthEnd)!?html}</td>
+                                        <td>
+                                            <input type="hidden" name="groups[${group_index}].id" value="${(group.id)!?html}" />
+                                            <input type="text" name="groups[${group_index}].concn" class="form-control concentration"
+                                                style="width: 80px; display: initial" required data-msg="" />
+                                        </td>
+                                        <td>
+                                            <div class="checkbox i-checks">
+                                                <label> <input class="toggle-qualified" type="checkbox" name="groups[${group_index}].qualified" data-id="${group.id!?html}"
+                                                        checked="checked" value="1"> 成功
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <#else> <#list group.samples as s> <#if s_index == 0> <#assign rows = group.samples?size />
+                                    <tr>
+                                        <td rowspan="${rows}">${(group.testingCode)!?html}</td>
+                                        <td rowspan="${rows}">${(group.probeName)!?html}</td>
+                                        <td rowspan="${rows}">${(group.probeDatasize!0)?string('0.##')}</td>
+                                        <td>${(s.originalSampleTypeName)!?html}</td>
+                                        <td>${(s.sampleCode)!?html}</td>
+                                        <td>${((s.inputVolume)!0)?string('0.##')}</td>
+                                        <td>${(s.libraryIndex)!?html}</td>
+                                        <td>${((s.concn)!0)?string('0.##')}</td>
+                                        <td>${(s.fragmentLengthStart)!?html}-${(s.fragmentLengthEnd)!?html}</td>
+                                        <td rowspan="${rows}">
+                                            <input type="hidden" name="groups[${group_index}].id" value="${(group.id)!?html}" />
+                                            <input type="text" name="groups[${group_index}].concn" class="form-control concentration"
+                                                style="width: 80px; display: initial" required data-msg="" />
+                                        </td>
+                                        <td rowspan="${rows}">
+                                            <div class="checkbox i-checks">
+                                                <label> <input class="toggle-qualified" type="checkbox" name="groups[${group_index}].qualified" data-id="${group.id!?html}"
+                                                        checked="checked" value="1"> 成功
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <#else>
+                                    <tr>
+                                        <td>${(s.originalSampleTypeName)!?html}</td>
+                                        <td>${(s.sampleCode)!?html}</td>
+                                        <td>${((s.inputVolume)!0)?string('0.##')}</td>
+                                        <td>${(s.libraryIndex)!?html}</td>
+                                        <td>${((s.concn)!0)?string('0.##')}</td>
+                                        <td>${(s.fragmentLengthStart)!?html}-${(s.fragmentLengthEnd)!?html}</td>
+                                    </tr>
+                                    </#if> </#list> </#if> </#list> </#if>
+                                </tbody>
+                            </table>
+                            <div class="row" style="margin-top: 34px">
+                                <div class="col-lg-12">
+                                    <div class="ibox" style="border: 2px solid #e7eaec; padding: 10px">
+                                        <label class="col-sm-2 control-label" style="text-align: left; margin-bottom: 10px">文库清单</label>
+                                        <table id="tasks" class="table table-striped table-bordered table-hover table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th class="index">序号</th>
+                                                    <th>文库编号</th>
+                                                    <th>检测产品</th>
+                                                    <th>原始样本名称</th>
+                                                    <th>原始样本类型</th>
+                                                    <th>原始样本编号</th>
+                                                    <th>捕获实验</th>
+                                                    <th>捕获结果</th>
+                                                    <th>失败处理</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <#if sheet.tasks?? && sheet.tasks?has_content> <#list sheet.tasks as task>
+                                                <tr>
+                                                    <td>${task_index+1}</td>
+                                                    <td>${(task.sampleCode)!?html}</td>
+                                                    <td>${(task.products)!?html}</td>
+                                                    <td>${(task.originalSampleName)!?html}</td>
+                                                    <td>${(task.originalSampleTypeName)!?html}</td>
+                                                    <td>${(task.originalSampleCode)!?html}</td>
+                                                    <td>
+                                                        <#list task.assignedGroups as g>
+                                                        <span class="capture-group group-${g.id!?html}">${g.testingCode!?html}</span>
+                                                        <br /> </#list>
+                                                    </td>
+                                                    <td class="capture-result">成功</td>
+                                                    <td class="failure-strategy">
+                                                        <input type="hidden" name="tasks[${task_index}].id" value="${(task.id)!?html}">
+                                                        <input type="hidden" class="input-task-qualified" name="tasks[${task_index}].qualified" value="1">
+                                                        <div class="checkbox i-checks strategies" style="display: none;">
+                                                            <label> <input type="radio" name="tasks[${task_index}].unqualifiedStrategy"
+                                                                    checked="checked" value="LIBRARY-CAP">重新捕获
+                                                            </label> <label> <input type="radio" name="tasks[${task_index}].unqualifiedStrategy"
+                                                                    value="1">上报
+                                                            </label>
+                                                        </div>
+                                                        <div class="none">-</div>
+                                                    </td>
+                                                </tr>
+                                                </#list> </#if>
+                                            </tbody>
+                                        </table>
+                                        <div class="form-group">
+                                            <div class="col-sm-4 col-sm-offset-5">
+                                                <button type="submit" class="btn btn-primary">完成任务</button>
+                                                <button type="button" class="btn btn-primary" onclick="history.go(-1)">返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <#include "../excelModelDialog/dna_qc_excel_model.html" />
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/fileinput.min.js"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/validation/jquery.validate.min.js"></script>
+<script src="${plugins}/validation/additional-methods.min.js"></script>
+<script src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${system_js}/testing/test/lib_cap_test.js?v=1.1.0"></script>
+<#include "../print/lib_cap_print_sheet.html" />
+</html>

@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>产品表单-产品管理</title>
+<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html" />
+	<![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/jquery.form.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+<script src="${system_js}/bootstrap-select.js"></script>
+<script type="text/javascript" src="${system_js}/avalon.js"></script>
+
+
+	<!-- 引入自定义包 -->
+<style>
+.btn-default {
+	background-color: white;
+	color: gray;
+}
+
+</style>
+<script type="text/javascript">
+
+
+
+var probeSelect=1;	
+var layerObject = layer;
+		
+$(function(){
+	var geneLists =[] ;
+	
+	var record = function () {
+		this.count=""
+		this.amount = ""
+	};		
+    
+	var i = geneLists.length;
+	vm11 = avalon.define({
+		$id: "checkControll",
+		geneAddLists:geneLists,
+		add: function (e) {
+			var arr = this.geneAddLists;
+			arr.push(new record()); 
+			i++;
+		},
+		remove:function(e,index){
+			if(confirm("确定要删除么？")){
+				this.geneAddLists.splice(index,1);
+				i--;
+			}
+		},
+		
+	});
+	
+	
+	$('#testInstitution').selectpicker({noneSelectedText : '请选择'}); 
+	
+	$('#samplePurpose').selectpicker({noneSelectedText : '请选择'}); 
+	
+	//校验重名name
+	if ($.validator) {
+        $.validator.prototype.elements = function () {
+            var validator = this,
+              rulesCache = {};
+
+            // select all valid inputs inside the form (no submit or reset buttons)
+            return $(this.currentForm)
+            .find("input, select, textarea")
+            .not(":submit, :reset, :image, [disabled]")
+            .not(this.settings.ignore)
+            .filter(function () {
+                if (!this.name && validator.settings.debug && window.console) {
+                    console.error("%o has no name assigned", this);
+                }
+                rulesCache[this.name] = true;
+                return true;
+            });
+        }
+    }
+	
+	
+	
+	$('#uploadData').fileinput({
+        language: 'zh', // 设置语言
+        uploadUrl:'', // 上传的地址
+        allowedFileExtensions : ['xlsx', 'xls'],// 接收的文件后缀
+        showUpload: false, // 是否显示上传按钮
+        showCaption: true,// 是否显示标题
+        browseClass: "btn btn-primary", // 按钮样式
+        showRemove:false,
+        showPreview:false,
+        previewFileIcon: "<i class='glyphicon glyphicon-king'></i>", 
+    }).on("fileuploaded", function(event, data) {
+    	
+    });
+	
+	$('#uploadData2').fileinput({
+        language: 'zh', // 设置语言
+        uploadUrl:'', // 上传的地址
+        allowedFileExtensions : ['xlsx', 'xls'],// 接收的文件后缀
+        showUpload: false, // 是否显示上传按钮
+        showCaption: true,// 是否显示标题
+        browseClass: "btn btn-primary", // 按钮样式
+        showRemove:false,
+        showPreview:false,
+        previewFileIcon: "<i class='glyphicon glyphicon-king'></i>", 
+    }).on("fileuploaded", function(event, data) {
+    	
+    });
+	
+	
+	
+	
+	
+	var s=	$('#productPrincipal').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/smm/user/list_json.do?',
+	    method:'get',
+	    queryParam:"key",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	            '<div style="font-weight:700;color:#676a6c;float:right;padding-top: 10px;margin-right:50px">' + v.phone + '</div>' +
+	            '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+
+	
+	
+	var productDuty=$('#productDuty').magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/smm/user/list_json.do?',
+	    method:'get',
+	    queryParam:"key",
+	    allowFreeEntries:false,
+	    maxSelection:1,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	            '<div style="font-weight:700;color:#676a6c;float:right;padding-top: 10px;margin-right:50px">' + v.phone + '</div>' +
+	            '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	
+	$("#productForm").validate({
+        submitHandler:function(form){
+
+        	var principalId=[];
+    		var productPrincipalList=$('#productPrincipal').magicSuggest().getSelection();
+    		
+    		var productDutyList=$('#productDuty').magicSuggest().getSelection();
+    		
+    		
+    		if(productPrincipalList.length==0){
+    			parent.layer.alert('请输入技术负责人！',{title:"提示"});
+    			return false;
+    		}
+    		
+    		if(productDutyList.length==0){
+    			parent.layer.alert('请输入产品负责人！',{title:"提示"});
+    			return false;
+    		}
+    		
+    		$('#productDutyId').val(productDutyList[0].id);
+    	
+    		var sub=false;
+    		$.each($('input[name="testMethodArray"]'),function(index,obj){
+    			if($(obj).prop('checked')){
+    			
+    				sub=true;
+    				return;
+    				
+    			}
+    			
+    		})
+    		if(!sub){
+    			parent.layer.alert('请选择检测方法!!!',{title:"提示"});
+    			return false
+    		}
+    		
+    		$.each(productPrincipalList,function(index,obj){
+    			principalId.push(obj.id);
+    		})
+    		var principalIds = principalId.join(",");
+    		$("#principalArray").val(principalIds);
+    		
+    		//组装探针数据
+    	var methodsForm=$(".probeForm");
+    		var data=[];
+    		
+    		var fla=true;
+    		var repeatProbe=true;
+    		$.each(methodsForm,function(index,obj){
+    			var probeid=[];
+    		
+    			 
+    			 
+    			$.each($(obj).find('.addProbe'),function(ind,oo){
+
+                    var ap = $('#'+$(oo).find('.ms-ctn').attr("id")).magicSuggest().getSelection()[0];
+                    var id ="";
+                    if(null==ap||undefined==ap) //点击增加探针后，并没有选择探针
+                    {
+                        parent.layer.alert('请选择探针!',{title:"提示"});
+                        fla=false;
+                        return;
+                    }
+                    else
+                    {
+                        //选择探针后获取探针的id和name
+                        id=$('#'+$(oo).find('.ms-ctn').attr("id")).magicSuggest().getSelection()[0].id;
+                    }
+
+                    var reg = new RegExp("^[0-9]+(.[0-9]{1,3})?$");
+                    if(!reg.test($(oo).find('.dataSize').val())){      //数据量不为空，数字合法性校验
+                        parent.layer.alert('请输入正确的数据量!',{title:"提示"});
+                        fla=false;
+                        return;
+
+                    }
+
+
+                    /*    				if(""== id ||null == id ||  (!reg.test($(oo).find('.dataSize').val()) && $(oo).closest('table').attr('id') != "MLPA检测")){//mlpa探针不需要数据量
+                                            parent.layer.alert('请选择探针输入正确的数据量!',{title:"提示"});
+                                            fla=false;
+                                            return false;
+                                        }*/
+    				
+    				var pp={'id':id,dataSize:$(oo).find('.dataSize').val(),qualitySize:$(oo).find('.qualitySize').val()};
+    				probeid.push(pp);
+            	
+    			})
+    			
+    			//探针重复校验
+    			
+    			for(var i=0;i<=probeid.length-1;i++){
+    				for(var j=i+1;j<=probeid.length-1;j++){
+    					if(probeid[i].id==probeid[j].id){
+    						repeatProbe=false;
+    						parent.layer.alert('同一检测方法不能选择相同探针',{title:"提示"});
+    						return ;
+    						
+    					}
+    					
+    				}
+    				
+    			}
+
+    			var per={methodId:$(obj).attr('id'),probes:probeid};
+    			data.push(per);
+
+    		})
+    		if(!fla || !repeatProbe){
+    			return false;
+    			
+    		}
+    	
+    		$("#probes").val(JSON.stringify(data))
+    		
+    		//组装分析方法数据
+    		var coordinates=[];
+    
+    		$.each($('.analyse'),function(index,obj){
+    			coordinates.push({testingMethod:{id:$(obj).attr('data-id')},coordinate:$(obj).val()})
+    		
+    			
+    		})
+    		
+    		$("#coordinates").val(JSON.stringify(coordinates))
+    		
+    		//组装检测数据量
+    		
+    		var testingDatasize=[];
+    
+    		$.each($('.testingDatasize'),function(index,obj){
+    			testingDatasize.push({testingMethod:{id:$(obj).attr('data-id')},testingDatasize:$(obj).val()})
+    		
+    			
+    		})
+    		
+    		$("#testingDatasize").val(JSON.stringify(testingDatasize))
+    		
+    		
+    		//组装检测周期  2017.5.26
+    		var scheduleTestingCongigs=[];
+    		$.each($('.scheduleTestingConfigSelect'),function(index,obj){
+    			scheduleTestingCongigs.push({testingMethod:{id:$(obj).attr('data-id')},scheduleConfigId:$(obj).val()});
+    		
+    			
+    		});
+    		$("#scheduleTestingCongigs").val(JSON.stringify(scheduleTestingCongigs));
+
+			//组装数据上传模板  2017.5.26
+			var dataTemplateCongigs=[];
+			$.each($('.dataTemplateConfigSelect'),function(index,obj){
+				dataTemplateCongigs.push({testingMethod:{id:$(obj).attr('data-id')},dataTemplateId:$(obj).val()});
+
+
+			});
+			$("#dataTemplateCongigs").val(JSON.stringify(dataTemplateCongigs));
+
+            //组装分析内容，把分析内容存到隐藏控件中传入后台
+            var claimTemplateCongigs=[];
+            $.each($("select.claimTemplateConfigSelect"),function(index,obj){
+
+               claimTemplateCongigs.push({testingMethod:{id:$(obj).attr('data-id')},claimTemplateId:$(obj).val()});
+
+            });
+            $("#claimTemplateCongigs").val(JSON.stringify(claimTemplateCongigs));
+
+            //组装分析要求
+            var coverageCongigs=[];
+            $.each($('select.coverageConfigSelect'),function(index,obj){
+                coverageCongigs.push({testingMethod:{id:$(obj).attr('data-id')},coverage:$(obj).val()});
+
+            });
+            $("#coverageCongigs").val(JSON.stringify(coverageCongigs));
+    		
+    		//组装疾病和基因数据
+    		var disease=[];
+    		var genes=[];
+    		$.each($('.diseasetr'),function(index,obj){
+    			disease.push({code:$(obj).children('td').first().html()})
+    			
+    		})
+    		$.each($('.genetr'),function(index,obj){
+    			genes.push({code:$(obj).children('td').first().html()})
+    			
+    		})
+    		
+    		$('#productDisease').val(JSON.stringify(disease));
+    		$('#productGenes').val(JSON.stringify(genes))
+    		
+    		$("#productAmountRule").val(JSON.stringify(vm11.geneAddLists.$model));
+    		console.info(JSON.stringify(vm11.geneAddLists.$model));
+    		var loadindex = layerObject.load();
+            form.submit();
+        },
+         errorPlacement: function(error, element) {
+           if (element.is(":checkbox")){
+                error.appendTo(element.parent().parent());
+           }else{
+               error.appendTo(element.parent());
+           }
+        	   
+        }, 
+   		 rules: {
+   			name:{
+   				 required:true,
+   				 maxlength:50,
+   				 remote: {
+        		    url: "${base}/product/validate.do",
+        		    type: "post",               
+        		    dataType: "json",          
+        		    data: {
+        		        name: function() {
+        		            return $("#name").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+   			 },
+   			 
+   			
+  			code:{
+  				 required:true,
+  				 maxlength:20,
+                 noxiahua:true,
+   				 remote: {
+        		    url: "${base}/product/validate.do",
+        		    type: "post",               
+        		    dataType: "json",          
+        		    data: {
+        		        code: function() {
+        		            return $("#code").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+  			 },
+  			
+  			price:{
+  				decimal:true,
+  				maxlength:20,
+  				required:true
+  			},
+  			discount:{
+  				decimal:true,
+  				required:true,
+  				min:0
+  			},
+  			testMethodArray:{
+  				 required:true,
+  			},
+  			testingDuration:{
+  				 required:true,
+  			},
+  			testingStartSample:{
+ 				 required:true,
+ 			},
+ 			ifMade:{
+				 required:true,
+			},
+			testInstitution:{
+				 required:true,
+			},
+			samplePurpose:{
+				 required:true,
+			},
+			enabled:{
+				 required:true,
+			},
+			enSample:{
+				required:true,
+				
+			},
+			analyseValidata:{
+				required:true,
+			},
+			testingDataSizeValidata:{
+				required:true,
+			},
+			scheduleTestingConfigValidata:{
+				required:true
+			},
+			 dataTemplateConfigValidata:{
+				 required:true
+			 },
+             claimTemplateConfigValidata:{
+             required:true
+         },
+             coverageConfigValidata:{
+             required:true
+         },
+			 count:{
+				 required:true, 
+				 digits:true,
+			 },
+			 amount:{
+				 required:true, 
+				 decimal:true,
+			 }
+   		 },
+   		 messages:{
+   			
+   			 code:{
+   				required:"请填写产品编号！",
+   				 remote:"产品编号已存在",
+                 noxiahua:"不允许下划线"
+         },
+   			name:{
+   				 required:"请填写产品名称！",
+   				 remote:"产品名称已存在"
+   			},
+   			price:{
+   				digits:"输入正确的个数",
+  			},
+   			discount:{
+  				decimal:"输入正确的价格(精确到分)",
+  				
+  			},
+   		 }
+   		
+   	});
+	
+
+});
+
+function check(checkbox){
+
+	if ( checkbox.checked == true){
+	
+		if($(checkbox).attr('is-capture')=='true'){
+			 $('.sample').prepend('<div class="form-group probeForm"  id="'+$(checkbox).attr('data-id')+'"><label class="col-sm-2 control-label control-required"><span style="color:#f00">*</span>'+$(checkbox).attr('data-name')+'探针：</label><div class="col-sm-8"><table id="'+$(checkbox).attr('data-name')+'" class="table table-striped table-bordered table-hover"><thead><tr><td class=" col-sm-4">探针</td><td class=" col-sm-2">数据量(G)</td><td class=" col-sm-2">操作</td></tr><tr class="addProbe"><td class=" col-sm-1">'+
+           			 '<div class="form-control probeSelect" id="productProbe'+probeSelect+'" placeholder="请选择探针"></div>'+
+           			 '</td><td class=" col-sm-2"><input type="text" value="" class="form-control dataSize"></td>'+
+           			 '<td class=" col-sm-2" onclick="removeProbe(this)" style="cursor: pointer;">删除</td></tr></thead></table><input type="button" id="but" class="btn btn-primary" value="增加探针" onclick="addProbe(this)"/></div></div>')
+           			 
+		
+		$('#productProbe'+probeSelect).magicSuggest({
+				    width: 190,
+				    highlight: true,
+			        data:'${base}/probe/getProbeList.do?testingPlatForm='+$(checkbox).val(),
+				    method:'get',
+					maxSelection : 1,
+				    allowFreeEntries:false,
+				    renderer: function(v){
+				    return '<div  class="probe">' + v.name + '</div>' +
+		            '<div style="font-weight:700;color:#676a6c;float:right;padding-top: 10px;margin-right:50px"></div>' +
+		            '</div>' +
+		        '<div style="clear:both;"></div>';
+				    }
+				});
+		
+           			probeSelect++; 
+		}
+		
+		//判断是否有分析坐标
+		if($(checkbox).attr('is-analyse') == '1'){
+			$('.analyseForm').append('<span><label class="col-sm-2 control-label " style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：分析坐标</label>	<div  class="col-sm-3" style="width: 210px"><input type="text" data-id="'+$(checkbox).attr('data-id')+'" class="form-control analyse" name="analyseValidata" id="analyse'+$(checkbox).attr('data-id')+'" value="${(data.name)!?html}"  style="width: 180px" placeholder="请输入分析坐标,分割"/></div></span>')
+			
+		}
+		
+		//判断是否需要检测数据量testingdatasize
+		if($(checkbox).attr('data-platForm') == '1' && $(checkbox).attr('is-capture')=='false'){
+			
+			$('.testingDatasizeForm').append('<span><label class="col-sm-2 control-label " style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：检测数据量(G)</label>	<div  class="col-sm-3" style="width: 210px"><input type="text" data-id="'+$(checkbox).attr('data-id')+'" class="form-control testingDatasize" name="testingDataSizeValidata" id="testingDatasize'+$(checkbox).attr('data-id')+'" value="${(data.name)!?html}"  style="width: 180px" /></div></span>')
+		}
+		
+		//周期配置  2017.5.26 ww  scheduleTestingConfig
+		$.ajax({
+	 		   type:"POST",
+	 		   url:'${base}/bpm/cycleConfig/getScheduleTestingConfigList.do',
+	 		   data:{testingMethodId : $(checkbox).attr('data-id')},
+	 		   async: false,
+	 		   success:function(data){
+	 				var options = "<option selected value=''>--所有检测配置--</option>";
+	 				if(null != data && data.length > 0)
+	 				{
+	 					for(var i = 0;i<data.length;i++)
+	 					 {
+	 						options += "<option value='"+data[i].id+"'>"+data[i].configName+"</option>";
+	 					 }
+	 					
+	 					$('.scheduleTestingConfig').append('<span><label class="col-sm-2 control-label " style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：周期配置</label>	<div  class="col-sm-3" style="width: 210px"><select data-id="'+$(checkbox).attr('data-id')+'" id= "scheduleTestingConfigSelect'+$(checkbox).attr('data-id')+'" name="scheduleTestingConfigValidata" class="form-control scheduleTestingConfigSelect" style="width: 180px"></select></div></span>')
+	 					$("#scheduleTestingConfigSelect"+$(checkbox).attr('data-id')+"").html(options);
+	 				}
+	 			}
+	 	   });
+
+		//数据上传模板
+		$.ajax({
+			type:"POST",
+			url:'${base}/data/dataTemplate/dataTemplateList.do',
+			data:{testingMethodId : $(checkbox).attr('data-id')},
+			async: false,
+			success:function(data){
+				$('.dataTemplateConfig').append('<span><label class="col-sm-2 control-label " style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：数据模板</label>	<div  class="col-sm-3" style="width: 210px"><select data-id="'+$(checkbox).attr('data-id')+'" id= "dataTemplateConfigSelect'+$(checkbox).attr('data-id')+'" name="dataTemplateConfigValidata" class="form-control dataTemplateConfigSelect" style="width: 180px"></select></div></span>');
+				var options = "<option selected value=''>--请选择数据模板--</option>";
+				if(null != data && data.length > 0)
+				{
+					for(var i = 0;i<data.length;i++)
+					{
+						options += "<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+					}
+				}
+				$("#dataTemplateConfigSelect"+$(checkbox).attr('data-id')+"").html(options);
+			}
+		});
+  // 多重PCR检测 、NGS、 CapNGS、 Long-PCR检测需要分析内容和分析要求
+ if($(checkbox).attr('data-semantic')=="MULTI-PCR" || $(checkbox).attr('data-semantic')=="NGS"||$(checkbox).attr('data-semantic')=="CAP-NGS"||$(checkbox).attr('data-semantic')=="Long-PCR")
+ {
+
+    //分析内容
+    $.ajax({
+        type:"POST",
+        url:'${base}/claimTemplate/claimTemplateList',
+        data:{},
+        async: false,
+        success:function(data){
+            console.info(data);
+
+            debugger;
+            $('.claimTemplateConfig').append('<span><label class="col-sm-2 control-label" style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：分析内容</label>	<div  class="col-sm-3 claim" style="width: 210px"><select data-id="'+$(checkbox).attr('data-id')+'" id= "claimTemplateConfigSelect'+$(checkbox).attr('data-id')+'" name="claimTemplateConfigValidata" multiple   class="form-control claimTemplateConfigSelect selectpicker show-tick" style="width: 180px"></select></div></span>');
+            var options = "";
+            if(null != data && data.length > 0)
+            {
+                for(var i = 0;i<data.length;i++)
+                {
+                    options += "<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+                }
+            }
+            $("#claimTemplateConfigSelect"+$(checkbox).attr('data-id')+"").html(options);
+
+            $('.claimTemplateConfig .claimTemplateConfigSelect').selectpicker({noneSelectedText : '请选择'});
+        }
+    });
+
+    //分析要求
+    $.ajax({
+        type:"POST",
+        url:'${base}/smm/dict/getEntries/COVERAGE',
+        data:{},
+        async: false,
+        success:function(data){
+            $('.coverageConfig').append('<span class=""><label class="col-sm-2 control-label " style="width: 200px"><span style="color:#f00">*</span>'+$(checkbox).next().html()+'：分析要求</label>	<div  class="col-sm-3" style="width: 210px"><select data-id="'+$(checkbox).attr('data-id')+'" id= "coverageConfigSelect'+$(checkbox).attr('data-id')+'" name="coverageConfigValidata" multiple class="form-control coverageConfigSelect selectpicker show-tick" style="width: 200px"></select></div></span>');
+            var options = "";
+            if(null != data && data.length > 0)
+            {
+                for(var i = 0;i<data.length;i++)
+                {
+                    options += "<option value='"+data[i].id+"'>"+data[i].text+"</option>";
+                }
+            }
+            $("#coverageConfigSelect"+$(checkbox).attr('data-id')+"").html(options);
+            $('.coverageConfig .coverageConfigSelect').selectpicker({noneSelectedText : '请选择'});
+
+        }
+    });
+
+}
+
+		}else{
+	
+$("#"+$(checkbox).val()+"").remove();
+	$("#analyse"+$(checkbox).attr('data-id')).closest('span').remove();
+	$("#testingDatasize"+$(checkbox).attr('data-id')).closest('span').remove()
+	$("#scheduleTestingConfigSelect"+$(checkbox).attr('data-id')).closest('span').remove()
+	$("#dataTemplateConfigSelect"+$(checkbox).attr('data-id')).closest('span').remove()
+    $("#claimTemplateConfigSelect"+$(checkbox).attr('data-id')).closest('span').remove()
+    $("#coverageConfigSelect"+$(checkbox).attr('data-id')).closest('span').remove()
+		}
+
+}
+
+function addProbe(addBtn){
+	
+
+	$(addBtn).prev("table").children('thead').append('<tr class="addProbe"><td class=" col-sm-1">'+
+			'<div class="form-control probeSelect" id="productProbe'+probeSelect+'" placeholder="请选择探针"></div>'+
+			'</td><td class=" col-sm-2"><input type="text" value="" class="form-control dataSize"></td><td class=" col-sm-2" onclick="removeProbe(this)" style="cursor: pointer;">删除</td></tr>');
+	
+	$('#productProbe'+probeSelect).magicSuggest({
+	    width: 190,
+	    highlight: true,
+        data:'${base}/probe/getProbeList.do?testingPlatForm='+$(addBtn).closest('.probeForm').attr("id"),
+	    method:'get',
+		maxSelection : 1,
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div  class="probe">' + v.name + '</div>' +
+        '<div style="font-weight:700;color:#676a6c;float:right;padding-top: 10px;margin-right:50px"></div>' +
+        '</div>' +
+    '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	
+	 probeSelect++;
+}
+		
+		function removeProbe(removeBtn){
+			if($(removeBtn).parent('.addProbe').prev('.addProbe').length==0 && $(removeBtn).parent('.addProbe').next('.addProbe').length==0){
+				return
+				
+			}
+			else{
+				$(removeBtn).parent('.addProbe').remove()
+			}
+			
+		}
+		
+		function checkedForm(){
+		
+			var excelFileName = document.uploadForm.uploadData.value;
+			var formatStr = '';
+			var index = excelFileName.lastIndexOf('.');
+			if(excelFileName.length == 0){
+				parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+				return false;
+			}else if(index > 0){
+				
+				formatStr = excelFileName.substring(index);
+				if(!(".xlsx" == formatStr||".xls" == formatStr)){
+					
+					parent.layer.alert('请上传excel文件',{title:"提示"});
+					
+					return false;
+				}
+				else{
+					var loadindex = layerObject.load();
+				
+				 $('#uploadForm').ajaxSubmit({
+			            type: 'post', // 提交方式 get/post
+			            url: '${base}/product/diseaseUpload.do', // 需要提交的 url
+			           data:'',
+			           
+			            success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+			            	if(data.result == 0){
+			            		parent.layer.alert('编号有误请重新上传!',{title:"提示"});
+			            		 layerObject.close(loadindex);
+			            		return false;
+			            	}
+			            	else if(data.result == 2){
+			            		parent.layer.alert('不能上传相同编号!',{title:"提示"});
+			            		 layerObject.close(loadindex);
+			            		return false;
+			            	}
+			    $("#excelPath").val(data.path);
+			            	$('.diseasetr').remove();
+			            	
+			             $.each(data.diseaseList,function(index,disease){
+			            	 $(".diseaseForm").find('thead').append('<tr class="diseasetr"><td>'+disease.code+'</td><td>'+disease.name+'</td><td><a  onclick="deleteTd(this)">删除</a></td></tr>')
+			            	 
+			             });
+			           
+			             layerObject.close(loadindex);
+			            
+			            
+			             $("#myModal").modal('hide')
+			            }
+			          
+			        });
+				}
+			}
+			
+			
+		}
+		
+		function checkedForm2(){
+			
+			var excelFileName = document.uploadForm2.uploadData2.value;
+			var formatStr = '';
+			var index = excelFileName.lastIndexOf('.');
+			if(excelFileName.length == 0){
+				parent.layer.alert('请选择需要上传的文件',{title:"提示"});
+				return false;
+			}else if(index > 0){
+				
+				formatStr = excelFileName.substring(index);
+				if(!(".xlsx" == formatStr||".xls" == formatStr)){
+					
+					parent.layer.alert('请上传excel文件',{title:"提示"});
+					
+					return false;
+				}
+				else{
+					var loadindex = layerObject.load();
+				 $('#uploadForm2').ajaxSubmit({
+			            type: 'post', // 提交方式 get/post
+			            url: '${base}/product/geneUpload.do', // 需要提交的 url
+			           data:'',
+			           
+			            success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+			            	if(data.result == 0){
+			            		parent.layer.alert('编号有误请重新上传!',{title:"提示"});
+			            		layerObject.close(loadindex);
+			            		return false;
+			            	}
+			            	else if(data.result == 2){
+			            		parent.layer.alert('不能上传相同编号!',{title:"提示"});
+			            		layerObject.close(loadindex);
+			            		return false;
+			            	}
+			    $("#excelPath").val(data.path);
+			            	
+			            	$('.genetr').remove();
+			          
+			            
+			             $.each(data.geneList,function(index,gene){
+			            	 $(".geneForm").find('thead').append('<tr class="genetr"><td>'+gene.code+'</td><td>'+gene.symbol+'</td><td><a  onclick="deleteTd(this)" >删除</a></td></tr>')
+			            	 
+			             })
+			             
+			             //设置基因数
+			             $('#testingGenes').val(data.geneList.length)
+			             layerObject.close(loadindex);
+			             $("#myModal2").modal('hide')
+			            }
+			          
+			        });
+				}
+			}
+			
+			
+		}
+		
+		
+		
+		function checksave(){
+			return false;
+		
+		}
+		
+		function changeType(sel){
+			//查询该大类子类
+			$.ajax({
+	            type: "GET",
+	            url: "${base}/testingType/testingSubtypeList",
+	            data: {parentId:$(sel).val()},
+	            dataType: "json",
+	            success: function(data){
+	         
+	           if("" != data && null != data){
+	        	   $('#testingSubtype').empty();
+	        	   $('#testingSubtype').append('<option value="">===请选择===</option>')
+	        	   $.each(data,function(index,obj){
+		           
+	        		   
+		            	$('#testingSubtype').append('<option value="'+obj.id+'">'+obj.name+'</option>')
+		            	
+		            })
+	        	   
+	           }
+	           else{
+	        	
+	            	
+	           }
+	           },
+	           error:function(data){
+	        	   $('#testingSubtype').empty();
+	            	$('#testingSubtype').append('<option value="">===请选择===</option>')
+	           }
+	        });
+		}
+		
+		//删除导入的疾病基因
+		function deleteTd(obj){
+			parent.layer.confirm('确认删除？', {
+				  btn: ['是','否'] 
+				}, function(index){
+					$(obj).parent().parent().remove();
+					parent.layer.close(index);
+				}, function(index){
+					
+					parent.layer.close(index);
+				}
+				);
+			
+			
+			
+			
+		}
+		
+
+		
+		//导出模板
+		function downloadData(){
+			
+			$.ajax({
+				 type:"POST",
+				 traditional: true,
+				 url:"/product/download",
+				 
+				 async: false,
+				 success:function(data){
+				
+					 $("#formValue").val(data);
+						$("#hiddForm").submit();
+			    }
+			}); 
+		}
+		
+		
+		
+</script>
+
+
+</head>
+<body class="gray-bg">
+
+<form action="${base}/testSheet/downloadFile" method="post"
+		name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue" id="formValue" value="">
+	</form>
+	
+	
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/product/list.do">产品管理</a></li>
+							<li class="active"><strong>新建产品</strong></li>
+							<div style="float: right;">
+								<a href="${base}/product/list.do" target="_self"
+									style="padding: 0px; position: relative; right: 16px; float: right"> <img
+									src="${system_images}/backbtn.png" style="height: 24px;" />
+								</a>
+							</div>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>基本信息</h5>
+						<a href="#" class="btn btn-sm btn-primary" onclick="downloadData()" style="margin-top: 0px;margin-right: 0px"> <i
+							class="fa fa-print"></i> 导出模板
+						</a>
+					</div>
+					
+					<div class="ibox-content" style="height: 100%">
+						<form id="productForm" class="form-horizontal m-t toggle-form"
+							action="${base}/product/create.do" method="post">
+							<input type="hidden" name="id" id="id" /> <input type="hidden" name="principalArray"
+								id="principalArray" /> <input type="hidden" name="probes" id="probes" /> <input
+								type="hidden" name="excelPath" id="excelPath" /> <input type="hidden" name="coordinates"
+								id="coordinates" /> <input type="hidden" name="testingDatasize" id="testingDatasize" /> <input
+								type="hidden" name="productDisease" id="productDisease" />
+								<input type="hidden" name="scheduleTestingCongigs" id="scheduleTestingCongigs" />
+								<input type="hidden" name="dataTemplateCongigs" id="dataTemplateCongigs" />
+							    <input type="hidden" name="claimTemplateCongigs" id="claimTemplateCongigs" />
+							    <input type="hidden" name="coverageCongigs" id="coverageCongigs" />
+								<input type="hidden" name="productGenes" id="productGenes" />
+								<input type="hidden" name="productDuty.id" id="productDutyId" />
+							<input id="reportTemplateId" name="reportTemplate.id" type="hidden" />
+						<input type="hidden" name="productAmountRule" id="productAmountRule" />	
+							<div class="search-form">
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">产品编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code" id="code" value="${(data.code)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label control-required">产品名称：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name" value="${(data.name)!?html}" />
+									</div>
+								</div>
+
+							</div>
+
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">营销中心：</label>
+								<div class="col-sm-3">
+									<select class="form-control " id="testingType" name="testingType.id"
+										onchange="changeType(this)">
+										<option value="">===请选择===</option> <#if testingTypeList??> <#list testingTypeList as
+										entry>
+										<option value="${entry.id!?html}">${entry.name!?html}</option> </#list></#if>
+
+									</select>
+								</div>
+
+								<label class="col-sm-2 control-label ">二级分类：</label>
+								<div class="col-sm-3">
+									<select class="form-control " id="testingSubtype" name="testingSubtype.id">
+										<option value="">===请选择===</option>
+									</select>
+								</div>
+
+
+
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">产品周期：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="testingDuration"
+										value="${(data.testingDuration)!?html}" placeholder="天" />
+								</div>
+
+
+								<label class="col-sm-2 control-label control-required">技术负责人：</label>
+								<div class="col-sm-3">
+									<div class="form-control" id="productPrincipal" placeholder="请选择技术负责人"></div>
+								</div>
+
+
+
+
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">产品定价：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="price" id="price" value="${(data.price)!?html}"
+										placeholder="RMB(支持2位小数)" onchange="javascript:$('.discountPrice').text($('#price').val())" />
+								</div>
+								<label class="col-sm-2 control-label control-required">实验样本：</label>
+								<div class="col-sm-3">
+									<select class="form-control " id="testingStartSample" name="testingStartSample">
+										<option value="">===请选择===</option> <@bcm_samples startable = true> <#list samples as s>
+										<option value="${s.id!?html}">${s.name!?html}</option> </#list> </@bcm_samples>
+									</select>
+								</div>
+
+							</div>
+
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">检测基因数：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" id="testingGenes"
+										value="${(data.testingGenes)!?html}" readonly="readonly" />
+								</div>
+								<label class="col-sm-2 control-label control-required">定制：</label>
+								<div class="col-sm-3">
+									<select class="form-control " id="ifMade" name="ifMade">
+
+										<option value="0">否</option>
+										<option value="1">是</option>
+
+									</select>
+								</div>
+
+							</div>
+
+							<div class="form-group">
+
+								<label class="col-sm-2 control-label control-required">检测机构：</label>
+								<div class="col-sm-3">
+									<select class="form-control selectpicker show-tick" multiple data-live-search="false"
+										id="testInstitution" name="testInstitution"> <@dict_entries
+										category="TEST_INSTITUTION"> <#if entries??> <#list entries as entry>
+										<option value="${entry.value}">${entry.text!?html}</option> </#list> </#if>
+										</@dict_entries>
+
+									</select>
+								</div>
+
+								<label class="col-sm-2 control-label control-required">状态：</label>
+								<div class="col-sm-3">
+									<select class="form-control " id="enabled" name="enabled">
+
+										<option value="1">有效</option>
+										<option value="0">禁用</option>
+
+									</select>
+								</div>
+
+
+
+							</div>
+							<div class="form-group">
+
+								
+								
+								<label class="col-sm-2 control-label control-required">产品负责人：</label>
+								<div class="col-sm-3">
+									<div class="form-control" id="productDuty" placeholder="请选择产品负责人"></div>
+								</div>
+								
+								
+								<label class="col-sm-2 control-label control-required">样本用途设限：</label>
+								<div class="col-sm-3">
+									<!-- <div class="form-control" id="samplePurpose" placeholder="请选择产品对应样本用途"></div> -->
+									
+									<select class="form-control selectpicker show-tick" multiple data-live-search="false"
+										id="samplePurpose" name="samplePurpose"> <@dict_entries
+										category="SAMPLE_PURPOSE"> <#if entries??> <#list entries as entry>
+										<option value="${entry.value}">${entry.text!?html}</option> </#list> </#if>
+										</@dict_entries>
+
+									</select>
+									
+								</div>
+								
+								
+							</div>
+
+							<div class="form-group ">
+								<label class="col-sm-2 control-label control-required">检测方法：</label>
+								<div class="col-sm-8">
+									<#list checkManagementList as r>
+									<div class="col-sm-2">
+										<input type="checkbox" name="testMethodArray"<#if
+										r.capture??>is-capture="${r.capture?string}"</#if> <#if r.analyse>is-analyse="1"</#if>
+										id="testMethodArray" value="${r.id}" <#if r.platForm??
+										>data-platform="${r.platForm!?html}"</#if> onclick="check(this)"
+										data-name="${r.name!?html}" data-id="${r.id!?html}" data-semantic="${r.semantic!?html}" > <span>${r.name!?html}</span>
+									</div>
+									</#list>
+								</div>
+							</div>
+
+							<div class="form-group analyseForm"></div>
+
+							<div class="form-group testingDatasizeForm"></div>
+
+							<div class="form-group scheduleTestingConfig"></div>
+
+							<div class="form-group dataTemplateConfig"></div>
+
+							<div class="form-group claimTemplateConfig"></div>
+
+							<div class="form-group coverageConfig"></div>
+
+							<div class="form-group sample">
+								<label class="col-sm-2 control-label control-required">推荐样本：</label>
+								<div class="col-sm-8">
+									<@bcm_samples type = "1" isProduct="1"> <#list samples as r>
+									<div class="col-sm-2">
+										<input type="checkbox" name="enSample" id="enSample" value="${r.id}">${r.name!?html}
+									</div>
+									</#list> </@bcm_samples>
+								</div>
+							</div>
+
+
+							<div class="form-group diseaseForm">
+								<label class="col-sm-2 control-label ">检测疾病：</label>
+								<div class="col-sm-8">
+									<table id="tab" class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<td class=" col-sm-2">疾病编号</td>
+												<td class=" col-sm-4">疾病名称</td>
+												<td class=" col-sm-4">操作</td>
+
+											</tr>
+
+
+										</thead>
+									</table>
+
+
+								</div>
+
+							</div>
+
+
+							<div class="form-group" style="text-align: center">
+								<a class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal"> <i
+									class="fa fa fa-folder-open-o"></i> 导入疾病
+								</a>
+
+
+							</div>
+
+
+							<div class="form-group geneForm">
+								<label class="col-sm-2 control-label ">检测基因：</label>
+								<div class="col-sm-8">
+									<table id="tab" class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<td class=" col-sm-2">基因编号</td>
+												<td class=" col-sm-4">基因名称</td>
+												<td class=" col-sm-4">操作</td>
+
+											</tr>
+
+
+										</thead>
+									</table>
+
+
+								</div>
+
+							</div>
+							<div class="form-group" style="text-align: center">
+								<a class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal2"> <i
+									class="fa fa fa-folder-open-o"></i> 导入基因
+								</a>
+
+
+							</div>
+
+
+
+
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">产品介绍：</label>
+								<div class="col-sm-3">
+									<textarea name="description" id="description" placeholder="输入描述信息" style="width: 650px"></textarea>
+								</div>
+
+
+
+
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">产品备注：</label>
+								<div class="col-sm-3">
+									<textarea name="remark" id="remark" placeholder="输入备注信息" style="width: 650px"></textarea>
+								</div>
+							</div>
+							
+							
+							
+							<div class="form-group"  ms-controller="checkControll">
+								<label class="col-sm-2 control-label">产品检测折扣：</label>
+								<div class="col-sm-8">
+									<table id="tab" class="table table-striped table-bordered table-hover">
+										   <thead>
+									        <tr>
+									            <td class=" col-sm-1">【家属样本】检测个数</td>
+												<td class=" col-sm-1">单个费用</td>
+									            <td class=" col-sm-2">操作</td>
+									       </tr>
+									       <tr  ms-for="(index,el) in @geneAddLists">
+									            <td class="col-sm-2">
+										             <input class='form-control' type='text' ms-attr="{id:'count'+ index}" name="count"  ms-duplex-string="el.count"   />
+										        </td>
+									            <td class=" col-sm-2">
+										            <input class='form-control' type='text' ms-attr="{id:'amount'+ index}" name="amount" ms-duplex-string="el.amount"/></td>
+									            <td class=" col-sm-2"><a href='#' ms-click="@remove(e,index)" >-删除</a></td>
+									       </tr>
+									       </thead>
+									    </table>
+								</div>
+								<div class="col-sm-2">
+									  <input type="button" id="but" class="btn btn-primary" value="增加" ms-click="@add(e)"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class="btn btn-primary" type="submit">保存</button>
+									<button class="btn btn-primary goback" type="button">返回</button>
+								</div>
+							</div>
+
+
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Excel导入</h4>
+				</div>
+				<form action="${base}/product/upload.do" method="post" name="uploadForm"
+					enctype="multipart/form-data" id="uploadForm">
+					<div class="modal-body">
+						<input type="file" id="uploadData" name="uploadData" accept=".xlsx,.xls" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="checkedForm()">提交</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
+	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Excel导入</h4>
+				</div>
+				<form action="${base}/product/upload.do" method="post" name="uploadForm2"
+					enctype="multipart/form-data" id="uploadForm2">
+					<div class="modal-body">
+						<input type="file" id="uploadData2" name="uploadData2" accept=".xlsx,.xls" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="checkedForm2()">提交</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
+
+
+
+</body>
+</html>

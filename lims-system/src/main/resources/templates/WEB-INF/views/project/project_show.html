@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户详情-用户管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/project/list.do">项目管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>项目详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox ibox-table">
+                <input type="hidden" name="id" id="id"
+								value="${(project.id)!?html}" />
+                    <div class="ibox-title">
+                        <h5>项目详情</h5>
+                        <div style="float:right;margin-top:7px">
+							<button class="btn btn-sm btn-success goback " type="button">返回</button> 
+						</div>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-striped table-bordered table-hover table-details">
+                            <tr>
+                                <th class="col-sm-1">项目编号</th>
+                                <td class="col-sm-2">${(project.code)!?html}</td>
+                                <th class="col-sm-1">项目名称</th>
+                                <td class="col-sm-2">${(project.name)!?html}</td>
+                                <th class="col-sm-1">项目类型</th>
+                                <td class="col-sm-2"><@dict_entry_text category="PROJECT_TYPE" value=project.projectType /></td>
+                                <th class="col-sm-1">项目负责人</th>
+                                <td><#if project.projectLeader??>${project.projectLeader.archive.name!?html}</#if></td>
+                            </tr>
+                            <tr>
+                                <th>技术负责人</th>
+                                <td><#if project.technicalLeader??>${project.technicalLeader.archive.name!?html}</#if></td>
+                                <th>实验负责人</th>
+                                <td><#if project.experimentLeader??>${project.experimentLeader.archive.name!?html}</#if></td>
+                                <th>客户</th>
+                                <td><#if project.customer??>${project.customer.name!?html}</#if></td>
+                                <th>合同号</th>
+                                <td>${project.contractNo!?html}</td>
+                            </tr>
+                             <tr>
+                                <th>经费</th>
+                                <td>${project.expenditure!?html}</td>
+                                <th>状态</th>
+                                <td><#if project.status??><#if project.status == 'EFFECTIVE'>有效<#elseif project.status == 'UNEFFECTIVE'>无效</#if></#if></td>
+                                <th>检测产品</th>
+                                <td id="product"></td>
+                                <th>描述</th>
+                                <td>${(project.describe)!?html}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/system.js"></script>
+    <script>
+    //为多选矿赋值
+
+ $.ajax({
+             type: "GET",
+             url: "${base}/project/getProject.do",
+             data: {id:$("#id").val()},
+             dataType: "json",
+             success: function(data){
+            	var product="";
+            	$.each(data.productList,function(idnex,obj){
+            		product=product+obj.name+","
+            	})
+            
+            	$("#product").html(product)
+                      }
+         })
+         
+       </script>  
+</body>
+</html>

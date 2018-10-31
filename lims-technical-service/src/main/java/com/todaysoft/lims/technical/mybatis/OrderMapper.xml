@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.Order" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="VARCHAR" />
+    <result column="ORDER_TYPE" property="orderType" jdbcType="BIT" />
+    <result column="CONTRACT_ID" property="contractId" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="AMOUNT" property="amount" jdbcType="INTEGER" />
+    <result column="SUBSIDIARY_SAMPLE_AMOUNT" property="subsidiarySampleAmount" jdbcType="INTEGER" />
+    <result column="PAY_TYPE" property="payType" jdbcType="BIT" />
+    <result column="DISCOUNT_COUPON_ID" property="discountCouponId" jdbcType="VARCHAR" />
+    <result column="DISCOUNT_AMOUNT" property="discountAmount" jdbcType="INTEGER" />
+    <result column="REDUCE_AMOUNT" property="reduceAmount" jdbcType="INTEGER" />
+    <result column="INCOMING_AMOUNT" property="incomingAmount" jdbcType="INTEGER" />
+    <result column="SAMPLING_AMOUNT" property="samplingAmount" jdbcType="INTEGER" />
+    <result column="RECIPIENT_NAME" property="recipientName" jdbcType="VARCHAR" />
+    <result column="RECIPIENT_PHONE" property="recipientPhone" jdbcType="VARCHAR" />
+    <result column="RECIPIENT_EMAIL" property="recipientEmail" jdbcType="VARCHAR" />
+    <result column="RECIPIENT_ADDRESS" property="recipientAddress" jdbcType="VARCHAR" />
+    <result column="DOCTOR_ASSIST" property="doctorAssist" jdbcType="VARCHAR" />
+    <result column="INVOICE_TITLE" property="invoiceTitle" jdbcType="VARCHAR" />
+    <result column="SHEDULE_STATUS" property="sheduleStatus" jdbcType="TINYINT" />
+    <result column="SUBMITTER_ID" property="submitterId" jdbcType="VARCHAR" />
+    <result column="SUBMITTER_NAME" property="submitterName" jdbcType="VARCHAR" />
+    <result column="SUBMIT_SOURCE" property="submitSource" jdbcType="BIT" />
+    <result column="ISSUE_INVOICE" property="issueInvoice" jdbcType="BIT" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR" />
+    <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATOR_ID" property="updatorId" jdbcType="VARCHAR" />
+    <result column="UPDATOR_NAME" property="updatorName" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="BIT" />
+    <result column="SCHEDULE_PAYMENT_STATUS" property="schedulePaymentStatus" jdbcType="BIT" />
+    <result column="RECEIVED_SAMPLE_STATUS" property="receivedSampleStatus" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="DRAFT_FLAG" property="draftFlag" jdbcType="BIT" />
+    <result column="PAYMENT_STATUS" property="paymentStatus" jdbcType="BIT" />
+    <result column="FULL_PAID_FLAG" property="fullPaidFlag" jdbcType="BIT" />
+    <result column="PAYMENT_DELAY_STATUS" property="paymentDelayStatus" jdbcType="BIT" />
+    <result column="TESTING_STATUS" property="testingStatus" jdbcType="BIT" />
+    <result column="SETTLEMENT_TYPE" property="settlementType" jdbcType="BIT" />
+    <result column="INVOICE_APPLY_TYPE" property="invoiceApplyType" jdbcType="BIT" />
+    <result column="IF_URGENT" property="ifUrgent" jdbcType="BIT" />
+    <result column="URGENT_UPDATE_TIME" property="urgentUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="URGENT_NAME" property="urgentName" jdbcType="VARCHAR" />
+    <result column="CANCEL_REMARK" property="cancelRemark" jdbcType="VARCHAR" />
+    <result column="CANCEL_ID" property="cancelId" jdbcType="VARCHAR" />
+    <result column="CANCEL_NAME" property="cancelName" jdbcType="VARCHAR" />
+    <result column="CANCEL_TIME" property="cancelTime" jdbcType="TIMESTAMP" />
+    <result column="PAY_TIME" property="payTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CODE, OWNER_ID, ORDER_TYPE, CONTRACT_ID, STATUS, AMOUNT, SUBSIDIARY_SAMPLE_AMOUNT, 
+    PAY_TYPE, DISCOUNT_COUPON_ID, DISCOUNT_AMOUNT, REDUCE_AMOUNT, INCOMING_AMOUNT, SAMPLING_AMOUNT, 
+    RECIPIENT_NAME, RECIPIENT_PHONE, RECIPIENT_EMAIL, RECIPIENT_ADDRESS, DOCTOR_ASSIST, 
+    INVOICE_TITLE, SHEDULE_STATUS, SUBMITTER_ID, SUBMITTER_NAME, SUBMIT_SOURCE, ISSUE_INVOICE, 
+    SUBMIT_TIME, CREATOR_ID, CREATOR_NAME, CREATE_TIME, UPDATOR_ID, UPDATOR_NAME, UPDATE_TIME, 
+    DEL_FLAG, SCHEDULE_PAYMENT_STATUS, RECEIVED_SAMPLE_STATUS, REMARK, DRAFT_FLAG, PAYMENT_STATUS, 
+    FULL_PAID_FLAG, PAYMENT_DELAY_STATUS, TESTING_STATUS, SETTLEMENT_TYPE, INVOICE_APPLY_TYPE, 
+    IF_URGENT, URGENT_UPDATE_TIME, URGENT_NAME, CANCEL_REMARK, CANCEL_ID, CANCEL_NAME, 
+    CANCEL_TIME, PAY_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.Order" >
+    insert into LIMS_ORDER (ID, CODE, OWNER_ID, 
+      ORDER_TYPE, CONTRACT_ID, STATUS, 
+      AMOUNT, SUBSIDIARY_SAMPLE_AMOUNT, PAY_TYPE, 
+      DISCOUNT_COUPON_ID, DISCOUNT_AMOUNT, REDUCE_AMOUNT, 
+      INCOMING_AMOUNT, SAMPLING_AMOUNT, RECIPIENT_NAME, 
+      RECIPIENT_PHONE, RECIPIENT_EMAIL, RECIPIENT_ADDRESS, 
+      DOCTOR_ASSIST, INVOICE_TITLE, SHEDULE_STATUS, 
+      SUBMITTER_ID, SUBMITTER_NAME, SUBMIT_SOURCE, 
+      ISSUE_INVOICE, SUBMIT_TIME, CREATOR_ID, 
+      CREATOR_NAME, CREATE_TIME, UPDATOR_ID, 
+      UPDATOR_NAME, UPDATE_TIME, DEL_FLAG, 
+      SCHEDULE_PAYMENT_STATUS, RECEIVED_SAMPLE_STATUS, REMARK, 
+      DRAFT_FLAG, PAYMENT_STATUS, FULL_PAID_FLAG, 
+      PAYMENT_DELAY_STATUS, TESTING_STATUS, SETTLEMENT_TYPE, 
+      INVOICE_APPLY_TYPE, IF_URGENT, URGENT_UPDATE_TIME, 
+      URGENT_NAME, CANCEL_REMARK, CANCEL_ID, 
+      CANCEL_NAME, CANCEL_TIME, PAY_TIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=BIT}, #{contractId,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{amount,jdbcType=INTEGER}, #{subsidiarySampleAmount,jdbcType=INTEGER}, #{payType,jdbcType=BIT}, 
+      #{discountCouponId,jdbcType=VARCHAR}, #{discountAmount,jdbcType=INTEGER}, #{reduceAmount,jdbcType=INTEGER}, 
+      #{incomingAmount,jdbcType=INTEGER}, #{samplingAmount,jdbcType=INTEGER}, #{recipientName,jdbcType=VARCHAR}, 
+      #{recipientPhone,jdbcType=VARCHAR}, #{recipientEmail,jdbcType=VARCHAR}, #{recipientAddress,jdbcType=VARCHAR}, 
+      #{doctorAssist,jdbcType=VARCHAR}, #{invoiceTitle,jdbcType=VARCHAR}, #{sheduleStatus,jdbcType=TINYINT}, 
+      #{submitterId,jdbcType=VARCHAR}, #{submitterName,jdbcType=VARCHAR}, #{submitSource,jdbcType=BIT}, 
+      #{issueInvoice,jdbcType=BIT}, #{submitTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=VARCHAR}, 
+      #{creatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updatorId,jdbcType=VARCHAR}, 
+      #{updatorName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=BIT}, 
+      #{schedulePaymentStatus,jdbcType=BIT}, #{receivedSampleStatus,jdbcType=BIT}, #{remark,jdbcType=VARCHAR}, 
+      #{draftFlag,jdbcType=BIT}, #{paymentStatus,jdbcType=BIT}, #{fullPaidFlag,jdbcType=BIT}, 
+      #{paymentDelayStatus,jdbcType=BIT}, #{testingStatus,jdbcType=BIT}, #{settlementType,jdbcType=BIT}, 
+      #{invoiceApplyType,jdbcType=BIT}, #{ifUrgent,jdbcType=BIT}, #{urgentUpdateTime,jdbcType=TIMESTAMP}, 
+      #{urgentName,jdbcType=VARCHAR}, #{cancelRemark,jdbcType=VARCHAR}, #{cancelId,jdbcType=VARCHAR}, 
+      #{cancelName,jdbcType=VARCHAR}, #{cancelTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Order" >
+    insert into LIMS_ORDER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID,
+      </if>
+      <if test="orderType != null" >
+        ORDER_TYPE,
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="subsidiarySampleAmount != null" >
+        SUBSIDIARY_SAMPLE_AMOUNT,
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE,
+      </if>
+      <if test="discountCouponId != null" >
+        DISCOUNT_COUPON_ID,
+      </if>
+      <if test="discountAmount != null" >
+        DISCOUNT_AMOUNT,
+      </if>
+      <if test="reduceAmount != null" >
+        REDUCE_AMOUNT,
+      </if>
+      <if test="incomingAmount != null" >
+        INCOMING_AMOUNT,
+      </if>
+      <if test="samplingAmount != null" >
+        SAMPLING_AMOUNT,
+      </if>
+      <if test="recipientName != null" >
+        RECIPIENT_NAME,
+      </if>
+      <if test="recipientPhone != null" >
+        RECIPIENT_PHONE,
+      </if>
+      <if test="recipientEmail != null" >
+        RECIPIENT_EMAIL,
+      </if>
+      <if test="recipientAddress != null" >
+        RECIPIENT_ADDRESS,
+      </if>
+      <if test="doctorAssist != null" >
+        DOCTOR_ASSIST,
+      </if>
+      <if test="invoiceTitle != null" >
+        INVOICE_TITLE,
+      </if>
+      <if test="sheduleStatus != null" >
+        SHEDULE_STATUS,
+      </if>
+      <if test="submitterId != null" >
+        SUBMITTER_ID,
+      </if>
+      <if test="submitterName != null" >
+        SUBMITTER_NAME,
+      </if>
+      <if test="submitSource != null" >
+        SUBMIT_SOURCE,
+      </if>
+      <if test="issueInvoice != null" >
+        ISSUE_INVOICE,
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="creatorName != null" >
+        CREATOR_NAME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updatorId != null" >
+        UPDATOR_ID,
+      </if>
+      <if test="updatorName != null" >
+        UPDATOR_NAME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="schedulePaymentStatus != null" >
+        SCHEDULE_PAYMENT_STATUS,
+      </if>
+      <if test="receivedSampleStatus != null" >
+        RECEIVED_SAMPLE_STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="draftFlag != null" >
+        DRAFT_FLAG,
+      </if>
+      <if test="paymentStatus != null" >
+        PAYMENT_STATUS,
+      </if>
+      <if test="fullPaidFlag != null" >
+        FULL_PAID_FLAG,
+      </if>
+      <if test="paymentDelayStatus != null" >
+        PAYMENT_DELAY_STATUS,
+      </if>
+      <if test="testingStatus != null" >
+        TESTING_STATUS,
+      </if>
+      <if test="settlementType != null" >
+        SETTLEMENT_TYPE,
+      </if>
+      <if test="invoiceApplyType != null" >
+        INVOICE_APPLY_TYPE,
+      </if>
+      <if test="ifUrgent != null" >
+        IF_URGENT,
+      </if>
+      <if test="urgentUpdateTime != null" >
+        URGENT_UPDATE_TIME,
+      </if>
+      <if test="urgentName != null" >
+        URGENT_NAME,
+      </if>
+      <if test="cancelRemark != null" >
+        CANCEL_REMARK,
+      </if>
+      <if test="cancelId != null" >
+        CANCEL_ID,
+      </if>
+      <if test="cancelName != null" >
+        CANCEL_NAME,
+      </if>
+      <if test="cancelTime != null" >
+        CANCEL_TIME,
+      </if>
+      <if test="payTime != null" >
+        PAY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=BIT},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="subsidiarySampleAmount != null" >
+        #{subsidiarySampleAmount,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=BIT},
+      </if>
+      <if test="discountCouponId != null" >
+        #{discountCouponId,jdbcType=VARCHAR},
+      </if>
+      <if test="discountAmount != null" >
+        #{discountAmount,jdbcType=INTEGER},
+      </if>
+      <if test="reduceAmount != null" >
+        #{reduceAmount,jdbcType=INTEGER},
+      </if>
+      <if test="incomingAmount != null" >
+        #{incomingAmount,jdbcType=INTEGER},
+      </if>
+      <if test="samplingAmount != null" >
+        #{samplingAmount,jdbcType=INTEGER},
+      </if>
+      <if test="recipientName != null" >
+        #{recipientName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientPhone != null" >
+        #{recipientPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientEmail != null" >
+        #{recipientEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientAddress != null" >
+        #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorAssist != null" >
+        #{doctorAssist,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTitle != null" >
+        #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sheduleStatus != null" >
+        #{sheduleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="submitterId != null" >
+        #{submitterId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterName != null" >
+        #{submitterName,jdbcType=VARCHAR},
+      </if>
+      <if test="submitSource != null" >
+        #{submitSource,jdbcType=BIT},
+      </if>
+      <if test="issueInvoice != null" >
+        #{issueInvoice,jdbcType=BIT},
+      </if>
+      <if test="submitTime != null" >
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatorId != null" >
+        #{updatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatorName != null" >
+        #{updatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="schedulePaymentStatus != null" >
+        #{schedulePaymentStatus,jdbcType=BIT},
+      </if>
+      <if test="receivedSampleStatus != null" >
+        #{receivedSampleStatus,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="draftFlag != null" >
+        #{draftFlag,jdbcType=BIT},
+      </if>
+      <if test="paymentStatus != null" >
+        #{paymentStatus,jdbcType=BIT},
+      </if>
+      <if test="fullPaidFlag != null" >
+        #{fullPaidFlag,jdbcType=BIT},
+      </if>
+      <if test="paymentDelayStatus != null" >
+        #{paymentDelayStatus,jdbcType=BIT},
+      </if>
+      <if test="testingStatus != null" >
+        #{testingStatus,jdbcType=BIT},
+      </if>
+      <if test="settlementType != null" >
+        #{settlementType,jdbcType=BIT},
+      </if>
+      <if test="invoiceApplyType != null" >
+        #{invoiceApplyType,jdbcType=BIT},
+      </if>
+      <if test="ifUrgent != null" >
+        #{ifUrgent,jdbcType=BIT},
+      </if>
+      <if test="urgentUpdateTime != null" >
+        #{urgentUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgentName != null" >
+        #{urgentName,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelRemark != null" >
+        #{cancelRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelId != null" >
+        #{cancelId,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelName != null" >
+        #{cancelName,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null" >
+        #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.Order" >
+    update LIMS_ORDER
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID = #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        ORDER_TYPE = #{orderType,jdbcType=BIT},
+      </if>
+      <if test="contractId != null" >
+        CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null" >
+        AMOUNT = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="subsidiarySampleAmount != null" >
+        SUBSIDIARY_SAMPLE_AMOUNT = #{subsidiarySampleAmount,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE = #{payType,jdbcType=BIT},
+      </if>
+      <if test="discountCouponId != null" >
+        DISCOUNT_COUPON_ID = #{discountCouponId,jdbcType=VARCHAR},
+      </if>
+      <if test="discountAmount != null" >
+        DISCOUNT_AMOUNT = #{discountAmount,jdbcType=INTEGER},
+      </if>
+      <if test="reduceAmount != null" >
+        REDUCE_AMOUNT = #{reduceAmount,jdbcType=INTEGER},
+      </if>
+      <if test="incomingAmount != null" >
+        INCOMING_AMOUNT = #{incomingAmount,jdbcType=INTEGER},
+      </if>
+      <if test="samplingAmount != null" >
+        SAMPLING_AMOUNT = #{samplingAmount,jdbcType=INTEGER},
+      </if>
+      <if test="recipientName != null" >
+        RECIPIENT_NAME = #{recipientName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientPhone != null" >
+        RECIPIENT_PHONE = #{recipientPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientEmail != null" >
+        RECIPIENT_EMAIL = #{recipientEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientAddress != null" >
+        RECIPIENT_ADDRESS = #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorAssist != null" >
+        DOCTOR_ASSIST = #{doctorAssist,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTitle != null" >
+        INVOICE_TITLE = #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="sheduleStatus != null" >
+        SHEDULE_STATUS = #{sheduleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="submitterId != null" >
+        SUBMITTER_ID = #{submitterId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterName != null" >
+        SUBMITTER_NAME = #{submitterName,jdbcType=VARCHAR},
+      </if>
+      <if test="submitSource != null" >
+        SUBMIT_SOURCE = #{submitSource,jdbcType=BIT},
+      </if>
+      <if test="issueInvoice != null" >
+        ISSUE_INVOICE = #{issueInvoice,jdbcType=BIT},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorName != null" >
+        CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatorId != null" >
+        UPDATOR_ID = #{updatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatorName != null" >
+        UPDATOR_NAME = #{updatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="schedulePaymentStatus != null" >
+        SCHEDULE_PAYMENT_STATUS = #{schedulePaymentStatus,jdbcType=BIT},
+      </if>
+      <if test="receivedSampleStatus != null" >
+        RECEIVED_SAMPLE_STATUS = #{receivedSampleStatus,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="draftFlag != null" >
+        DRAFT_FLAG = #{draftFlag,jdbcType=BIT},
+      </if>
+      <if test="paymentStatus != null" >
+        PAYMENT_STATUS = #{paymentStatus,jdbcType=BIT},
+      </if>
+      <if test="fullPaidFlag != null" >
+        FULL_PAID_FLAG = #{fullPaidFlag,jdbcType=BIT},
+      </if>
+      <if test="paymentDelayStatus != null" >
+        PAYMENT_DELAY_STATUS = #{paymentDelayStatus,jdbcType=BIT},
+      </if>
+      <if test="testingStatus != null" >
+        TESTING_STATUS = #{testingStatus,jdbcType=BIT},
+      </if>
+      <if test="settlementType != null" >
+        SETTLEMENT_TYPE = #{settlementType,jdbcType=BIT},
+      </if>
+      <if test="invoiceApplyType != null" >
+        INVOICE_APPLY_TYPE = #{invoiceApplyType,jdbcType=BIT},
+      </if>
+      <if test="ifUrgent != null" >
+        IF_URGENT = #{ifUrgent,jdbcType=BIT},
+      </if>
+      <if test="urgentUpdateTime != null" >
+        URGENT_UPDATE_TIME = #{urgentUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgentName != null" >
+        URGENT_NAME = #{urgentName,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelRemark != null" >
+        CANCEL_REMARK = #{cancelRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelId != null" >
+        CANCEL_ID = #{cancelId,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelName != null" >
+        CANCEL_NAME = #{cancelName,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null" >
+        CANCEL_TIME = #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        PAY_TIME = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.Order" >
+    update LIMS_ORDER
+    set CODE = #{code,jdbcType=VARCHAR},
+      OWNER_ID = #{ownerId,jdbcType=VARCHAR},
+      ORDER_TYPE = #{orderType,jdbcType=BIT},
+      CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      AMOUNT = #{amount,jdbcType=INTEGER},
+      SUBSIDIARY_SAMPLE_AMOUNT = #{subsidiarySampleAmount,jdbcType=INTEGER},
+      PAY_TYPE = #{payType,jdbcType=BIT},
+      DISCOUNT_COUPON_ID = #{discountCouponId,jdbcType=VARCHAR},
+      DISCOUNT_AMOUNT = #{discountAmount,jdbcType=INTEGER},
+      REDUCE_AMOUNT = #{reduceAmount,jdbcType=INTEGER},
+      INCOMING_AMOUNT = #{incomingAmount,jdbcType=INTEGER},
+      SAMPLING_AMOUNT = #{samplingAmount,jdbcType=INTEGER},
+      RECIPIENT_NAME = #{recipientName,jdbcType=VARCHAR},
+      RECIPIENT_PHONE = #{recipientPhone,jdbcType=VARCHAR},
+      RECIPIENT_EMAIL = #{recipientEmail,jdbcType=VARCHAR},
+      RECIPIENT_ADDRESS = #{recipientAddress,jdbcType=VARCHAR},
+      DOCTOR_ASSIST = #{doctorAssist,jdbcType=VARCHAR},
+      INVOICE_TITLE = #{invoiceTitle,jdbcType=VARCHAR},
+      SHEDULE_STATUS = #{sheduleStatus,jdbcType=TINYINT},
+      SUBMITTER_ID = #{submitterId,jdbcType=VARCHAR},
+      SUBMITTER_NAME = #{submitterName,jdbcType=VARCHAR},
+      SUBMIT_SOURCE = #{submitSource,jdbcType=BIT},
+      ISSUE_INVOICE = #{issueInvoice,jdbcType=BIT},
+      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=VARCHAR},
+      CREATOR_NAME = #{creatorName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATOR_ID = #{updatorId,jdbcType=VARCHAR},
+      UPDATOR_NAME = #{updatorName,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=BIT},
+      SCHEDULE_PAYMENT_STATUS = #{schedulePaymentStatus,jdbcType=BIT},
+      RECEIVED_SAMPLE_STATUS = #{receivedSampleStatus,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      DRAFT_FLAG = #{draftFlag,jdbcType=BIT},
+      PAYMENT_STATUS = #{paymentStatus,jdbcType=BIT},
+      FULL_PAID_FLAG = #{fullPaidFlag,jdbcType=BIT},
+      PAYMENT_DELAY_STATUS = #{paymentDelayStatus,jdbcType=BIT},
+      TESTING_STATUS = #{testingStatus,jdbcType=BIT},
+      SETTLEMENT_TYPE = #{settlementType,jdbcType=BIT},
+      INVOICE_APPLY_TYPE = #{invoiceApplyType,jdbcType=BIT},
+      IF_URGENT = #{ifUrgent,jdbcType=BIT},
+      URGENT_UPDATE_TIME = #{urgentUpdateTime,jdbcType=TIMESTAMP},
+      URGENT_NAME = #{urgentName,jdbcType=VARCHAR},
+      CANCEL_REMARK = #{cancelRemark,jdbcType=VARCHAR},
+      CANCEL_ID = #{cancelId,jdbcType=VARCHAR},
+      CANCEL_NAME = #{cancelName,jdbcType=VARCHAR},
+      CANCEL_TIME = #{cancelTime,jdbcType=TIMESTAMP},
+      PAY_TIME = #{payTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>操作日志</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/log/list.do">系统配置</a></li>
+							<li><a href="${base}/log/list.do">操作日志</a></li>
+							<li class="active"><strong>日志列表</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>日志列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/log/list.do" method="post" id="search_from"
+							class="search-form">
+							<div class="row m-b-xs">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="operator" class="form-control"
+											placeholder="操作员">
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="startDate" class="form-control"
+											placeholder="开始时间">
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<input type="text" name="endDate" class="form-control"
+											placeholder="结束时间">
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<button type="submit" class="btn btn-sm btn-primary">
+											<i class="fa fa-search"></i> 查询
+										</button>
+										<button type="button" class="btn btn-sm btn-success" onclick="clearCondition('search_from')" >
+											<i class="fa fa-remove"></i> 清空
+											</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th class="index">序号</th>
+									<th>事件名称</th>
+									<th>事件等级</th>
+									<th>请求用户代理</th>
+									<th>请求路径</th>
+									<th>请求参数</th>
+									<th>操作员</th>
+									<th>操作时间</th>
+									<th>操作结果</th>
+									<th>操作IP</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<#if pagination.records?has_content> <#list pagination.records
+								as record>
+								<tr>
+									<td>${record_index + 1}</td>
+									<td>${record.event!?html}</td>
+									<td>${record.level!?html}</td>
+									<td>${record.agent!?html}</td>
+									<td>${record.url!?html}</td>
+									<td>${record.parameters!?html}</td>
+									<td>${record.operator!?html}</td>
+									<td>${record.operateTime!?string('yyyy-MM-dd HH:mm:ss')}</td>
+									<td>${record.result!?html}</td>
+									<td>${record.operateIp!?html}</td>
+								</tr>
+								</#list> <#else>
+								<tr>
+									<td colspan="3">暂无相关记录</td>
+								</tr>
+								</#if>
+							</tbody>
+						</table>
+						<#include "../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+	<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+	<script src="${system_js}/system.js?v=1.0.0"></script>
+	<script src="${plugins}/pagination/jquery.pagination.js"></script>
+</body>
+</html>

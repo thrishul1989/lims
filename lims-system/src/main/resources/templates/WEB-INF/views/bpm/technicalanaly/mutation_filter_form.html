@@ -1,0 +1,978 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<meta name="format-detection" content="telephone=no,email=no">
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="HandheldFriendly" content="true">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<link rel="stylesheet"
+	href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+<link
+	href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" href="${system_css}/common.css">
+<link rel="stylesheet" href="${system_css}/modules.css">
+<link rel="stylesheet" href="${system_css}/style.css">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+
+/*.btn-group label {*/
+/*border-radius: .25rem !important;*/
+/*}*/
+.item-list {
+	margin: 20px auto;
+}
+
+.item-list .col-form-label {
+	text-align: right;
+	height: 36px;
+	padding-top: 0;
+	padding-bottom: 0;
+	line-height: 36px;
+	color: #666666;
+}
+
+.ms-ctn .ms-sel-ctn input {
+	font-size: 12px;
+}
+</style>
+</head>
+<body>
+	<article class="content-wrap">
+		<div class="container container-fluid">
+			<div class="row">
+				<div class="breadCrumbs-nav-box"></div>
+			</div>
+		</div>
+		<div class="container container-fluid">
+			<div class="row sys-plane">
+				<div class="form-group ub mr_b0">
+					<label for="" class="col-auto col-form-label"
+						style="padding-left: 0;"><span class="ft_sm">最近筛选：</span></label>
+					<div class="col">
+						<div class="ub-f1">
+							<!-- <div class="alert alert-secondary alert-dismissible fade show sys-badge-alert mr_r10 mr_b10" role="alert" onclick="recentFilter()">
+              突变标签：杂合携带；纯和/杂合：het；蛋白影响：synonymous
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div> -->
+							<#if recentFilterList?has_content><#list recentFilterList as rfl>
+							<button attr-data="${rfl!?html}" type="button"
+								class="alert alert-secondary alert-dismissible fade show sys-badge-alert mr_r10"
+								onclick="recentFilter(this,${rfl_index})">
+								筛选记录${rfl_index+1}</button>
+							</#list> </#if> <input type="hidden" id="recheckTag"
+								name="recheckTag" value="${recheckTag!?html}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container container-fluid mr_t30">
+			<div class="row mr_b10">
+				<form id="mutationForm" class="form-horizontal m-t ub-f1" action="" method="post"
+					  enctype='application/json'>
+
+					<div action="" class="sys-column-plane ">
+
+						<div class="sys-column-plane-body">
+							<div class="pd_l40 pd_r40">
+								<div class="sys-column-plane">
+									<div class="sys-column-plane-head">
+										<h2 class="sys-column-name">设置关键词</h2>
+									</div>
+									<div class="sys-column-plane-body" style="min-height: auto">
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm ">疾病类：</span></label>
+											<div class="col">
+												<div class="form-control " id="disease" placeholder="请选择疾病"></div>
+											</div>
+										</div>
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm">基因类：</span></label>
+											<div class="col">
+												<div class="form-control" id="gene" placeholder="请选择基因"></div>
+											</div>
+										</div>
+										<div class="form-row item-list">
+											<label for="" class="col-form-label col-2"><span
+												class="ft_sm">表型类：</span></label>
+											<div class="col">
+												<div class="form-control" id="phenotype" placeholder="请选择表型"></div>
+											</div>
+										</div>
+										<input type="hidden" name="diseases"> <input
+											type="hidden" name="genes"> <input type="hidden"
+											name="phenotypes">
+
+									</div>
+								</div>
+
+
+								<div class="sys-column-plane" id="maijinuoDiv"
+									style="border-style: ridge">
+									<div class="sys-column-plane-head"
+										style="background-color: #c8c9ca; height: 45px">
+										<h2 class="sys-column-name">迈基诺标签</h2>
+										<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+											onclick="clearMaijinuo()">重置</a>
+									</div>
+									<div class="sys-column-plane-body" style="min-height: auto;">
+										<#if data?has_content><#list data as entiy> <#if
+										entiy.semantic =="Pathogenic_Analysis" || entiy.semantic
+										=="标签" >
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm ">${entiy.columnName!?html}：</span></label> <#if
+											entiy.type=='1'>
+											<div class="col">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="sys-btn-check"> <input type="checkbox"
+													name="${filterItem.semantic!?html}"
+													value="${filterItem.name!?html}"<#if
+													entiy.chooseDefaultValueList?has_content><#list
+													entiy.chooseDefaultValueList as defaultValue><#if
+													defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+													<span class="check-btn">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+											</div>
+											</#if>
+
+										</div>
+										</#if> </#list> </#if>
+									</div>
+								</div>
+
+
+
+								<div class="sys-column-plane" id="baseDiv"
+									style="border-style: ridge">
+									<div class="sys-column-plane-head"
+										style="background-color: #c8c9ca; height: 45px">
+										<h2 class="sys-column-name">基本参数</h2>
+										<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+											onclick="clearBase()">重置</a>
+									</div>
+									<div class="sys-column-plane-body" style="min-height: auto;">
+										<#if data?has_content><#list data as entiy> <#if
+										entiy.semantic !="Inhouse" && entiy.semantic
+										!="1000g2015aug_all" && entiy.semantic !="ExAC_ALL" &&
+										entiy.semantic !="ExAC_EAS" && entiy.semantic !="ESP6500si" &&
+										entiy.semantic !="gnomAD_exome_ALL" && entiy.semantic
+										!="gnomAD_exome_EAS" && entiy.semantic !="gnomAD_genome_ALL"
+										&& entiy.semantic !="gnomAD_genome_EAS" && entiy.semantic
+										!="highest-MAF" && entiy.semantic !="SIFT_Predict" &&
+										entiy.semantic !="PolyPhen_2_Predict" && entiy.semantic
+										!="MutationTaster_Predict" && entiy.semantic !="MCAP_pred" &&
+										entiy.semantic !="GERP++_Predict" && entiy.semantic !="SPIDEX"
+										&& entiy.semantic !="Tag" && entiy.semantic !="MutInDatabase"
+										&& entiy.semantic !="Pathogenic_Analysis" && entiy.semantic
+										!="标签" >
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm ">${entiy.columnName!?html}：</span></label> <#if
+											entiy.type=='1'>
+											<div class="col">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="sys-btn-check"> <input type="checkbox"
+													name="${filterItem.semantic!?html}"
+													value="${filterItem.name!?html}"<#if
+													entiy.chooseDefaultValueList?has_content><#list
+													entiy.chooseDefaultValueList as defaultValue><#if
+													defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+													<span class="check-btn">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+											</div>
+											</#if> <#if entiy.type=='2'>
+											<div class="col" style="padding-top: .375rem;">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="custom-control custom-radio"> <input
+													name="${filterItem.semantic!?html}" type="radio"
+													class="custom-control-input"
+													value="${filterItem.name!?html}"<#if
+													entiy.radioValue??><#if
+													filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+													class="custom-control-indicator"></span> <span
+													class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+
+											</div>
+											</#if> <#if entiy.type=='3'>
+											<div class="col row range">
+												<div class="col-2 pr-0">
+													<input type="text" class="form-control"
+														name="${entiy.semantic!?html}Min"
+														value="${entiy.rangeValue1!?html}" onblur="check(this)"
+														onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+												</div>
+												<label class="col-auto col-form-label">—</label>
+												<div class="col-2 pl-0">
+													<input type="text" class="form-control"
+														name="${entiy.semantic!?html}Max"
+														value="${entiy.rangeValue2!?html}" onblur="check(this)"
+														onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+												</div>
+											</div>
+											</#if>
+										</div>
+										</#if> </#list> </#if>
+									</div>
+
+
+									<div class="sys-column-plane">
+										<div class="sys-column-plane-head">
+											<h2 class="sys-column-name">人群频率</h2>
+											<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+												onclick="clearCrowd()">重置</a>
+										</div>
+										<div class="sys-column-plane-body" style="min-height: auto;">
+											<div class="clearfix">
+												<#if data?has_content><#list data as entiy> <#if
+												entiy.semantic =="Inhouse" || entiy.semantic
+												=="1000g2015aug_all" || entiy.semantic =="ExAC_ALL" ||
+												entiy.semantic =="ExAC_EAS" || entiy.semantic =="ESP6500si"
+												|| entiy.semantic =="gnomAD_exome_ALL" || entiy.semantic
+												=="gnomAD_exome_EAS" || entiy.semantic =="gnomAD_genome_ALL"
+												|| entiy.semantic =="gnomAD_genome_EAS" || entiy.semantic
+												=="highest-MAF">
+												<div class="form-row item-list"
+													style="width: 50%; float: left;">
+													<#if entiy.type=='3'>
+													<div class="col row popular-rate range">
+														<label for="" class="col-form-label col-6 pd_r0"><span
+															class="ft_sm">${entiy.columnName!?html}：</span></label>
+														<div class="col-2">
+															<input type="text" class="form-control"
+																name="${entiy.semantic!?html}Min"
+																value="${entiy.rangeValue1!?html}" onblur="check(this)"
+																onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+														</div>
+														<span class="col-form-label col-auto pd_h0">—</span>
+														<div class="col-2">
+															<input type="text" class="form-control"
+																name="${entiy.semantic!?html}Max"
+																value="${entiy.rangeValue2!?html}" onblur="check(this)"
+																onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+														</div>
+													</div>
+													</#if>
+												</div>
+												</#if></#list></#if>
+											</div>
+										</div>
+									</div>
+
+									<div class="sys-column-plane">
+										<div class="sys-column-plane-head">
+											<h2 class="sys-column-name">蛋白功能预测</h2>
+											<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+												onclick="clearProtein()">重置</a>
+										</div>
+										<div class="sys-column-plane-body" style="min-height: auto;">
+											<div class="form-row item-list">
+												<label class="col-2 col-form-label"><span
+													class="ft_sm "></span></label>
+												<div class="col" style="padding-top: .375rem;">
+													<label class="custom-control custom-radio"> <input
+														name="proteinFunction" type="radio"
+														class="custom-control-input" value="满足全部"> <span
+														class="custom-control-indicator"></span> <span
+														class="custom-control-description txt-default">交集</span>
+													</label> <label class="custom-control custom-radio"> <input
+														name="proteinFunction" type="radio"
+														class="custom-control-input" value="满足一种"
+														checked="checked"> <span
+														class="custom-control-indicator"></span> <span
+														class="custom-control-description txt-default">并集</span>
+													</label>
+												</div>
+											</div>
+											<#if data?has_content><#list data as entiy> <#if
+											entiy.semantic =="SIFT_Predict" || entiy.semantic
+											=="PolyPhen_2_Predict" || entiy.semantic
+											=="MutationTaster_Predict" || entiy.semantic =="MCAP_pred" ||
+											entiy.semantic =="GERP++_Predict" || entiy.semantic
+											=="SPIDEX" >
+											<div class="form-row item-list">
+												<label class="col-2 col-form-label"><span
+													class="ft_sm ">${entiy.columnName!?html}：</span></label> <#if
+												entiy.type=='1'>
+												<div class="col">
+													<#if entiy.chooseFilterItemsList?has_content><#list
+													entiy.chooseFilterItemsList as filterItem> <label
+														class="sys-btn-check"> <input type="checkbox"
+														name="${filterItem.semantic!?html}"
+														value="${filterItem.name!?html}"<#if
+														entiy.chooseDefaultValueList?has_content><#list
+														entiy.chooseDefaultValueList as defaultValue><#if
+														defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+														<span class="check-btn">${filterItem.name!?html}</span>
+													</label> </#list> </#if>
+												</div>
+												</#if> <#if entiy.type=='2'>
+												<div class="col" style="padding-top: .375rem;">
+													<#if entiy.chooseFilterItemsList?has_content><#list
+													entiy.chooseFilterItemsList as filterItem> <label
+														class="custom-control custom-radio"> <input
+														name="${filterItem.semantic!?html}" type="radio"
+														class="custom-control-input"
+														value="${filterItem.name!?html}"<#if
+														entiy.radioValue??><#if
+														filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+														class="custom-control-indicator"></span> <span
+														class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+													</label> </#list> </#if>
+
+												</div>
+												</#if> <#if entiy.type=='3'>
+												<div class="col row range">
+													<div class="col-2 pr-0">
+														<input type="text" class="form-control"
+															name="${entiy.semantic!?html}Min"
+															value="${entiy.rangeValue1!?html}" onblur="" onkeyup="">
+													</div>
+													<label class="col-auto col-form-label">—</label>
+													<div class="col-2 pl-0">
+														<input type="text" class="form-control"
+															name="${entiy.semantic!?html}Max"
+															value="${entiy.rangeValue2!?html}" onblur="" onkeyup="">
+													</div>
+												</div>
+												</#if>
+											</div>
+											</#if> </#list> </#if>
+										</div>
+									</div>
+
+								</div>
+
+
+
+
+								<div class="sys-column-plane" id="evidenceDiv"
+									style="border-style: ridge">
+									<div class="sys-column-plane-head"
+										style="background-color: #c8c9ca; height: 45px">
+										<h2 class="sys-column-name">Evidence</h2>
+										<a href="javascript:;" class="op-link ft_sm f_r mr_t20"
+											onclick="clearEvidence()">重置</a>
+									</div>
+									<div class="sys-column-plane-body" style="min-height: auto;">
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm "></span></label>
+											<div class="col" style="padding-top: .375rem;">
+												<label class="custom-control custom-radio"> <input
+													name="evidence" type="radio" class="custom-control-input"
+													value="交集"> <span class="custom-control-indicator"></span>
+													<span class="custom-control-description txt-default">交集</span>
+												</label> <label class="custom-control custom-radio"> <input
+													name="evidence" type="radio" class="custom-control-input"
+													value="并集" checked="checked"> <span
+													class="custom-control-indicator"></span> <span
+													class="custom-control-description txt-default">并集</span>
+												</label>
+											</div>
+										</div>
+										<#if data?has_content><#list data as entiy> <#if
+										entiy.semantic =="Tag" >
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm ">${entiy.columnName!?html}：</span></label> <#if
+											entiy.type=='1'>
+											<div class="col">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="sys-btn-check"> <input type="checkbox"
+													name="${filterItem.semantic!?html}"
+													value="${filterItem.name!?html}"<#if
+													entiy.chooseDefaultValueList?has_content><#list
+													entiy.chooseDefaultValueList as defaultValue><#if
+													defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+													<span class="check-btn">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+											</div>
+											</#if>
+										</div>
+										</#if> </#list> <#list data as entiy> <#if
+										entiy.semantic =="MutInDatabase" || entiy.semantic
+										=="highest-MAF">
+										<div class="form-row item-list">
+											<label class="col-2 col-form-label"><span
+												class="ft_sm ">${entiy.columnName!?html}：</span></label> <#if
+											entiy.type=='1'>
+											<div class="col">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="sys-btn-check"> <input type="checkbox"
+													name="${filterItem.semantic!?html}"
+													value="${filterItem.name!?html}"<#if
+													entiy.chooseDefaultValueList?has_content><#list
+													entiy.chooseDefaultValueList as defaultValue><#if
+													defaultValue.name==filterItem.name>checked</#if></#list></#if>>
+													<span class="check-btn">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+											</div>
+											</#if> <#if entiy.type=='2'>
+											<div class="col" style="padding-top: .375rem;">
+												<#if entiy.chooseFilterItemsList?has_content><#list
+												entiy.chooseFilterItemsList as filterItem> <label
+													class="custom-control custom-radio"> <input
+													name="${filterItem.semantic!?html}" type="radio"
+													class="custom-control-input"
+													value="${filterItem.name!?html}"<#if
+													entiy.radioValue??><#if
+													filterItem.name==entiy.radioValue>checked</#if></#if>> <span
+													class="custom-control-indicator"></span> <span
+													class="custom-control-description txt-default ">${filterItem.name!?html}</span>
+												</label> </#list> </#if>
+
+											</div>
+											</#if> <#if entiy.type=='3'>
+											<div class="col row range">
+												<div class="col-2 pr-0">
+													<input type="text" class="form-control"
+														name="${entiy.semantic!?html}2Min"
+														value="${entiy.rangeValue1!?html}" onblur="check(this)"
+														onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+												</div>
+												<label class="col-auto col-form-label">—</label>
+												<div class="col-2 pl-0">
+													<input type="text" class="form-control"
+														name="${entiy.semantic!?html}2Max" value="0.05"
+														onblur="check(this)"
+														onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+												</div>
+											</div>
+											</#if>
+										</div>
+										</#if> </#list> </#if>
+									</div>
+								</div>
+
+								<div class="form-row mr_t20 pd_b20">
+									<div class="col">
+										<button class="btn btn-primary mr_r50" type="button"
+											style="width: 150px;" onclick="packData()">
+											<span class="ft_default">保 存</span>
+										</button>
+										<button class="btn btn-outline-primary" type="button"
+											style="width: 150px;" onclick="goBack()">
+											<span class="ft_default">返 回</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</article>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						<span class="txt-default">修改关键词</span>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="">
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label pd_r0 txt-default">疾病类：</label>
+							<div class="col-sm-9 pd_l0">
+								<div class="txt_l ub-f1">
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<input type="text" class="sys-input" style="width: 85px;">
+									<a href="javascript:;"
+										class="op-link inline_block dialog-add-btn"
+										style="height: 38px; line-height: 38px;">添加</a>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="" class="col-sm-3 col-form-label pd_r0 txt-default">基因类：</label>
+							<div class="col-sm-9 pd_l0">
+								<div class="txt_l ub-f1">
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<input type="text" class="sys-input" style="width: 85px;">
+									<a href="javascript:;"
+										class="op-link inline_block dialog-add-btn"
+										style="height: 38px; line-height: 38px;">添加</a>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="" class="col-sm-3 col-form-label pd_r0 txt-default">表型类：</label>
+							<div class="col-sm-9 pd_l0">
+								<div class="txt_l ub-f1">
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div
+										class="alert alert-secondary alert-dismissible fade show sys-badge-alert"
+										role="alert">
+										某某某
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<input type="text" class="sys-input" style="width: 85px;">
+									<a href="javascript:;"
+										class="op-link inline_block dialog-add-btn"
+										style="height: 38px; line-height: 38px;">添加</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="txt_c ub-f1">
+						<button type="button" class="btn btn-primary" data-dismiss="modal"
+							style="width: 150px; margin-right: 50px;">保存</button>
+						<button type="button" class="btn btn-outline-primary"
+							style="width: 150px;">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+		integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+		crossorigin="anonymous"></script>
+
+	<script src="${system_js}/magicsuggest-min.js"></script>
+	<script type="text/javascript"
+		src="${plugins}/validation/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+	<script src="${plugins}/layer/layer.min.js"></script>
+	<script>
+$(function ()
+{
+ 	var disease=$('#disease').magicSuggest({
+	    width: 190,
+	    highlight: true,
+	    data:'${base}/disease/diseaseSelect.do',
+	    method:'get',
+	    queryParam:"name",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	        
+	            '<div  class="probe">' + v.name + '</div>' +
+	           
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+ 	if ($('#disease').val() != null && "" != $('#disease').val())
+    {
+        s.setDataUrlParams({
+            name : $('#disease').val()
+        });
+    }
+ 	
+	var gene=	$('#gene').magicSuggest({
+	    width: 190,
+	    highlight: true,
+	    data:'${base}/disease/geneSelect.do',
+	    method:'get',
+	    queryParam:"symbol",
+	    displayField:'symbol',
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	            '<div  class="probe">' + v.symbol + '</div>' +
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	var phenotype=	$('#phenotype').magicSuggest({
+	    width: 190,
+	    highlight: true,
+	    data:'${base}/phenotype/getPhenotypeSelected.do',
+	    method:'get',
+	    queryParam:"name",
+	    allowFreeEntries:false,
+	    renderer: function(v){
+	    return '<div>' +
+	        '<div >' +
+	            '<div  class="probe">' + v.name + '</div>' + 
+	        '<div style="clear:both;"></div>';
+	    }
+	});
+	
+	<#if disease??>
+		$('#disease').magicSuggest().setSelection(${disease});
+	</#if>
+	
+	/* <#if acmgs?has_content><#list acmgs as acmg>
+		$('input[name="acmgs"][value="${acmg!?html}"]').prop('checked' ,true);
+	</#list>
+	</#if>
+	
+	<#if mutationLabels?has_content><#list mutationLabels as mutationLabel>
+		$('input[name="mutationLabel"][value="${mutationLabel!?html}"]').prop('checked' ,true);
+	</#list>
+	</#if> */
+});
+
+$.fn.serializeObject = function()    
+{    
+   var o = {};    
+   var a = this.serializeArray();   
+   $.each(a, function() { 
+	   if(null != this.value && "" != this.value)
+	   {
+		   if (o[this.name]) {    
+	           if (!o[this.name].push) {    
+	               o[this.name] = [o[this.name]];    
+	           }    
+	           o[this.name].push(this.value || '');    
+	       } else {    
+	           o[this.name] = this.value || '';    
+	       } 
+	   }
+   });    
+   return o;    
+};  
+  
+
+
+function packData()
+{
+	//临床诊断(疾病)
+	var ds=$('#disease').magicSuggest().getSelection();
+	var dsid=[];
+	$.each(ds,function(index,obj){
+		dsid.push(obj.id);
+	})
+	var diseases = dsid.join(",");
+	
+	//关注基因
+	var gn=$('#gene').magicSuggest().getSelection();
+	var gnid=[];
+	$.each(gn,function(index,obj){
+		gnid.push(obj.id);
+	})
+	var genes = gnid.join(",");
+	
+	//临床表型
+	var pt=$('#phenotype').magicSuggest().getSelection();
+	var ptid=[];
+	$.each(pt,function(index,obj){
+		ptid.push(obj.id);
+	})
+	var phenotypes = ptid.join(",");
+	
+	$("input[name='diseases']").val(diseases);
+	$("input[name='genes']").val(genes);
+	$("input[name='phenotypes']").val(phenotypes);
+	//$('#mutationForm').submit();
+	var flag = checkSize();
+	
+	
+	if(flag)
+	{
+		var jsonInfo = $('#mutationForm').serializeObject();
+		//console.info(JSON.stringify(jsonInfo));
+		$.ajax({
+			   type:"POST",
+			   url:'${base}/testing/saveFilterCreate.jsp',
+			   data:{jsonStr:JSON.stringify(jsonInfo)},
+			   success:function(flag){
+				   if(flag)
+				   {
+					   window.location.href = '${base}/testing/tab.do?dataCode=${dataCode}&sampleCode=${sampleCode!?html}&analysisFamilyId=${familyGroupId!?html}&id=${id!?html}&ifRecheck=${recheckTag!?html}';
+				   }
+				}
+		   }); 
+	}
+}
+
+function checkSize() {
+	var flag = true;
+	$(".range").each(function(index){
+		var name = $(this).find("input[name$='Min']").attr('name');
+		name = name.substring(0,name.length-3);
+		var min = $.trim($(this).find("input[name$='Min']").val());
+		var max = $.trim($(this).find("input[name$='Max']").val());
+		if(null != min && "" !=min && null != max && "" != max)
+	    {
+	    	if(parseFloat(max)<parseFloat(min))
+	    	{
+	    		layer.alert(name+':后值必须大于前值！', {title : "提示"});
+	            flag = false;
+	    	}
+	    }
+	});
+    return flag;
+}
+
+function check(e) { 
+    var re = /^\d+(?=\.{0,1}\d+$|$)/ 
+    if (e.value != "") { 
+        if (!re.test(e.value)) { 
+            e.value = ""; 
+            e.focus(); 
+            alert("请输入正确的数字");
+        } 
+    } 
+} 
+
+function goBack() {
+    window.history.back(-1);
+}
+//最近筛选项
+function recentFilter(e,index)
+{
+	var d = $('#disease').magicSuggest();
+    var g = $('#gene').magicSuggest();
+    var p = $('#phenotype').magicSuggest();
+    if(d.getSelection().length>0 || g.getSelection().length>0 || p.getSelection().length>0){
+    	if(typeof g.clear == 'function'){
+            g.clear();
+        }
+        if(typeof d.clear == 'function'){
+            d.clear();
+        }
+        if(typeof p.clear == 'function'){
+            p.clear();
+        }
+        $('#disease').blur();
+        $('#gene').blur();
+        $('#phenotype').blur();
+        return ;
+    }
+    
+	var attrData = $(e).attr("attr-data");
+	var obj = JSON.parse(attrData);
+	if(null != obj)
+	{
+		clearBase();
+		clearCrowd();
+		clearProtein();
+		clearEvidence();
+		
+		for (var key in obj)
+	    {
+	        //console.info(key); console.info(obj[key]);
+	        if(obj[key] instanceof Array)
+	        {
+	        	for(var i = 0;i<obj[key].length;i++)
+	        	{
+	        		$("input[name='"+key+"'][value='"+obj[key][i]+"']").prop('checked' ,true);
+	        	}
+	        }else if(key.indexOf("Min")>0 || key.indexOf("Max")>0)
+	        {
+	        	$("input[name='"+key+"']").val(obj[key]);
+	        }
+	        else
+	        {
+	        	 $("input[name='"+key+"'][value='"+obj[key]+"']").prop('checked' ,true);
+	        }
+	        
+	        if("diseases" == key)
+	        {
+	        	if(null != obj[key] && "" != obj[key])
+	        	{
+	        		$.ajax({
+	     			   type:"POST",
+	     			   url:'${base}/mutation/getDiseaseKeyWord.jsp?ids='+obj[key],
+	     			   success:function(data){
+	     				   if(null != data && data.length > 0)
+	     				   {
+	     					  $('#disease').magicSuggest().setSelection(data);
+	     				   }
+	     				}
+	     		   }); 
+	        	}
+	        }
+
+	        if("genes" == key)
+	        {
+	        	if(null != obj[key] && "" != obj[key])
+	        	{
+	        		$.ajax({
+	     			   type:"POST",
+	     			   url:'${base}/mutation/getGeneKeyWord.jsp?ids='+obj[key],
+	     			   success:function(data){
+	     				   if(null != data && data.length > 0)
+	     				   {
+	     					  $('#gene').magicSuggest().setSelection(data);
+	     				   }
+	     				}
+	     		   }); 
+	        	}
+	        }
+	        if("phenotypes" == key)
+	        {
+	        	if(null != obj[key] && "" != obj[key])
+	        	{
+	        		$.ajax({
+	     			   type:"POST",
+	     			   url:'${base}/mutation/getPhenotypeKeyWord.jsp?ids='+obj[key],
+	     			   success:function(data){
+	     				   if(null != data && data.length > 0)
+	     				   {
+	     					  $('#phenotype').magicSuggest().setSelection(data);
+	     				   }
+	     				}
+	     		   }); 
+	        	}
+	        }
+	        
+	    }
+	}
+}
+
+
+//迈基诺
+function clearMaijinuo()
+{
+	$("#maijinuoDiv :text").each(function(){  
+        $(this).val('');  
+    });  
+    $("#maijinuoDiv :checkbox").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    $("#maijinuoDiv :radio").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    
+}
+
+
+
+//基础重置
+function clearBase()
+{
+	$("#baseDiv :text").each(function(){  
+        $(this).val('');  
+    });  
+    $("#baseDiv :checkbox").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    $("#baseDiv :radio").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    
+}
+//人群重置
+function clearCrowd()
+{
+	$("#crowdDiv :text").each(function(){  
+        $(this).val('');  
+    });  
+    $("#crowdDiv :checkbox").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    $("#crowdDiv :radio").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    
+}
+//蛋白功能预测重置
+function clearProtein()
+{
+	$("#proteinDiv :text").each(function(){  
+        $(this).val('');  
+    });  
+    $("#proteinDiv :checkbox").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    $("#proteinDiv :radio").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    
+}
+//Evidence重置
+function clearEvidence()
+{
+	$("#evidenceDiv :text").each(function(){  
+        $(this).val('');  
+    });  
+    $("#evidenceDiv :checkbox").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    $("#evidenceDiv :radio").each(function(){  
+        $(this).prop('checked' ,false);  
+    });
+    
+}
+
+</script>
+</body>
+</html>

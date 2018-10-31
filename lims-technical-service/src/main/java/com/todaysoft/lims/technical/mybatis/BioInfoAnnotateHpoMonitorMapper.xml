@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.todaysoft.lims.technical.mybatis.BioInfoAnnotateHpoMonitorMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotateHpoMonitor">
+		<result column="ANNOTATE_ID" property="annotateId" jdbcType="VARCHAR" />
+		<result column="SAMPLE_TEST_ID" property="sampleTestId" jdbcType="VARCHAR" />
+		<result column="MONITOR_TASK_ID" property="monitorTaskId" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="BIT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ANNOTATE_ID,SAMPLE_TEST_ID,MONITOR_TASK_ID,STATUS,CREATE_TIME,END_TIME
+	</sql>
+
+
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotateHpoMonitor">
+		insert into BIOLOGY_INFO_ANNOTATE_HPO_MONITOR
+		(ANNOTATE_ID,
+		MONITOR_TASK_ID, STATUS,
+		CREATE_TIME, END_TIME)
+		values
+		(#{annotateId,jdbcType=VARCHAR}, #{monitorTaskId,jdbcType=VARCHAR},
+		#{status,jdbcType=BIT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotateHpoMonitor">
+		insert into BIOLOGY_INFO_ANNOTATE_HPO_MONITOR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="annotateId != null">
+				ANNOTATE_ID,
+			</if>
+			<if test="sampleTestId != null">
+				SAMPLE_TEST_ID,
+			</if>
+			<if test="monitorTaskId != null">
+				MONITOR_TASK_ID,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="endTime != null">
+				END_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="annotateId != null">
+				#{annotateId,jdbcType=VARCHAR},
+			</if>
+			<if test="sampleTestId != null">
+				#{sampleTestId,jdbcType=VARCHAR},
+			</if>
+			<if test="monitorTaskId != null">
+				#{monitorTaskId,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="getByMonitorId" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from BIOLOGY_INFO_ANNOTATE_HPO_MONITOR
+		where MONITOR_TASK_ID
+		= #{0} and STATUS = 0
+
+	</select>
+
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.BioInfoAnnotateHpoMonitor">
+		update BIOLOGY_INFO_ANNOTATE_HPO_MONITOR
+		set
+		MONITOR_TASK_ID =
+		#{monitorTaskId,jdbcType=VARCHAR},
+		STATUS =
+		#{status,jdbcType=BIT},
+		CREATE_TIME =
+		#{createTime,jdbcType=TIMESTAMP},
+		END_TIME =
+		#{endTime,jdbcType=TIMESTAMP}
+		where ANNOTATE_ID =
+		#{annotateId,jdbcType=VARCHAR} and MONITOR_TASK_ID = #{monitorTaskId,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="getMonitoringList" resultMap="BaseResultMap">
+		select * from BIOLOGY_INFO_ANNOTATE_HPO_MONITOR where STATUS = 0
+
+	</select>
+	
+	 <select id="getBySampleAnalysisId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      <include refid="Base_Column_List" />
+    from
+      BIOLOGY_INFO_ANNOTATE_HPO_MONITOR
+    where
+      SAMPLE_TEST_ID = #{analysisSampleId,jdbcType=VARCHAR}
+      AND STATUS = 0
+    ORDER BY CREATE_TIME DESC limit 1;
+  </select>
+	
+</mapper>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>消息通知-新增/修改消息</title>
+    <link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="${system_css}/animate.min.css" rel="stylesheet">
+    <link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+    <link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+
+    <script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+    <script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${system_js}/bootstrap-suggest.js"></script>
+    <script src="${system_js}/system.js?v=1.0.0"></script>
+    <script src="${plugins}/pagination/jquery.pagination.js"></script>
+    <script src="${system_js}/magicsuggest-min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+    <script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+    <!-- 时间控件 -->
+    <script src="${plugins}/my97DatePicker/WdatePicker.js"></script>
+
+    <script>
+        $().ready(function () {
+
+            $("#message_form").validate({
+                rules: {
+                    sampleCode: {
+                        required: true,
+                    },
+                    handleStrategy: {
+                        required: true,
+                    },
+                    notify: {
+                        required: true,
+                    },
+                    content: {
+                        required: true,
+                    },
+                    noticeTime: {
+                        required: true,
+                    },
+
+                },
+                messages: {
+                    sampleCode: {
+                        required: "必填"
+
+                    },
+                    handleStrategy: {
+                        required: "请选择处理策略"
+                    },
+
+                    notify: {
+                        required: "请选择通知人"
+                    },
+                    content: {
+                        required: "必填内容"
+                    },
+                    noticeTime: {
+                        required: "请选择通知时间"
+                    },
+                }
+
+            });
+        });
+
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="${base}/messageNotice/list.do">消息通知管理</a>
+                        </li>
+                        <li class="active">
+                            <strong>新增消息</strong>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <strong>新增消息</strong>
+                </div>
+                <div class="ibox-content">
+                    <form id="message_form" class="form-horizontal m-t" action="${base}/messageNotice/create.do" method="post">
+                        <fieldset>
+                            <input type="hidden" name="id" id="id" value="${(message.id)!?html}" />
+                            <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                            <div class="form-group control-required" >
+                                <label class="col-sm-2 control-label control-required">样本编号：</label>
+                                <div class="col-sm-3 control-required">
+                                    <input type="text" class="form-control" name="sampleCode" id="sampleCode" value="${(message.sampleCode)!?html}" required />
+                                </div>
+                                <label class="col-sm-2 control-label control-required">处理策略：</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="handleStrategy" name="handleStrategy" data-value="${(message.handleStrategy)!?html}" required>
+                                        <option value=''>==请选择处理策略==</option>
+                                        <#if taskList??>
+                                        <#list taskList as entry>
+                                        <option value="${entry.semantic}">${entry.name!?html}</option>
+                                        </#list>
+                                        </#if>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label control-required" >通知人：</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="notify" name="notify" data-value="${(message.notify)!?html}" required>
+                                        <option value=''>==请选择通知用户==</option>
+                                        <#if userList??>
+                                        <#list userList as entry>
+                                        <option value="${entry.id}">${entry.username!?html}</option>
+                                        </#list>
+                                       </#if>
+                                    </select>
+                                </div>
+                                <label class="col-sm-2 control-label control-required">通知时间：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="noticeTime" id="noticeTime" value="${(message.noticeTime)!?html}" onclick="WdatePicker()" style="padding: 16px" required/>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label control-required">通知内容：</label>
+                                <div class="col-sm-3">
+                                    <textarea  class="form-control" name="content" id="content" style=" height: 110px" value="${(message.content)!?html}" required ></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-2"></div>
+                                <div class="col-sm-4 col-sm-offset-2"></div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

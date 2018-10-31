@@ -1,0 +1,796 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>实验室管理系统-收藏页面</title>
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<meta name="format-detection" content="telephone=no,email=no">
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="HandheldFriendly" content="true">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<link rel="stylesheet"
+	href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+<link
+	href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link
+	href="http://cdn.bootcss.com/pickadate.js/3.5.6/compressed/themes/classic.css"
+	rel="stylesheet">
+<link
+	href="http://cdn.bootcss.com/pickadate.js/3.5.6/compressed/themes/classic.date.css"
+	rel="stylesheet">
+<link href="${system_css}/bootstrap-table.min.css" rel="stylesheet">
+<link href="https://cdn.bootcss.com/viewerjs/1.0.0-beta.2/viewer.min.css" rel="stylesheet">
+<link href="${plugins}/layer/skin/layer.css" rel="stylesheet">
+<link rel="stylesheet" href="${system_css}/common.css">
+<link rel="stylesheet" href="${system_css}/modules.css">
+<link rel="stylesheet" href="${system_css}/style.css">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+<link href="${system_css}/system.css?v=0.1" rel="stylesheet">
+
+<style>
+.my-table1 thead th {
+	max-width: 4.2rem;
+	min-width: 3.5rem;
+	padding: .375rem;
+}
+
+.my-table2 thead {
+	text-align: center;
+}
+
+.my-table2 thead:first-child th {
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+
+.my-table2 thead:first-child th:last-child {
+	border-right: none;
+}
+
+.my-table2 thead th:nth-child(4n + 4) {
+	border-right: 1px solid #ddd;
+}
+
+.my-table2 tbody td:nth-child(4n + 4) {
+	border-right: 1px solid #ddd;
+}
+
+.table-striped thead {
+	background-color: rgba(0, 0, 0, .05);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+	background-color: rgba(0, 0, 0, .05);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+	background-color: transparent;
+}
+
+#dataTableBox table {
+	width: auto;
+	white-space: nowrap;
+	font-size: 12px;
+}
+
+#dataTableBox table th {
+	text-align: center
+}
+
+#dataTableBox table th, #dataTableBox table td {padding-top：0;
+	padding-bottom: 0;
+	height: 40px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.evidenceTable th.evidence {
+	display: none;
+}
+
+#exampleModalLong td {
+	word-break: break-all;
+}
+
+.modal-body th {
+	background-color: white
+}
+
+.sys-info-table th, .sys-info-table .table-active, .sys-info-table .table-active td
+	{
+	background-color: white
+}
+
+.col-form-label {
+	text-align: right
+}
+
+.draw_picture_box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+	integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+	crossorigin="anonymous"></script>
+
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-table.min.js"></script>
+<script src="https://cdn.bootcss.com/viewerjs/1.0.0-beta.2/viewer.min.js"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/system.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script src="${system_js}/analysis/technical_common.js"></script>
+
+
+<body>
+	<article class="content-wrap">
+		<div class="container pd_h0 pd_b10" style="max-width: 100%">
+
+			<div class="sys-plane pd_t0">
+				<div class="sys-tabs">
+					<div class="pd_t20"></div>
+					<div class="sys-tabs-body">
+					
+						<div class="ibox-title text-right">
+							<#if ifRecheck?? && ifRecheck == "1">
+								<a href="#" class="btn btn-outline-secondary mr_r10" onclick="recheck()">复核确认</a>
+							<#else>
+								<a href="javascript:unqualifiedReport('${analysisSampleId!?html}')"	class="btn btn-outline-secondary mr_r10">不合格上报</a>
+								<a href="javascript:confirmTechnical('${analysisSampleId!?html}')" class="btn btn-outline-secondary mr_r10">提交复核</a>
+							</#if>
+						</div>
+					
+							<div class="sys-table-box" id="dataTableBox">
+								<h4>突变收藏列表</h4>
+								<table id="dataTable">
+									<thead>
+										<tr>
+											<th rowspan="2" style="width: 50px;">序号</th>
+											<th rowspan="2">加入收藏</th> <#if pagination??><#if
+											pagination.colList?has_content><#list pagination.colList as
+											dcol> <#if dcol=="Evidence">
+											<th class='evidence' data-field="${dcol!?html}"
+												attr-semantic="${dcol!?html}"
+												colspan="${pagination.senondColName['${dcol}']?size}">${dcol!?html}</th>
+											<#else>
+											<th data-field="${dcol!?html}" attr-semantic="${dcol!?html}"
+												rowspan="2">${dcol!?html}</th> </#if> </#list></#if></#if>
+										</tr>
+										<tr>
+											<#if pagination??><#if pagination.colList?has_content><#list
+											pagination.colList as dcol> <#if dcol=="Evidence"> <#if
+											pagination.senondColName?has_content><#list
+											pagination.senondColName["${dcol}"] as secondCol>
+											<th data-field="${secondCol}" attr-semantic="${secondCol}">${secondCol}</th>
+											</#list></#if> </#if> </#list></#if></#if>
+										</tr>
+									</thead>
+									<tbody>
+										<#if (annotateStatus??) && annotateStatus=="7">
+										<tr>
+											<td>正在打分中...</td>
+										</tr>
+										<#else> <#if pagination??><#if
+										pagination.dataValue?has_content><#list pagination.dataValue
+										as dv>
+										<tr>
+											<td>${dv_index+1}</td>
+											<td><img id="collection"
+												src="${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />"
+												alt="" style="height: 30px; cursor: pointer;"
+												onclick="mutationCollection('${dv['_id']!?html}',this)"
+												class="${dv['_id']!?html}" /></td> <#if
+											pagination.colList?has_content><#list pagination.colList as
+											dcol> <#if dcol_index == 5>
+											<td attr-semantic="${dcol!?html}"><a class="op-btn check_method"
+												href="#"
+												onclick="showExampleModalLong('${dv['_id']!?html}','${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />','${dv['_id']!?html}')">${dv["${dcol!?html}"]!?html}</a></td>
+											<#elseif dcol_index == 6>
+											<td attr-semantic="${dcol!?html}">${dv["${dcol!?html}"]!?html}</a></td>
+											<#else> <#if dcol=="遗传方式" || dcol=="关联表型" || dcol=="疾病表型" ||
+											dcol=="疾病信息">
+											<td attr-semantic="${dcol!?html}"
+												title="${dv['${dcol}']!?html}"><#if dv["${dcol}"]??>
+												<#if dv["${dcol}"]?length gt
+												20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if>
+												</#if></td> <#elseif dcol=="变异信息" || dcol=="疾病与基因关联度打分" ||
+											dcol=="人群频率" || dcol=="蛋白功能预测">
+											<td attr-semantic="${dcol!?html}"><a class="op-btn"
+												href="javascript:;"
+												onclick="detailsShow('${dcol}','${dv['_id']!?html}')"><#if
+													dv["${dcol}"]??><#if dv["${dcol}"]?length gt
+													20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if></#if></a></td>
+											<#elseif dcol=="Evidence"> <#if
+											pagination.senondColName?has_content><#list
+											pagination.senondColName["${dcol}"] as secondCol> <#if
+											secondCol="HGMD">
+											<td attr-semantic="${secondCol}"><a class="op-btn"
+												href="javascript:;"
+												onclick="detailsShow('${secondCol}','${dv['_id']!?html}')">${dv["${secondCol}"]!?html}</a></td>
+											<#elseif secondCol="clinvar">
+											<td attr-semantic="${secondCol}"
+												title="${dv['${secondCol}']!?html}"><#if
+												dv["${secondCol}"]?has_content>${dv["${secondCol}"]?split("|")[0]!?html}...</#if></td>
+											<#else>
+											<td attr-semantic="${secondCol}">${dv["${secondCol}"]!?html}</td>
+											</#if> </#list></#if> <#elseif dcol=="功能域">
+											<td attr-semantic="${dcol!?html}"
+												title="${dv['${dcol}']!?html}"><#if
+												dv["${dcol}"]?has_content>${dv["${dcol}"]?split("|")[0]!?html}...</#if></td>
+											<#elseif dcol=="染色体位置">
+											<td attr-semantic="${dcol!?html}"><#if dv["${dcol}"]??><a
+												href="javascript:getIgv('${dv["Chr"]}:${dv["Begin"]}-${dv["End"]!dv["Begin"]}','${dv["analysisSampleId"]!?html}')" target="_blank">${dv["${dcol}"]}</a></#if>
+											</td> <#else>
+											<td attr-semantic="${dcol!?html}" title="<#if dv['${dcol}']??>${dv['${dcol}']}</#if>"><#if dv["${dcol}"]??><#if dv["${dcol}"]?length gt 20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if></#if></td> </#if> </#if>
+											</#list></#if>
+										</tr>
+										</#list> <#else>
+										<tr>
+											<td>暂无收藏突变数据</td>
+										</tr>
+										</#if></#if> </#if>
+
+									</tbody>
+								</table>
+							</div>  <!-- mutation -->
+							
+							
+							
+	
+					  	<h4 class="mr_t20">CapCnv收藏列表</h4>			
+						<!-- capnCnv收藏数据 -->							
+						<#if capcnv?size != 0> 	
+						<#list capcnv as cnvAnalysisPicResultList>
+							<div class="sys-plane">
+								<#if cnvAnalysisPicResultList.cnvAnalysisPic??>
+								<div class="chart-box" >
+									<div class="draw_picture_box">
+									<img src="${cnvAnalysisPicResultList.cnvAnalysisPic.imageUrl!?html}"  alt=""
+											   class="chart-img">
+									</div>
+									<div class="chart-op-box">
+									<p class="inline_block mr_b0 pd_h10">${cnvAnalysisPicResultList.cnvAnalysisPic.clinicalJudgment!?html}</p>
+									<img
+											src="${system_images}<@if_collection id = cnvAnalysisPicResultList.cnvAnalysisPic.id tag = 'cnvPic'  />"
+											alt="" style="height: 30px; cursor: pointer;"
+											onclick="collectionCapcnvPic('${cnvAnalysisPicResultList.cnvAnalysisPic.id!?html}','pic',this)">
+									</div>
+								</div>
+								</#if>
+								
+									<div class="sys-table-box mr_t20 writeResult">
+										<table class="sys-table dyTable">
+											<thead>
+												<tr>
+													<th>加入收藏</th>
+													<th>是否进行家系分析实验</th>
+													<th>家系实验方法</th>
+													<th>验证样本</th>
+													<th>缺失重复类型</th>
+													<th>基因</th>
+													<th>致病性分级</th>
+													<th>染色体位置</th>
+													<th>外显子</th>
+													<th>遗传来源</th>
+													<th>关联疾病</th>
+													<th>遗传方式</th>
+												
+												</tr>
+											</thead>
+											<tbody>
+												<#if cnvAnalysisPicResultList.collectionCnvAnalysisResult?? > <#list
+												cnvAnalysisPicResultList.collectionCnvAnalysisResult as record>
+												 
+												<tr>
+													<td><img  class="collectionbtn" id="img_${record.id!?html}"  src="${system_images}<@if_collection id = record.id tag = 'cnvResult'  />"  
+													 data-toggle="modal" alt="" style="cursor: pointer;" onclick="cnvCollection('${record.technicalAnalyRecordId!?html}','result',this)"></td>
+													<td>${record.isFamilyAnalysis!?html}</td>
+													<td>${record.familyMethod!?html}</td>
+													<td>${record.verifySample!?html}</td>
+													<td>${record.clinicalJudgment!?html}</td>
+													<td>${record.gene!?html}</td>
+													<td>${record.pathogenicLevel!?html}</td>
+													<td>${record.missingArea!?html}</td>
+													<td>${record.exon!?html}</td>
+													<td>${record.inheritSource!?html}</td>
+													<td>${record.relatedDisease!?html}</td>
+													<td>${record.inhert!?html}</td>								
+												</tr>
+												 </#list>
+												
+												</#if>
+											</tbody>
+										</table>
+									</div>
+									
+									</div>   <!-- capcnv -->
+								</#list>
+								<#else>
+								<div class="pd_v20"> 暂无收藏CapCNV数据</div>
+							</#if>
+							
+							
+					     <h4>补提列表</h4>
+					     <div class="bootstrap-table">
+						 <table class="sys-table "  > 
+						 <thead>
+                        	<tr>
+                        		<th>序号</th>
+                        		<th>临床相关性判断</th>
+								<th>染色体</th>
+								<th>位置1</th>
+								<th>位置2</th>
+								<th>基因</th>
+								<th>核苷酸</th>
+								<th>氨基酸</th>
+								<th>纯和/杂合</th>
+								<th>验证方法</th>
+								<th>验证样本</th>
+								<th>操作</th>
+                      		</tr>
+                      		</thead>
+                      		<tbody>
+                      	  <#if addVerifyData??  && addVerifyData?has_content > 
+                      		<#list	addVerifyData as record>
+                      		
+                      		<tr>
+                      			<td>${record_index+1}</td>
+                      			<td>${record.clinicalJudgment!?html}</td>
+								<td>${record.chrom!?html}</td>
+								<td>${record.startLocation!?html}</td>
+								<td>${record.endLocation!?html}</td>
+								<td>${record.gene!?html}</td>
+								<td>${record.nucleotide!?html}</td>
+								<td>${record.aminoAcid!?html}</td>
+								<td>${record.pure!?html}</td>
+								<td>${record.verifyMethod!?html}</td>
+								<td>${record.verifySamplerCodeRelation!?html}</td>
+								<td>
+									<a class="btn btn-sm btn-success layer-confirm" data-confirm-message="确定删除该数据?"
+									    href="${base}/testing/deleteVerifyDataById.do?id=${record.id!?html}&analysisSampleId=${analysisSampleId!?html}" >删除
+									 </a>
+								</td>
+                      		</tr>
+                      		</#list>
+                      		<#else>
+                      		<tr>
+                      			<td colspan="16">暂无数据</td>
+                      		</tr>
+                      		</#if>
+                      		</tbody>	
+                         </table>
+							</div>
+						</div>
+						<!-- <div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot"></div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</article>
+	
+	
+	<!-- 分组列Modal -->
+	<div class="modal fade" id="detailsModal" tabindex="-2" role="dialog"
+		aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detailsModalLabel">突变</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body txt_l">
+					<form action="">
+						<div class="form-group row mr_b0" id="detailsModalDiv">
+							<div class="col-sm-12"></div>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Modal -->
+	<#include "./analysis_detail.html" />
+
+	
+	<div class="modal fade" id="report_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content animated bounceInRight"
+				 style="width: 550px; margin-left: 160px; margin-top: 100px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">异常上报</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span> <span class="sr-only">关闭</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div>
+							<form action="#" method="post" class="search-form form-inline" id="report_form">
+								<input type="hidden" id="taskId" name="taskId"/>
+
+								<div style="width: 450px;" style="float: left">
+									<#if familyTaskList?has_content>
+										<#list familyTaskList as task>
+											<div class="form-group">
+												<label class="control-label">${task.testingAnalyDataCode!?html}：</label>
+												<input type="checkbox" name="reportState" value="${task.id!?html}"/> 上报
+											</div>
+											<br>
+										</#list>
+									</#if>
+									<div class="form-group">
+										<label class="control-label">备注原因：</label>
+										<textarea class="form-control" id="remark" name="remark" rows="3"
+												  cols="45"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="operate_button">确定</button>
+						<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 处理Modal -->
+	<div class="modal fade" id="recheckModal" tabindex="-2" role="dialog"
+		aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="min-width: 800px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body txt_l">
+					<form id="resolve_form" action="${base}/testing/submitRecheckTechnicalTask.do" class="form-horizontal m-t">
+						<input type="hidden" id="technicalFamilyGroupId"	name="familyGroupId" value="${analysisSampleId!?html}" />
+						
+						<div class="form-group row">
+							<label class="col-sm-3 control-label">复核结果：</label>
+							<div class="col-sm-4 pd_l0 mr_t5 text-left">
+								<input type="radio" name="status" value="5" checked="checked">通过&nbsp;&nbsp;&nbsp;
+								<input type="radio" name="status" value="6">不通过
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-3 control-label">复核说明：</label>
+							<div class="col-sm-8 pd_l0 mr_t5">
+								<textarea class="form-control" rows="4" id="note" name="note"></textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4 col-sm-offset-5"
+								style="margin-left: 250px; margin-top: 10px;">
+								<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+								<button type="button" class="btn btn-primary"
+									data-dismiss="modal">取消</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+</body>
+<script>
+var PATH = '${base}';
+var analysisSampleId = '${analysisSampleId!?html}';
+
+function mutationCollection(id, obj) {
+	
+	parent.layer.confirm('确认取消收藏吗？', {
+		 btn: ['是','否'] ,
+		 icon : 3,
+	     title : '操作确认',
+		}, function(index){
+			
+			var method = $(obj).parent().parent().children().eq(3).text();
+			console.info("VERIFY_METHOD"+method);
+			$("#mutationObjectId").val(id);
+
+			$.ajax({
+				type : "POST",
+				url :"${base}/testing/cancelCollection.do",
+				data: {
+					mutationId:id,
+					method:method,
+					analysisSampleId:analysisSampleId
+				},
+				dataType : "json",
+				success : function(data) {
+					window.location.reload();
+				}
+			
+			});  
+			parent.layer.close(index);	
+		}, function(index){
+			parent.layer.close(index);
+		});
+	
+	
+	
+
+}
+
+
+
+function showLoading() {
+	console.log(1);
+	var loadindex = parent.layer.load();
+}
+
+function getIgv(location,mongoId){
+	
+	var url = 'http://60.205.205.23:55000/pages/index.html';
+	
+	var json = {};
+	var family=[];
+	json.Location = location;
+	$.ajax({
+		type : "GET",
+		url : PATH + "/testing/getFamilyAnnotate.jsp",
+		data : {
+			mongoId : mongoId
+		},
+		dataType : "json",
+		success : function(data) {
+			$.each(data,function(i,o){
+				var d =  {};
+				d.sampleNum = o.dataCode;
+				d.BAM_url = o.bamBam;
+				d.VCF_url = o.vcfDmdexon;
+				family.push(d)
+	
+			});
+			json.IGV = family;
+			window.open(url+"?data="+JSON.stringify(json),"_blank");
+		}
+
+	})
+	
+}
+
+function add(){
+  var addTemp = $("#addTemp").html();
+  $('#addObject').append(addTemp);
+}
+function deleteObj(obj){
+ 	$(obj).parent().parent().remove();
+}
+
+$(".draw_picture_box").each(function(){
+	new Viewer(this);
+});
+
+function confirmTechnical(analysisSampleId){
+	if(checkTaskIsFinished(analysisSampleId)){
+		parent.layer.confirm('确认提交复核？', {
+			  btn: ['是','否'],
+			  icon : 3,
+			  title : '操作确认',
+			}, function(index){
+				$.ajax({
+					type: "POST",
+					traditional: true,
+					url: '${base}/testing/submitTechnicalTaskAjax.do',
+					data: {
+						familyGroupId: analysisSampleId,
+					},
+					async: false,
+					success: function (data) {
+						window.close();
+					},
+					error: function () {
+						alert("failed");
+					}
+				});
+				parent.layer.confirm('操作成功,即将闭当前页面', {
+					  btn: ['确定'] 
+					}, function(index){
+						setTimeout(function(){ window.close()} , 500 );
+					}, function(index){
+						setTimeout(function(){ window.close()} , 500 );
+					});
+			}, function(index){
+				parent.layer.close(index);
+			});
+	}else{
+		parent.parent.layer.alert('还有任务正在执行,稍后提交', {title: "提示"});
+	}
+	
+}
+
+
+
+$('#operate_button').on('click', function () {
+	var loadindex = layer.load();
+	var id_array = new Array();
+	$('input[name="reportState"]:checked').each(function () {
+		id_array.push($(this).val());//向数组中添加元素
+	});
+	var reportState = id_array.join(',');//将数组元素连接起来以构建一个字符串
+	console.log(reportState + "~~~");
+	var remark = $('#remark').val();
+	if ('' == reportState || typeof(reportState) == "undefined") {
+		parent.parent.layer.alert('请至少选择一个样本是否上报', {title: "提示"});
+		parent.layer.close(index);
+		return false;
+	} else {
+		
+		$.ajax({
+			type: "POST",
+			traditional: true,
+			url: '${base}/testing/technicalReportOperate.do',
+			data: {
+				reportState: reportState,
+				remark: remark
+			},
+			async: false,
+			success: function (data) {
+				$('#operate_dialog').modal('hide');
+				parent.layer.confirm('操作成功,即将闭当前页面', {
+					  btn: ['确定'] 
+					}, function(index){
+						setTimeout(function(){ window.close()} , 500 );
+					}, function(index){
+						setTimeout(function(){ window.close()} , 500 );
+					}
+					);
+			},
+			error: function () {
+				alert("failed");
+				parent.layer.close(index);
+			}
+		});
+	}
+});
+
+
+
+function collectionCapcnvPic(id, ref, obj){
+	if("${system_images}/collection2.png" == $(obj).attr('src')){
+		
+		parent.layer.confirm('确认取消收藏吗？', {
+			  btn: ['是','否'],
+			  icon : 3,
+			  title : '操作确认',
+			}, function(index){
+		
+				var ifCollect = 0;
+				$.ajax({
+					type : "GET",
+					url :  "${base}/testing/technicalanaly_collectionCapcnvPic.do",
+					data : {
+						cnvAnalysisPicId : id,
+						ifCollection : ifCollect,
+						ref : ref
+					},
+					dataType : "json",
+					success : function(data) {
+						if (1 == data) {
+							if (1 == ifCollect) {
+								$(obj).attr('src', "${base}/static/system/images/collection2.png");
+								
+							} else {
+								$(obj).attr('src', "${base}/static/system/images/collection.png");
+								
+							}
+						}
+					},
+					error: function(data, XMLHttpRequest, textStatus, errorThrown){
+						if(data.status=='200'){
+							if (1 == ifCollect) {
+								$(obj).attr('src', "${base}/static/system/images/collection2.png");
+								
+							} else {
+								$(obj).attr('src', "${base}/static/system/images/collection.png");
+							}
+						}
+				}
+				});	
+				parent.layer.close(index);
+			}, function(index){
+				parent.layer.close(index);
+			});
+	}
+}
+
+
+function cnvCollection(id, ref,obj) {
+   if("${system_images}/collection2.png" == $(obj).attr('src')){
+		
+	parent.layer.confirm('确认取消收藏吗？', {
+		  btn: ['是','否'],
+		  icon : 3,
+	      title : '操作确认',
+		}, function(index){
+			//调取消收藏接口
+			$.ajax({
+				type : "POST",
+				url : "${base}/testing/technicalanaly_cancelSubmitCnvVerify.do?technicalAnalyRecordId="+id,
+				dataType : "json",
+				success : function(result) {
+					$(obj).attr('src',"${system_images}/collection.png");
+				},
+				error:function(data, XMLHttpRequest, textStatus, errorThrown){  
+					if(data.status=='200'){
+						$(obj).attr('src',"${system_images}/collection.png");
+					}else{
+						alert("failed");	
+					}
+				}
+			});
+			parent.layer.close(index);
+		
+		}, function(index){
+			parent.layer.close(index);
+		});
+	}
+	
+}
+
+
+$("#btnSave").on('click', function () {
+	 var loadindex = parent.layer.load();
+	 $.ajax({
+			type: "POST",
+			url: '${base}/testing/submitRecheckTechnicalTask.do',
+			data: $("#resolve_form").serialize(),
+			async: true,
+			success: function (data) {
+				parent.layer.closeAll();
+				window.location.href="${base}/testing/technical_recheck_list.do";
+			},
+			error: function () {
+				$("#recheckModal").modal('hide');
+				parent.layer.closeAll();
+				alert("failed");
+			}
+		});
+});
+
+</script>
+<script src="${system_js}/analysis/analysis.js"></script>
+<script src="${system_js}/analysis/mutation.js"></script>
+</html>
+

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title></title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+<script type="text/javascript">
+var base = "${base}";
+var familyConfig=[], picInit =[];
+<#if appSampleTransportJson??>
+var transport = ${appSampleTransportJson};
+
+var familyFiguresInit = transport.expressPictureShow;
+
+if(familyFiguresInit!=undefined){
+	if(familyFiguresInit.indexOf(",")!=0){
+		var initConsentPath = familyFiguresInit.split(",");
+		var trueConsentPath=transport.expressPicture.split(",")
+		
+		for(var i=0;i<initConsentPath.length;i++){
+			if("" != initConsentPath[i]){
+				picInit.push("<img  src='"+initConsentPath[i]+"' class='file-preview-image' style='max-width:700px;height:200px;'/><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+trueConsentPath[i]+"'>下载</a>")
+				familyConfig.push({size:"100", caption:trueConsentPath[i],width:'120px',key:trueConsentPath[i]});
+			}
+			
+		}
+		
+		picInit.join(",")
+	}
+}
+
+
+</#if>
+
+$(document).ready(function(){
+	
+	$("#pic").fileinput({
+		language: 'zh', // 设置语言
+        uploadUrl: base+'/order/upload.do', 
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        maxFileSize: 5000,
+        showUpload: false, // 是否显示上传按钮
+        showCaption: false,// 是否显示标题
+        showRemove:false,
+        initialPreview:picInit,
+        initialPreviewConfig:familyConfig,
+	});
+
+
+$('.btn.btn-primary.btn-file').css('display','none');
+$('.kv-file-remove').css('display','none');
+
+	
+})
+
+
+
+	
+
+	var companyMap ={
+		"1":"shunfeng",
+		"2":"tiantian",
+		"3":"youzhengguonei"
+	};
+
+
+  function showProcess(expressNo,type){
+	$('#express_table').html(""); 
+	var param = {};
+	param.com = companyMap[type];;
+	param.num = expressNo;
+	$.get(base+"/order/showTransport.do?param="+JSON.stringify(param) , function(data){
+		  
+		     var tt = data.msg;
+		     var dataObj=eval("("+tt+")");
+		     console.info(dataObj);
+		     console.info(dataObj.result);
+		     if(dataObj.message=="ok"){
+		    	 $('.express_query_code').find('font').text(dataObj.nu);
+			     if(dataObj.state == "3"){
+			    	 $('.express_query_status').find('font').text("已签收");
+			     }
+			    
+			     $.each(dataObj.data,function(index,obj){
+			    	  var context =obj.context;
+			    	 $('#express_table').append("<tr><td>"+obj.time+"</td> <td>"+context+"</td> </tr>");
+			     });
+		     }else{
+		    	 $('.express_query_code').find('font').text(expressNo);
+		     
+		    	 $('.express_query_status').find('font').text("查询无结果");
+		     
+		    	 $('#express_table').append(""+dataObj.message+""); 
+		     }
+		    
+			
+		     $('#myModal').modal('show');
+		    
+		     
+	});
+	
+}  
+
+</script>
+
+
+</head>
+
+<body class="gray-bg">
+		<div class="wrapper wrapper-content animated">
+			<div class="row">
+				<div class="col-lg-12">
+					
+					<div class="ibox">
+					
+						<div class="ibox-title">
+							<strong>打包样本详情</strong>
+							<div style="float:right">
+								<a href="javascript:history.go(-1)"  target="_self" style="margin-top:0px;padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+							</div>
+					    </div>
+					  
+					    <div class="ibox ibox-table">
+                          <div class="ibox-content">
+                   
+                           <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>打包信息</strong></td>
+                        	</tr>
+                            <tr>
+                                <td class="col-sm-1">打包人</td>
+                                <td class="col-sm-2">
+                                		
+											${appSampleTransport.createName!?html}
+										</td> 
+                                <td class="col-sm-1">打包时间</td>
+                                <td class="col-sm-2">  
+                              		${(appSampleTransport.packDate)!?string('yyyy-MM-dd HH:mm:ss')}
+								</td>
+                              
+                            </tr>
+                       	
+                       </table>  
+                       
+                       
+                        <table class="table table-striped table-bordered table-hover table-details">
+                        	<tr>
+                        		<td colspan="8" ><strong>样本清单</strong></td>
+                        	</tr>
+                        	<tr> 
+	                        	<td> 样本编号</td>
+	                        	<td> 订单编号</td>
+	                        	<td> 样本名称</td>
+	                        	<td> 样本类型</td>
+                        	
+                        	</tr>
+                        	
+                        	
+                        	<#if packageRelationInfo?has_content> <#list packageRelationInfo	as record>
+                            <tr>
+                               
+                                <td class="col-sm-2"><#if record.sampleDetail ?? > ${(record.sampleDetail.sampleCode)!?html} </#if></td> 
+                                <td class="col-sm-2">  
+                              		${(record.orderNo)!?html}
+								</td>
+                                <td class="col-sm-2"><#if record.sampleDetail ?? >  ${(record.sampleDetail.sampleName)!?html} </#if></td> 
+                                <td class="col-sm-2">  
+                              		<#if record.sampleDetail ?? >  ${(record.sampleDetail.sampleTypeName)!?html} </#if>
+								</td>
+                              
+                            </tr>
+                            </#list>
+                            </#if>
+                           
+                       		
+                       </table>  
+                       
+                       
+                      
+					<#include "package_info.html" />
+					
+					
+				
+                        	
+                       
+                      
+                       	 
+                    </div>
+                </div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+
+
+
+
+</html>

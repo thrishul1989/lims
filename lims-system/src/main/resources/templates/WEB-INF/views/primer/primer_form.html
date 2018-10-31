@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>引物表单-更新引物</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script> 
+<script src="${plugins}/pagination/jquery.pagination.js"></script> 
+<script src="${system_js}/magicsuggest-min.js"></script>
+
+<!-- 表单验证 -->
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/primer/list.do">引物管理</a></li>
+							<li class="active"><strong>新增引物</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<strong>新增引物</strong>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal m-t toggle-form" id="choseForm"
+							action="${base}/primer/create.do" method="post">
+						<input type="hidden" id="id" name="id" value="${(primer.id)!?html}" />
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">突变基因：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="gene" id="gene"
+											value="${(primer.gene)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label control">外显子编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="codingExon" id="codingExon"
+											   value="${(primer.codingExon)!?html}" />
+									</div>
+								</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">PCR起始点：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="pcrStartPoint" id="pcrStartPoint"
+										value="${(primer.pcrStartPoint)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label control-required">PCR终止点：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="pcrEndPoint" id="pcrEndPoint"
+										value="${(primer.pcrEndPoint)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required" >正向引物名：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="forwardPrimerName" id="forwardPrimerName"
+										value="${(primer.forwardPrimerName)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label control-required">正向引物序列：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="forwardPrimerSequence" id="forwardPrimerSequence"
+										value="${(primer.forwardPrimerSequence)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required" >反向引物名：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="reversePrimerName" id="reversePrimerName"
+										value="${(primer.reversePrimerName)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label  control-required">反向引物序列：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="reversePrimerSequence" id="reversePrimerSequence"
+										value="${(primer.reversePrimerSequence)!?html}" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label control" >产品编号：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="productCode" id="productCode"
+										   value="${(primer.productCode)!?html}" />
+								</div>
+								<label class="col-sm-2 control-label control-required">应用类型：</label>
+								<div class="col-sm-3">              
+									<select class="form-control" id="applicationType" name="applicationType" data-value=${(primer.applicationType)!} >
+										<#if testingMethodList??>
+                                        <#list testingMethodList as t>
+											<option value="${t.id!}">${t.name!?html}</option>
+                                         </#list>
+										</#if>
+									</select>
+							</div>
+                            </div>
+                          <div class="form-group">
+                                <label class="col-sm-2 control-label control-required">染色体编号：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="chromosomeNumber"  id="chromosomeNumber"
+                                        value="${(primer.chromosomeNumber)!?html}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2 text-center">
+									<button class=" btn btn-primary " type="button" id="sub">保存</button>
+									
+									<button class=" btn btn-primary " type="button"
+										onclick="goBack()">返回</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+		
+		function checkedForm(){
+			 $("#choseForm").validate({
+		            rules: {
+		            	primerNo:  {
+		            		required:true,
+		            		maxlength: 64,
+		            		remote:{
+								url: "${base}/primer/checkedPrimerNo?primerNo?"+$("#primerNo").val()
+							 }
+		            	},
+						gene: {
+		            		required:true,
+		            		maxlength: 64
+		            	},
+		            	chromosomeNumber: {
+		            		required:true,
+		            		maxlength: 64
+		            	},
+						chromosomeLocation: {
+							required:true,
+							maxlength: 64
+						},
+		            	pcrStartPoint: {
+		            		required:true,
+		            		maxlength: 64,
+							digits:true
+		            	},
+		            	pcrEndPoint: {
+		            		required:true,
+		            		maxlength: 64,
+							digits:true
+		            	},
+						forwardPrimerName: {
+							required:true,
+							maxlength: 64
+						},
+						forwardPrimerSequence: {
+							required:true,
+							maxlength: 64
+						},
+						reversePrimerName: {
+							required:true,
+							maxlength: 64
+						},
+		            	reversePrimerSequence:  {
+		            		required:true,
+		            		maxlength: 64
+		            	},
+						applicationType:  {
+							required:true,
+							maxlength: 64
+						},
+		            },
+		            messages: {
+		            	primerNo:  {
+		            		remote:"引物编号已存在，请重新输入！"
+		            	}
+		            }
+		        });
+	        
+		}
+		
+	$(function(){
+	      $('#applicationType').change(function(){
+	             var label= $("#productCode").parent().prev();
+	          if($(this).find('option:selected').text()=='动态突变'){
+                  $("#productCode").rules("add",{ required: true, messages: { required: "选择动态突变,产品编号不能为空"} }); 
+                  label.addClass('control-required').removeClass('control');
+                  label.empty().append().html('<span>*</span>产品编号：');
+	          }else{
+                  $("#productCode").rules("remove"); 
+                  label.addClass('control').removeClass('control-required');
+                  label.empty().append().html('产品编号：');
+              }
+	      });
+	      var primerNum = $("#primerNum").val();
+          var updateID = '';
+          updateID  = $("#id").val();
+          if(updateID.length>0){
+              $("strong").html("修改引物");
+              $('#choseForm').attr('action', '${base}/primer/modify.do');
+             
+          }else{
+              checkedForm();
+          } 
+          
+      $("#sub").click(function(){
+              if(primerNum != $("#primerNo").val()){
+                  checkedForm();
+              }
+               $("#choseForm").submit();
+          });
+      
+      });
+	
+	function goBack() {
+		window.history.back(-1);
+	}
+	</script>
+</body>
+</html>

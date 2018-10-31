@@ -1,0 +1,31 @@
+    <tr class="getData">
+    <td rowspan="3" class="addSelect">
+        <select class="form-control doneJDDl">
+            <% _.forEach(values, function(v) { %><option value=<%- v %>><%- v %></option><% }); %>
+        <select>
+<input type="hidden"  class="sheetId" /> 
+    </td>
+    <td>Qbit(ng/ul)</td>
+    <td class="wkSize"></td>
+    <td class="unitConversion"></td>
+    <td rowspan="3" class="MYlength"></td>
+    <td rowspan="3" class="concentration"></td>
+    <td rowspan="3" class="cluster"></td>
+    <td rowspan="3"><input name="choose" class="choose" value="" id="choose" name="choose" type="hidden"><br>
+    <div class="col-sm-3 col-sm-offset-3">
+    <input class="btn btn-primary" onclick="deleteDom(this)" value="删除" type="button">
+    </div>                              
+    </tr>
+                              <tr>
+                                <td>QPCR(nM)</td>
+                                <td class="wkSize"></td>
+                                <td class="unitConversion"></td>
+                            </tr>
+                            <tr >
+                                <td>2100</td>
+                                <td class="wkSize"></td>
+                                <td class="unitConversion"></td>
+                                <td style="display:none" class="MYlength"></td>
+                                <td style="display:none" class="concentration"></td>
+                                <td style="display:none" class="cluster"></td>
+                            </tr>

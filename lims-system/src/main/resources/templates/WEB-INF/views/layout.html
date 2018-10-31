@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>实验室管理系统</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link rel="shortcut icon" href="favicon.ico">
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/metisMenu/jquery.metisMenu.js"></script>
+<script src="${plugins}/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+<script src="${system_js}/hplus.min.js?v=4.1.0"></script>
+<script src="${system_js}/contabs.min.js"></script>
+<script src="${plugins}/pace/pace.min.js"></script>
+<script src="${system_js}/system.js"></script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close">
+                <i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold"></strong>
+                                    </span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li>
+                                    <a href="#">修改密码</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">LIMS</div>
+                    </li>
+                    <#list menus as menu> <#if menu_index == 0>
+                    <li class="active"><#else>
+                    <li>
+                        </#if>
+                        <a href="#">
+                            <i class="fa ${menu.icon!?html}"></i>
+                            <span class="nav-label">${menu.name!?html}</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <#if menu.submenus?has_content>
+                        <ul class="nav nav-second-level">
+                            <#list menu.submenus as submenu>
+                            <li>
+                                <#if submenu.submenus?has_content>
+                                    <a class="menu" >
+                                    <#else>
+                                        <a class="menu" href="${base}${submenu.uri}">
+                                </#if>
+                                    <i class="fa ${submenu.icon!?html}"></i>${submenu.name!?html}
+                                    <#if submenu.submenus?has_content>
+                                        <span class="fa arrow"></span>
+                                    </#if>
+                                </a>
+
+                                <#if submenu.submenus?has_content>
+                                    <ul class="nav nav-third-level">
+                                        <#list submenu.submenus as thirdmenu>
+                                            <li>
+                                                <a class="menu" href="${base}${thirdmenu.uri}">
+                                                    <i class="fa ${thirdmenu.icon!?html}"></i>${thirdmenu.name!?html}
+
+                                                </a>
+
+                                            </li>
+                                        </#list>
+                                    </ul>
+                                </#if>
+
+                            </li>
+                            </#list>
+                        </ul>
+                        </#if>
+                    </li>
+                    </#list>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                        <@smm_security_resource resource = "/messageNotice/toUser.do">
+                        <li class="dropdown">
+                        <a class="count-info menu" href="/messageNotice/toUser.do" data-toggle="tooltip" title="您有待处理消息">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <span class="label label-danger badge">${total}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-messages">
+                            <li>
+                                <div class="text-center link-block">
+                                    <a class="menu" href="/user/informList.do">
+                                        <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </li></@smm_security_resource>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                     <@smm_security_resource resource = "/testing/test_tasks.do">
+                        <li class="dropdown">
+                            <a class="count-info menu" href="/testing/test_tasks.do" data-toggle="tooltip" title="您有待处理消息">
+                                <i class="fa fa-envelope"></i>
+                                <span class="label label-warning">${size}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages">
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a class="menu" href="/user/informList.do">
+                                            <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
+                                        </a>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </li></@smm_security_resource>
+
+
+                        <li>
+                            <div class="dropdown">
+                                <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                                    <i class="fa fa-user"></i>&nbsp;${(account.name)!?html}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="menu1">
+                                    <li role="presentation">
+                                    	<@smm_security_resource resource = "/smm/user/password/reset.do">
+                                        <a role="menuitem" class=" menu" tabindex="-1" href="${base}/smm/user/password/reset.do?id=${(account.userId)!?html}">
+                                            <i class="fa fa-pencil-square-o"></i>更改密码
+                                        </a>
+                                        </@smm_security_resource>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="${base}/logout">
+                                            <i class="fa fa-sign-out"></i> 退出
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${base}${innerUri!}" frameborder="0" seamless></iframe>
+            </div>
+            <div class="footer">
+                <div class="pull-right"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>合同清单记录查看</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript">
+
+function clickDetail(id){
+	   $('#contract_bill_detail').attr('src','/contract/viewContractBillDetail.do?id=' +id +'&createTime='+$('.createTime').html());
+       $('#bill_dialog').modal('show');
+}
+
+</script>
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" style="border-color: white">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="javascript:history.go(-1);">合同结算管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>合同清单记录</strong>
+                            </li>
+                        </ol>
+                        <div style="float:right">
+								<a href="javascript:history.go(-1)"  target="_self" style="margin-top:-18px;padding: 0px;position: relative;right: 16px;float: right">
+								<img src="${system_images}/backbtn.png" style="height: 24px;"/></a>
+						</div>
+                    </div>
+                    <div class="ibox-content">
+                     	<table class="table table-striped table-bordered table-detail">
+                     		<tr>
+                     			<th>合同编号：</th>
+                     			<td>${(data.code)!?html}</td>
+                     			<th>合同名称：</th>
+                     			<td>${(data.name)!?html}</td>
+                     			<th>营销中心：</th>
+                     			<td>	<#if data.marketingCenter??>
+                                    		<#if data.marketingCenter == 1>临床遗传</#if>
+	                                    	<#if data.marketingCenter == 2>临床肿瘤</#if>
+	                                    	<#if data.marketingCenter == 3>健康筛选</#if>
+	                                    	<#if data.marketingCenter == 4>科技服务</#if>
+	                                    	</#if></td>
+                     		</tr>
+                     		<tr>
+                     			<th>业务员：</th>
+                     			<td>${data.signUsername!?html}</td>
+                     			<th>签订日期：</th>
+                     			<td><#if data.effectiveStart??>${(data.effectiveStart)!?string('yyyy-MM-dd')} <#else>  ${(data.effectiveStart)!?html} </#if></td>
+                     			<th>终止日期：</th>
+                     			<td><#if data.effectiveEnd??>${(data.effectiveEnd)!?string('yyyy-MM-dd')} <#else>  ${(data.effectiveEnd)!?html} </#if></td>
+                     		</tr>
+                     	</table>
+                    </div>
+                   
+                </div>
+                
+                 
+                  <div class="ibox" style="margin-top:-12px">
+                  	<div class="ibox-title">
+						<h5>清单明细</h5>
+					</div>
+					<div class="ibox-content">
+                        <table class="table table-striped table-bordered table-hover">
+                             <thead>
+									<tr>
+										<th>序号</th>
+										<th>清单编号</th>
+										<th>清单产生日期</th>
+										<th>订单数</th>
+										<th>应结费用</th>
+										<th>是否付款</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+                                 <tbody>
+	                               
+	                                <#if data.settleBill?has_content> <#list data.settleBill as record>
+	                                <tr>
+	                                    <td>${record_index + 1}</td>
+										<td>${(record.code)!?html}</td> 
+										<td class="createTime">${(record.createTime)!?string('yyyy-MM-dd')}</td>
+										<td>${(record.orderCount)!?html}</td>
+	                                    <td>${((record.orderAmount/100)!0)?string('0.##')}</td>
+		                                <td><#if record.status == 0>未支付</#if>
+	                                    	<#if record.status == 1>已支付</#if>
+	                                    </td>
+		                                <td>
+											<input type="button" value="详情" class="btn btn-sm btn-success"  
+											onclick='clickDetail("${(record.id)!?html}")'  />
+										</td>   
+	                                </tr>
+	                                </#list>
+	                               
+	                                </#if>
+	                              
+                              	 </tbody>
+                         </table>
+						
+						</div>
+						
+						
+					</div>
+				  </div>  
+                  
+                </div><!-- col12 -->
+            </div><!-- row -->
+       
+  
+      
+  <#include "contratc_bill_print.html" />
+      
+</body>
+</html>
+

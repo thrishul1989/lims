@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>文库捕获任务</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/layout.css" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/icheckbox/icheckbox.css" rel="stylesheet"></link>
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script src="${plugins}/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${plugins}/icheckbox/icheckbox.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.1"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script src="${system_js}/testing/assign/lib_cap_assign.js?v=2018051112"></script>
+<style type="text/css">
+.hightLight {
+    background-color: #f8d765 !important;
+}
+</style>
+</head>
+<body>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12" style="margin-top: 30px">
+            <form id="lib_cap_form" class="form-horizontal m-t" action="${base}/testing/wk_catch_assign_submit.do" method="post" target="_parent">
+                <input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">捕获试剂盒：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="reagentKit" name="reagentKit" required data-msg="捕获试剂盒不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_testing_rkc node = "LIBRARY-CAP" sample = inputSampleTypeId!> <#list kits as kit>
+                            <option value="${kit.id!?html}" data-input-quantity="${kit.sampleInputQuantity!}"
+                                data-input-volume="${kit.sampleInputVolume!}">${kit.name!?html}</option>
+                            </#list> </@bcm_testing_rkc>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label control-required">实验负责人：</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="testerId" required data-msg="提取实验员不能为空">
+                            <option value="">请选择</option>
+                            <@bcm_members semantic = "LIBRARY-CAP"> <#list members as s>
+                            <option value="${s.id!?html}">${s.name!?html}</option>
+                            </#list> </@bcm_members>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">质检方法：</label>
+                    <div class="col-sm-10">
+                        <div class="checkbox-inline i-checks">
+                            <label><input type="checkbox" name="methods" class="method" value="Qubit" checked="checked" /> Qubit</label> <label><input
+                                    type="checkbox" name="methods" class="method" value="2100DNA" />2100DNA</label> <label><input type="checkbox"
+                                    name="methods" class="method" value="2100RNA" />2100RNA</label> <label><input type="checkbox" name="methods"
+                                    class="method" value="Nanodrop" />Nanodrop</label> <label><input type="checkbox" name="methods" class="method"
+                                    value="琼脂糖电泳" checked="checked" />琼脂糖电泳</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">任务描述：</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" name="description" id="description" value=""></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label control-required">输入编号：</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" id="batchCode" name="batchCode" required data-msg="编号不能为空" />
+                    </div>
+                    <label class="col-sm-2 control-label control-required">文库投入量：</label>
+                    <div class="col-sm-2">
+                        <input class="form-control" id="libraryInputSize" name="libraryInputSize" value="${defaultInputSize!?html}" required
+                            data-msg="文库投入量不能为空" />
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="form-group" style="padding-left: 188px">
+                        <div class="col-sm-3 ">
+                            <input type="hidden" class="btn btn-primary" value="下达任务" />
+                        </div>
+                    </div>
+                    <table id="testing_task_detail_table" class="table table-striped table-bordered table-hover dataTables-example"
+                        style="margin-left: 15px;">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>组号</th>
+                                <th>Probe</th>
+                                <th>数据量</th>
+                                <th>样本编号</th>
+                                <th>混样体积</th>
+                                <th>文库浓度</th>
+                                <th>文库长度</th>
+                                <th>Index编号</th>
+                                <th>样本形式</th>
+                                <th>检测产品</th>
+                                <th>用途</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <#if data.groups??>
+                            <input id="num" type="hidden" />
+                            <#list data.groups as group> <#list group.tasks as record>
+                            <tr>
+                                <#if record_index==0>
+                                <td rowspan="${group.tasks?size}" class="code"></td>
+                                <td id="${group_index+1}" rowspan="${group.tasks?size}" class="index">${group_index+1}</td>
+                                <td rowspan="${group.tasks?size}">${group.probeName!?html}</td>
+                                <td rowspan="${group.tasks?size}" class="group" >
+                                    <span>${(((group.probeDatasize)!0)*(group.tasks?size))?string("#.##")}</span>
+                                    <input type="hidden" class="testingCode" name="groups[${group_index}].testingCode" />
+                                    <input type="hidden" class="probeId" name="groups[${group_index}].probeId" value="${group.probeId!}" />
+                                    <input type="hidden" class="probeDatasize" name="groups[${group_index}].probeDatasize"
+                                        value="${(((group.probeDatasize)!0)*(group.tasks?size))?string("#.##")}" data-size="${group.probeDatasize!}" />
+                                    <input type="hidden" class="probeName" value="${group.probeName!?html}" />
+                                </td>
+                                </#if>
+                                <td>${record.sampleCode!?html}</td>
+                                <td class="volume">${defaultInputSize/record.concn}</td>
+                                <td class="concn">${record.concn!?html}</td>
+                                <td>${record.fragmentLengthStart!?html}~${record.fragmentLengthEnd!?html}</td>
+                                <td>${record.libraryIndex!?html}</td>
+                                <td>${record.originalSampleTypeName!?html}</td>
+                                <td>${record.products!?html}</td>
+                                <td><@dict_entry_text category="SAMPLE_PURPOSE" value=record.purpose /></td>
+                                <td>
+                                    <input type="button" value="调整" id="modify" class="modify">
+                                </td>
+                                <td style="display: none" class="subTask">
+                                    <input type="hidden" class="index" name="groups[${group_index}].tasks[${record_index}].id" value="${record.id!}" />
+                                    <input type="hidden" class="sampleInputSize" name="groups[${group_index}].tasks[${record_index}].sampleInputSize"
+                                        value="${defaultInputSize!}" />
+                                    <input type="hidden" class="volu" name="groups[${group_index}].tasks[${record_index}].sampleInputVolume"
+                                        value="${defaultInputSize/record.concn}" />
+                                </td>
+                            </tr>
+                            </#list> </#list> </#if>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    
+</script>
+</html>

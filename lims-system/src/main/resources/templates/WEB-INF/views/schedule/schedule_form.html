@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>原料管理-添加/修改原料</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="${base}/reagent/list.do">原料管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>新增原料</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <strong>新增原料</strong>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="material_form" class="form-horizontal m-t" action="${base}/reagent/create.do" method="post">
+                            <fieldset>
+                                <!-- 第一列 -->
+                                <input type="hidden" name="id" id="id" value="${(material.id)!?html}" />
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label control-required">原料编号：</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="code" id="code" value="${(material.code)!?html}" />
+                                    </div>
+                                    <label class="col-sm-2 control-label control-required">原料名称：</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="name" id="name" value="${(material.name)!?html}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">缩写代码：</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="abbr" id="abbr" value="${(material.abbr)!?html}" />
+                                    </div>
+                                    <label class="col-sm-2 control-label">规格：</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="specification" id="specification"
+                                            value="${(material.specification)!?html}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-primary" type="submit">保存</button>
+                                        <button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+                                    </div>
+                                    <div class="col-sm-4 col-sm-offset-2"></div>
+                                    <div class="col-sm-4 col-sm-offset-2"></div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script>
+    $(function()
+    {
+        $("#material_form").validate({
+            rules : {
+                code : {
+                    required : true,
+                    maxlength : 64,
+                    remote : {
+                        url : "${base}/reagent/unique.do",
+                        type : "post",
+                        dataType : "json",
+                        data : {
+                            id : function()
+                            {
+                                return $("#id").val();
+                            }
+                        }
+                    }
+                },
+
+                name : {
+                    required : true
+                }
+
+            },
+            messages : {
+                code : {
+                    remote : "原料编号已存在，请重新输入！"
+                }
+            }
+        });
+
+        if ($("#id").val() != null && $("#id").val() != '')
+        {
+            $("strong").html("修改原料");
+            $('#material_form').attr('action', '${base}/reagent/modify.do');
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>样本表单-样本管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/sample/list.do">样本管理</a></li>
+							<li class="active"><strong class="toggle-title">新增样本</strong>
+							</li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5 class="toggle-title">新增样本</h5>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal m-t toggle-form" action="${base}/sample/create.do" method="post">
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<input type="hidden" name="id" value="${(data.id)!}" />
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">样本名称：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="name" id="name"
+										value="${(data.name)!?html}" required data-msg="样本名称不能为空" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">样本类型：</label>
+								<div class="col-sm-3">
+									<select class="form-control" name="intermediate"
+										data-value="${(data.intermediate)!}" required
+										data-msg="样本类型不能为空">
+										<option value="">请选择</option> <@dict_entries
+										category="SAMPLE_FLAG"> <#list entries as entry>
+										<option value="${entry.value!}">${entry.text!?html}</option>
+										</#list> </@dict_entries>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">存储容器类型：</label>
+								<div class="col-sm-3">
+									<select class="form-control" name="storageType"
+										data-value="${(data.storageType)!}" required
+										data-msg="存储容器类型不能为空">
+										<option value="">请选择</option> <@dict_entries
+										category="STORAGE_DEVICE_TYPE"> <#list entries as entry>
+										<option value="${entry.value!}">${entry.text!?html}</option>
+										</#list> </@dict_entries>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">长期存储量：</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="lsSize" value="${(data.lsSize)!?html}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">收样单位：</label>
+								<div class="col-sm-3">
+									<select class="form-control" name="receivingUnit" required data-msg="收样单位不能为空">
+										<option value="">请选择</option>
+										<#if unitList ??> <#list unitList as unit>
+										<option value="${unit.id!}" <#if data.receivingUnit == unit.name>selected='selected'</#if>>${unit.name!?html}</option>
+										</#list> </#if>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label control-required">实验单位：</label>
+								<div class="col-sm-3">
+									<select class="form-control" name="testingUnit" required data-msg="实验单位不能为空">
+										<option value="">请选择</option>
+										<#if unitList ??> <#list unitList as unit>
+										<option value="${unit.id!}" <#if data.testingUnit == unit.name>selected='selected'</#if>>${unit.name!?html}</option>
+										</#list> </#if>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">样本采集要求：</label>
+								<div class="col-sm-6">
+									<textarea name="samplingTips" class="form-control" id="samplingTips"
+										placeholder="输入样本采集要求">${(data.samplingTips)!?html}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">样本运输要求：</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" name="transportingTips" id="transportingTips"
+										placeholder="输入样本运输要求">${(data.transportingTips)!?html}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">样本保存要求：</label>
+								<div class="col-sm-6">
+									<textarea class="form-control" name="storagingTips" id="storagingTips"
+										placeholder="输入样本保存要求">${(data.storagingTips)!?html}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2">
+									<button class="btn btn-primary" type="submit">保存</button>
+									<button class="btn btn-primary goback" type="button">返回</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript">
+$(function()
+{
+    <#if data??>
+    $('.toggle-title').empty().append('修改样本');
+    $('.toggle-form').attr('action','${base}/sample/modify.do');
+    </#if>
+    
+    $('form').validate();
+    
+    $('#name').change(function(){
+    	var name = $('#name').val();
+    	$.ajax({
+            type : "POST",
+            traditional: true,
+            url : "/sample/validata.do",
+            data : {
+            	name : name,
+            },
+            async : false,
+            success : function(data) {
+            	if(data == false){
+	            	parent.layer.alert('样本名称已存在',{title:"提示"});
+	            	$("#name").empty();
+            	}
+            },
+            error : function() {
+            	parent.layer.alert('failed',{title:"提示"});
+            }
+        });
+     })
+});
+</script>
+</html>

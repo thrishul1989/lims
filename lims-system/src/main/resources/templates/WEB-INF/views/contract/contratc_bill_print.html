@@ -1,0 +1,93 @@
+
+	   <div class="modal fade" id="bill_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">关闭</span>
+                        </button>
+                        <h4 class="modal-title">账单明细</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="contract_bill_detail" src="" target="self" style="border: 0; width: 850px; height: 500px;"> </iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="released" onclick="billDownload()">导出</button>
+                        <button type="button" class="btn btn-info" id="print" onclick="billPreview()">打印</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="${base}/testSheet/downloadFile" method="post" name="hiddForm" id="hiddForm">
+        <input type="hidden" name="formValue" id="formValue" value="">
+    </form>
+
+
+<script src="${system_js}/LodopFuncs.js"></script>
+<script>
+    var LODOP;
+	//打印账单
+    function billPreview()
+    {
+
+    	var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+		LODOP = getLodop();
+        LODOP.PRINT_INITA(0, 0, 522, 333, "打印控件功能演示");
+        LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+
+        LODOP.ADD_PRINT_TEXT(84, "40%", "26%", 50, "账单明细");
+        LODOP.SET_PRINT_STYLEA(1, "FontName", "宋体");
+        LODOP.SET_PRINT_STYLEA(1, "FontSize", 20);
+        LODOP.SET_PRINT_STYLEA(1, "ItemType", 1);
+        LODOP.SET_PRINT_STYLEA(1, "LinkedItem", 1);
+        LODOP.SET_PRINT_STYLEA(1, "Bold", 1);
+
+        LODOP.ADD_PRINT_HTM(70, "35%", "60%", 20, "<hr style='background-color:black;color:black;height:1px' />");
+        LODOP.SET_PRINT_STYLEA(2, "Bold", 1);
+        LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+        
+
+        LODOP.ADD_PRINT_TABLE(195,2,"95%",500,
+        		'<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"><link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"><link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet"><link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">'
+                    + document.getElementById("contract_bill_detail").contentWindow.document.getElementById('bill_table').innerHTML);
+
+        LODOP.ADD_PRINT_IMAGE(0, 0, 300, 70, "<img border='0' src='/static/plugins/img/logo.png'/>");
+        LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+
+        LODOP.PREVIEW();
+        
+        layerObject.close(loadindex);
+    };
+
+    
+    // 导出账单
+    function billDownload(){
+    	var layerObject = parent.parent.layer;
+		var loadindex = layerObject.load();
+    	var contractId = document.getElementById("contract_bill_detail").contentWindow.document.getElementById('contractId').value;
+    	var createTime = document.getElementById("contract_bill_detail").contentWindow.document.getElementById('ctrateTime').innerHTML;
+          $.ajax({
+            type : "POST",
+            url : "/contract/downloadSettleBill.do",
+            data : {
+            	id : contractId,
+            	createTime:createTime
+            },
+            success : function(data) {
+            	$("#formValue").val(data);
+                $("#hiddForm").submit();
+            	layerObject.close(loadindex);
+            },
+            error : function() {
+                alert("failed");
+                layerObject.close(loadindex);
+            }
+        });  
+    	
+    }
+</script>

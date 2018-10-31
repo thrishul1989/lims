@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>已完成任务列表</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.7"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css"
+	rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox ibox-table">
+					<div class="ibox-title">
+						<h5>已完成任务列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form action="${base}/bpm/completeTasks/tasks.do" method="post"
+							id="search_from" class="search-form form-inline">
+							<div class="col-sm-4">
+								<div class="form-group">
+
+									<label class="control-label">实验名称：</label> 
+									<select class="form-control" name="taskName" data-value="${searcher.taskName !? html}">
+										<option value="CDNA提取" >CDNA提取</option>
+										<option value="CDNA质检" >CDNA质检</option>
+										<option value="DNA提取">DNA提取</option>
+										<option value="DNA质检">DNA质检</option>
+										<option value="Long-PCR">Long-PCR</option>
+										<option value="Long-PCR扩增">Long-PCR扩增</option>
+										<option value="Long-PCR构建">Long-PCR构建</option>
+										<option value="Long-PCR质检">Long-PCR质检</option>
+										<option value="MLPA实验">MLPA实验</option>
+										<option value="MLPA数据分析">MLPA数据分析</option>
+										<option value="MULTI-PCR实验">MULTI-PCR实验</option>
+										<option value="MULTIPCR-QC质检">MULTIPCR-QC质检</option>
+										<option value="NGS测序">NGS测序</option>
+										<option value="NGS_SEQUECING_TASK">新上机实验</option>
+										<option value="PCR-NGS实验">PCR-NGS实验</option>
+										<option value="PCR-NGS引物设计合成">PCR-NGS引物设计合成</option>
+										<option value="PCR-NGS数据分析">PCR-NGS数据分析</option>
+										<option value="QPCR实验">QPCR实验</option>
+										<option value="SANGER检测-一次PCR">SANGER检测-一次PCR</option>
+										<option value="SANGER检测-二次PCR">SANGER检测-二次PCR</option>
+										<option value="SANGER检测-数据分析">SANGER检测-数据分析</option>
+										<option value="一次PCR">一次PCR</option>
+										<option value="二次PCR">二次PCR</option>
+										<option value="动态突变">动态突变</option>
+										<option value="动态突变-数据分析">动态突变-数据分析</option>
+										<option value="多重PCR实验">多重PCR实验</option>
+										<option value="多重PCR质检">多重PCR质检</option>
+										<option value="技术分析">技术分析</option>
+										<option value="TECHNICAL-ANALYSIS">新技术分析</option>
+										<option value="SANGER验证-数据分析">SANGER验证-数据分析</option>
+										<option value="文库捕获">文库捕获</option>
+										<option value="文库构建">文库构建</option>
+										<option value="文库质检">文库质检</option>
+										<option value="混样">混样</option>
+										<option value="生信分析">生信分析</option>
+										<option value="BIOLOGY-ANNOTATION">生信注释</option>
+										<option value="BIOLOGY_DIVISION_TASK">数据拆分</option>
+										<option value="相对定量">相对定量</option>
+										<option value="绝对定量">绝对定量</option>
+										<option value="荧光检测">荧光检测</option>
+										<option value="荧光检测数据分析">荧光检测数据分析</option>
+									</select>
+
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">任务编号：</label> <input type="text"
+										class="form-control" name="code"
+										value="${(searcher.code)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">样本编号：</label> <input type="text"
+										class="form-control" name="sampleCode"
+										value="${(searcher.sampleCode)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">下达人：</label> <input type="text"
+										class="form-control" name="assignerName"
+										value="${(searcher.assignerName)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">实验员：</label> <input type="text"
+										class="form-control" name="testerName"
+										value="${(searcher.testerName)!?html}">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">下达时间起：</label> <input type="text"
+										id="assignTimeStart" class="form-control laydate-icon"
+										name="assignTimeStart" readOnly="readOnly"
+										onclick="laydate({istime: true, format: 'YYYY/MM/DD'})"
+										value="${(searcher.assignTimeStart)!?html}" />
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">下达时间止：</label> <input type="text"
+										id="assignTimeEnd" class="form-control laydate-icon"
+										name="assignTimeEnd" readOnly="readOnly"
+										onclick="laydate({istime: true, format: 'YYYY/MM/DD'})"
+										value="${(searcher.assignTimeEnd)!?html}" />
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">完成状态：</label> <select
+										class="form-control" name="completed"
+										data-value="${(searcher.completed)!?html}">
+										<option value="">所有任务</option>
+										<option value="false">未完成</option>
+										<option value="true">已完成</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<button type="submit" class="btn btn-sm btn-success">
+										<i class="fa fa-search"></i> 查询
+									</button>
+									<button type="button" class="btn btn-sm btn-success"
+										onclick="clearCondition('search_from')">
+										<i class="fa fa-remove"></i> 清空
+									</button>
+								</div>
+							</div>
+						</form>
+						<table
+							class="table table-striped table-bordered table-hover table-responsive">
+							<thead>
+								<tr>
+									<td>序号</td>
+									<td>实验名称</td>
+									<td>任务编号</td>
+									<td>下达人</td>
+									<td>下达时间</td>
+									<td>实验员</td>
+									<td>完成时间</td>
+									<th class="flexible-btns flexible-btns-1">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pagination.records?has_content> <#list pagination.records
+								as record>
+								<tr>
+									<input type="hidden" class="semantic"
+										value="${record.semantic!?html}" />
+									<input type="hidden" class="id" value="${record.id!?html}" />
+									<td>${record_index + 1}</td>
+									<td>${(record.taskName)!?html}</td>
+									<td>${(record.code)!?html}</td>
+									<td>${(record.assignerName)!?html}</td>
+									<td><#if
+										record.assignTime??>${(record.assignTime)!?string('yyyy/MM/dd
+										HH:mm')}</#if></td>
+									<td>${(record.testerName)!?html}</td>
+									<td><#if
+										record.submitTime??>${(record.submitTime)!?string('yyyy/MM/dd
+										HH:mm')}</#if></td>
+									<td class="flexible-btns"><a target="_self" href=""
+										class="btn btn-sm btn-success testUrl"> <i
+											class="fa fa-search-plus"></i>查看
+									</a> <#if record.semantic!?html == "TECHNICAL-ANALY" &&
+										record.submitTime?? && record.technicalIfResubmit == 0><a
+										href="${base}/testing/reTecanalys_test.do?id=${record.id}"
+										class="btn btn-sm btn-success"> <i class="fa fa-edit"></i>补提
+									</a></#if></td>
+								</tr>
+								</#list> <#else>
+								<tr>
+									<td colspan="12">暂无相关记录</td>
+								</tr>
+								</#if>
+							</tbody>
+						</table>
+						<#include "../../inc/pagination.html" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script>
+	$(function() {
+		$(".testUrl")
+				.click(
+						function() {
+							var semantic = $(this).parents("tr").find(
+									".semantic").val();
+							var id = $(this).parents("tr").find(".id").val();
+							switch (semantic) {
+							case "DNA-EXT":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/dna_extract.do?id="
+												+ id);
+								break;
+							case "DNA-QC":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/dna_qc.do?id="
+												+ id);
+								break;
+							case "CDNA-EXT":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/cdna_extract.do?id="
+												+ id);
+								break;
+							case "CDNA-QC":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/cdna_qc.do?id="
+												+ id);
+								break;
+							case "LIBRARY-CRE":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/lib_create.do?id="
+												+ id);
+								break;
+							case "LIBRARY-QC":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/lib_qc.do?id="
+												+ id);
+								break;
+							case "LIBRARY-CAP":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/lib_cap.do?id="
+												+ id);
+								break;
+							case "RQT":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/rqt.do?id="
+												+ id);
+								break;
+							case "POOLING":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/pooling.do?id="
+												+ id);
+								break;
+							case "QT":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/qt.do?id="
+												+ id);
+								break;
+							case "NGS-SEQ":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/sequencing.do?id="
+												+ id);
+								break;
+							case "NGS-SEQUECING":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/ngsSequencing.do?id="
+												+ id);
+								break;
+							case "BIOLOGY-ANALY":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/biology-analy.do?id="
+												+ id);
+								break;
+							case "TECHNICAL-ANALY":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/technical-analy.do?id="
+												+ id);
+								break;
+							case "PRIMER-DESIGN":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sanger/primer_design.do?id="
+												+ id);
+								break;
+							case "PCR-ONE":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sanger/first_pcr.do?id="
+												+ id);
+								break;
+							case "PCR-TWO":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sanger/second_pcr.do?id="
+												+ id);
+								break;
+							case "DATA-ANALYSIS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sanger/data_pcr.do?id="
+												+ id);
+								break;
+							case "MLPA":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/mlpa/mlpa.do?id="
+												+ id);
+								break;
+							case "MLPA-DATA-ANALYSIS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/mlpa/mlpa_data.do?id="
+												+ id);
+								break;
+							case "DT":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/dt/dt.do?id="
+												+ id);
+								break;
+							case "DT-DATA-ANALYSIS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/dt/dt_data.do?id="
+												+ id);
+								break;
+							case "QPCR":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/qpcr/qpcr.do?id="
+												+ id);
+								break;
+							case "PCR-NGS-PRIMER-DESIGN":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/pcrngs/pcr_ngs_primer_design.do?id="
+												+ id);
+								break;
+							case "PCR-NGS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/pcrngs/pcr_ngs_test.do?id="
+												+ id);
+								break;
+							case "PCR-NGS-DATA-ANALYSIS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/pcrngs/pcr_ngs_data.do?id="
+												+ id);
+								break;
+							case "Long-PCR":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/longpcr/longpcr.do?id="
+												+ id);
+								break;
+							case "Long-CRE":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/longpcr/longcre.do?id="
+												+ id);
+								break;
+							case "Long-QC":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/longpcr/longqc.do?id="
+												+ id);
+								break;
+							case "MULTI-PCR":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/multipcr/multipcr.do?id="
+												+ id);
+								break;
+							case "MULTIPCR-QC":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/multipcr/multipcr_qc.do?id="
+												+ id);
+								break;
+							case "FLUO-TEST":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/fluo/fluotest.do?id="
+												+ id);
+								break;
+							case "FLUO-ANALYSE":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/fluo/fluoanalyse.do?id="
+												+ id);
+								break;
+							case "SANGER-PCR-ONE":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sangerTest/first_pcr_sanger.do?id="
+												+ id);
+								break;
+							case "SANGER-PCR-TWO":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sangerTest/second_pcr_sanger.do?id="
+												+ id);
+								break;
+							case "SANGER-DATA-ANALYSIS":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/sangerTest/data_pcr_sanger.do?id="
+												+ id);
+								break;
+							case "BIOLOGY-DIVISION":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/biology-division.do?id="
+										+ id);
+								break;
+							case "BIOLOGY-ANNOTATION":
+								$(this).attr(
+										"href",
+										"${base}/bpm/completeTasks/ngs/biology-annotation.do?id="
+										+ id);
+								break;
+								case "TECHNICAL-ANALYSIS":
+									$(this).attr(
+											"href",
+											"${base}/bpm/completeTasks/ngs/technical-analysis.do?id="
+										+ id);
+								break;
+							}
+						})
+	});
+</script>
+</html>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingMethodMapper">
+	<resultMap id="BaseResultMap"
+		type="com.todaysoft.lims.technical.mybatis.entity.TestingMethod">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="PLATFORM" jdbcType="VARCHAR" property="platform" />
+		<result column="TYPE" jdbcType="BIT" property="type" />
+		<result column="IS_CAPTURE" jdbcType="BIT" property="isCapture" />
+		<result column="IS_ANALYSE" jdbcType="BIT" property="isAnalyse" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="TESTING_PROCESS" jdbcType="VARCHAR" property="testingProcess" />
+		<result column="ANALYSE_PROCESS" jdbcType="VARCHAR" property="analyseProcess" />
+		<result column="DEL_FLAG" jdbcType="BIT" property="delFlag" />
+		<result column="SEMANTIC" jdbcType="VARCHAR" property="semantic" />
+		<result column="ENABLED" jdbcType="BIT" property="enabled" />
+		<result column="INPUT_SAMPLE_TYPE" jdbcType="VARCHAR" property="inputSampleType" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, NAME, PLATFORM, TYPE, IS_CAPTURE, IS_ANALYSE,
+		DESCRIPTION,
+		TESTING_PROCESS, ANALYSE_PROCESS,
+		DEL_FLAG, SEMANTIC,
+		ENABLED, INPUT_SAMPLE_TYPE
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_TESTING_METHOD
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_TESTING_METHOD
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingMethod">
+		insert into LIMS_TESTING_METHOD (ID, NAME, PLATFORM,
+		TYPE, IS_CAPTURE, IS_ANALYSE, DESCRIPTION,
+		TESTING_PROCESS,
+		ANALYSE_PROCESS, DEL_FLAG,
+		SEMANTIC, ENABLED, INPUT_SAMPLE_TYPE
+		)
+		values
+		(#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{platform,jdbcType=VARCHAR},
+		#{type,jdbcType=BIT},
+		#{isCapture,jdbcType=BIT}, #{isAnalyse,jdbcType=BIT},
+		#{description,jdbcType=VARCHAR},
+		#{testingProcess,jdbcType=VARCHAR},
+		#{analyseProcess,jdbcType=VARCHAR}, #{delFlag,jdbcType=BIT},
+		#{semantic,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT},
+		#{inputSampleType,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingMethod">
+		insert into LIMS_TESTING_METHOD
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="platform != null">
+				PLATFORM,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="isCapture != null">
+				IS_CAPTURE,
+			</if>
+			<if test="isAnalyse != null">
+				IS_ANALYSE,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="testingProcess != null">
+				TESTING_PROCESS,
+			</if>
+			<if test="analyseProcess != null">
+				ANALYSE_PROCESS,
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG,
+			</if>
+			<if test="semantic != null">
+				SEMANTIC,
+			</if>
+			<if test="enabled != null">
+				ENABLED,
+			</if>
+			<if test="inputSampleType != null">
+				INPUT_SAMPLE_TYPE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="platform != null">
+				#{platform,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=BIT},
+			</if>
+			<if test="isCapture != null">
+				#{isCapture,jdbcType=BIT},
+			</if>
+			<if test="isAnalyse != null">
+				#{isAnalyse,jdbcType=BIT},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="testingProcess != null">
+				#{testingProcess,jdbcType=VARCHAR},
+			</if>
+			<if test="analyseProcess != null">
+				#{analyseProcess,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag,jdbcType=BIT},
+			</if>
+			<if test="semantic != null">
+				#{semantic,jdbcType=VARCHAR},
+			</if>
+			<if test="enabled != null">
+				#{enabled,jdbcType=BIT},
+			</if>
+			<if test="inputSampleType != null">
+				#{inputSampleType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingMethod">
+		update LIMS_TESTING_METHOD
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="platform != null">
+				PLATFORM = #{platform,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=BIT},
+			</if>
+			<if test="isCapture != null">
+				IS_CAPTURE = #{isCapture,jdbcType=BIT},
+			</if>
+			<if test="isAnalyse != null">
+				IS_ANALYSE = #{isAnalyse,jdbcType=BIT},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="testingProcess != null">
+				TESTING_PROCESS = #{testingProcess,jdbcType=VARCHAR},
+			</if>
+			<if test="analyseProcess != null">
+				ANALYSE_PROCESS = #{analyseProcess,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG = #{delFlag,jdbcType=BIT},
+			</if>
+			<if test="semantic != null">
+				SEMANTIC = #{semantic,jdbcType=VARCHAR},
+			</if>
+			<if test="enabled != null">
+				ENABLED = #{enabled,jdbcType=BIT},
+			</if>
+			<if test="inputSampleType != null">
+				INPUT_SAMPLE_TYPE = #{inputSampleType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingMethod">
+		update LIMS_TESTING_METHOD
+		set NAME =
+		#{name,jdbcType=VARCHAR},
+		PLATFORM = #{platform,jdbcType=VARCHAR},
+		TYPE
+		= #{type,jdbcType=BIT},
+		IS_CAPTURE = #{isCapture,jdbcType=BIT},
+		IS_ANALYSE = #{isAnalyse,jdbcType=BIT},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR},
+		TESTING_PROCESS =
+		#{testingProcess,jdbcType=VARCHAR},
+		ANALYSE_PROCESS =
+		#{analyseProcess,jdbcType=VARCHAR},
+		DEL_FLAG = #{delFlag,jdbcType=BIT},
+		SEMANTIC = #{semantic,jdbcType=VARCHAR},
+		ENABLED =
+		#{enabled,jdbcType=BIT},
+		INPUT_SAMPLE_TYPE =
+		#{inputSampleType,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectBySearcher"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingMethod"
+		resultMap="BaseResultMap">
+		select * from LIMS_TESTING_METHOD where 1=1
+
+
+		<if test="type != null">
+			and TYPE = #{type,jdbcType=BIT}
+		</if>
+
+		<if test="semantic != null">
+			and SEMANTIC = #{semantic,jdbcType=VARCHAR}
+		</if>
+		<if test="enabled != null">
+			and ENABLED = #{enabled,jdbcType=BIT}
+		</if>
+
+
+
+	</select>
+
+</mapper>

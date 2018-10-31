@@ -1,0 +1,1099 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>迈基诺遗传疾病分析平台</title>
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<meta name="format-detection" content="telephone=no,email=no">
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="HandheldFriendly" content="true">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<link rel="stylesheet"
+	href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+<link
+	href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link
+	href="http://cdn.bootcss.com/pickadate.js/3.5.6/compressed/themes/classic.css"
+	rel="stylesheet">
+<link
+	href="http://cdn.bootcss.com/pickadate.js/3.5.6/compressed/themes/classic.date.css"
+	rel="stylesheet">
+<link href="${system_css}/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${system_css}/common.css">
+<link rel="stylesheet" href="${system_css}/modules.css">
+<link rel="stylesheet" href="${system_css}/style.css">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/node-bar.css" rel="stylesheet">
+<link href="${system_css}/system.css?v=0.1" rel="stylesheet">
+<style>
+.my-table1 thead th {
+	max-width: 4.2rem;
+	min-width: 3.5rem;
+	padding: .375rem;
+}
+
+.my-table2 thead {
+	text-align: center;
+}
+
+.my-table2 thead:first-child th {
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+
+.my-table2 thead:first-child th:last-child {
+	border-right: none;
+}
+
+.my-table2 thead th:nth-child(4n + 4) {
+	border-right: 1px solid #ddd;
+}
+
+.my-table2 tbody td:nth-child(4n + 4) {
+	border-right: 1px solid #ddd;
+}
+
+.table-striped thead {
+	background-color: rgba(0, 0, 0, .05);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+	background-color: rgba(0, 0, 0, .05);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+	background-color: transparent;
+}
+
+#dataTableBox table {
+	width: auto;
+	white-space: nowrap;
+	font-size: 12px;
+}
+
+#dataTableBox table th {
+	text-align: center
+}
+
+#dataTableBox table th, #dataTableBox table td {padding-top：0;
+	padding-bottom: 0;
+	height: 40px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.evidenceTable th.evidence {
+	display: none;
+}
+
+#exampleModalLong td {
+	word-break: break-all;
+}
+
+.modal-body th {
+	background-color: white
+}
+
+.sys-info-table th, .sys-info-table .table-active, .sys-info-table .table-active td
+	{
+	background-color: white
+}
+
+.col-form-label {
+	text-align: right
+}
+
+.addEroBorder {
+	border-color: #F00 !important;
+}
+
+#addVerModal table {
+	font-size: 0.875rem;
+}
+
+#addVerModal table .form-control {
+	font-size: 0.875rem;
+}
+
+#addVerModal select.form-control:not([size]):not([multiple]) {
+	height: calc(2.25rem - 1px);
+}
+</style>
+</head>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+	integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+	crossorigin="anonymous"></script>
+
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-table.min.js"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script src="${system_js}/system.js"></script>
+<script src="${plugins}/layer/layer.min.js"></script>
+
+<script type="text/html" id="addVerifyTemp">
+	<#include "temp/addVerifyTemp.html"/>
+</script>
+
+<body>
+	<article class="content-wrap">
+		<div class="container pd_h0 pd_b10" style="max-width: 100%">
+
+			<div class="sys-plane pd_t0">
+				<div class="sys-tabs">
+					<div class="pd_t20"></div>
+					<div class="sys-tabs-body">
+						<div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot active">
+							<div class="clearfix mr_t20">
+								<div class="filter-card ub ub-ac active f_l mr_r30">
+									<div class="filter-card-img ub-ac">
+										<img src="${system_images}/card1.png" alt="">
+									</div>
+									<div class="filter-card-txt ub-f1 ">
+										<p class="count mr_v0"><#if
+											pagination??>${pagination.geneNumber}</#if></p>
+										<p class="name mr_b0 mr_t5">基因数目</p>
+									</div>
+								</div>
+								<div class="filter-card ub ub-ac active f_l mr_r30">
+									<div class="filter-card-img ub-ac">
+										<img src="${system_images}/card2.png" alt="">
+									</div>
+									<div class="filter-card-txt ub-f1 ">
+										<p class="count mr_v0"><#if
+											pagination??>${pagination.matSumNumber}</#if></p>
+										<p class="name mr_b0 mr_t5">突变数目</p>
+									</div>
+								</div>
+								<div class="filter-card ub ub-ac f_l">
+									<div class="filter-card-img ub-ac">
+										<img src="${system_images}/card3.png" alt="">
+									</div>
+									<div class="filter-card-txt ub-f1 ">
+										<a href='${base}/testing/myCollection.do?analysisSampleId=${analysisSampleId!?html}&ifRecheck=${ifRecheck!?html}' target="_blank">
+											<p class="count mr_v0" id="collectionCount"><@doctor_collection_count
+												analysisSampleId = analysisSampleId technicalTaskId=id /></p>
+											<p class="name mr_b0 mr_t5">已收藏突变</p>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="mr_t20">
+								<button type="button" class="btn btn-outline-secondary mr_r10"
+									data-toggle="modal" data-target="#showColModal"
+									<#if (annotateStatus??) && (annotateStatus?string('yes', 'no') =='no')> disabled="disabled"</#if>>展示列</button>
+								<button type="button" class="btn btn-outline-secondary mr_r10"
+									onclick="showRefilterModal()"<#if (annotateStatus??) && (annotateStatus?string('yes', 'no') =='no')>disabled="disabled"</#if>>筛选</button>
+                                 <a  href="/testing/downloadAnatationFile.jsp?analysisSampleId=${analysisSampleId!?html}">
+									 <button id="waitEffect" type="button" class="btn btn-outline-secondary mr_r10">下载数据</button>
+								 </a>
+
+								<button type="button" class="btn btn-outline-secondary mr_r10"
+									onclick="downloadFilterData('${analysisSampleId!?html}')"
+									<#if (annotateStatus??) && (annotateStatus?string('yes', 'no') =='no')>disabled="disabled"</#if>>下载筛选后数据</button>
+								<button type="button" class="btn btn-outline-secondary mr_r10"
+										onclick="addValid('${analysisSampleId!?html}')">补提
+								</button>
+							</div>
+							<div class="sys-table-box mr_t20" id="dataTableBox">
+								<table id="dataTable">
+									<thead>
+										<tr>
+											<th rowspan="2" style="width: 50px;">序号</th>
+											<th rowspan="2">加入收藏</th> <#if pagination??><#if
+											pagination.colList?has_content><#list pagination.colList as
+											dcol> <#if dcol=="Evidence">
+											<th class='evidence' data-field="${dcol!?html}"
+												attr-semantic="${dcol!?html}"
+												colspan="${pagination.senondColName['${dcol}']?size}">${dcol!?html}</th>
+											<#else>
+											<th data-field="${dcol!?html}" attr-semantic="${dcol!?html}"
+												rowspan="2">${dcol!?html}</th> </#if> </#list></#if></#if>
+										</tr>
+										<tr>
+											<#if pagination??><#if pagination.colList?has_content><#list
+											pagination.colList as dcol> <#if dcol=="Evidence"> <#if
+											pagination.senondColName?has_content><#list
+											pagination.senondColName["${dcol}"] as secondCol>
+											<th data-field="${secondCol}" attr-semantic="${secondCol}">${secondCol}</th>
+											</#list></#if> </#if> </#list></#if></#if>
+										</tr>
+									</thead>
+									<tbody>
+										<#if (annotateStatus??) && (annotateStatus?string('yes', 'no') =='no')>
+										<tr>
+											<td ><span style="color: red">正在打分中...</span></td>
+										</tr>
+										<#else> <#if pagination??><#if	pagination.dataValue?has_content>
+										<#list pagination.dataValue	as dv>
+										<tr>
+											<td>${dv_index+1}</td>
+											<td><img id="collection"
+												src="${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />"
+												alt="" style="height: 30px; cursor: pointer;"
+												onclick="mutationCollection('${dv['_id']!?html}',this)"
+												class="${dv['_id']!?html}" /></td> <#if
+											pagination.colList?has_content><#list pagination.colList as
+											dcol> <#if dcol_index == 1>
+											<td attr-semantic="${dcol!?html}"><a class="op-btn"
+												href="#"
+												onclick="showExampleModalLong('${dv['_id']!?html}','${system_images}<@if_collection id = dv['_id'] tag = 'mutation'  />','${dv['_id']!?html}')">${dv["${dcol!?html}"]!?html}</a></td>
+											<#elseif dcol_index == 2>
+											<td attr-semantic="${dcol!?html}"><a class="op-btn"
+												href="javascript:;"
+												onclick="showLeve('${dv['_id']!?html}');">${dv["${dcol!?html}"]!?html}</a></td>
+											<#else> <#if dcol=="遗传方式" || dcol=="关联表型" || dcol=="疾病表型" ||
+											dcol=="疾病信息">
+											<td attr-semantic="${dcol!?html}"
+												title="${dv['${dcol}']!?html}"><#if dv["${dcol}"]??>
+												<#if dv["${dcol}"]?length gt
+												20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if>
+												</#if></td> <#elseif dcol=="变异信息" || dcol=="疾病与基因关联度打分" ||
+											dcol=="人群频率" || dcol=="蛋白功能预测">
+											<td attr-semantic="${dcol!?html}"><a class="op-btn"
+												href="javascript:;"
+												onclick="detailsShow('${dcol}','${dv['_id']!?html}')"><#if
+													dv["${dcol}"]??><#if dv["${dcol}"]?length gt
+													20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if></#if></a></td>
+											<#elseif dcol=="Evidence"> <#if
+											pagination.senondColName?has_content><#list
+											pagination.senondColName["${dcol}"] as secondCol> <#if
+											secondCol="HGMD">
+											<td attr-semantic="${secondCol}"><a class="op-btn"
+												href="javascript:;"
+												onclick="detailsShow('${secondCol}','${dv['_id']!?html}')">${dv["${secondCol}"]!?html}</a></td>
+											<#elseif secondCol="clinvar">
+											<td attr-semantic="${secondCol}"
+												title="${dv['${secondCol}']!?html}"><#if
+												dv["${secondCol}"]?has_content>${dv["${secondCol}"]?split("|")[0]!?html}...</#if></td>
+											<#else>
+											<td attr-semantic="${secondCol}">${dv["${secondCol}"]!?html}</td>
+											</#if> </#list></#if> <#elseif dcol=="功能域">
+											<td attr-semantic="${dcol!?html}"
+												title="${dv['${dcol}']!?html}"><#if
+												dv["${dcol}"]?has_content>${dv["${dcol}"]?split("|")[0]!?html}...</#if></td>
+											<#elseif dcol=="染色体位置">
+											<td attr-semantic="${dcol!?html}"><#if dv["${dcol}"]??><a
+												href="javascript:getIgv('${dv["Chr"]}:${dv["Begin"]}-${dv["End"]!dv["Begin"]}','${dv["analysisSampleId"]!?html}')" target="_blank">${dv["${dcol}"]}</a></#if>
+											</td> <#else>
+											<td attr-semantic="${dcol!?html}" title="<#if dv['${dcol}']??>${dv['${dcol}']}</#if>">
+												<#if dv["${dcol}"]??><#if dv["${dcol}"]?length gt
+														20>${dv["${dcol}"]?substring(0,19)}...<#else>${dv["${dcol}"]!?html}</#if></#if></td> </#if> </#if>
+											</#list></#if>
+										</tr>
+										</#list> <#else>
+										<tr>
+											<td>暂无数据</td>
+										</tr>
+										</#if></#if> </#if>
+
+									</tbody>
+								</table>
+							</div>
+							<#include "../../inc/pagination.html" />
+							<form action="${base}/testing/analysisMutation.jsp"
+								class="search-form">
+								<input type="hidden" name="analysisFamilyId"
+									value="${analysisSampleId!?html}" />
+							</form>
+						</div>
+						<div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot"></div>
+						<div class="sys-tabs-cot"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</article>
+
+	<!-- 展示列Modal -->
+	<div class="modal fade" id="showColModal" tabindex="-1" role="dialog"
+		aria-labelledby="showColModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" style="width: 650px;">
+				<div class="modal-header">
+					<h5 class="modal-title">展示列</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body txt_l">
+					<form action="">
+						<div class="form-group row mr_b0">
+							<div class="col-sm-3">
+								<input class="check-controller" type="checkbox" name=""><span>全选</span>
+							</div>
+						</div>
+						<div class="form-group mr_b0 clearfix pd_l5">
+							<#if pagination.colList?has_content><#list pagination.colList as
+							dcol> <label
+								style="float: left; width: 33.333%; text-align: left;">
+								<input class="check-instance" type="checkbox"
+								value="${dcol!?html}"><span>${dcol!?html}</span>
+							</label> </#list></#if>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="txt_c ub-f1">
+						<button type="button" class="btn btn-outline-primary"
+							style="width: 150px;" data-dismiss="modal"
+							onclick="sureToShowCol()">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 分组列Modal -->
+	<div class="modal fade" id="detailsModal" tabindex="-2" role="dialog"
+		aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detailsModalLabel">突变</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body txt_l">
+					<form action="">
+						<div class="form-group row mr_b0" id="detailsModalDiv">
+							<div class="col-sm-12"></div>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 收藏Modal -->
+	<div class="modal fade" id="familyModal" tabindex="-2" role="dialog"
+		aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="min-width: 1000px;">
+			<div class="modal-content">
+
+				<div class="modal-header">
+
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body txt_l">
+					<form id="resave_form" action="" class="form-horizontal m-t">
+						<input type="hidden" id="technicalFamilyGroupId"
+							name="technicalFamilyGroupId" value="${analysisSampleId!?html}" />
+						<input type="hidden" id="sourceRef" name="sourceRef" value="1" />
+						<input type="hidden" id="mutationObjectId" name="mutationObjectId"
+							value="" />
+						<!-- 位点id(mongon) -->
+						<div class="form-group row">
+							<label class="col-3 col-form-label">临床相关性判断：</label>
+							<div class="col-sm-3 pd_l0">
+								<select class="form-control " id="clinicalJudgment"
+									name="clinicalJudgment">
+									<option value="临床表型高度相关">临床表型高度相关</option>
+									<option value="可疑变异">可疑变异</option>
+									<option value="杂合携带">杂合携带</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-3 col-form-label">是否进行家系分析：</label>
+							<div class="col-sm-3 pd_l0 mr_t5">
+								<input type="radio" id="verify_Y" name="verify" value="1"
+									checked="checked">是 &nbsp; <input type="radio"
+									id="verify_N" name="verify" value="0">否
+							</div>
+						</div>
+						<div id="addObject" style="display: block">
+							<div class="form-group row ">
+								<label class="col-3 col-form-label">家系实验方法：</label>
+								<div class="col-sm-3 pd_l0">
+									<select class="form-control " name="verifyMethod">
+										<option value="QPCR">QPCR</option>
+										<option value="Sanger" selected="selected">Sanger</option>
+										<option value="PCR-NGS">PCR-NGS</option>
+										<option value="MLPA">MLPA</option>
+									</select>
+								</div>
+
+								<label class="col-2 col-form-label">验证方案：</label>
+								<div class="col-sm-3 pd_l0 pd_t5 sampleInfo">
+
+									<#if relationSamples?has_content> <#list relationSamples as
+									entity> <#if entity.ifSelf?? && entity.ifSelf==1> <input
+										type="checkbox" name="familyRelation" value="本人"
+										checked="checked"> <input type="hidden"
+										name="sampleId" value="${entity.testingSampleId!?html}">本人
+									<#else> <input type="checkbox" name="familyRelation"
+										value="<@dict_entry_text
+									category='FAMILY_RELATION' value=entity.familyRelation />"
+										checked="checked"> <input type="hidden"
+										name="sampleId" value="${entity.testingSampleId!?html}"><@dict_entry_text
+									category="FAMILY_RELATION" value=entity.familyRelation />
+									</#if> </#list> </#if>
+
+
+								</div>
+
+								<div class="col-sm-1">
+									<button class="btn btn-sm btn-success" type="button"
+										onclick="add()">添加</button>
+								</div>
+
+							</div>
+						</div>
+
+
+						<div id="siteTypeShow" style="display: none">
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">位点类型：</label>
+								<div class="col-sm-3">
+									<select class="form-control" id="locusType" name="locusType"
+										style="width: 300px">
+										<option selected="selected" value="报告位点">报告位点</option>
+										<option value="纯阴性报告">纯阴性报告</option>
+										<option value="参考位点">参考位点</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group row">
+
+							<div class="col-sm-4 col-sm-offset-5"
+								style="margin-left: 250px; margin-top: 10px;">
+								<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+								<button type="button" class="btn btn-primary"
+									data-dismiss="modal">取消</button>
+							</div>
+
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 重新筛选Modal -->
+	<#include "./analysis_mutation_refilter.html" />
+
+	<!-- Modal -->
+	<#include "./analysis_detail.html" />
+
+
+
+	<div id="addTemp" style="display: none">
+		<div class="form-group row ">
+			<label class="col-3 col-form-label">家系实验方法：</label>
+			<div class="col-sm-3 pd_l0">
+				<select class="form-control " name="verifyMethod">
+					<option value="QPCR">QPCR</option>
+					<option value="Sanger">Sanger</option>
+					<option value="PCR-NGS">PCR-NGS</option>
+					<option value="MLPA">MLPA</option>
+				</select>
+			</div>
+
+			<label class="col-2 col-form-label">验证方案：</label>
+			<div class="col-sm-3 pd_l0 pd_t5 sampleInfo">
+				<#if relationSamples?has_content> <#list relationSamples as entity>
+				<#if entity.ifSelf?? && entity.ifSelf==1> <input type="checkbox"
+					name="familyRelation" value="本人" checked="checked"> <input
+					type="hidden" name="sampleId"
+					value="${entity.testingSampleId!?html}">本人 <#else> <input
+					type="checkbox" name="familyRelation"
+					value="<@dict_entry_text
+									category='FAMILY_RELATION' value=entity.familyRelation />"
+					checked="checked"> <input type="hidden" name="sampleId"
+					value="${entity.testingSampleId!?html}"><@dict_entry_text
+				category="FAMILY_RELATION" value=entity.familyRelation /> </#if>
+				</#list> </#if>
+			</div>
+			<div class="col-sm-1">
+				<button class="btn btn-sm btn-warning" type="button"
+					onclick="deleteObj(this)">删除</button>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="modal fade" id="addVerModal" tabindex="-2" role="dialog"
+		 aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="min-width: 1200px;">
+			<div class="modal-content">
+
+				<div class="modal-header">
+
+					<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body txt_l">
+					<form id="addVer_form" action="" class="form-horizontal m-t" enctype="application/json">
+						<!-- 位点id(mongon) -->
+						<div class="form-group">
+							<div>
+								<input type="hidden" name="technicalFamilyGroupId" value="${analysisSampleId!?html}">
+								<table id="infoTable" class="table table-striped table-bordered table-hover">
+									<thead>
+									<tr style="line-height: 1.4; height: auto;">
+										<th>操作</th>
+										<th>临床相关性判断</th>
+										<th>染色体</th>
+										<th>位置1</th>
+										<th>位置2</th>
+										<th>基因</th>
+										<th>核苷酸</th>
+										<th>氨基酸</th>
+										<th>纯和/杂合</th>
+										<th>验证方法</th>
+										<th>验证样本</th>
+									</tr>
+									</thead>
+									<tbody id="verifyRows">
+									<#if verifyDatas?has_content>
+										<#list verifyDatas as verifyData>
+											<tr>
+												<td>
+													<#if verifyData_index=0>
+														<a href="javascript:;" class="btn btn-sm btn-success add"><i
+																class="fa fa-plus"></i> 新增</a>
+														<#else>
+															<a href="javascript:;"
+															   class="btn btn-sm btn-success remove"><i
+																	class="fa fa-trash"></i> 删除</a>
+													</#if>
+												</td>
+												<td>
+													<input type="hidden"
+														   name="textsForList[${verifyData_index}].sampleCode"
+														   value="${sampleCode!?html}" class="sampleCode">
+													<input type="hidden"
+														   name="textsForList[${verifyData_index}].dataCode"
+														   value="${dataCode!?html}" class="dataCode">
+													<select name="textsForList[${verifyData_index}].clinicalJudgment"
+															data-value="${verifyData.clinicalJudgment!?html}"
+															class="form-control checknull clinicalJudgment"
+															style="width: 120px;">
+														<option value="临床表型高度相关">临床表型高度相关</option>
+														<option value="可疑变异">可疑变异</option>
+														<option value="杂合携带">杂合携带</option>
+													</select>
+												</td>
+												<td>
+													<input name="textsForList[${verifyData_index}].chrom"
+														   class="form-control checknull chrom" type="text"
+														   value="${verifyData.chrom!?html}" style="width: 100px;"/>
+												</td>
+												<td><input name="textsForList[${verifyData_index}].startLocation"
+														   class="form-control checknull startLocation"
+														   value="${verifyData.startLocation!?html}" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[${verifyData_index}].endLocation"
+														   class="form-control checknull endLocation"
+														   value="${verifyData.endLocation!?html}" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[${verifyData_index}].gene"
+														   class="form-control gene" value="${verifyData.gene!?html}"
+														   type="text" style="width: 100px;"/></td>
+												<td><input name="textsForList[${verifyData_index}].nucleotide"
+														   class="form-control nucleotide"
+														   value="${verifyData.chrom!?html}" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[${verifyData_index}].aminoAcid"
+														   class="form-control aminoAcid"
+														   value="${verifyData.aminoAcid!?html}" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[${verifyData_index}].pure"
+														   class="form-control pure" value="${verifyData.pure!?html}"
+														   type="text" style="width: 100px;"/></td>
+												<td>
+													<select name="textsForList[${verifyData_index}].verifyMethod"
+															data-value="${verifyData.verifyMethod!?html}"
+															class="form-control checknull verifyMethod">
+														<option value="QPCR">QPCR</option>
+														<option value="Sanger">Sanger</option>
+														<option value="PCR-NGS">PCR-NGS</option>
+														<option value="MLPA">MLPA</option>
+													</select>
+												</td>
+												<td>
+													<div class="sampleInfo">
+														<#if relationSamples?has_content>
+															<#list relationSamples as entity>
+																<#if entity.ifSelf?? && entity.ifSelf==1>
+																	<input type="checkbox"
+																		   name="textsForList[${verifyData_index}].familyRelation"
+																		   value="本人_${entity.testingSampleId!?html}"
+																	<#if verifyData.familyRelation??>
+																		<#if verifyData.familyRelation?contains('${entity.testingSampleId!?html}')>
+																			checked="checked"
+																		</#if>
+																	</#if>
+																		   class="familyRelation">
+																	<input type="hidden"
+																		   name="textsForList[${verifyData_index}].sampleId"
+																		   value="${entity.testingSampleId!?html}"
+																		   class="sampleId">本人
+																	<#else>
+																		<input type="checkbox"
+																			   name="textsForList[${verifyData_index}].familyRelation"
+																			   value="<@dict_entry_text category='FAMILY_RELATION' value=entity.familyRelation />_${entity.testingSampleId!?html}"
+																			   class="familyRelation"
+																		<#if verifyData.familyRelation??>
+																			<#if verifyData.familyRelation?contains('${entity.testingSampleId!?html}')>
+																				checked="checked"
+																			</#if>
+																		</#if>
+																		>
+																		<input type="hidden"
+																			   name="textsForList[${verifyData_index}].sampleId"
+																			   value="${entity.testingSampleId!?html}"
+																			   class="sampleId">
+																		<@dict_entry_text category="FAMILY_RELATION"
+																		value=entity.familyRelation />
+																</#if>
+															</#list>
+														</#if>
+													</div>
+												</td>
+											</tr>
+										</#list>
+										<#else>
+											<tr>
+												<td>
+													<a href="javascript:;" class="btn btn-sm btn-success add"><i
+															class="fa fa-plus"></i> 新增</a>
+												</td>
+												<td>
+													<input type="hidden" name="textsForList[0].sampleCode"
+														   value="${sampleCode!?html}" class="sampleCode">
+													<input type="hidden" name="textsForList[0].dataCode"
+														   value="${dataCode!?html}" class="dataCode">
+													<select name="textsForList[0].clinicalJudgment"
+															class="form-control checknull clinicalJudgment"
+															style="width: 120px;">
+														<option value="临床表型高度相关">临床表型高度相关</option>
+														<option value="可疑变异">可疑变异</option>
+														<option value="杂合携带">杂合携带</option>
+													</select>
+												</td>
+												<td>
+													<input name="textsForList[0].chrom"
+														   class="form-control checknull chrom" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[0].startLocation"
+														   class="form-control checknull startLocation" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[0].endLocation"
+														   class="form-control checknull endLocation" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[0].gene" class="form-control gene"
+														   type="text" style="width: 100px;"/></td>
+												<td><input name="textsForList[0].nucleotide"
+														   class="form-control nucleotide" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[0].aminoAcid"
+														   class="form-control aminoAcid" type="text"
+														   style="width: 100px;"/></td>
+												<td><input name="textsForList[0].pure" class="form-control pure"
+														   type="text" style="width: 100px;"/></td>
+												<td>
+													<select name="textsForList[0].verifyMethod"
+															class="form-control checknull verifyMethod">
+														<option value="QPCR">QPCR</option>
+														<option value="Sanger">Sanger</option>
+														<option value="PCR-NGS">PCR-NGS</option>
+														<option value="MLPA">MLPA</option>
+													</select>
+												</td>
+												<td>
+													<div class="sampleInfo">
+														<#if relationSamples?has_content>
+															<#list relationSamples as entity>
+																<#if entity.ifSelf?? && entity.ifSelf==1>
+																	<input type="checkbox"
+																		   name="textsForList[0].familyRelation"
+																		   value="本人_${entity.testingSampleId!?html}"
+																		   checked="checked"
+																		   class="familyRelation">
+																	<input type="hidden" name="textsForList[0].sampleId"
+																		   value="${entity.testingSampleId!?html}"
+																		   class="sampleId">本人
+																	<#else>
+																		<input type="checkbox"
+																			   name="textsForList[0].familyRelation"
+																			   value="<@dict_entry_text category='FAMILY_RELATION' value=entity.familyRelation />_${entity.testingSampleId!?html}"
+																			   class="familyRelation" checked="checked">
+																		<input type="hidden"
+																			   name="textsForList[0].sampleId"
+																			   value="${entity.testingSampleId!?html}"
+																			   class="sampleId">
+																		<@dict_entry_text category="FAMILY_RELATION"
+																		value=entity.familyRelation />
+																</#if>
+															</#list>
+														</#if>
+													</div>
+												</td>
+											</tr>
+									</#if>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="form-group row">
+
+							<div class="col-sm-4 col-sm-offset-5"
+								 style="margin-left: 250px; margin-top: 10px;">
+								<button type="button" class="btn btn-primary" id="addVerBtnSave">保存</button>
+								<button type="button" class="btn btn-primary"
+										data-dismiss="modal">取消
+								</button>
+							</div>
+
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<form action="${base}/testing/downloadFile" method="post"
+		name="hiddForm" id="hiddForm">
+		<input type="hidden" name="formValue" id="formValue" value="">
+	</form>
+</body>
+<script>
+var PATH = '${base}';
+
+parent.layer.closeAll();
+
+
+var analysisSampleId = '${analysisSampleId!?html}';
+var sampleCode = '${sampleCode!?html}';
+var dataCode = '${dataCode!?html}';
+var ifRecheck='${ifRecheck!?html}';
+var id ='${id!?html}';
+var pList = [];
+<#if pagination.phenotypeList?has_content><#list pagination.phenotypeList as phenotype>
+	pList.push('${phenotype}');
+</#list> 
+</#if>
+
+$(document).ready(function() {
+	$('input[name="verify"]').change(function(){
+		if(this.value == "0"){
+			$("#addObject").css("display","none");
+			$("#siteTypeShow").css("display","block");
+		}else{
+			$("#addObject").css("display","block");
+			$("#siteTypeShow").css("display","none");
+		}
+	});
+
+	$("#waitEffect").click(function () {
+        loadindex = parent.layer.load();
+    })
+	$('#familyModal').on('hidden.bs.modal', function (e) {
+		document.getElementById("resave_form").reset();
+		$("#addObject").css("display","block");
+		$("#siteTypeShow").css("display","none");
+		console.info($("#addObject").find(".form-group").siblings());
+		var childs = $("#addObject").find(".form-group").siblings();
+		$.each(childs,function(index,obj){
+			if(index!=0){
+				console.info($(obj));
+				$(obj).remove();
+			}
+		});
+	})
+	
+	$("#btnSave").on("click",function(){
+		$("#btnSave").attr('disabled', 'disabled');
+		var _entity ={};
+		var _arr =[];
+		var verifyValue = $("input[name=verify]:checked").val();
+		if(typeof(verifyValue) != "undefined" && verifyValue == 1 ){
+
+			$.each($('.sampleInfo:visible'),function(index,obj){
+				var data={};
+				var record ={};
+				record.clinicalJudgment = $("#clinicalJudgment").val();
+				record.verify = verifyValue;
+				//record.locusType=$("#locusType").val(); 默认验证位点
+				record.technicalFamilyGroupId=$("#technicalFamilyGroupId").val();
+				record.sourceRef=$("#sourceRef").val();
+				record.mutationObjectId=$("#mutationObjectId").val();
+				var method=$(obj).prevAll().find("select[name=verifyMethod]").val();
+				if(method!=undefined){
+					record.verifyMethod=method;
+				}
+				var _obj = $(obj).find("input[name=familyRelation]:checked");
+				var samples =[];
+				$.each(_obj,function(i,o){
+					var sam ={};
+					if($(o).next()!=undefined){
+						sam.id=$(o).next().val();
+					}
+					sam.familyRelation=$(o).val();
+					samples.push(sam);
+				});
+				data.record=record;
+				data.samples=samples;
+				_arr.push(data);
+				
+			})
+		}else{
+			var data={};
+			var record ={};
+			record.clinicalJudgment = $("#clinicalJudgment").val();
+			record.verify = verifyValue;
+			record.locusType=$("#locusType").val();
+			record.technicalFamilyGroupId=$("#technicalFamilyGroupId").val();
+			record.sourceRef=$("#sourceRef").val();
+			record.mutationObjectId=$("#mutationObjectId").val();
+			data.record=record;
+			data.samples=[];
+			_arr.push(data);
+		}
+		_entity.list=_arr;
+		console.info(_entity);
+		
+		 $.ajax({
+			type : "POST",
+			url :"${base}/testing/collection.jsp",
+			data: JSON.stringify(_entity),
+			contentType:"application/json",
+			dataType : "json",
+			success : function(data) {
+				$('#familyModal').modal('hide');
+				//document.location.reload();
+				$('#collectionCount').html(parseInt($('#collectionCount').html()) + 1);
+				var targetId = $("#mutationObjectId").val();
+				$('.'+targetId).attr('src',PATH + "/static/system/images/collection2.png");
+				$("#btnSave").removeAttr("disabled");
+			}
+		
+		});  
+	});
+
+	var addVerifyTemp = $("#addVerifyTemp").html();
+	$("#verifyRows").on("click", ".add", function () {
+		$("#verifyRows").append(addVerifyTemp);
+		setIndex();
+	}).on("click", ".remove", function () {
+		$(this).parent().parent().remove();
+		setIndex();
+	});
+
+	function setIndex() {
+		$('#verifyRows tr').each(function (i, v) {
+			$(this).find(".sampleCode").attr('name', 'textsForList[' + i + '].sampleCode');
+			$(this).find(".dataCode").attr('name', 'textsForList[' + i + '].dataCode');
+			$(this).find(".clinicalJudgment").attr('name', 'textsForList[' + i + '].clinicalJudgment');
+			$(this).find(".chrom").attr('name', 'textsForList[' + i + '].chrom');
+			$(this).find(".startLocation").attr('name', 'textsForList[' + i + '].startLocation');
+			$(this).find(".endLocation").attr('name', 'textsForList[' + i + '].endLocation');
+			$(this).find(".gene").attr('name', 'textsForList[' + i + '].gene');
+			$(this).find(".nucleotide").attr('name', 'textsForList[' + i + '].nucleotide');
+			$(this).find(".aminoAcid").attr('name', 'textsForList[' + i + '].aminoAcid');
+			$(this).find(".pure").attr('name', 'textsForList[' + i + '].pure');
+			$(this).find(".verifyMethod").attr('name', 'textsForList[' + i + '].verifyMethod');
+			$(this).find(".familyRelation").attr('name', 'textsForList[' + i + '].familyRelation');
+			$(this).find(".sampleId").attr('name', 'textsForList[' + i + '].sampleId');
+		});
+	}
+	
+	var statusArray =[4,7];
+	//定时检测此任务是否已在另外一个页面处理
+	/* var refreshStatus = function()
+    {
+        $.get('${base}/testing/getTaskByFamilyId.do',{ analysisSampleId: analysisSampleId }, function(monitor)
+        {
+            var monitor = monitor || false;
+
+            if (!monitor)
+            {
+                return;
+            }
+            console.info(monitor);
+            console.info($.inArray(monitor.status,statusArray));
+            
+           if($.inArray(monitor.status,statusArray)>=0){
+           	window.parent.location.href="${base}/testing/technicalanaly.do";
+           }
+            
+            
+            
+        });
+    }
+
+    refreshStatus();
+    setInterval(refreshStatus, 3000); */
+
+	
+})
+
+function addValid(familyAnalysisId) {
+	console.log(familyAnalysisId);
+	$('#addVerModal').modal({
+		width: '1250px'
+	});
+}
+//复核前 保存验证数据
+$("#addVerBtnSave").click(function () {
+	var flag = true;
+	var checknull = $(".checknull:visible");
+	$.each(checknull, function (index, check) {//判断必填
+		if ($(check).val() == null || $(check).val() == "") {
+			parent.layer.alert('请输入必填项', {
+				title: "提示"
+			});
+			$(check).addClass('addEroBorder');
+			flag = false;
+			return false;
+		}
+		else {
+			if ($(check).hasClass('addEroBorder')) {
+				$(check).removeClass('addEroBorder');
+			}
+		}
+	})
+	if (flag) {
+		$.ajax({
+			type: "POST",
+			url: "${base}/testing/saveAddVerify.do",
+			data: $("#addVer_form").serialize(),
+			dataType: "json",
+			async: false,
+			success: function (data) {
+				$('#addVerModal').modal('hide');
+			},
+			error: function () {
+				console.log("fail~~~");
+			}
+		});
+	}
+});
+
+function mutationCollection(id, obj) {
+	$("#mutationObjectId").val(id);
+	var ifCollect;
+	if (PATH + "/static/system/images/collection2.png" == $(obj).attr('src')) {
+		ifCollect = 0;
+	} else {
+		ifCollect = 1;
+	}
+	if (1 == ifCollect) {  //shoucang
+		$('#familyModal').modal('show');
+	} else {
+		$.ajax({
+			type : "POST",
+			url :"${base}/testing/cancelCollection.do",
+			data: {
+				mutationId:id,
+				ifCollection:ifCollect
+			},
+			dataType : "json",
+			success : function(data) {
+				$(obj).attr('src', PATH + "/static/system/images/collection.png");
+				$("."+id).prop('src',PATH + "/static/system/images/collection.png");
+				$('#collectionCount').html(parseInt($('#collectionCount').html()) - 1);
+			}
+		});
+	}
+}
+
+
+
+function showLoading() {
+	console.log(1);
+	var loadindex = parent.layer.load();
+}
+
+function getIgv(location,mongoId){
+	
+	var url = 'http://60.205.205.23:55000/pages/index.html';
+	
+	var json = {};
+	var family=[];
+	json.Location = location;
+	$.ajax({
+		type : "GET",
+		url : PATH + "/testing/getFamilyAnnotate.jsp",
+		data : {
+			mongoId : mongoId
+		},
+		dataType : "json",
+		success : function(data) {
+			$.each(data,function(i,o){
+				var d =  {};
+				d.sampleNum = o.dataCode;
+				d.BAM_url = o.bamBam;
+				d.VCF_url = o.vcfDmdexon;
+				family.push(d)
+	
+})
+		
+json.IGV = family;
+			
+			window.open(url+"?data="+JSON.stringify(json),"_blank");
+
+		}
+
+	})
+	
+}
+
+function add(){
+  var addTemp = $("#addTemp").html();
+  $('#addObject').append(addTemp);
+}
+function deleteObj(obj){
+ 	$(obj).parent().parent().remove();
+}
+
+
+
+
+</script>
+<script src="${system_js}/analysis/analysis.js"></script>
+<script src="${system_js}/analysis/mutation.js"></script>
+</html>
+

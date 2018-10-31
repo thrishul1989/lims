@@ -1,0 +1,386 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>试剂盒管理</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/bootstrap-select.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<style>
+button.btn.btn-default.dropdown-toggle {
+	background-color: white;
+	color: inherit;
+	border-color: #e5e6e7;
+}
+
+.error {
+	color: red;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">试剂盒</a></li>
+
+							<li class="active"><strong class="toggle-title">新增试剂盒</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5 class="toggle-title">新增试剂盒</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="reagentKitForm" class="form-horizontal m-t" action=""
+							method="post" enctype='application/json'>
+							<input type="hidden" name="id" id="id"
+								value="${(reagentKit.id)!?html}" /> <input type="hidden"
+								id="createTime" name="createTime"
+								value="<#if reagentKit??><#if reagentKit.createTime??>${(reagentKit.createTime)!?string('yyyy-MM-dd')}</#if></#if>" />
+							<fieldset>
+								<div class="form-group">
+
+
+									<label class="col-sm-2 control-label control-required">试剂盒编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control " name="code" id="code"
+											value="${(reagentKit.code)!?html}" />
+									</div>
+
+									<label class="col-sm-2 control-label control-required">试剂盒名称：</label>
+
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="name" id="name"
+											value="${(reagentKit.name)!?html}" />
+									</div>
+
+								</div>
+
+								<div class="form-group">
+
+
+									<!-- 									<label class="col-sm-2 control-label control-required">反应数：</label> -->
+									<!-- 									<div class="col-sm-3"> -->
+									<!-- 										<input type="text" class="form-control" name="reaction" -->
+									<!-- 											id="reaction" value="${(reagentKit.reaction)!?html}" /> -->
+
+
+
+
+
+
+									<!-- 									</div> -->
+
+									<label class="col-sm-2 control-label control-required">类型：</label>
+
+									<div class="col-sm-3">
+										<select class="form-control" name="type" id="type"
+											onchange="sle()">
+											<option value="">请选择类型</option> <@dict_entries
+											category="REAGENT_KIT_TYPE"> <#if entries??> <#list entries
+											as entry>
+
+											<option value="${entry.value!}"<#if
+												reagentKit.type??><#if entry.value==reagentKit.type
+												>selected</#if></#if> >${entry.text!?html}</option> </#list> </#if>
+											</@dict_entries>
+										</select>
+
+									</div>
+
+
+
+
+
+								</div>
+
+								<div class="form-group">
+
+
+									<label class="col-sm-2 control-label control-required">适用任务：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="task"
+											class="selectpicker show-tick form-control" multiple
+											data-live-search="false" id="task"> <#if
+											task?has_content> <#list task as record>
+
+											<option value="${record.id!}">${record.name!?html}</option>
+											</#list> </#if>
+
+										</select>
+									</div>
+
+
+									<span style="display: none" id="ifprivate"> <label
+										class="col-sm-2 control-label">试剂：</label>
+										<div class="col-sm-3">
+											<div class="form-control" id="reagent" placeholder="请选择相关试剂"></div>
+										</div>
+									</span>
+
+
+
+
+								</div>
+
+
+
+
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2" style="margin-top: 10px;">
+
+										<button type="submit" class="btn btn-primary">保存</button>
+										<button class="btn btn-primary" type="button"
+											onclick="history.go(-1)">返回</button>
+
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+
+<script src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script src="${system_js}/bootstrap.min.js?v=3.3.6"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script src="${system_js}/bootstrap-select.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/system.js?v=1.0.0"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+
+
+<script>
+
+$().ready(function () {
+	<#if reagentKit.id??>
+	$('.toggle-title').empty().append('修改试剂盒');
+	</#if>
+
+    $("#reagentKitForm").validate({
+    	
+    	submitHandler: function(form) 
+ 	   {      
+    		
+    		var reagentIds=[];
+    			var reagentList=$('#reagent').magicSuggest().getSelection();
+    			if(reagentList.length==0&&$("#type").val()==2){
+    				parent.layer.alert('请输入关联试剂！',{title:"提示"});
+    				return false;
+    			}
+    			$.each(reagentList,function(index,obj){
+    				reagentIds.push(obj.id);
+    			})
+    			
+    			if($("#task").val()==null){
+    				parent.layer.alert('请输入关联任务！',{title:"提示"});
+    				return false;
+    			}
+    			
+    			
+ 		window.location.href = "${base}/reagentKit/reagentKitCreat.do?id="+$("#id").val()+"&name="+ $("#name").val()+
+ 				"&code="+$("#code").val()+"&type="+$("#type").val()+"&taskIds="+$("#task").val()+
+ 				"&unit="+$("#unit").val()+"&reagentIds="+reagentIds+"&createTime="+$("#createTime").val()
+ 				//+"&reaction="+$("#reaction").val()
+ 	   },
+ 	   
+ 	   
+        rules: {
+        	code:  {
+        		required:true,
+        		maxlength: 30,
+        		remote: {
+        		    url: "${base}/reagentKit/validate.do",     //后台处理程序
+        		    type: "post",               //数据发送方式
+        		    dataType: "json",           //接受数据格式   
+        		    data: {                     //要传递的数据
+        		        code: function() {
+        		            return $("#code").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+        	},
+        	name: {
+        		required:true,
+        		maxlength: 50,
+        		remote: {
+        		    url: "${base}/reagentKit/validate.do",     //后台处理程序
+        		    type: "post",               //数据发送方式
+        		    dataType: "json",           //接受数据格式   
+        		    data: {                     //要传递的数据
+        		        name: function() {
+        		            return $("#name").val();
+        		        },
+        		        id:function() {
+        		            return $("#id").val();
+        		        }
+        		    }
+        		}
+        	},
+        	
+        	reaction: {
+        		required:true,
+        		maxlength: 32,
+        		number: "请输入合法的数字",
+        	},
+        	type: {
+        		required:true,
+        		maxlength: 248
+        	},
+        	unit: {
+        		required:true,
+        		maxlength: 248
+        	},
+        	task:{
+        		required:true,
+        	}
+           
+        },
+        messages: {
+        	code:  {
+                required: "请输入试剂盒编号",
+                maxlength: "编号不能超过30个字符",
+            	remote:"编号已经存在"
+            },
+            name:  {
+            	required: "请输入试剂盒名称",
+            	maxlength: "名称不能超过50个字符",
+            	remote:"名称已经存在"
+            },
+            
+            reaction: {
+            	required: "请选择反应数"
+        	},
+        	type: {
+        		required: "请选择类型"
+        	},
+        	unit: {
+        		required: "请选择单位"
+        	},
+        	task:{
+        		required:"请选择适用任务",
+        	}
+           
+        }
+    });
+    
+  
+    
+
+
+ 
+            
+            
+            
+    
+	/***/
+    var s=	$('#reagent').magicSuggest({
+    	    width: 190,
+    	    highlight: true,
+        data:'${base}/reagent/reagentSelect.do?',
+        queryParam : "code",
+    	    method:'get',
+    	    allowFreeEntries:true,
+    	    resultAsString: true,
+    	    renderer: function(v){
+    	    
+    	    return '<div>' +
+    	        '<div >' +
+    	        
+    	            '<div style="padding-top: 10px;font-style:bold;font-size:120%;color:#333;float:left;margin-left:50px;font-weight:700;color:#676a6c">' + v.name + '</div>' +
+    	            '</div>' +
+    	        '<div style="clear:both;"></div>';
+    	    }
+    	});
+	
+    //为多选矿赋值
+    var reagentList=[];
+    <#if reagentKit.reagentKitReagentList?has_content>
+    <#list reagentKit.reagentKitReagentList as one>
+    var reagent={id:"${one.reagent.id}",name:"${one.reagent.name}",code:"${one.reagent.code}",abbr:"${one.reagent.abbr}",specification:"<#if one.reagent.specification??>${one.reagent.abbr}<#else></#if>"};
+    reagentList.push(reagent);
+
+    
+
+
+
+    </#list>
+    </#if>
+
+    $('#reagent').magicSuggest().setSelection(reagentList);
+    <#if reagentKit.type?has_content>
+    <#if reagentKit.type == "2">
+    $("#ifprivate").css("display",'block');
+    </#if>
+    </#if>
+	
+	
+});   	
+
+
+
+function sle(){
+	if($("#type").val()==2){
+		$("#ifprivate").css("display",'block');
+	}
+	else{
+		$("#ifprivate").css("display",'none');
+	}
+}
+</script>
+
+
+
+<script>
+
+    $('#task').selectpicker({noneSelectedText:'请选择'});
+    var list=[];
+    <#if reagentKit.kitTaskList?has_content>
+    <#list reagentKit.kitTaskList as record>
+    <#if record.taskConfigId??> list.push("${record.taskConfigId}");</#if>
+
+    </#list>
+    </#if>
+
+
+    $('#task').selectpicker('val', list);
+    
+ 
+    
+
+</script>
+</html>

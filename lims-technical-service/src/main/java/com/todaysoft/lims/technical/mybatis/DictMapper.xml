@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.DictMapper">
+	<resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.Dict">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+		<result column="CATEGORY" property="category" jdbcType="VARCHAR" />
+		<result column="DICT_TEXT" property="dictText" jdbcType="VARCHAR" />
+		<result column="DICT_VALUE" property="dictValue" jdbcType="VARCHAR" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+		<result column="EDITABLE" property="editable" jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, PARENT_ID, CATEGORY, DICT_TEXT, DICT_VALUE, SORT,
+		EDITABLE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_DICT
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		LIMS_DICT
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.Dict">
+		insert into LIMS_DICT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="parentId != null">
+				PARENT_ID,
+			</if>
+			<if test="category != null">
+				CATEGORY,
+			</if>
+			<if test="dictText != null">
+				DICT_TEXT,
+			</if>
+			<if test="dictValue != null">
+				DICT_VALUE,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+			<if test="editable != null">
+				EDITABLE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="category != null">
+				#{category,jdbcType=VARCHAR},
+			</if>
+			<if test="dictText != null">
+				#{dictText,jdbcType=VARCHAR},
+			</if>
+			<if test="dictValue != null">
+				#{dictValue,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="editable != null">
+				#{editable,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="com.todaysoft.lims.technical.mybatis.entity.Dict">
+		update LIMS_DICT
+		<set>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="category != null">
+				CATEGORY = #{category,jdbcType=VARCHAR},
+			</if>
+			<if test="dictText != null">
+				DICT_TEXT = #{dictText,jdbcType=VARCHAR},
+			</if>
+			<if test="dictValue != null">
+				DICT_VALUE = #{dictValue,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="editable != null">
+				EDITABLE = #{editable,jdbcType=BIT},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="search" resultMap="BaseResultMap"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Dict">
+		SELECT t.* FROM LIMS_DICT t
+		where t.PARENT_ID is not null
+		<if test="category != null and category != ''">
+			AND t.CATEGORY = #{category}
+		</if>
+		<if test="dictText != null and dictText != ''">
+			AND t.DICT_TEXT = #{dictText}
+		</if>
+		<if test="dictValue != null and dictValue != ''">
+			AND t.DICT_VALUE = #{dictValue}
+		</if>
+	</select>
+
+	<select id="selectByText" resultMap="BaseResultMap"
+		parameterType="com.todaysoft.lims.technical.mybatis.entity.Dict">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_DICT
+		where CATEGORY = #{category,jdbcType=VARCHAR} AND
+		DICT_TEXT =
+		#{dictText,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getEntriesFromDatabase" resultMap="BaseResultMap"
+		parameterType="string">
+		select
+		<include refid="Base_Column_List" />
+		from LIMS_DICT where CATEGORY= #{0} and PARENT_ID is not null order by SORT asc
+	</select>
+
+</mapper>

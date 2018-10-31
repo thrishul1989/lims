@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.ngs.mybatis.NgsSequecingLanMapper">
+	<resultMap id="BaseResultMap" type="com.todaysoft.lims.ngs.model.NgsSequecingLan">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="MACHINE_ID" property="machineId" jdbcType="VARCHAR" />
+		<result column="LAN_CODE" property="lanCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getByMachineCode" resultMap="BaseResultMap"
+		parameterType="string">
+
+		select L.ID,L.MACHINE_ID,L.LAN_CODE from NGS_SEQUECING_LAN L left join
+		NGS_SEQUECING_MACHINE M ON M.ID = L.MACHINE_ID
+		where M.SEQUECING_MACHINE_CODE = #{0}
+	</select>
+
+
+	<delete id="deleteByMachine" parameterType="string">
+		delete from
+		NGS_SEQUECING_LAN where MACHINE_ID = #{0}
+	</delete>
+
+	<insert id="insert" parameterType="com.todaysoft.lims.ngs.model.NgsSequecingLan">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+
+		insert into NGS_SEQUECING_LAN
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="lanCode != null">
+				LAN_CODE,
+			</if>
+			<if test="machineId != null">
+				MACHINE_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="lanCode != null">
+				#{lanCode,jdbcType=VARCHAR},
+			</if>
+			<if test="machineId != null">
+				#{machineId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

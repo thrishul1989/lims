@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.technical.mybatis.TestingScheduleHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleHistory" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SCHEDULE_ID" property="scheduleId" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="TASK_TIMESTAMP" property="taskTimestamp" jdbcType="TIMESTAMP" />
+    <result column="PAUSE_TIME" property="pauseTime" jdbcType="TIMESTAMP" />
+    <result column="PAUSE_NAME" property="pauseName" jdbcType="VARCHAR" />
+    <result column="RESTART_TIME" property="restartTime" jdbcType="TIMESTAMP" />
+    <result column="RESTART_NAME" property="restartName" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="TASK_REFER" property="taskRefer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SCHEDULE_ID, TASK_ID, TASK_TIMESTAMP, PAUSE_TIME, PAUSE_NAME, RESTART_TIME, RESTART_NAME, 
+    REMARK, TASK_REFER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_TESTING_SCHEDULE_HISTORY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getByTaskId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from LIMS_TESTING_SCHEDULE_HISTORY
+    where TASK_ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_TESTING_SCHEDULE_HISTORY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleHistory" >
+  <selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+    insert into LIMS_TESTING_SCHEDULE_HISTORY (ID, SCHEDULE_ID, TASK_ID, 
+      TASK_TIMESTAMP, PAUSE_TIME, PAUSE_NAME, 
+      RESTART_TIME, RESTART_NAME, REMARK, 
+      TASK_REFER)
+    values (#{id,jdbcType=VARCHAR}, #{scheduleId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{taskTimestamp,jdbcType=TIMESTAMP}, #{pauseTime,jdbcType=TIMESTAMP}, #{pauseName,jdbcType=VARCHAR}, 
+      #{restartTime,jdbcType=TIMESTAMP}, #{restartName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{taskRefer,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleHistory" >
+  <selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+    insert into LIMS_TESTING_SCHEDULE_HISTORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="scheduleId != null" >
+        SCHEDULE_ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="taskTimestamp != null" >
+        TASK_TIMESTAMP,
+      </if>
+      <if test="pauseTime != null" >
+        PAUSE_TIME,
+      </if>
+      <if test="pauseName != null" >
+        PAUSE_NAME,
+      </if>
+      <if test="restartTime != null" >
+        RESTART_TIME,
+      </if>
+      <if test="restartName != null" >
+        RESTART_NAME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="taskRefer != null" >
+        TASK_REFER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleId != null" >
+        #{scheduleId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTimestamp != null" >
+        #{taskTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pauseTime != null" >
+        #{pauseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pauseName != null" >
+        #{pauseName,jdbcType=VARCHAR},
+      </if>
+      <if test="restartTime != null" >
+        #{restartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="restartName != null" >
+        #{restartName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="taskRefer != null" >
+        #{taskRefer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleHistory" >
+    update LIMS_TESTING_SCHEDULE_HISTORY
+    <set >
+      <if test="scheduleId != null" >
+        SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTimestamp != null" >
+        TASK_TIMESTAMP = #{taskTimestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pauseTime != null" >
+        PAUSE_TIME = #{pauseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pauseName != null" >
+        PAUSE_NAME = #{pauseName,jdbcType=VARCHAR},
+      </if>
+      <if test="restartTime != null" >
+        RESTART_TIME = #{restartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="restartName != null" >
+        RESTART_NAME = #{restartName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="taskRefer != null" >
+        TASK_REFER = #{taskRefer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.technical.mybatis.entity.TestingScheduleHistory" >
+    update LIMS_TESTING_SCHEDULE_HISTORY
+    set SCHEDULE_ID = #{scheduleId,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      TASK_TIMESTAMP = #{taskTimestamp,jdbcType=TIMESTAMP},
+      PAUSE_TIME = #{pauseTime,jdbcType=TIMESTAMP},
+      PAUSE_NAME = #{pauseName,jdbcType=VARCHAR},
+      RESTART_TIME = #{restartTime,jdbcType=TIMESTAMP},
+      RESTART_NAME = #{restartName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      TASK_REFER = #{taskRefer,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

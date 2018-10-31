@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>容器管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/pagination/jquery.pagination.js"></script>
+<script type="text/javascript">
+function goback(){
+	window.location.href='${base}/equipment/storeContainer_list.do';
+}
+
+$(function(){
+	$("input[name='allChecked']").click(function() {
+		if ($(this).is(":checked")) {
+			$(".choose").prop("checked",true);
+		} else {
+			$(".choose").prop("checked",false);
+		} 
+	});
+	
+	
+
+	
+		
+		
+	
+	
+	
+});
+
+function cleanLocation(){
+	
+	var ids = $("#id").val();
+	
+	var layerObject = parent.parent.layer;
+	var loadindex = layerObject.load();
+	$.ajax({
+	  url: "${base}/equipment/cleanContainerLocation.do",
+	  data: {
+		  id:ids
+	  },
+	 // cache: false,
+	 // async: false,
+	  type:'POST',
+	  dataType:'json',
+	  success: function(data){
+		  layerObject.close(loadindex);
+		  window.location.href='${base}/equipment/viewStoreContainer.do?id='+$("#id").val()
+				  +"&locationCode"+$("#locationCode").val()
+				  +"&state"+$("#state").val();
+		  parent.layer.alert('清除成功！',{title:"提示"});
+	  },
+	  error:function(){
+		  layerObject.close(loadindex);
+		  parent.layer.alert('清除失败！',{title:"提示"});
+	  }
+			
+	});
+}
+
+
+
+
+function cleanOneLocation(locationIds){
+	
+	var layerObject = parent.parent.layer;
+	var loadindex = layerObject.load();
+	$.ajax({
+	  url: "${base}/equipment/cleanOneContainerLocation.do",
+	  data: {
+		  id:locationIds
+	  },
+	  //cache: false,
+	  //async: false,
+	  type:'POST',
+	  dataType:'json',
+	  success: function(data){
+		  layerObject.close(loadindex);
+		  window.location.href='${base}/equipment/viewStoreContainer.do?id='+$("#id").val()
+				  +"&locationCode"+$("#locationCode").val()
+				  +"&state"+$("#state").val();
+		  parent.layer.alert('清除成功！',{title:"提示"});
+		  
+	  },
+	  error:function(){
+		  layerObject.close(loadindex);
+		  parent.layer.alert('清除失败！',{title:"提示"});
+	  }
+			
+	});
+	
+	
+}
+</script>
+<style>
+textarea{
+	margin: 0px; 
+	width: 1100px; 
+	height: 80px;
+	border: 1px solid #e5e6e7;
+	padding: 5px 0px 0px 5px;
+}
+
+</style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title" style="border-color: white">
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="javascript:goback()">容器管理</a>
+                            </li>
+                            <li class="active">
+                                <strong>容器存储位置详情</strong>
+                            </li>
+                        </ol>
+                    </div>
+                   
+                </div>
+                
+                 
+                  <div class="ibox" style="margin-top:-12px">
+					<div class="ibox-title">
+						<h5>存储容器详情</h5>
+						 <div style="float:right;margin-top:-7px">
+						 <button class="btn btn-sm btn-success goback " type="button" data-url="${base}/equipment/storeContainer_list.do">返回</button> 
+						</div>
+					</div>
+					<div class="ibox-content">
+						<form id="" class="form-horizontal m-t"
+							action="" method="post" enctype='application/json'>
+						      <input type="hidden" name="id" id="id" value="${(container.id)!?html}" />
+							
+								<div class="form-group">
+									<label class="col-sm-1 control-label">容器编号：</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="code"
+											id="code" value=" ${(container.code)!?html} " readonly="readonly" />
+									</div>
+									<label class="col-sm-1 control-label">容器名称：</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="name"
+											id="name" value="${(container.name)!?html}"  readonly="readonly" />
+									</div>
+									
+								
+									<label class="col-sm-1 control-label">容器类别：</label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" name="containerType"
+											id="containerType" value=" <@dict_entry_text category='STORAGE_DEVICE_TYPE' 
+											value=container.deviceType />"  readonly="readonly" />
+									
+									</div>
+									
+								</div>
+								<div class="form-group">
+								
+								   <label class="col-sm-1 control-label">存储类型：</label>
+									<div class="col-sm-2">
+											<input type="text" class="form-control" name="storeType"
+											id="storeType" value=" <@dict_entry_text category='STORAGE_TYPE' 
+											value=container.storageType />"  readonly="readonly" />
+									
+									</div>
+									
+									<label class="col-sm-1 control-label">样本类型：</label>
+									<div class="col-sm-2">
+											<input type="text" class="form-control" name="sampleType"
+											id="sampleType" value="<@bcm_samples_text  id=container.sampleType />"  readonly="readonly" />
+									
+									</div>
+								
+								
+									
+									<label class="col-sm-1 control-label">容器规格：</label>
+									<div class="col-sm-1" style="width: 119px">
+									<input type="text" class="form-control" name="frame" id="frame" value="${(container.frame)!?html}"  readonly="readonly" />
+									</div>
+									<label class="control-label" style="float: left">架</label>
+									<div class="col-sm-1" style="width: 119px">
+									<input type="text" class="form-control" name="box" id="box" value="${(container.box)!?html}"   readonly="readonly"/>
+									</div>
+									<label class="control-label" style="float: left">盒</label>
+									
+									<div class="col-sm-1" style="width: 119px">
+									<input type="text" class="form-control" name="site" id="site" value="${(container.site)!?html}"  readonly="readonly" /> 
+									</div>
+									<label class="control-label" style="float: left">*</label>
+									<div class="col-sm-1" style="width: 119px">
+									<input type="text" class="form-control" name="cell" id="cell" value="${(container.cell)!?html}"  readonly="readonly" />
+									</div>
+									<label class="control-label" style="float: left">(高*宽)位</label>
+									
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-1 control-label">备注：</label>
+									<div class="col-sm-3">
+										<textarea id="remark" name="remark" placeholder="输入备注信息"   readonly="readonly">${(container.remark)!?html}</textarea>
+									</div>
+								</div>
+							
+						</form>
+						
+						
+						<!-- <div class="ibox-title">
+							<h5>存储容器位置详情</h5>
+						</div> -->
+						<div class="ibox-content">
+						<form id="search_from" 
+							 action="${base}/equipment/viewStoreContainer.do" method="post" class="search-form">
+						<!-- <input type="hidden" name="id" id="id" value="${(container.id)!?html}" /> -->
+						<div class="row m-b-xs">
+                          
+								<div class="col-sm-2">
+								<input type="text" class="form-control" name="code"
+											id="code" value="${searcher.code!?html}"  placeholder="请输入查询位置编号 " />
+								</div>
+							
+								<div class="col-sm-2">
+								<div class="form-group">
+											
+									<select class="form-control" name="state" id="state"  data-value=${(searcher.state)!}>
+                                        <option value="">---请选择位置状态---</option>
+                                     <!--    <@dict_entries category="CONTAINER_LOCATION_STATE">
+                                        <#if entries??>
+                                        <#list entries as entry>
+                                        <option value="${entry.value!}">${entry.text!?html}</option>
+                                        </#list>
+                                        </#if>
+                                        </@dict_entries> -->
+                                         <option value=1>未存储</option>
+                                         <option value=2>已存储</option>
+                                    </select>
+									</div>
+								</div>
+								
+								<div class="col-sm-3">
+									<div class="form-group">
+										<button type="submit" class="btn btn-sm btn-success">
+											<i class="fa fa-search"></i> 查询
+										</button>
+									 
+									</div>
+								</div>
+								
+								<div class="col-sm-5">
+									 <a href="javascript:cleanLocation()" id="batchCleanLocation"
+										style="float: right; margin-top: 5px; margin-right: 50px"
+										class="btn btn-sm btn-success layer-confirm " data-confirm-message="确定全部清空该容器位置吗?">
+										<i class="fa fa-recycle"></i> 全部清空</a>
+								</div>
+						
+						</div>
+						
+						<input type="hidden" name="id" value="${storeId}">
+						
+                        <table class="table table-striped table-bordered table-hover">
+                             <thead>
+									<tr>
+										
+										<th><input type="checkbox" name="allChecked" id="allChecked"
+										value="" /></th>
+										<th>序号</th>
+										<th>存储位置编号</th>
+										<th>是否已用</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+                                 <tbody>
+	                                <#if pagination??>
+	                                <#if pagination.records?has_content> <#list pagination.records as record>
+	                                <tr>
+	                                    
+	                                    <td><input type="checkbox" name="choose${(record.id)!?html}" class="choose"
+											value="${(record.id)!?html}" /><br></td>
+										<td>${record_index + 1}</td>
+	                                    <td>${record.code!?html}</td>
+	                                    <td><#if record.state ==1>未存储<#else>已占用</#if></td>
+	                                    <td>
+	                                     	<#if record.state != 1>
+                                            <a href="#"
+												onclick="cleanOneLocation('${(record.id)!?html}')"
+												class="btn btn-sm btn-success">  <i class="fa fa-minus-circle"></i>  清空
+											</a>
+                                            <#else>
+                                            <a href="#" disabled="true"
+												class="btn btn-sm btn-success">  <i class="fa fa-minus-circle"></i>  清空
+											</a>
+                                            </#if>
+	                                    
+	                                    
+		                                    
+										</td>
+	                                	</tr>
+	                                </#list>
+	                                </#if>
+	                              </#if> 
+                              	 </tbody>
+                         </table>
+                        
+                         </form>
+                        <#include "../inc/pagination.html" />
+						
+						</div>
+						
+						
+					</div>
+				  </div>  
+                  
+                </div><!-- col12 -->
+            </div><!-- row -->
+        </div>
+  
+      
+</body>
+</html>
+

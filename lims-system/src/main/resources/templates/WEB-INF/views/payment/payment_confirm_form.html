@@ -1,0 +1,457 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>APP付款确认表单</title>
+<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/fileinput.min.css" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${system_css}/product.css" rel="stylesheet">
+
+
+
+<script type="text/javascript" src="${system_js}/jquery.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/bootstrap-suggest.js"></script>
+<script type="text/javascript" src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script src="${plugins}/laydate/laydate.js"></script> 
+
+
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+
+
+
+<script>
+
+
+var base = "${base}";
+var order = ${orderJson};
+var orderPos  ;
+var orderTrans  ;
+var instrumentImgFile =[];
+
+<#if orderPosJson??>
+orderPos = ${orderPosJson};
+var familyFiguresInit = orderPos.instrumentImgShow;
+var familyConfig=[];
+if(familyFiguresInit!=undefined){
+	if(familyFiguresInit.indexOf(",")!=0){
+		var initConsentPath = familyFiguresInit.split(",");
+		var trueConsentPath=orderPos.instrumentImg.split(",")
+		var picInit =[];
+		for(var i=0;i<initConsentPath.length;i++){
+			if("" != initConsentPath[i]){
+				picInit.push("<img  src='"+initConsentPath[i]+"' class='file-preview-image' style='max-width:700px;height:150px;'/><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+trueConsentPath[i]+"'>下载</a>")
+				familyConfig.push({caption:trueConsentPath[i],width:'120px',key:trueConsentPath[i]});
+				instrumentImgFile.push(trueConsentPath[i]);
+			}
+			
+		}
+		picInit.join(",")
+	}
+}
+</#if>
+
+<#if orderTransJson??>
+orderTrans = ${orderTransJson};
+var familyFiguresInit = orderTrans.instrumentImgShow;
+var familyConfig2=[];
+if(familyFiguresInit!=undefined){
+	if(familyFiguresInit.indexOf(",")!=0){
+		var initConsentPath = familyFiguresInit.split(",");
+		var trueConsentPath= orderTrans.instrumentImg.split(",")
+		var picInit2 =[];
+		for(var i=0;i<initConsentPath.length;i++){
+			if("" != initConsentPath[i]){
+				picInit2.push("<img  src='"+initConsentPath[i]+"' class='file-preview-image' style='max-width:700px;height:150px;'/><a style='display:flex' href='"+base+"/order/getSrcByPath.do?fileName="+trueConsentPath[i]+"'>下载</a>")
+				familyConfig2.push({caption:trueConsentPath[i],width:'120px',key:trueConsentPath[i]});
+				instrumentImgFile.push(trueConsentPath[i]);
+			}
+			
+		}
+		picInit2.join(",")
+	}
+}
+</#if>
+
+
+$(function() {
+	if(order && order.payType=="3" && orderPos){
+		$("#instrumentImg").fileinput({
+			language: 'zh', // 设置语言
+	        uploadUrl: base+'/order/upload.do', 
+	        allowedFileExtensions : ['jpg', 'png','gif'],
+	        maxFileSize: 5000,
+	        showUpload: false, // 是否显示上传按钮
+	        showCaption: false,// 是否显示标题
+	        showRemove:false,
+	        initialPreview:picInit ,
+	        initialPreviewConfig:familyConfig ,
+	        
+		});
+		
+		$('.btn.btn-primary.btn-file').css('display','none')
+	}else if(order && order.payType=="4" && orderTrans){
+		
+		$("#instrumentImg").fileinput({
+			language: 'zh', // 设置语言
+	        uploadUrl: base+'/order/upload.do', 
+	        allowedFileExtensions : ['jpg', 'png','gif'],
+	        maxFileSize: 5000,
+	        showUpload: true, // 是否显示上传按钮
+	        showCaption: false,// 是否显示标题
+	        showRemove:false,
+	        maxFileCount: 2,
+	        
+	        deleteUrl:base+'/order/deletePic.do',
+	        validateInitialCount:true,
+	        initialPreview:picInit2 ,
+	        initialPreviewConfig:familyConfig2 
+	        
+		}).on("fileuploaded", function(event, data) {
+	    	if(data.response.fileList.length==1){
+	    		instrumentImgFile.push(data.response.fileList[0])
+	    	}
+	    	else{
+	    		$.each(data.response.fileList,function(index,obj){
+	    			instrumentImgFile.push(obj)
+	    		})
+	    	}
+	    }).on('filedeleted', function(event, key) { 
+	    	instrumentImgFile.remove(key);
+	    }) ;
+		
+	} else{
+		showTip("没有POS机或者转账付款信息，请查看APP端具有POS数据！","错误提示");
+		window.location.href="/payment/appPaymentConfirm.do?status=2";
+	} 
+	
+	
+	
+	
+$("#confirmForm").validate({
+		
+		submitHandler:function(form){
+			
+			$("#createButton").attr('disabled', 'disabled');
+			$("#createButton").val('确认中');
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			
+			$.ajax({
+	            type: "post",
+	            url: base+"/payment/confirm.do",
+	            data:{
+	            	orderId:$("#orderId").val(),
+	            	posOrTransId:$("#posOrTransId").val(),
+	            	transferNo:$("#transferNo").val(),
+	            	paymenter:$("#paymenter").val(),
+	            	paymentTime:$("#paymentTime").val(),
+	            	checkAmount:$("#checkAmount").val(),
+	            	instrumentImg:instrumentImgFile.join(","),
+	            	remark:$("#remark").val(),
+	            	payType:$("#payType").val(),
+	            	posNo:$("#posNo").val(),
+	            	receiptRolls:$("#receiptRolls").val()
+	            },
+	            dataType: "json",
+	            success: function(data){
+	            	window.location.href=base+"/payment/appPaymentConfirm.do?status=2&pageNo="+${pageNo};
+	            	layerObject.close(loadindex);
+	            },
+	            error:function(){
+	            	layerObject.close(loadindex);
+	            	$("#createButton").removeAttr("disabled");
+	            	$("#createButton").val('确认');
+	            }
+	           
+	        });
+			
+			
+		},
+        rules: {
+        	paymentTime:{
+        		required:true,
+        	},
+        	checkAmount:{
+        		required:true,
+        		number:true,
+        		min:0
+        	},
+        	posNo:{
+        		required:true,
+        	}
+        	
+        	
+        },
+        messages: {
+        	
+        }
+    });
+	
+	
+
+}); 
+
+
+		    
+</script>
+<style>
+.file-drop-zone {
+	height: auto
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated ">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="" onclick="history.go(-1)">缴费业务</a></li>
+							<li class="active"><strong>付款确认</strong></li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>付款信息</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="confirmForm" class="form-horizontal m-t" action="" method="post" enctype='application/json'>
+							<#if orderPos??>
+						    <input type="hidden" name="posOrTransId" id="posOrTransId" value="${(orderPos.id)!?html}" /> 
+						    <#else>
+						    <input type="hidden" name="posOrTransId" id="posOrTransId"  value="${(orderTrans.id)!?html}" /> 
+						    </#if>
+							<input type="hidden" name="orderId" id="orderId"  value="${(order.id)!?html}" />
+							<fieldset>
+							<div class="form-group">
+									<label class="col-sm-2 control-label control-required">订单编号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="code"
+											id="code" value="${(order.code)!?html}" readonly="readonly" />
+									</div>
+							</div>
+							<div class="form-group">
+									
+									<label class="col-sm-2 control-label control-required">支付方式：</label>
+									
+									<div class="col-sm-3">
+											<select class="form-control" name="payType" id="payType"  disabled="disabled"
+											 data-value="${(order.payType)!?html}"  >
+											<option value="3">POS机支付</option>
+											<option value="4">转账支付</option>
+										</select>
+									</div>
+									
+								</div>
+								
+								<#if order.payType??>
+								<#if order.payType == "3" >  
+								
+								<div class="form-group hiddenArea">
+									
+									<label class="col-sm-2 control-label control-required">（交易）参考号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="posNo"
+												id="posNo" value="${(orderPos.posNo)!?html}"   />
+	                   				 </div>
+                    			</div>
+                    			<div class="form-group hiddenArea">
+                   			 		<label class="col-sm-2 control-label ">收据单号：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="receiptRolls"
+												id="receiptRolls" value="${(orderPos.receiptRolls)!?html}"  />
+                    				</div>
+									
+								</div>
+								
+								<#else>
+									<div class="form-group transArea">
+										
+										<label class="col-sm-2 control-label">转账卡号：</label>
+										<div class="col-sm-3">
+											<input type="text" class="form-control" name="transferNo"
+													id="transferNo" value="${(orderTrans.transferNo)!?html}"  />
+		                   				</div>
+	                    			</div>
+								
+								
+								</#if>
+								
+								</#if>
+								
+								<div class="form-group ">
+                   			 		<label class="col-sm-2 control-label control-required">应付款：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="realPrice"
+												id="realPrice" value="${(order.realPrice)!?html}" readonly="readonly" />
+                    				</div>
+									
+								</div>
+								
+								
+								
+									<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">减免申请：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" 
+												value="<#if (order.reduceAmount) gt 0 >是<#else>否 </#if> " readonly="readonly" />
+                    				</div>
+									
+								</div>
+								
+								<#if (order.reduceAmount) gt 0 >
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">减免状态：</label>
+									
+									<div class="col-sm-3">
+									
+									  	<#if order.orderReduce[0]??>
+                                 		<#if order.orderReduce[0].status == 0>审核中</#if>
+										<#if order.orderReduce[0].status == 1>审核通过</#if>
+										<#if order.orderReduce[0].status == 2>审核未通过</#if>
+                                 		</#if>
+                    				</div>
+									
+								</div>
+								
+								<#if order.orderReduce[0]??>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">申请减免：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" 
+												 value="<@amount_toyuan amount=order.orderReduce[0].applyAmount /> " readonly="readonly" />
+                    				</div>
+									
+								</div>
+								
+								
+							
+									
+									<#if order.orderReduce[0].status gt 0 >    
+									
+									<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">审批减免：</label>
+									
+									<div class="col-sm-3">
+									
+										<#if order.orderReduce[0].status == 1>
+											<input type="text" class="form-control" 
+												value=" <@amount_toyuan amount=order.orderReduce[0].checkAmount /> " readonly="readonly" /> </#if>
+										<#if order.orderReduce[0].status == 2>
+											<input type="text" class="form-control" 
+												value="0 " readonly="readonly" /> 
+										</#if>
+                                 		
+                    				</div>
+									
+									</div>
+									
+									</#if>
+									
+								</#if>
+								
+								</#if>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label ">付款人：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="paymenter"
+												id="paymenter" value="${(orderPos.name)!?html}"   />
+                    				</div>
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">缴费日期：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control laydate-icon " 
+												name="paymentTime" id="paymentTime" value="" readonly="readonly"
+												style="height: 34px"
+												onclick="laydate({istime: true, format: 'YYYY-MM-DD' ,max: laydate.now()})" />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label control-required">确认到账金额：</label>
+									
+									<div class="col-sm-3">
+									<input type="text" class="form-control" name="checkAmount"
+												id="checkAmount" value="" />
+                    				</div>
+									
+								</div>
+								
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label ">付款凭证：</label>
+									
+									<div class="col-sm-8">
+										<input id="instrumentImg" type="file" multiple
+											data-overwrite-initial="false" >
+									</div>
+                    				
+									
+								</div>
+								<div class="form-group">
+                   			 		<label class="col-sm-2 control-label">备注：</label>
+									
+									<div class="col-sm-3">
+									
+									 <textarea  class="form-control"name="remark" id="remark" style="width:1090px;height:100px;resize: none" ></textarea>
+									
+                    				</div>
+									
+								</div>
+								
+								
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+								
+										<button type="submit"   class="btn btn-primary" >确认</button>
+										<button class="btn btn-primary" type="button" onclick="history.go(-1)">返回</button>
+										
+									</div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+									<div class="col-sm-4 col-sm-offset-2"></div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+</body>
+</html>

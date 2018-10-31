@@ -1,0 +1,358 @@
+@charset "UTF-8";
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.mr-t1 {
+  margin-top: 1em;
+}
+
+.mr-b2 {
+  margin-bottom: 2em;
+}
+
+.preview-wrap {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.report-box {
+  margin: 0 auto;
+  width: 79.6875%;
+  min-width: 1100px;
+  max-width: 1440px;
+  border: 1px solid #c6c6c6;
+  background-color: white;
+  padding: 60px 58px;
+  text-align: left;
+  color: #333333;
+  font: normal 22px/30px "宋体";
+  word-break: break-all;
+}
+.report-box > .report-hd {
+  height: 124px;
+  border-bottom: 2px solid #0033cc;
+  position: relative;
+  margin: 0;
+}
+.report-box > .report-hd > .report-logo {
+  height: 100%;
+  line-height: 0;
+  display: inline-block;
+}
+.report-box > .report-hd > .report-logo > img {
+  height: 100%;
+  vertical-align: middle;
+}
+.report-box > .report-hd > .report-contact {
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 1;
+}
+.report-box > .report-hd > .report-contact .num {
+  font-size: 18px;
+  margin: 0 4px 10px auto;
+  color: blue;
+}
+.report-box > .report-hd > .report-contact .company {
+  font-size: 24px;
+  margin: 18px auto 10px;
+}
+.report-box > .report-hd > .report-contact .phone {
+  margin: 0 auto;
+  font-size: 22px;
+}
+.report-box > .report-hd > .report-contact .phone em {
+  font-style: normal;
+  color: red;
+}
+.report-box > .report-hd > .report-contact .er-code {
+  height: 80px;
+  width: 303px;
+  text-align: left;
+}
+.report-box > .report-hd > .report-contact .er-code > img {
+  height: 100%;
+  width: 100%;
+}
+
+.report-cot .report-title {
+  margin: 1em auto;
+  font-size: 32px;
+  line-height: 1;
+  text-align: center;
+  color: #0070c0;
+}
+.report-cot table {
+  border-collapse: collapse;
+}
+.report-cot img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+.report-cot .ntc {
+  color: red;
+  font-style: normal;
+}
+.report-cot .img-box {
+  margin: 1em 5px;
+}
+
+.summary-table-box {
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  padding: 1px 0;
+}
+
+.summary-table {
+  width: 100%;
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+}
+.summary-table th {
+  height: 34px;
+  vertical-align: middle;
+}
+
+.report-secondary-title {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.report-third-title {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.report-fourth-title {
+  font-size: 22px;
+  line-height: 1;
+  margin: 0.875em auto;
+}
+
+.result-box {
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  padding: 0 16px;
+  line-height: 120%;
+}
+.result-box > p {
+  margin: 0 auto;
+}
+.result-box.result-ntc {
+  background-color: #c7d9f1;
+}
+
+.gene-table-box {
+  margin-bottom: 1em;
+}
+
+.gene-table {
+  width: 100%;
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  word-break: break-all;
+}
+.gene-table th, .gene-table td {
+  text-align: center;
+  min-height: 24px;
+}
+.gene-table tbody td {
+  border-top: 1px dashed #333333;
+}
+.gene-table.appendix-table th {
+  padding: 1em;
+}
+.gene-table.appendix-table td {
+  padding: 1em;
+  text-align: left;
+}
+
+.remark-box {
+  font-size: 18px;
+  line-height: 1.3;
+}
+.remark-box > p {
+  margin: 0 auto;
+}
+
+.gene-table-box + .remark-box {
+  margin-top: -20px;
+}
+
+.result-txt {
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: justify;
+  word-break: break-all;
+}
+
+.second-txt {
+  font-size: 18px;
+}
+
+.result-txt.lv-1 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.result-txt.lv-2 {
+  margin-top: 1em;
+  margin-left: 2em;
+}
+
+.indent-2 {
+  text-indent: 2em;
+}
+
+.disease-table-box {
+  margin: 0.5em auto 0;
+}
+
+.disease-table {
+  width: 100%;
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  word-break: break-all;
+}
+.disease-table th {
+  text-align: center;
+  min-height: 30px;
+  vertical-align: middle;
+}
+.disease-table tbody td {
+  border-top: 1px solid #333333;
+  vertical-align: middle;
+  text-align: left;
+  min-height: 32px;
+}
+.disease-table tbody > tr > td[rowspan]:last-child {
+  text-align: center;
+}
+
+.declaration-box {
+  margin: 1em auto;
+  padding: 5px;
+  position: relative;
+  border-top: 2px solid #333333;
+  border-bottom: 4px solid #333333;
+}
+.declaration-box:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background-color: #333333;
+}
+.declaration-box > p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+.result-img-box {
+  text-align: center;
+  margin-bottom: 1.2em;
+}
+.result-img-box img {
+  width: 100%;
+  height: auto;
+}
+
+.jd-list {
+  margin: 0 0 1em;
+  padding: 0;
+}
+.jd-list > li {
+  padding-left: 45px;
+  list-style: none;
+  position: relative;
+  margin-bottom: 0.5em;
+}
+.jd-list > li:before {
+  content: "◆";
+  font-size: 30px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.jd-list > li > p {
+  margin: 0;
+  text-align: justify;
+}
+
+[class*="-title"] > .remark {
+  font-weight: normal;
+}
+
+.fl-img-box {
+  text-align: center;
+  margin-bottom: 1em;
+}
+.fl-img-box > img {
+  width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 0.5em;
+}
+.fl-img-box > p {
+  text-align: center;
+}
+
+.qm-box {
+  padding: 0px 50px;
+  height: 80px;
+  position: relative;
+}
+.qm-box .qm-item {
+  width: 32%;
+  height: 40px;
+  line-height: 40px;
+  text-align: left;
+}
+.qm-box .qm-item:nth-child(2n) {
+  float: right;
+}
+.qm-box .qm-item:nth-child(2n+1) {
+  float: left;
+}
+.qm-box p {
+  margin: 0 auto;
+}
+.qm-box .qm-gz {
+  position: absolute;
+  top: -30px;
+  right: 40%;
+  height: 112px;
+  width: auto;
+}
+.qm-box .qm-gz img {
+  width: auto;
+  height: 100%;
+}
+
+.edit-wait {
+  background-color: #faffa6;
+}
+
+.op-box {
+  position: fixed;
+  right: 15%;
+  top: 35px;
+  background-color: #faffa6;
+  padding: 10px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
+
+.input-edit.can-input:before {
+  content: '[';
+  color: red;
+}
+.input-edit.can-input:after {
+  content: ']';
+  color: red;
+}

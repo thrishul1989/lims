@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>用户表单-用户管理</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.6"
+	rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0"
+	rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/chosen/chosen.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+<link href="${system_css}/magicsuggest-min.css" rel="stylesheet">
+<link href="${plugins}/ztreeBase/css/zTreeStyle/zTreeStyle.css"
+	rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><a href="${base}/smm/user/list.do">用户管理</a></li>
+							<li class="active"><strong class="toggle-title">新增用户</strong>
+							</li>
+						</ol>
+					</div>
+				</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5 class="toggle-title">新增用户</h5>
+					</div>
+					<div class="ibox-content">
+						<form id="user_form" class="form-horizontal m-t"
+							action="${base}/smm/user/create.do" method="post">
+							<input type="hidden" name="id" id='id' value="${(user.id)!}" />
+							<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">用户名：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" id="username"
+											name="username" value="${(user.username)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label control-required">姓名：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="archive.name"
+											id="archive.name" value="${(user.archive.name)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">性别：</label>
+									<div class="col-sm-3">
+										<select class="form-control" name="archive.gender"
+											id="archive.gender" data-value="${(user.archive.gender)!}">
+											<option value="">请选择</option>
+											<option value="MALE">男</option>
+											<option value="FEMALE">女</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label control-required">角色：</label>
+									<div class="col-sm-3">
+										<select id="roles" name="roles" data-placeholder="选择角色"
+											class="form-control chosen" multiple> <#list roles
+											as role>
+											<option value="${role.id}">${role.name!?html}</option>
+											</#list>
+										</select>
+									</div>
+								</div>
+								<div class="form-group password-group ">
+									<label class="col-sm-2 control-label control-required">密码：</label>
+									<div class="col-sm-3">
+										<input type="password" class="form-control" name="password"
+											id="password" />
+									</div>
+									<label class="col-sm-2 control-label control-required">重复密码：</label>
+									<div class="col-sm-3">
+										<input type="password" class="form-control"
+											name="password_sure" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">工号：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control"
+											name="archive.employeeNo" id='employeeNo'
+											value="${(user.archive.employeeNo)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">电子邮件：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="archive.email"
+											value="${(user.archive.email)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label control-required">手机：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control" name="archive.phone"
+											id="phone" value="${(user.archive.phone)!?html}" />
+									</div>
+									<label class="col-sm-2 control-label">座机：</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control"
+											name="archive.officePhone"
+											value="${(user.archive.officePhone)!?html}" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="txtChargePersonS" class="col-sm-2 control-label">机构：</label>
+									<div id="cyPersonDiv" class="col-sm-3">
+										<input type="hidden" name="archive.deptId" id='hide' value="${(user.archive.deptId)!?html}"/> 
+										<input type="hidden" id='dept' value='<#if departmenet??>${departmenet.id}</#if>'/> 
+										<input type="text" id="txtChargePersonS" personIndex="0" placeholder="点击显示机构" style="background-color: white;"
+												readonly class="form-control"  value="<#if departmenet??>${departmenet.text}</#if>"
+													onfocus="listShow('div2personTree2','txtChargePersonS');">
+										<div id="div2personTree2" name="province" type="selectbox" 
+												style="display: none; z-index: 1000; position: absolute;">
+											<ul id="personTree2" class="ztree"></ul>
+										</div>
+									</div>
+
+									<label class="col-sm-2 control-label">上级领导：</label>
+									<div class="col-sm-3">
+										<div class="form-control" id="leaderid" placeholder="先选择机构"></div>
+										<input type="hidden" class="form-control"
+											name="archive.leaderId" id="hideLeader"
+											value="${(user.archive.leaderId)!?html}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label "></label>
+									<div class="col-sm-3 "></div>
+									<label class="col-sm-2 control-label ">请选择区域：</label>
+									<div class="col-sm-3 " id="element_id">
+										<select class="province form-control" name="archive.province"
+											data-value="${(user.archive.province)!?html}"></select> <select
+											class="city form-control" name="archive.city"
+											data-value="${(user.archive.city)!?html}"></select> <select
+											class="area form-control" name="archive.county"
+											data-value="${(user.archive.county)!?html}"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2" style="float: right;">
+										<button class="btn btn-primary" type="button"
+											onclick='subForm()'>保存</button>
+										<button class="btn btn-primary goback" type="button">返回</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${plugins}/chosen/chosen.jquery.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>
+<script type="text/javascript" src="${system_js}/user.form.js?v=0.0.1"></script>
+<script src="${system_js}/jquery.cxselect.min.js"></script>
+<script src="${system_js}/magicsuggest-min.js"></script>
+<script src="${system_js}/layer.js"></script>
+<script src="${plugins}/ztreeBase/js/jquery.ztree.core-3.5.min.js"></script>
+<script type="text/javascript">
+
+var leader =	$('#leaderid').magicSuggest({
+    width: 190,
+    highlight: true,
+  data:'${base}/smm/user/UserSelect.do?',
+    method:'post',
+    queryParam:"key",
+    maxSelection: 1,
+    displayField:'userName_name',
+    allowFreeEntries:false,
+    renderer: function(v){
+    return '<div>' +
+        '<div >' +
+        '<div >' + v.name + '</div>' +
+            '</div></div>';
+        }
+});
+
+$(leader).on('selectionchange',function(e,m){
+    var obj=$("#leaderid").magicSuggest().getSelection()[0];
+    if(obj != null){
+    	
+	    var val = obj.name;
+	    if(val == '该部门目前没有人'){
+	    	 this.removeFromSelection(this.getSelection(), true);
+	    }
+    }
+})
+
+/* $(leader).on('selectionchange',function(e,m){
+    var obj=$("#leaderid").magicSuggest().getSelection();
+    var a= obj[0];
+    var n=a.name;
+    alert(1);
+    if(n=='该部门目前没有人'){
+    $('#leaderid').magicSuggest().clear();
+    }
+}) */
+
+/* $(leader).on('selectionchange',function(e,m){
+    var val = this.getValue();
+    alert(val.length)
+    if(val.length == 0){
+          this.removeFromSelection(this.getSelection(), false);
+    }  
+}) */
+
+
+<#if leader??>
+	$('#leaderid').magicSuggest().setSelection(${leader}); 
+</#if>
+
+var zNodes = [];  
+
+  $.ajax({
+		url:'${base}/department/selectParentD',
+		async:false,
+		success: function(resultData){
+			zNodes=resultData;   
+		}
+  });
+function listShow(divid,btnId) {
+	var ulId = "personTree2";
+	$("#"+btnId).attr("value", "");
+	
+	var setting = {
+	view: {
+		showLine: true,
+		showIcon: true,
+		selectedMulti: false,
+		dblClickExpand: true,
+	}, 
+	data: {
+		key : {  
+	        name : "text" ,
+	        children: "nodes"
+	    },  
+		  simpleData : {  
+	          enable : true,  
+	          idKey : "id",  
+	          pIdKey : "parentId",  
+	          rootPId : 0  
+	      }  
+	},
+	callback: {
+		onClick:viewHtml
+	}
+};
+
+
+$(document).ready(function () {
+	var treeObj = $("#"+ulId);
+	$.fn.zTree.init(treeObj, setting, zNodes);
+});
+	showMenu(divid,btnId);
+	return false;
+}
+function showMenu(divid,btnId) {
+	var cityObj = $("#"+btnId);
+	var cityOffset = $("#"+btnId).offset();
+	$("#"+divid).css("display", "block").slideDown("fast");
+	$("body").bind("mousedown",{btnId:btnId,divid:divid}, onBodyDown);
+}
+ function hideMenu(divid,btnId) {
+	$("#"+divid).fadeOut("fast");
+	$("body").unbind("mousedown", onBodyDown);
+}
+ 
+ function onBodyDown(event) {
+	//判断鼠标点击是否为同一个对象
+	if (!(event.target.id == event.data.btnId || event.target.id == event.data.divid || $(event.target).parents("#"+event.data.divid).length>0)) {
+		hideMenu(event.data.divid,event.data.btnId);
+	}
+}  
+function viewHtml(event, treeId, treeNode) {
+	$('#leaderid').magicSuggest().enable();
+	$("#div1personTree1").css("display","none");
+	$("#txtChargePersonS").attr("value", treeNode.text);
+	$("#hide").attr("value", treeNode.id);
+	leader.setDataUrlParams({deptId:treeNode.id,templateId:$('#id').val()});
+	leader.clear();
+}	
+$(function(){
+	$('#leaderid').magicSuggest().disable();    
+    $('#element_id').cxSelect({
+   	   url: '${system_js}/cityData.min.json',           
+   	   selects: ['province', 'city', 'area'], 
+   	   emptyStyle: 'none'
+    });
+    $.cxSelect.defaults.url = '${system_js}/cityData.min.json';
+   	$.cxSelect.defaults.nodata = 'none';
+    	
+}); 
+
+function subForm(){
+	
+   	var leaderid = $('#leaderid').magicSuggest().getSelection()[0];
+   	if(null !=leaderid)
+   	{
+   		$('#hideLeader').val(leaderid.id);
+   	}else{
+   		$('#hideLeader').val('')
+   	}
+   	    $("#roles_chosen").each(function(){
+   	        if($(this).find('span').text()==''){
+   	         parent.layer.alert('请选择角色', {
+                 title : "提示"
+             });
+   	        }else{
+   	$('#user_form').submit();	
+   	        }
+   	    })
+}
+
+<!--
+    $(function()
+    {
+        var opts = {};
+        <#if user??>
+        <#if (user.archive.deptId)?? &&(user.archive.deptId) != "">
+	        $('#leaderid').magicSuggest().enable();
+	        leader.setDataUrlParams({deptId:$('#dept').val(),templateId:$('#id').val()});
+        <#else>
+       		 $('#leaderid').magicSuggest().disable();
+        </#if>
+        opts.modify = true;
+        opts.modify_title = '修改用户';
+        opts.modify_action = '${base}/smm/user/modify.do';
+        <#if user.roles??>
+        opts.roles = [];
+        <#list user.roles as role>
+        opts.roles.push('${role!}');
+        </#list>
+        </#if>
+        
+        </#if>
+        
+        $.init(opts);
+    });
+//-->
+</script>
+</body>
+</html>

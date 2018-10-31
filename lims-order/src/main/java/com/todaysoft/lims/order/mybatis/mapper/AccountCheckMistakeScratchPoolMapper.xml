@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.order.mybatis.mapper.AccountCheckMistakeScratchPoolMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPool" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="PAYMENT_TIME" property="paymentTime" jdbcType="TIMESTAMP" />
+    <result column="CHECK_TASK_ID" property="checkTaskId" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="REFER_NO" property="referNo" jdbcType="VARCHAR" />
+    <result column="CHECK_AMOUNT" property="checkAmount" jdbcType="DECIMAL" />
+    <result column="PAY_TYPE" property="payType" jdbcType="BIT" />
+    <result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+    <result column="BILL_DATE" property="billDate" jdbcType="VARCHAR" />
+    <result column="MER_NUM" property="merNum" jdbcType="VARCHAR" />
+    <result column="TERM_ID" property="termId" jdbcType="VARCHAR" />
+    <result column="TRAN_DATE" property="tranDate" jdbcType="VARCHAR" />
+    <result column="TRAN_TYPE" property="tranType" jdbcType="VARCHAR" />
+    <result column="O_SERIALNO" property="oSerialno" jdbcType="VARCHAR" />
+    <result column="O_BATCHNO" property="oBatchno" jdbcType="VARCHAR" />
+    <result column="SERIAL_NO" property="serialNo" jdbcType="VARCHAR" />
+    <result column="WANG_PAY_TYPE" property="wangPayType" jdbcType="VARCHAR" />
+    <result column="EXT1" property="ext1" jdbcType="VARCHAR" />
+    <result column="EXT2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ADD_VAL" property="addVal" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, PAYMENT_TIME, CHECK_TASK_ID, ORDER_NO, REFER_NO, CHECK_AMOUNT, PAY_TYPE, 
+    BATCH_NO, BILL_DATE, MER_NUM, TERM_ID, TRAN_DATE, TRAN_TYPE, O_SERIALNO, O_BATCHNO, 
+    SERIAL_NO, WANG_PAY_TYPE, EXT1, EXT2, ADD_VAL
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPoolExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart >= 0" >
+      limit #{limitStart}, #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPoolExample" >
+    delete from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPool" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL (ID, CREATE_TIME, PAYMENT_TIME, 
+      CHECK_TASK_ID, ORDER_NO, REFER_NO, 
+      CHECK_AMOUNT, PAY_TYPE, BATCH_NO, 
+      BILL_DATE, MER_NUM, TERM_ID, 
+      TRAN_DATE, TRAN_TYPE, O_SERIALNO, 
+      O_BATCHNO, SERIAL_NO, WANG_PAY_TYPE, 
+      EXT1, EXT2, ADD_VAL)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, 
+      #{checkTaskId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{referNo,jdbcType=VARCHAR}, 
+      #{checkAmount,jdbcType=DECIMAL}, #{payType,jdbcType=BIT}, #{batchNo,jdbcType=VARCHAR}, 
+      #{billDate,jdbcType=VARCHAR}, #{merNum,jdbcType=VARCHAR}, #{termId,jdbcType=VARCHAR}, 
+      #{tranDate,jdbcType=VARCHAR}, #{tranType,jdbcType=VARCHAR}, #{oSerialno,jdbcType=VARCHAR}, 
+      #{oBatchno,jdbcType=VARCHAR}, #{serialNo,jdbcType=VARCHAR}, #{wangPayType,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{addVal,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPool" >
+    insert into LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="paymentTime != null" >
+        PAYMENT_TIME,
+      </if>
+      <if test="checkTaskId != null" >
+        CHECK_TASK_ID,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+      <if test="referNo != null" >
+        REFER_NO,
+      </if>
+      <if test="checkAmount != null" >
+        CHECK_AMOUNT,
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE,
+      </if>
+      <if test="batchNo != null" >
+        BATCH_NO,
+      </if>
+      <if test="billDate != null" >
+        BILL_DATE,
+      </if>
+      <if test="merNum != null" >
+        MER_NUM,
+      </if>
+      <if test="termId != null" >
+        TERM_ID,
+      </if>
+      <if test="tranDate != null" >
+        TRAN_DATE,
+      </if>
+      <if test="tranType != null" >
+        TRAN_TYPE,
+      </if>
+      <if test="oSerialno != null" >
+        O_SERIALNO,
+      </if>
+      <if test="oBatchno != null" >
+        O_BATCHNO,
+      </if>
+      <if test="serialNo != null" >
+        SERIAL_NO,
+      </if>
+      <if test="wangPayType != null" >
+        WANG_PAY_TYPE,
+      </if>
+      <if test="ext1 != null" >
+        EXT1,
+      </if>
+      <if test="ext2 != null" >
+        EXT2,
+      </if>
+      <if test="addVal != null" >
+        ADD_VAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentTime != null" >
+        #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTaskId != null" >
+        #{checkTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkAmount != null" >
+        #{checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=BIT},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        #{billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranDate != null" >
+        #{tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tranType != null" >
+        #{tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="oSerialno != null" >
+        #{oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="oBatchno != null" >
+        #{oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wangPayType != null" >
+        #{wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="addVal != null" >
+        #{addVal,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPoolExample" resultType="java.lang.Integer" >
+    select count(*) from LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.paymentTime != null" >
+        PAYMENT_TIME = #{record.paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkTaskId != null" >
+        CHECK_TASK_ID = #{record.checkTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null" >
+        ORDER_NO = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.referNo != null" >
+        REFER_NO = #{record.referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkAmount != null" >
+        CHECK_AMOUNT = #{record.checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.payType != null" >
+        PAY_TYPE = #{record.payType,jdbcType=BIT},
+      </if>
+      <if test="record.batchNo != null" >
+        BATCH_NO = #{record.batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billDate != null" >
+        BILL_DATE = #{record.billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merNum != null" >
+        MER_NUM = #{record.merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.termId != null" >
+        TERM_ID = #{record.termId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tranDate != null" >
+        TRAN_DATE = #{record.tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tranType != null" >
+        TRAN_TYPE = #{record.tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oSerialno != null" >
+        O_SERIALNO = #{record.oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oBatchno != null" >
+        O_BATCHNO = #{record.oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serialNo != null" >
+        SERIAL_NO = #{record.serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wangPayType != null" >
+        WANG_PAY_TYPE = #{record.wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext1 != null" >
+        EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext2 != null" >
+        EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addVal != null" >
+        ADD_VAL = #{record.addVal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      PAYMENT_TIME = #{record.paymentTime,jdbcType=TIMESTAMP},
+      CHECK_TASK_ID = #{record.checkTaskId,jdbcType=VARCHAR},
+      ORDER_NO = #{record.orderNo,jdbcType=VARCHAR},
+      REFER_NO = #{record.referNo,jdbcType=VARCHAR},
+      CHECK_AMOUNT = #{record.checkAmount,jdbcType=DECIMAL},
+      PAY_TYPE = #{record.payType,jdbcType=BIT},
+      BATCH_NO = #{record.batchNo,jdbcType=VARCHAR},
+      BILL_DATE = #{record.billDate,jdbcType=VARCHAR},
+      MER_NUM = #{record.merNum,jdbcType=VARCHAR},
+      TERM_ID = #{record.termId,jdbcType=VARCHAR},
+      TRAN_DATE = #{record.tranDate,jdbcType=VARCHAR},
+      TRAN_TYPE = #{record.tranType,jdbcType=VARCHAR},
+      O_SERIALNO = #{record.oSerialno,jdbcType=VARCHAR},
+      O_BATCHNO = #{record.oBatchno,jdbcType=VARCHAR},
+      SERIAL_NO = #{record.serialNo,jdbcType=VARCHAR},
+      WANG_PAY_TYPE = #{record.wangPayType,jdbcType=VARCHAR},
+      EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      ADD_VAL = #{record.addVal,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPool" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentTime != null" >
+        PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTaskId != null" >
+        CHECK_TASK_ID = #{checkTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="referNo != null" >
+        REFER_NO = #{referNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkAmount != null" >
+        CHECK_AMOUNT = #{checkAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE = #{payType,jdbcType=BIT},
+      </if>
+      <if test="batchNo != null" >
+        BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        BILL_DATE = #{billDate,jdbcType=VARCHAR},
+      </if>
+      <if test="merNum != null" >
+        MER_NUM = #{merNum,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null" >
+        TERM_ID = #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranDate != null" >
+        TRAN_DATE = #{tranDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tranType != null" >
+        TRAN_TYPE = #{tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="oSerialno != null" >
+        O_SERIALNO = #{oSerialno,jdbcType=VARCHAR},
+      </if>
+      <if test="oBatchno != null" >
+        O_BATCHNO = #{oBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        SERIAL_NO = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wangPayType != null" >
+        WANG_PAY_TYPE = #{wangPayType,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        EXT1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        EXT2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="addVal != null" >
+        ADD_VAL = #{addVal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.todaysoft.lims.order.mybatis.model.AccountCheckMistakeScratchPool" >
+    update LIMS_ORDER_ACCOUNT_CHECK_MISTAKE_SCRATCH_POOL
+    set CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+      CHECK_TASK_ID = #{checkTaskId,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      REFER_NO = #{referNo,jdbcType=VARCHAR},
+      CHECK_AMOUNT = #{checkAmount,jdbcType=DECIMAL},
+      PAY_TYPE = #{payType,jdbcType=BIT},
+      BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+      BILL_DATE = #{billDate,jdbcType=VARCHAR},
+      MER_NUM = #{merNum,jdbcType=VARCHAR},
+      TERM_ID = #{termId,jdbcType=VARCHAR},
+      TRAN_DATE = #{tranDate,jdbcType=VARCHAR},
+      TRAN_TYPE = #{tranType,jdbcType=VARCHAR},
+      O_SERIALNO = #{oSerialno,jdbcType=VARCHAR},
+      O_BATCHNO = #{oBatchno,jdbcType=VARCHAR},
+      SERIAL_NO = #{serialNo,jdbcType=VARCHAR},
+      WANG_PAY_TYPE = #{wangPayType,jdbcType=VARCHAR},
+      EXT1 = #{ext1,jdbcType=VARCHAR},
+      EXT2 = #{ext2,jdbcType=VARCHAR},
+      ADD_VAL = #{addVal,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

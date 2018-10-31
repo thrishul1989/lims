@@ -1,0 +1,49 @@
+<!--    鎵撳嵃table -->
+<span id="table" style="display: none">
+<style>
+#printTable td, #printTable th {
+    border: 1px solid black; font-size: 15px;  font-weight: bold; color: black; width: 1000px
+}
+#printTable tr{
+    height: 20px;
+}
+
+#printTable {
+    border: 1px solid black;
+}
+</style>
+    <table class="table table-striped table-bordered table-hover" id="printTable">
+								<thead>
+									<tr>
+										
+										<th>实验编号</th>
+										<th>实验名称</th>
+										<th>样本编号</th>
+										<th>样本名称</th>
+
+										<th>样本类型</th>
+										<th>存储位置</th>
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<#if sampleList?has_content> <#list sampleList as record>
+									<tr>
+										<td>${record.task.testingCode!?html}</td>
+										<td>${record.task.name!?html}</td>
+										<td name="code">${record.sample.sampleCode!?html}</td>
+										<td>${record.sample.receivedSample.sampleName!?html}</td>
+
+										<td>${record.sample.sampleTypeName!?html}</td>
+										<td><#if record.storage??>${record.storage.locationCode!?html}</#if></td>
+
+									</tr>
+									</#list> </#if>
+
+
+
+								</tbody>
+							</table>
+</span>
+

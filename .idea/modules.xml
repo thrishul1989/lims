@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/lims-config-server/config-server.iml" filepath="$PROJECT_DIR$/lims-config-server/config-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-eureka-server/eureka-server.iml" filepath="$PROJECT_DIR$/lims-eureka-server/eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-export-service/export-service.iml" filepath="$PROJECT_DIR$/lims-export-service/export-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-gateway-service/gateway-service.iml" filepath="$PROJECT_DIR$/lims-gateway-service/gateway-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-invoice-service/invoice-service.iml" filepath="$PROJECT_DIR$/lims-invoice-service/invoice-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-kbm-es-service/kbm-es-service.iml" filepath="$PROJECT_DIR$/lims-kbm-es-service/kbm-es-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-base-api/lims-base-api.iml" filepath="$PROJECT_DIR$/lims-base-api/lims-base-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-biology-service/lims-biology.iml" filepath="$PROJECT_DIR$/lims-biology-service/lims-biology.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-ngs-service/lims-ngs.iml" filepath="$PROJECT_DIR$/lims-ngs-service/lims-ngs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-order/lims-order.iml" filepath="$PROJECT_DIR$/lims-order/lims-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-order-api/lims-order-api.iml" filepath="$PROJECT_DIR$/lims-order-api/lims-order-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-order-sync-service/lims-order-sync.iml" filepath="$PROJECT_DIR$/lims-order-sync-service/lims-order-sync.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-schedule/lims-schedule.iml" filepath="$PROJECT_DIR$/lims-schedule/lims-schedule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-schedule-api/lims-schedule-api.iml" filepath="$PROJECT_DIR$/lims-schedule-api/lims-schedule-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-technical-service/lims-technical.iml" filepath="$PROJECT_DIR$/lims-technical-service/lims-technical.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-maintain-service/maintain-service.iml" filepath="$PROJECT_DIR$/lims-maintain-service/maintain-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-order-service/order-service.iml" filepath="$PROJECT_DIR$/lims-order-service/order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-product-service/product-service.iml" filepath="$PROJECT_DIR$/lims-product-service/product-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-reagent-service/reagent-service.iml" filepath="$PROJECT_DIR$/lims-reagent-service/reagent-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-report-service/report-service.iml" filepath="$PROJECT_DIR$/lims-report-service/report-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-system/system.iml" filepath="$PROJECT_DIR$/lims-system/system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-testing-service/testing-service.iml" filepath="$PROJECT_DIR$/lims-testing-service/testing-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-user-service/user-service.iml" filepath="$PROJECT_DIR$/lims-user-service/user-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lims-utils/utils.iml" filepath="$PROJECT_DIR$/lims-utils/utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/workspace-lims.iml" filepath="$PROJECT_DIR$/.idea/workspace-lims.iml" />
+    </modules>
+  </component>
+</project>

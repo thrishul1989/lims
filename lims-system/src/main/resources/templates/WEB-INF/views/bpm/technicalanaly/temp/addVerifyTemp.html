@@ -1,0 +1,54 @@
+<tr>
+    <td>
+        <a href="javascript:;" style="background-color: #eb4f38;border-color: rgb(235, 79, 56);"
+           class="btn btn-sm btn-success remove"><i class="fa fa-trash"></i> 删除</a>
+    </td>
+    <td>
+        <input type="hidden" name="sampleCode" value="${sampleCode!?html}" class="sampleCode">
+        <input type="hidden" name="dataCode" value="${dataCode!?html}" class="dataCode">
+        <select name="clinicalJudgment" class="form-control checknull clinicalJudgment" style="width: 120px;height: 40px">
+            <option value="临床表型高度相关">临床表型高度相关</option>
+            <option value="可疑变异">可疑变异</option>
+            <option value="杂合携带">杂合携带</option>
+        </select>
+    </td>
+    <td>
+        <input name="chrom" class="form-control checknull chrom" type="text" style="width: 100px;"/></td>
+    <td><input name="startLocation" class="form-control checknull startLocation" type="text" style="width: 100px;"/>
+    </td>
+    <td><input name="endLocation" class="form-control checknull endLocation" type="text" style="width: 100px;"/></td>
+    <td><input name="gene" class="form-control gene" type="text" style="width: 100px;"/></td>
+    <td><input name="nucleotide" class="form-control nucleotide" type="text" style="width: 100px;"/></td>
+    <td><input name="aminoAcid" class="form-control aminoAcid" type="text" style="width: 100px;"/></td>
+    <td><input name="pure" class="form-control pure" type="text" style="width: 100px;"/></td>
+    <td>
+        <select name="verifyMethod" class="form-control checknull verifyMethod" style="width: 120px;height: 40px">
+            <option value="QPCR">QPCR</option>
+            <option value="Sanger">Sanger</option>
+            <option value="PCR-NGS">PCR-NGS</option>
+            <option value="MLPA">MLPA</option>
+        </select>
+    </td>
+    <td>
+        <div class="sampleInfo">
+            <#if relationSamples?has_content>
+                <#list relationSamples as entity>
+                    <#if entity.ifSelf?? && entity.ifSelf==1>
+                        <input type="checkbox" name="textsForList[0].familyRelation"
+                               value="本人_${entity.testingSampleId!?html}" checked="checked"
+                               class="familyRelation">
+                        <input type="hidden" name="textsForList[0].sampleId" value="${entity.testingSampleId!?html}"
+                               class="sampleId">本人
+                        <#else>
+                            <input type="checkbox" name="textsForList[0].familyRelation"
+                                   value="<@dict_entry_text category='FAMILY_RELATION' value=entity.familyRelation />_${entity.testingSampleId!?html}"
+                                   class="familyRelation" checked="checked">
+                            <input type="hidden" name="textsForList[0].sampleId" value="${entity.testingSampleId!?html}"
+                                   class="sampleId">
+                            <@dict_entry_text category="FAMILY_RELATION" value=entity.familyRelation />
+                    </#if>
+                </#list>
+            </#if>
+        </div>
+    </td>
+</tr>

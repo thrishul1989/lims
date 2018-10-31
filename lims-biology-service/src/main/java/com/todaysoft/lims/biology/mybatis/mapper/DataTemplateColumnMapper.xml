@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.todaysoft.lims.biology.mybatis.mapper.DataTemplateColumnMapper" >
+  <resultMap id="BaseResultMap" type="com.todaysoft.lims.biology.model.entity.DataTemplateColumn" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="COLUMN_INDEX" property="columnIndex" jdbcType="BIT" />
+    <result column="COLUMN_NAME" property="columnName" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="SEMANTIC" property="semantic" jdbcType="VARCHAR" />
+    <result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TEMPLATE_ID, COLUMN_INDEX, COLUMN_NAME, TYPE, SEMANTIC,GROUP_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.todaysoft.lims.biology.model.entity.DataTemplateColumn" >
+    insert into LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="columnIndex != null" >
+        COLUMN_INDEX,
+      </if>
+      <if test="columnName != null" >
+        COLUMN_NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="semantic != null" >
+        SEMANTIC,
+      </if>
+      <if test="groupName != null">
+      	GROUP_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnIndex != null" >
+        #{columnIndex,jdbcType=BIT},
+      </if>
+      <if test="columnName != null" >
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="semantic != null" >
+        #{semantic,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.todaysoft.lims.biology.model.entity.DataTemplateColumn" >
+    update LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    <set >
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnIndex != null" >
+        COLUMN_INDEX = #{columnIndex,jdbcType=BIT},
+      </if>
+      <if test="columnName != null" >
+        COLUMN_NAME = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="semantic != null" >
+        SEMANTIC = #{semantic,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+      	GROUP_NAME = #{groupName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByTemplateId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    where TEMPLATE_ID = #{templateId}
+    order by COLUMN_INDEX
+  </select>
+  
+  <delete id="deleteByTemplateId" parameterType="java.lang.String" >
+    delete from LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    where TEMPLATE_ID = #{templateId}
+  </delete>
+  
+  <select id="selectByGroupName" resultMap="BaseResultMap" parameterType="com.todaysoft.lims.biology.model.entity.DataTemplateColumn" >
+    select 
+    <include refid="Base_Column_List" />
+    from LIMS_BIOLOGY_DATA_TEMPLATE_COLUMN
+    where GROUP_NAME = #{groupName} AND TEMPLATE_ID = #{templateId}
+  </select>
+  
+</mapper>

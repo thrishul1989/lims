@@ -1,0 +1,8 @@
+<#if pagination??>
+<div class="row pagination-wrap">
+    <div class="pagination" data-page-no="${pagination.pageNum!1}" data-page-size="${pagination.pageSize!10}" data-count="${pagination.total!0}">
+    </div>
+    <label>共<span>${pagination.total!0}</span>条记录
+    </label>
+</div>
+</#if>

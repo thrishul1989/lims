@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<title>物资名称表单</title>
+<link href="${system_css}/bootstrap.min14ed.css?v=3.3.7" rel="stylesheet">
+<link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+<link href="${system_css}/animate.min.css" rel="stylesheet">
+<link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+<link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+<link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+						<ol class="breadcrumb">
+							<li><span>物资名称配置</span></li>
+							<#if material??>
+								<li class="active"><strong class="toggle-title">修改</strong></li>
+							<#else>
+								<li class="active"><strong class="toggle-title">新增</strong></li>
+							</#if>
+							
+						</ol>
+				</div>
+			</div>
+				<div class="ibox">
+					<div class="ibox-title">
+						<#if material??>
+							<h5 class="toggle-title">修改</h5>
+							<#else>
+							<h5 class="toggle-title">新增</h5>
+						</#if>
+						
+					</div>
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox">
+									<form id="materialConfigForm" class="form-horizontal m-t" action="${base}/smm/material/nameCreate.do" method="post">
+										<input type="hidden" name="${(REPEAT_SUBMIT_TOKEN)!}" value="${(Request[REPEAT_SUBMIT_TOKEN])!}" />
+										<input type="hidden" name="id" id="id" value="${(material.id)!?html}"/>
+										<fieldset >
+													<div class="form-group">
+														<label class="col-sm-2 control-label control-required">物资类别：</label>
+														<div class="col-sm-3">
+															<select class="form-control" id="materialSort.id" name="materialSort.id" data-value="${(material.materialSort.id)!?html}">
+																<option value="">-请选择物资类别-</option>
+																<#if sortList?has_content><#list sortList as sort>
+																	<option value="${sort.id}">${(sort.name)!?html}</option>
+																</#list>
+																</#if>
+															</select>
+														</div>
+														<label class="col-sm-2 control-label control-required">物资名称：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" id="name"
+																name="name" value="${(material.name)!?html}"/>
+														</div>
+														
+													</div>
+													
+													<div class="form-group">
+														<label class="col-sm-2 control-label">描述：</label>
+														<div class="col-sm-3">
+															<input type="text" class="form-control" name="description"
+																id="description" value="${(material.description)!?html}"/>
+														</div>
+													</div>
+													
+										</fieldset>
+										<div class="form-group">
+					                         <div class="col-sm-4 col-sm-offset-5">
+					                            <button type="submit" class="btn btn-primary" >保存</button>
+					                            <button class="btn btn-primary goback" type="button" >返回</button>
+					                         </div>
+				                    	</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="${system_js}/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${system_js}/bootstrap.min.js"></script>
+<script type="text/javascript" src="${system_js}/system.js"></script>
+<script type="text/javascript" src="${plugins}/laydate/laydate.js"></script>
+<script type="text/javascript"
+	src="${plugins}/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/additional-methods.min.js"></script>
+<script type="text/javascript" src="${plugins}/validation/localization/messages_zh.min.js"></script>
+<script type="text/javascript" src="${system_js}/myValidate.js"></script>	
+<script src="${system_js}/bootstrap-fileinput-master/js/fileinput.js"></script>
+<script src="${system_js}/bootstrap-fileinput-master/js/zh.js"></script>
+<script type="text/javascript">
+<#if material??>
+$("#materialConfigForm").attr('action','${base}/smm/material/nameModify.do');
+</#if>
+$(function(){
+	$("#materialConfigForm").validate({
+		
+		submitHandler:function(form){
+			
+			//遮罩开始
+			var layerObject = parent.parent.layer;
+			var loadindex = layerObject.load();
+			//保存
+			form.submit();
+			layerObject.close(loadindex);
+		},
+		rules: {
+			'name':{
+				required:true,
+				remote: {
+         		    url: "/smm/material/validate.do",
+         		    type: "post",               
+         		    dataType: "json",          
+         		    data: {
+         		    	equalName: function() {
+         		            return $("#name").val();
+         		        },
+	    		        id:function() {
+	    		            return $("#id").val();
+	    		        }
+         		    }
+         		}
+			},
+			'materialSort.id':{
+				required:true
+			}
+		},
+		 messages: {
+			 'name':{
+				 required: "请输入物资名称",
+				 remote:"物资名称已经存在"
+			 },
+			'materialSort.id':{
+				required: "请选择物资类别"
+			}
+		 }
+	})
+})
+</script>
+</html>

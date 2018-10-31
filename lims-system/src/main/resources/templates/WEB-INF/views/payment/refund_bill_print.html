@@ -1,0 +1,135 @@
+<!--    打印table -->
+
+<div id="table" style="display: none">
+    <link href="${system_css}/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="${system_css}/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="${system_css}/animate.min.css" rel="stylesheet">
+    <link href="${system_css}/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="${plugins}/jstree/themes/default/style.min.css" rel="stylesheet">
+    <link href="${system_css}/lims.css?v=4.1.0" rel="stylesheet">
+    <style>
+
+#printTable td, #printTable th {
+	border: 1px solid black;
+    font-size: 15px;
+    font-family: 宋体;
+    font-weight: bold;
+    color: black;
+    width: 1000px;
+    text-align: left;
+}
+#productName,#applyReason,#replyAmount,#capitalRMB,#bankNo,#bankOwnerName{
+    color: black;
+}
+#printTable tr {
+	height: 20px;
+}
+
+#printTable {
+	border: 1px solid black;
+}
+</style>
+    <div style="text-align: center">
+        <h1 style="font-family: 宋体;font-weight: bold;  color: black;">支出凭单</h1>
+        <p style="font-family: 宋体;font-weight: bold; color: black;">年 &nbsp; 月 &nbsp; 日</p>
+        <p style="font-family: 宋体;font-weight: bold; color: black;">第 &nbsp;&nbsp; 号</p>
+    </div>
+    <table id="printTable" class="table table-striped table-bordered table-hover table-responsive">
+            <tr>
+
+                <td colspan="4">订单编号：${order.code!?html} <br />
+                    <br />
+                    受检人姓名：${order.examineeName!?html}<br />
+                    <br />
+                    检测项目：<span id="productName"></span> <br />
+                    <br />
+                    退款理由：<span id="applyReason"></span><br />
+                    <br />
+                    业务员：${order.creatorName!?html}<br />
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>审批金额</td>
+                <td><span id="capitalRMB" ></span></td>
+                <td colspan="2">￥<span id="replyAmount"></span></td>
+            </tr>
+            <tr>
+                <td  style="height: 80px;">领款人</td>
+                <td><span id="bankOwnerName" ></span></td>
+                <td>领款人账户信息</td>
+                <td><span id="bankNo" ></span></td>
+            </tr>
+            <tr>
+                <td  style="height: 80px;">部门负责人签字</td>
+                <td></td>
+                <td colspan="2">备注：</td>
+            </tr>
+            <tr>
+                <td style="height: 80px;">财务部预算员签字</td>
+                <td></td>
+                <td colspan="2">备注：</td>
+            </tr>
+            <tr>
+                <td style="height: 80px;">财务主管签字</td>
+                <td></td>
+                <td colspan="2">备注：</td>
+            </tr>
+            <tr>
+                <td style="height: 80px;">财务总监签字</td>
+                <td></td>
+                <td colspan="2">备注：</td>
+            </tr>
+            <tr>
+                <td style="height: 80px;">总经理签字</td>
+                <td></td>
+                <td colspan="2">备注：</td>
+            </tr>
+
+</table>
+</div>
+<script src="${system_js}/LodopFuncs.js"></script>
+<script src="${system_js}/util.js"></script>
+<script>
+    var LODOP;
+
+    function myPreview(productName,applyReason,replyAmount,bankNo,bankOwnerName)
+    {
+        if(null != productName)
+        {
+            $("#productName").html(productName);
+        }
+        if(null != applyReason)
+        {
+            $("#applyReason ").html(applyReason);
+        }
+        if(null != replyAmount)
+        {
+            $("#replyAmount ").html(replyAmount);
+            var capitalRMB = $.convertCurrency(replyAmount);
+            $("#capitalRMB").html(capitalRMB);
+        }
+        if(null != bankNo )
+        {
+            $("#bankNo ").html(bankNo);
+        }
+        if(null != bankOwnerName )
+        {
+            $("#bankOwnerName").html(bankOwnerName);
+        }
+        $('span').attr('style','');
+        LODOP = getLodop();
+        LODOP.PRINT_INITA(0, 0, 522, 333, "打印控件功能演示");
+        LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4"); //当宽度和高度都设为 0 的时候，才能指定用特定的纸型打印
+        createContent();
+        LODOP.PREVIEW();
+
+    };
+
+    function createContent()
+    {
+        LODOP.ADD_PRINT_HTM (10,'2.5%',"96%",'BottomMargin: 10',document.getElementById("table").innerHTML);
+        LODOP.ADD_PRINT_IMAGE(0, 0, 300, 70, "<img border='0' src='/static/plugins/img/logo.png'/>");
+        LODOP.SET_PRINT_STYLEA(0, "ItemType", 1);
+    }
+</script>
